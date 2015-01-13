@@ -1,0 +1,25 @@
+﻿<UserControl
+    x:Class="LightNovel.Controls.RichTextView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:LightNovel.Controls"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <ScrollViewer x:Name="ContentScrollViewer" Grid.Column="1" ViewChanged="ContentScrollViewer_ViewChanged"  Style="{StaticResource HorizontalScrollViewerStyle}" HorizontalScrollMode="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollMode="Disabled" ZoomMode="Disabled" HorizontalSnapPointsType="Mandatory" >
+        <controls:RichTextColumns x:Name="ContentColumns" Height="Auto" VerticalAlignment="Stretch" Margin="0,20" ColumnWidth="640" ColumnHeight="668">
+            <RichTextBlock x:Name="ContentTextBlock" Style="{StaticResource BasicRichTextStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiLight" Width="640" Height="668" IsTextSelectionEnabled="True" TextAlignment="Left" Padding="30,0" Language="zh-CN" FontFamily="Segoe UI" Foreground="{StaticResource ApplicationForegroundThemeBrush}" VerticalAlignment="Top" >
+            </RichTextBlock>
+            <controls:RichTextColumns.ColumnTemplate>
+                <DataTemplate>
+                    <RichTextBlockOverflow Width="640" Height="668" Padding="30,0" >
+                    </RichTextBlockOverflow>
+                </DataTemplate>
+            </controls:RichTextColumns.ColumnTemplate>
+        </controls:RichTextColumns>
+    </ScrollViewer>
+</UserControl>

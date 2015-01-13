@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="zh-CN" target-language="zh-Hans" original="LightNovelClient.Windows_Multilingual.prilog.xml" tool-id="MultilingualAppToolkit" product-name="LightNovelClient.Windows" product-version="1.0.0.0" build-num="0">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1250.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="Resources">
+        <trans-unit id="Resources\UserNameLabel\WatermarkText" translate="yes" xml:space="preserve">
+          <source>用户名</source>
+          <target state="new">用户名</target>
+        </trans-unit>
+        <trans-unit id="Resources\SignUpButton\Content" translate="yes" xml:space="preserve">
+          <source>注册"轻之国度"</source>
+          <target state="new">注册"轻之国度"</target>
+        </trans-unit>
+        <trans-unit id="Resources\SearchResultLabel\Text" translate="yes" xml:space="preserve">
+          <source>搜索结果：</source>
+          <target state="new">搜索结果：</target>
+        </trans-unit>
+        <trans-unit id="Resources\RecentReadingSection\Header" translate="yes" xml:space="preserve">
+          <source>最近阅读</source>
+          <target state="new">最近阅读</target>
+        </trans-unit>
+        <trans-unit id="Resources\ReadingStyleButton\Label" translate="yes" xml:space="preserve">
+          <source>主题</source>
+          <target state="new">主题</target>
+        </trans-unit>
+        <trans-unit id="Resources\PinButton_ToolTip" translate="yes" xml:space="preserve">
+          <source>将该卷订到"开始屏幕"</source>
+          <target state="new">将该卷订到"开始屏幕"</target>
+        </trans-unit>
+        <trans-unit id="Resources\PinButton\Label" translate="yes" xml:space="preserve">
+          <source>固定</source>
+          <target state="new">固定</target>
+        </trans-unit>
+        <trans-unit id="Resources\PictureToolLabel\Text" translate="yes" xml:space="preserve">
+          <source>图片</source>
+          <target state="new">图片</target>
+        </trans-unit>
+        <trans-unit id="Resources\PasswordLabel\PlaceholderText" translate="yes" xml:space="preserve">
+          <source>密码</source>
+          <target state="new">密码</target>
+        </trans-unit>
+        <trans-unit id="Resources\NoCommentLabel\Text" translate="yes" xml:space="preserve">
+          <source>目前还没有评论</source>
+          <target state="new">目前还没有评论</target>
+        </trans-unit>
+        <trans-unit id="Resources\LoginSection\Header" translate="yes" xml:space="preserve">
+          <source>用户登陆</source>
+          <target state="new">用户登陆</target>
+        </trans-unit>
+        <trans-unit id="Resources\IndexButton_ToolTip" translate="yes" xml:space="preserve">
+          <source>打开/关闭 目录</source>
+          <target state="new">打开/关闭 目录</target>
+        </trans-unit>
+        <trans-unit id="Resources\IndexButton\Label" translate="yes" xml:space="preserve">
+          <source>目录</source>
+          <target state="new">目录</target>
+        </trans-unit>
+        <trans-unit id="Resources\HubSearchBox\PlaceholderText" translate="yes" xml:space="preserve">
+          <source>搜索书名,作者</source>
+          <target state="new">搜索书名,作者</target>
+        </trans-unit>
+        <trans-unit id="Resources\FontSizeButton\Label" translate="yes" xml:space="preserve">
+          <source>字号</source>
+          <target state="new">字号</target>
+        </trans-unit>
+        <trans-unit id="Resources\FavoriteSection\Header" translate="yes" xml:space="preserve">
+          <source>用户收藏</source>
+          <target state="new">用户收藏</target>
+        </trans-unit>
+        <trans-unit id="Resources\FavoriteButton_ToolTip" translate="yes" xml:space="preserve">
+          <source>收藏该卷</source>
+          <target state="new">收藏该卷</target>
+        </trans-unit>
+        <trans-unit id="Resources\FavoriteButton\Label" translate="yes" xml:space="preserve">
+          <source>收藏</source>
+          <target state="new">收藏</target>
+        </trans-unit>
+        <trans-unit id="Resources\CommentInputBox\PlaceholderText" translate="yes" xml:space="preserve">
+          <source>在这里输入评论</source>
+          <target state="new">在这里输入评论</target>
+        </trans-unit>
+        <trans-unit id="Resources\ApplicationName" translate="yes" xml:space="preserve">
+          <source>轻之国度</source>
+          <target state="new">轻之国度</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,72 @@
+﻿<vm:MainViewModel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:LightNovel.ViewModels"
+    xmlns:local="clr-namespace:LightNovel"
+    xmlns:service="clr-namespace:LightNovel.Service;assembly=LightNovel.Service"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    CoverBackgroundImageUri="http://lknovel.lightnovel.cn/illustration/image/20120828/20120828093257_11743.jpg"
+    UserName="UserName"
+    >
+    <!--<vm:MainViewModel.RecommandBookItems>-->
+        <!--<vm:StringCoverGroup Key="2014一月新番">
+            --><!--<vm:BookCoverViewModel CoverImageUri="http://lknovel.lightnovel.cn/cover/image/20120821/20120821151343_21228.jpg" Title="我的青春恋爱物语果然有问题" />
+            <vm:BookCoverViewModel/>--><!--
+        </vm:StringCoverGroup>-->
+    <!--</vm:MainViewModel.RecommandBookItems>-->
+    <!--<vm:MainViewModel.Items>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36316" LineOne="Chapter one" LineTwo="Maecenas praesent accumsan bibendum" LineThree="Maecenas praesent accumsan bibendum dictumst eleifend facilisi faucibus habitant inceptos interdum lobortis nascetur"/>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36317" LineOne="Chapter two" LineTwo="Dictumst eleifend facilisi faucibus" LineThree="Pharetra placerat pulvinar sagittis senectus sociosqu suscipit torquent ultrices vehicula volutpat maecenas praesent"/>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36318" LineOne="Chapter three" LineTwo="Habitant inceptos interdum lobortis" LineThree="Accumsan bibendum dictumst eleifend facilisi faucibus habitant inceptos interdum lobortis nascetur pharetra placerat"/>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36319" LineOne="Chapter four" LineTwo="Nascetur pharetra placerat pulvinar" LineThree="Pulvinar sagittis senectus sociosqu suscipit torquent ultrices vehicula volutpat maecenas praesent accumsan bibendum"/>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36320" LineOne="Chapter five" LineTwo="Sagittis senectus sociosqu suscipit" LineThree="Dictumst eleifend facilisi faucibus habitant inceptos interdum lobortis nascetur pharetra placerat pulvinar sagittis"/>
+        <vm:ItemViewModel Url="/Reading.xaml?id=36321" LineOne="Chapter six" LineTwo="Torquent ultrices vehicula volutpat" LineThree="Senectus sociosqu suscipit torquent ultrices vehicula volutpat maecenas praesent accumsan bibendum dictumst eleifend"/>
+    </vm:MainViewModel.Items>-->
+    <!--<vm:MainViewModel.SeriesIndex>
+        <local:AlphaKeyGroup x:TypeArguments="vm:SeriesPreviewModel" Key="#">
+            <vm:SeriesPreviewModel Title = "0能者九条凑" ID="1104"/>
+        </local:AlphaKeyGroup>
+        <local:AlphaKeyGroup x:TypeArguments="vm:SeriesPreviewModel" Key="A">
+            <vm:SeriesPreviewModel Title = "ACCEL WORLD(加速世界)" ID="114"/>
+        </local:AlphaKeyGroup>
+        <local:AlphaKeyGroup x:TypeArguments="vm:SeriesPreviewModel" Key="B">
+            <vm:SeriesPreviewModel Title = "B．A．D．事件簿" ID="628"/>
+        </local:AlphaKeyGroup>
+        <local:AlphaKeyGroup x:TypeArguments="vm:SeriesPreviewModel" Key="C">
+            <vm:SeriesPreviewModel Title = "Campione！弑神者!" ID="307"/>
+        </local:AlphaKeyGroup>
+    </vm:MainViewModel.SeriesIndex>-->
+    <vm:MainViewModel.RecentList>
+        <service:Descriptor Title="strike the blood(噬血狂袭)" Id="5131"></service:Descriptor>
+        <service:Descriptor Title="心连·情结" Id="5131"></service:Descriptor>
+    </vm:MainViewModel.RecentList>
+    <vm:MainViewModel.FavouriateList>
+        <service:FavourVolume SeriesTitle="我的青春恋爱物语果然有问题" VolumeTitle="第5卷" VolumeId="5131"></service:FavourVolume>
+        <service:FavourVolume SeriesTitle="strike the blood(噬血狂袭)" VolumeTitle="冥暗神王的新娘" VolumeId="5131"></service:FavourVolume>
+        <service:FavourVolume SeriesTitle="心连·情结(恋爱随意链接)" VolumeTitle="clip time" VolumeId="5131"></service:FavourVolume>
+    </vm:MainViewModel.FavouriateList>
+    <vm:MainViewModel.HistoryViewList>
+        <vm:HistoryItemViewModel SeriesTitle="大春物" VolumeTitle="第5卷" ChapterTitle="第5章" CoverImageUri="http://lknovel.lightnovel.cn/cover/image/20120821/20120821151343_21228.jpg" Description="如果失败也能称为是青春的象征的话，那么交友失败的人可谓是充满青春也不为过了吧。但是，他们却不会这么认为。没有什么不可思议的。因为他们就是些利己主义的人。" ProgressPercentage="0.2">
+            <vm:HistoryItemViewModel.Position>
+                <service:NovelPositionIdentifier SeriesId="726" VolumeId="3848" ChapterId="29955" LineNo="21"></service:NovelPositionIdentifier>
+            </vm:HistoryItemViewModel.Position>
+        </vm:HistoryItemViewModel>
+        <vm:HistoryItemViewModel SeriesTitle="我的青春恋爱物语果然有问题" VolumeTitle="第3卷" ChapterTitle="第1章" CoverImageUri="http://lknovel.lightnovel.cn/cover/image/20121013/20121013165736_44188.jpg" Description="……哈英是什么，新的必杀技吗？ 不对，是超有英国感觉的意思。喂真的假的。而且准确的说应该是英伦风哦" ProgressPercentage="0.5">
+            <vm:HistoryItemViewModel.Position>
+                <service:NovelPositionIdentifier SeriesId="726" VolumeId="3848" ChapterId="29955" LineNo="21"></service:NovelPositionIdentifier>
+            </vm:HistoryItemViewModel.Position>
+        </vm:HistoryItemViewModel>
+    </vm:MainViewModel.HistoryViewList>
+
+</vm:MainViewModel>
+
+<!--<vm:NovelChapter
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:LightNovel.ViewModels">
+    <vm:NovelChapter.Lines>
+        <vm:NovelLine Content="Line 1"/>
+        <vm:NovelLine Content="Line 2"/>
+        <vm:NovelLine Content="Line 3"/>
+    </vm:NovelChapter.Lines>
+</vm:NovelChapter>-->

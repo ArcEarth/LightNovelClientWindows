@@ -1,0 +1,478 @@
+﻿<Page x:Class="LightNovel.HubPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:data="using:LightNovel.Service"
+      xmlns:local="using:LightNovel"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:toolkit="using:WinRTXamlToolkit.Controls"
+      x:Name="pageRoot"
+      DataContext="{Binding ViewModel,
+                            RelativeSource={RelativeSource Self}}"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DataTemplateDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Name="RecommandCollectionViewSource"
+                              IsSourceGrouped="true"
+                              Source="{Binding RecommandSection}" />
+            <CollectionViewSource x:Name="SeriesIndexViewSource"
+                              IsSourceGrouped="true"
+                              Source="{Binding SeriesIndex}" />
+            <DataTemplate x:Key="PosterSectionButtonTemplate">
+                <Button Style="{ThemeResource PureButtonStyle}" ContentTemplate="{StaticResource PosterHubSectionDataTemplate}"
+                        Click="LastReadSection_Clicked">
+                </Button>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <!--  This grid acts as a root panel for the page.  -->
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Border Grid.ColumnSpan="4" Background="{ThemeResource AppAccentBrush}" />
+        <Image Name="LogoImage"
+               Grid.ColumnSpan="4"
+               Margin="640,0,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Center"
+               Opacity="0.75"
+               Source="Assets/LK_Logo.png"
+               Stretch="None">
+            <Image.RenderTransform>
+                <TranslateTransform x:Name="LogoImageTranslate" X="0" />
+            </Image.RenderTransform>
+        </Image>
+
+        <Hub Name="RootHub"
+             Grid.Row="0"
+             Grid.RowSpan="2"
+             ScrollViewer.IsHorizontalScrollChainingEnabled="True"
+             SectionHeaderClick="Hub_SectionHeaderClick"
+             TabIndex="0">
+            <Hub.Header>
+                <!--  Back button and page title  -->
+                <Grid Margin="0,-45,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="backButton"
+                            VerticalAlignment="Top"
+                            AutomationProperties.AutomationId="BackButton"
+                            AutomationProperties.ItemType="Navigation Button"
+                            AutomationProperties.Name="Back"
+                            BorderBrush="{ThemeResource AppBackgroundBrush}"
+                            Command="{Binding NavigationHelper.GoBackCommand,
+                                              ElementName=pageRoot}"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Style="{StaticResource NavigationBackButtonNormalStyle}" />
+                    <!--  <Rectangle Fill="AliceBlue" Grid.Column="1" Width="40"></Rectangle>  -->
+                    <!--  <Image Source="Assets/LK_Logo.png" Stretch="None" VerticalAlignment="Center" Margin="500,0,0,0" Grid.Column="1" Opacity="0.75"></Image>  -->
+                    <!--
+                        <TextBlock x:Name="pageTitle" x:Uid="Header" Text="Light Novel" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1"
+                        VerticalAlignment="Top" IsHitTestVisible="false" TextWrapping="NoWrap" />
+                    -->
+                </Grid>
+            </Hub.Header>
+            <HubSection VerticalAlignment="Stretch" Header="" DataContext="{Binding LastReadSection}" ContentTemplate="{StaticResource PosterSectionButtonTemplate}">
+            </HubSection>
+
+            <HubSection x:Uid="RecentReadingSection"
+                        x:Name="RecentReadingItem"
+                        Header="Recent"
+                        DataContext="{Binding RecentSection}"
+                        Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
+                        HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <GridView Margin="0,0,0,0"
+                              IsItemClickEnabled="True"
+                              ItemClick="RecentItem_Click"
+                              ItemTemplate="{StaticResource HistoryItemTemplate}"
+                              ItemsSource="{Binding}"
+                              ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.IsHorizontalRailEnabled="False"
+                              ScrollViewer.IsHorizontalScrollChainingEnabled="True"
+                              ScrollViewer.IsScrollInertiaEnabled="False"
+                              SelectionMode="None">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition />
+                                <EntranceThemeTransition />
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>
+                    </GridView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Uid="FavoriteSection"
+                        Name="FavoriteSection"
+                        Header="Favorite"
+                        DataContext="{Binding FavoriteSection}"
+                        HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <Grid>
+                        <GridView IsItemClickEnabled="True"
+                                  IsSwipeEnabled="False"
+                                  ItemClick="FavoriteSectionItem_ItemClike"
+                                  ItemTemplate="{StaticResource FavourItemTemplate}"
+                                  ItemsSource="{Binding}"
+                                  ScrollViewer.HorizontalScrollMode="Disabled"
+                                  ScrollViewer.IsHorizontalRailEnabled="False"
+                                  ScrollViewer.IsHorizontalScrollChainingEnabled="True"
+                                  ScrollViewer.IsScrollInertiaEnabled="False"
+                                  SelectionMode="Multiple"
+                                  Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}" />
+                        <TextBlock MaxWidth="300"
+                                   FontSize="{ThemeResource AppFontSizeLarge}"
+                                   Foreground="{ThemeResource AppAccentBrush}"
+                                   TextWrapping="WrapWholeWords"
+                                   Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            :( No favourite yet. Add some by tap the &quot;Favourite&quot; button when you read!
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Name="RecommandSection" DataContext="{Binding RecommandSection}">
+                <DataTemplate>
+                    <GridView Margin="0,-40,0,20"
+                              IsItemClickEnabled="True"
+                              ItemClick="RecommandSectionItem_ItemClick"
+                              ItemTemplate="{StaticResource BookCoverTemplate}"
+                              ItemsSource="{Binding Source={StaticResource RecommandCollectionViewSource}}"
+                              ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.IsHorizontalRailEnabled="False"
+                              ScrollViewer.IsHorizontalScrollChainingEnabled="True"
+                              ScrollViewer.IsScrollInertiaEnabled="False"
+                              SelectionMode="None">
+                        <GridView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,36">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border Grid.Column="0"
+                                                    Width="50"
+                                                    Height="50"
+                                                    Background="{ThemeResource AppAccentBrush}"
+                                                    BorderBrush="Transparent">
+                                                <SymbolIcon HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Stretch"
+                                                            Foreground="{ThemeResource AppBackgroundBrush}"
+                                                            Symbol="{Binding Key,
+                                                                             Converter={StaticResource StringToSymbolConverter}}" />
+                                            </Border>
+                                            <TextBlock Grid.Column="1"
+                                                       Margin="10,0,0,0"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
+                                                       FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
+                                                       Foreground="{ThemeResource AppAccentBrush}"
+                                                       Language="zh-CN"
+                                                       Text="{Binding Key}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </GridView.GroupStyle>
+                        <!--<GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="3"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>-->
+                        <!--<GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="0,10,20,0" />
+                            </Style>
+                        </GridView.ItemContainerStyle>-->
+                    </GridView>
+                </DataTemplate>
+            </HubSection>
+
+
+            <HubSection x:Name="AllSection">
+                <DataTemplate>
+                    <SemanticZoom 
+                        Margin="0,-42,0,20" 
+                        Width="450"
+                        ScrollViewer.HorizontalScrollMode="Disabled">
+                        <SemanticZoom.ZoomedInView>
+                            <ListView 
+                              Width="450"
+                              IsItemClickEnabled="True"
+                              ItemClick="IndexListView_ItemClick"
+                              IsSwipeEnabled="False"
+                              ItemsSource="{Binding Source={StaticResource SeriesIndexViewSource}}"
+                              ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.IsVerticalScrollChainingEnabled="False"
+                              SelectionMode="None">
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="True">
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="0,0,0,5" 
+                                                Grid.Column="0"
+                                                Width="50"
+                                                Height="50"
+                                                Background="{ThemeResource AppAccentBrush}"
+                                                BorderBrush="Transparent">
+                                                    <FontIcon   HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                                        Glyph="{Binding Key}"
+                                                        FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource AppAccentBrush}" Text="{Binding Title}" HorizontalAlignment="Left"></TextBlock>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Margin" Value="2" />
+                                        <Setter Property="Padding" Value="2" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <!--<GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>-->
+                            </ListView>
+                        </SemanticZoom.ZoomedInView>
+                        <SemanticZoom.ZoomedOutView>
+                            <GridView
+                                Margin="0,42,0,0"
+                                x:Name="IndexZoomedOutView"
+                                x:Uid="IndexZoomedOutView"
+                                ItemsSource="{Binding SeriesIndexGroupView}"
+                                ScrollViewer.IsHorizontalScrollChainingEnabled="False">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="10" 
+                                                Grid.Column="0"
+                                                Width="50"
+                                                Height="50"
+                                                Background="{ThemeResource AppAccentBrush}"
+                                                BorderBrush="Transparent">
+                                            <FontIcon   HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                                        Glyph="{Binding Group.Key}"
+                                                        FontFamily="{ThemeResource SymbolThemeFontFamily}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </SemanticZoom.ZoomedOutView>
+                    </SemanticZoom>
+                </DataTemplate>
+            </HubSection>
+
+            <!--  Double line list with image placeholder and text wrapping using a floating header that scrolls with the content  -->
+            <!--  </HubSection>  -->
+            <!--
+                <HubSection Header="Settings">
+                <DataTemplate>
+                <StackPanel>
+                <Button Click="ClearCacheButton_Click">Clear Cache</Button>
+                <Button Click="ClearHistoryButtonBase_Click">Clear History</Button>
+                <Button Click="ClearBookmarkButtonBase_Click">Clear Bookmark</Button>
+                <ToggleSwitch IsOn="{Binding Settings.EnableComments,Mode=TwoWay}" Foreground="{StaticResource AppAccentBrush}">Show Comments</ToggleSwitch>
+                <TextBlock Style="{StaticResource AppTextAccentStyle}" FontWeight="Light" TextWrapping="Wrap" Visibility="{Binding Settings.EnableComments,Converter={StaticResource BooleanToVisibilityConverter}}">*Warning : Comments is still in testing, enable it may bring accidential crush when reading!</TextBlock>
+                </StackPanel>
+                </DataTemplate>
+                </HubSection>
+            -->
+        </Hub>
+        <Button Margin="220,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                Click="UserAccount_Click">
+            <Button.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition />
+                </TransitionCollection>
+            </Button.Transitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <SymbolIcon Grid.RowSpan="2"
+                            Grid.Column="0"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Symbol="ContactPresence" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="{ThemeResource AppFontSizeLarge}"
+                           Foreground="{ThemeResource AppBackgroundBrush}"
+                           Style="{StaticResource AppTextAccentStyle}"
+                           Text="{Binding UserName}" />
+                <!--  <Button Grid.Column="1" Grid.Row="1"  Style="{StaticResource PureButtonStyle}" Name="LogoutButton" Click="LogoutButton_Click" FontWeight="SemiLight">Log out</Button>  -->
+            </Grid>
+        </Button>
+        
+        <SearchBox x:Uid="HubSearchBox"
+                   Grid.Column="3"
+                   Width="200"
+                   Margin="20,0"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Center"
+                   BorderBrush="{ThemeResource AppAccentBrushSemiLight}"
+                   Foreground="{ThemeResource AppAccentBrush}"
+                   PlaceholderText="Search for Novel"
+                   QuerySubmitted="SearchBox_QuerySubmitted"
+                   SearchHistoryEnabled="True"
+                   TabIndex="2" />
+        
+        <Rectangle Name="SigninMask"
+                   Grid.RowSpan="2"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Stretch"
+                   Fill="{ThemeResource AppBackgroundBrush}"
+                   Opacity="0.5"
+                   Tapped="SigninPopupBackButton_Click"
+                   Visibility="{Binding ElementName=SigninPopup,
+                                        Path=Visibility}" />
+        <Popup Name="SigninPopup"
+               Grid.RowSpan="2"
+               Grid.ColumnSpan="2"
+               Margin="0,-150,0,0"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Center"
+               Visibility="Collapsed">
+            <Popup.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition />
+                </TransitionCollection>
+            </Popup.Transitions>
+            <Grid Width="{Binding ElementName=pageRoot,
+                                  Path=ActualWidth}"
+                  MinWidth="{Binding ElementName=pageRoot,
+                                     Path=ActualWidth}"
+                  HorizontalAlignment="Stretch"
+                  Background="{ThemeResource AppAccentBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="8*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="2" Background="{ThemeResource AppAccentBrushSemiLight}">
+                    <TextBlock Margin="100,5,100,5"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource AppBackgroundBrush}"
+                               Style="{ThemeResource AppTextLargeStyle}">
+                        Signin to lightnovel account
+                    </TextBlock>
+                </Border>
+                <ProgressBar Grid.ColumnSpan="2"
+                             VerticalAlignment="Bottom"
+                             Foreground="{ThemeResource AppBackgroundBrush}"
+                             IsIndeterminate="True"
+                             Visibility="{Binding IsLoading,
+                                                  Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                <AppBarButton Margin="20,5"
+                              BorderBrush="{ThemeResource AppBackgroundBrush}"
+                              Click="SigninPopupBackButton_Click"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="Back" />
+                <!--  <HyperlinkButton Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="SignUpButton" Foreground="{StaticResource AppBackgroundBrush }" NavigateUri="http://www.lightnovel.cn/member.php?mod=register"></HyperlinkButton>  -->
+                <Viewbox Grid.Row="1"
+                         Grid.RowSpan="3"
+                         Grid.Column="0"
+                         MaxWidth="145"
+                         Margin="0,0,0,0"
+                         HorizontalAlignment="Right">
+                    <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Contact" />
+                </Viewbox>
+                <!--  <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="UserNameLabel">User Name</TextBlock>  -->
+                <toolkit:WatermarkTextBox x:Uid="UserNameLabel"
+                                          Grid.Row="1"
+                                          Grid.Column="1"
+                                          Width="200"
+                                          Height="30"
+                                          Margin="30,20"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          IsEnabled="{Binding IsLoading,
+                                                              Converter={StaticResource BooleanNegationConverter},
+                                                              ConverterParameter=False}"
+                                          Text="{Binding UserName,
+                                                         Mode=TwoWay}" />
+                <!--  <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="{Binding UserName,Mode=TwoWay}" Margin="30,20" Width="200" ></TextBox>  -->
+                <!--  <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="PasswordLabel">Password</TextBlock>  -->
+                <PasswordBox x:Uid="PasswordLabel"
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             Width="200"
+                             Height="30"
+                             Margin="30,20"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Center"
+                             IsEnabled="{Binding IsLoading,
+                                                 Converter={StaticResource BooleanNegationConverter},
+                                                 ConverterParameter=False}"
+                             KeyDown="PasswordBox_KeyDown"
+                             Password="{Binding Password,
+                                                Mode=TwoWay}"
+                             PlaceholderText="Password" />
+                <Button x:Uid="LoginButton"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Width="30"
+                        Height="30"
+                        Margin="200,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Background="{StaticResource AppAccentBrush}"
+                        BorderBrush="Transparent"
+                        BorderThickness="1"
+                        Click="LoginButton_Click"
+                        Foreground="{StaticResource AppBackgroundBrush}"
+                        IsEnabled="{Binding IsLoading,
+                                            Converter={StaticResource BooleanNegationConverter},
+                                            ConverterParameter=False}"
+                        Padding="0">
+                    <Viewbox Margin="3">
+                        <SymbolIcon Symbol="Forward" />
+                    </Viewbox>
+                </Button>
+            </Grid>
+        </Popup>
+
+    </Grid>
+</Page>

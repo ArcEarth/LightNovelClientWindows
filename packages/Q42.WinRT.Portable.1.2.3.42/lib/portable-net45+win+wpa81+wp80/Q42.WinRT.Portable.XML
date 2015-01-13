@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Q42.WinRT.Portable</name>
+    </assembly>
+    <members>
+        <member name="T:Q42.WinRT.Portable.Data.LoadingState">
+            <summary>
+            Possible loading states for the DataLoader
+            </summary>
+        </member>
+        <member name="F:Q42.WinRT.Portable.Data.LoadingState.None">
+            <summary>None</summary>
+        </member>
+        <member name="F:Q42.WinRT.Portable.Data.LoadingState.Loading">
+            <summary>Loading</summary>
+        </member>
+        <member name="F:Q42.WinRT.Portable.Data.LoadingState.Finished">
+            <summary>Finished</summary>
+        </member>
+        <member name="F:Q42.WinRT.Portable.Data.LoadingState.Error">
+            <summary>Error</summary>
+        </member>
+        <member name="T:Q42.WinRT.Portable.Data.DataLoader">
+            <summary>
+            DataLoader that enables easy binding to Loading / Finished / Error properties
+            </summary>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.#ctor(System.Boolean)">
+            <summary>
+            DataLoader constructors
+            </summary>
+            <param name="swallowExceptions">Swallows exceptions. Defaults to true. It's a more common scenario to swallow exceptions and just bind to the IsError property. You don't want to surround each DataLoader with a try/catch block. You can listen to the error callback at all times to get the error.</param>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.LoadAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Action{``0},System.Action{System.Exception})">
+            <summary>
+             Load data. Errors will be in errorcallback
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="loadingMethod"></param>
+            <param name="resultCallback"></param>
+            <param name="errorCallback">optional error callback. Fires when exceptino is thrown in loadingMethod</param>
+            <returns></returns>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.LoadCacheThenRefreshAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Func{System.Threading.Tasks.Task{``0}},System.Action{``0},System.Action{System.Exception})">
+            <summary>
+            First returns result callback with result from cache, then from refresh method
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="cacheLoadingMethod"></param>
+            <param name="refreshLoadingMethod"></param>
+            <param name="resultCallback"></param>
+            <param name="errorCallback"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.LoadFallbackToCacheAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Func{System.Threading.Tasks.Task{``0}},System.Action{``0},System.Action{System.Exception})">
+            <summary>
+            Loads data from source A, if this fails, load it from source B (cache)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="refreshLoadingMethod"></param>
+            <param name="cacheLoadingMethod"></param>
+            <param name="resultCallback"></param>
+            <param name="errorCallback"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.RaisePropertyChanged(System.String)">
+            <summary>
+            RaisePropertyChanged for INotifyPropertyChanged implementation
+            </summary>
+            <param name="propertyName"></param>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Data.DataLoader.RaisePropertyChanged(System.Linq.Expressions.Expression{System.Func{System.Object}})">
+            <summary>
+            RaisePropertyChanged for INotifyPropertyChanged implementation
+            </summary>
+            <param name="expression"></param>
+        </member>
+        <member name="P:Q42.WinRT.Portable.Data.DataLoader.LoadingState">
+            <summary>
+            Current loading state
+            </summary>
+        </member>
+        <member name="P:Q42.WinRT.Portable.Data.DataLoader.IsError">
+            <summary>
+            Indicates LoadingState == LoadingState.Error
+            </summary>
+        </member>
+        <member name="P:Q42.WinRT.Portable.Data.DataLoader.IsBusy">
+            <summary>
+            Indicates LoadingState == LoadingState.Loading
+            </summary>
+        </member>
+        <member name="P:Q42.WinRT.Portable.Data.DataLoader.IsFinished">
+            <summary>
+            Indicates LoadingState == LoadingState.Finished
+            </summary>
+        </member>
+        <member name="E:Q42.WinRT.Portable.Data.DataLoader.PropertyChanged">
+            <summary>
+            PropertyChanged for INotifyPropertyChanged implementation
+            </summary>
+        </member>
+        <member name="T:Q42.WinRT.Portable.Util">
+            <summary>
+            Various Utils
+            </summary>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Util.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0}})">
+            <summary>
+            Gets a property name, usage: GetPropertyName(() => Object.PropertyName)
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Q42.WinRT.Portable.Util.GetPropertyName``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Gets a property name, usage: Utils.GetPropertyName T (x => x.PropertyName);
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

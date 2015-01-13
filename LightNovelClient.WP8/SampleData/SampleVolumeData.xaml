@@ -1,0 +1,19 @@
+﻿<vm:VolumeViewModel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:LightNovel.ViewModels"
+    Title="第07卷"
+    Author="渡航"
+    Illustrator="ぽんかん⑧"
+    Description="去京都修学旅行前夕，班里的气氛有些浮躁。文化祭之后，虽然八幡在教室里的地位变得微妙起来，只不过——从最初开始地位这种东西就不存在，与我无关。然而，来自被带到侍奉部的意外人物的'恋爱商谈'，以及，和其他人的思绪互相重叠……。旅行变得一下子充满了混乱的预感。在复杂感情的漩涡中，没有得出答案的八幡他们前往了京都。有问题的青春模样，会孕育出有问题的恋爱喜剧=恋爱模样吗？TV动画化正当前，更加热烈的系列第七弹。"
+    CoverImageUri="http://lknovel.lightnovel.cn/cover/image/20130922/20130922105032_93712.jpg"
+    >
+    <vm:VolumeViewModel.ChapterList>
+        <vm:ChapterPreviewModel No="0" Title="序章" Id="36316" ></vm:ChapterPreviewModel>
+        <vm:ChapterPreviewModel No="1" Title="Short story1 比企谷八幡的老妈的味道果然有问题。" Id="36317" ></vm:ChapterPreviewModel>
+        <vm:ChapterPreviewModel No="2" Title="SIDE-A * Special Act.A 作为本人来讲也只得祝愿他们和她们的结局能够幸福美满" Id="36318" ></vm:ChapterPreviewModel>
+        <vm:ChapterPreviewModel No="3" Title="Short story2 自不必说，比企谷八幡的温柔是别扭的。" Id="36319" ></vm:ChapterPreviewModel>
+        <vm:ChapterPreviewModel No="4" Title="B.T.  福利音轨！比企谷小町的计策" Id="36320" ></vm:ChapterPreviewModel>
+    </vm:VolumeViewModel.ChapterList>
+
+</vm:VolumeViewModel>

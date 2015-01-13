@@ -1,0 +1,146 @@
+﻿<Page
+    x:Class="LightNovel.ItemPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    d:DataContext="{Binding Groups[0].Items[0], Source={d:DesignData Source=../LightNovelClient.Shared/DataModel/SampleData.json, Type=data:SampleDataSource}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel"
+    xmlns:controls="using:LightNovel.Controls"
+    xmlns:data="using:LightNovel.Data"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition>
+                <NavigationThemeTransition.DefaultNavigationTransitionInfo>
+                    <ContinuumNavigationTransitionInfo></ContinuumNavigationTransitionInfo>
+                </NavigationThemeTransition.DefaultNavigationTransitionInfo>
+            </NavigationThemeTransition>
+        </TransitionCollection>
+    </Page.Transitions>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- TitlePanel -->
+        <StackPanel Grid.Row="0" Margin="24,17,0,28">
+            <TextBlock Text="{Binding ChapterView.Title}" Margin="0,12,0,0"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid 
+                  to show details for the current item -->
+        <Grid Grid.Row="1" x:Name="ContentRoot">
+            <SemanticZoom Name="ContentSemanticZoon" ViewChangeStarted="ContentSemanticZoon_ViewChangeStarted">
+                <SemanticZoom.ZoomedInView>
+                    <ListView ItemsSource="{Binding ChapterView.Lines}">
+                        <ListView.ItemTemplateSelector>
+                            <controls:LineViewDataTemplateSelector>
+                                <controls:LineViewDataTemplateSelector.ImageDataTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding Content}" HorizontalAlignment="Center"></Image>
+                                    </DataTemplate>
+                                </controls:LineViewDataTemplateSelector.ImageDataTemplate>
+                                <controls:LineViewDataTemplateSelector.TextDataTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Content}" HorizontalAlignment="Left"></TextBlock>
+                                    </DataTemplate>
+                                </controls:LineViewDataTemplateSelector.TextDataTemplate>
+                            </controls:LineViewDataTemplateSelector>
+                        </ListView.ItemTemplateSelector>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <ListView ItemsSource="{Binding SeriesView.Volumes}">
+                        <!--<ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"></VirtualizingStackPanel>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>-->
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,8,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="140"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="140"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Ellipse  Fill="{StaticResource AppAccentBrush}" Margin="-30,-20,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="180" Width="180" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"></Ellipse>
+
+                                    <Image HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Width="100" Height="140" Margin="10,0,0,0" Source="{Binding CoverImageUri}" Stretch="UniformToFill"></Image>
+                                    <Button BorderBrush="{x:Null}" Grid.Row="0" Grid.Column="1" BorderThickness="0" Margin="0,0,10,0" Height="Auto" Padding="0,0,0,0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource PureButtonStyle}" VerticalAlignment="Top">
+                                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <!--<ColumnDefinition Width="auto"/>-->
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Viewbox Grid.Column="0" Height="20" Width="20" Margin="0,20,-1,0" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Top">
+                                                <Path Fill="{StaticResource AppAccentBrush}" Data="F1 M 0,0L 10,0 10,10 Z" HorizontalAlignment="Right" Width="10" Height="10" Margin="0,0,0,0" UseLayoutRounding="False" Grid.ColumnSpan="1"></Path>
+                                            </Viewbox>
+                                            <Rectangle Fill="{StaticResource AppAccentBrush}" Grid.Column="1" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="2" />
+                                            <TextBlock Grid.Row="0" Text="{Binding Title}" TextTrimming="WordEllipsis" TextWrapping="NoWrap" Margin="10,0,10,0" Style="{StaticResource AppTextExtraLargeStyle}" FontSize="{StaticResource AppFontSizeLarge}" Foreground="{StaticResource AppBackgroundBrush}" Grid.Column="1"/>
+                                            <TextBlock Text="{Binding Description}" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityReverseConverter}}" TextTrimming="WordEllipsis" TextWrapping="Wrap" Margin="5,0,0,5" Style="{StaticResource AppTextSubtleStyle}" Foreground="{StaticResource AppSemitransparentBrush}"
+                                           Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" />
+                                        </Grid>
+                                    </Button>
+
+                                    <Rectangle Grid.Row="1" Fill="{StaticResource AppAccentBrush}" Grid.Column="0" Width="8" Margin="56,0,0,0" HorizontalAlignment="Left" ></Rectangle>
+
+                                    <!--<Rectangle Grid.Row="1" Fill="{StaticResource PhoneProgressBarBackgroundBrush}" Grid.Column="0" Width="10" VerticalAlignment="Stretch" Margin="15,0,67,0"></Rectangle>-->
+                                    <ListView Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" ItemsSource="{Binding ChapterList}" Margin="52,20,15,10" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="None">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="20"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Margin="0,10,0,0" Grid.Column="0" Width="16" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Fill="{StaticResource AppAccentBrush}" ></Ellipse>
+                                                    <Button Grid.Column="1" Width="auto"  Margin="0,5,0,5" Style="{StaticResource PureButtonStyle}" HorizontalAlignment="Left">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="25"></ColumnDefinition>
+                                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Path Grid.Column="0" Fill="{StaticResource AppAccentBrush}" Data="F1 M 0,0L 10,0 10,10 Z" HorizontalAlignment="Right" Margin="0,10,15,0"/>
+                                                            <Rectangle Fill="{StaticResource AppAccentBrush}" Grid.Column="1" Margin="0,0,0,0"/>
+                                                            <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.Column="2" HorizontalAlignment="Left" Height="40" Width="40" Margin="-20,0,0,0"></Ellipse>
+                                                            <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.Column="0" HorizontalAlignment="Right" Height="40" Width="40" Margin="0,0,-20,0"></Ellipse>
+                                                            <!--<TextBlock Grid.Column="1" Text="{Binding No}" Width="auto" VerticalAlignment="Center" Style="{StaticResource PhoneTextTitle3Style}"></TextBlock>-->
+                                                            <TextBlock  Text="{Binding Title}" TextTrimming="WordEllipsis" Width="Auto" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="15,0,10,0" Foreground="{StaticResource AppBackgroundBrush}"></TextBlock>
+                                                        </Grid>
+                                                    </Button>
+                                                </Grid>
+
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
+        </Grid>
+    </Grid>
+</Page>

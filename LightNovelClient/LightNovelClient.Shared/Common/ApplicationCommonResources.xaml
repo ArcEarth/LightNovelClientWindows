@@ -1,0 +1,14 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel.Common"
+    xmlns:controls="using:LightNovel.Controls">
+    
+    <x:String x:Key="AppName">Light Novel</x:String>
+    <controls:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></controls:BooleanToVisibilityConverter>
+    <controls:BooleanToVisibilityConverter VisiableValue="False" x:Key="BooleanToVisibilityReverseConverter"></controls:BooleanToVisibilityConverter>
+    <local:BooleanNegationConverter x:Key="BooleanNegationConverter" ></local:BooleanNegationConverter>
+    <controls:PlusConverter x:Key="PlusConverter"></controls:PlusConverter>
+    <local:OrientationToVisibilityConverter VisibleOrientation="Vertical" x:Key="VerticalToVisibileConverter"></local:OrientationToVisibilityConverter>
+    <local:OrientationToVisibilityConverter VisibleOrientation="Horizontal" x:Key="HorizontalToVisibileConverter"></local:OrientationToVisibilityConverter>
+</ResourceDictionary>

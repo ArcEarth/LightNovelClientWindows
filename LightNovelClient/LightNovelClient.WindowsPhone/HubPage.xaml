@@ -1,0 +1,296 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="LightNovel.HubPage"
+    DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel"
+    xmlns:data="using:LightNovel.Service"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!-- Grid-appropriate 310 by 260 pixel item template as seen in section 4 -->
+        <Color x:Key="VolumeTileBackgroundColor">#FFF4FFC1</Color>
+        <SolidColorBrush x:Key="VolumeTileBackgroundBrush" Color="Transparent"></SolidColorBrush>
+        <DataTemplate x:Key="BookCoverTemplate" d:DataType="{system:Type vm:BookCoverViewModel}">
+            <Grid VerticalAlignment="Top" Height="150" Background="{ThemeResource VolumeTileBackgroundBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--<Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>-->
+                <Image Grid.Column="0" Grid.RowSpan="2" Source="{Binding CoverImageUri}" Stretch="Uniform" HorizontalAlignment="Center"></Image>
+                <!--<Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
+                                    </Rectangle>-->
+                <TextBlock Grid.Column="1" Margin="20,5,10,0" Foreground="{StaticResource AppAccentBrush}" Language="zh-CN" FontSize="{ThemeResource AppFontSizeLarge}" Text="{Binding Title}" HorizontalAlignment="Left" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="20,5,10,0" Style="{ThemeResource AppTextSubtleStyle}" Language="zh-CN" Text="{Binding Description}" FontSize="{ThemeResource AppFontSizeSmall}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="HistoryItemTemplate" d:DataType="{system:Type vm:HistoryItemViewModel}">
+            <Grid VerticalAlignment="Top" Height="150"  Background="{ThemeResource VolumeTileBackgroundBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!--<Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>-->
+                <Image Grid.Column="0" Grid.RowSpan="3" Source="{Binding CoverImageUri}" Stretch="UniformToFill" HorizontalAlignment="Left"></Image>
+                <!--<Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
+                                    </Rectangle>-->
+                <TextBlock Grid.Column="1" Margin="20,5,10,0" Foreground="{StaticResource AppAccentBrush}" Language="zh-CN" FontSize="{ThemeResource AppFontSizeLarge}" Text="{Binding SeriesTitle}" HorizontalAlignment="Left" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="20,5,10,0" Style="{ThemeResource AppTextSubtleStyle}" Language="zh-CN" Text="{Binding Description}" FontSize="{ThemeResource AppFontSizeSmall}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                <TextBlock Language="zh-CN" Grid.Row="2" Text="{Binding UpdateTime}"  Margin="20,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
+                                            Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Left"/>
+                <!--<ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>-->
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="FavourItemTemplate" d:DataType="{system:Type data:FavourVolume}">
+            <Grid VerticalAlignment="Top" Height="150" Background="{ThemeResource VolumeTileBackgroundBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <!--<Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>-->
+                <Image Grid.Column="0" Grid.RowSpan="3" Source="{Binding CoverImageUri}" Stretch="UniformToFill" HorizontalAlignment="Left"></Image>
+                <!--<Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
+                                    </Rectangle>-->
+                <TextBlock Grid.Column="1" Margin="20,5,10,0" Text="{Binding SeriesTitle}" Language="zh-CN" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppAccentBrush}"></TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="2" Margin="20,5,10,0" Style="{ThemeResource AppTextSubtleStyle}" Language="zh-CN" Text="{Binding Description}" FontSize="{ThemeResource AppFontSizeSmall}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                <StackPanel Grid.Column="1" Grid.Row="1"  Margin="20,5,10,0" Orientation="Horizontal">
+                    <TextBlock Language="zh-CN" Text="{Binding VolumeNo}" Foreground="{ThemeResource AppAccentBrush}" FontWeight="SemiBold"></TextBlock>
+                    <TextBlock Margin="10,0,0,0" Language="zh-CN" Text="{Binding VolumeTitle}" Foreground="{ThemeResource AppAccentBrush}"></TextBlock>
+                </StackPanel>
+                <!--<TextBlock Language="zh-CN" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
+                                            Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>-->
+            </Grid>
+        </DataTemplate>
+        <CollectionViewSource x:Name="RecommandCollectionViewSource" IsSourceGrouped="true" Source="{Binding RecommandSection}"/>
+        <local:StringToSymbolConverter x:Key="StringToSymbolConverter"></local:StringToSymbolConverter>
+    </Page.Resources>
+
+    <!--
+    This grid acts as a root panel for the page.
+  -->
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <!--<RowDefinition Height="80"/>-->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!--<Border Background="{ThemeResource AppAccentBrush}" Grid.Row="0"></Border>-->
+        <Hub Name="RootHub" TabIndex="0" Grid.RowSpan="2" SectionHeaderClick="Hub_SectionHeaderClick" ScrollViewer.IsHorizontalScrollChainingEnabled="True" >
+            <Hub.Header>
+                <!-- Back button and page title -->
+                <Grid Margin="0,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!--<Rectangle Fill="AliceBlue" Grid.Column="1" Width="40"></Rectangle>-->
+                    <!--<Image Source="Assets/LK_Logo.png" Stretch="None" VerticalAlignment="Center" Margin="500,0,0,0" Grid.Column="1" Opacity="0.75"></Image>-->
+                    <!--<TextBlock x:Name="pageTitle" x:Uid="Header" Text="Light Novel" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        VerticalAlignment="Top" IsHitTestVisible="false" TextWrapping="NoWrap" />-->
+                </Grid>
+            </Hub.Header>
+            <Hub.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition></EntranceThemeTransition>
+                </TransitionCollection>
+            </Hub.Transitions>
+            <HubSection Header="LastRead" VerticalAlignment="Stretch">
+                <DataTemplate>
+                    <Grid VerticalAlignment="Stretch" Margin="-20,-95,0,0" DataContext="{Binding LastReadSection}" Width="580" Tapped="LastReadSection_Tapped">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <!--<Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="580">
+                        </Grid.ColumnDefinitions>-->
+                        <Border Height="{Binding Path=Height,ElementName=pageRoot}" VerticalAlignment="Stretch" Grid.RowSpan="4" BorderBrush="Transparent" BorderThickness="0">
+                            <Image Source="{Binding CoverImageUri}" Height="{Binding Path=Height,ElementName=pageRoot}"  VerticalAlignment="Stretch" Stretch="UniformToFill" ></Image>
+                        </Border>
+                        <Rectangle Grid.Row="1" Grid.RowSpan="3" Margin="0,-50,0,0">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Transparent" Offset="0"/>
+                                    <GradientStop Color="Black" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <TextBlock Language="zh-CN" Grid.Row="1" Text="{Binding SeriesTitle}" TextTrimming="WordEllipsis" TextWrapping="Wrap" Margin="10,0,10,0" Style="{StaticResource AppTextExtraLargeStyle}" Foreground="{StaticResource AppBackgroundBrush}"/>
+                        <TextBlock Language="zh-CN" Text="{Binding Description}" TextTrimming="WordEllipsis" TextWrapping="Wrap" Margin="5,0,5,0" Style="{StaticResource AppTextNormalStyle}" Foreground="{StaticResource AppSemitransparentBrush}"
+                                           Grid.Row="2" VerticalAlignment="Stretch" />
+                        <TextBlock Language="zh-CN" Text="{Binding UpdateTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextNormalStyle}" Foreground="{StaticResource AppSemitransparentBrush}"
+                                           Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+                        <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}"
+                                     Grid.Row="3" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Uid="LoginSection" Header="User" Visibility="{Binding IsSignedIn, Converter={StaticResource BooleanToVisibilityReverseConverter}}" Name="LogInSection">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{ThemeResource AppAccentBrush}" BorderBrush="Transparent" Grid.Column="0" Width="50" Height="50">
+                                <SymbolIcon Symbol="Account" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{ThemeResource AppBackgroundBrush}"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="SemiLight" FontSize="{ThemeResource HubSectionHeaderFontSize}" Foreground="{ThemeResource AppAccentBrush}" Language="zh-CN" Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Width="160" Margin="0,0,-40,0">
+                        <TextBlock Style="{StaticResource AppTextAccentStyle}" x:Uid="UserNameLabel">User Name</TextBlock>
+                        <TextBox Text="{Binding UserName,Mode=TwoWay}" ></TextBox>
+                        <TextBlock Style="{StaticResource AppTextAccentStyle}" x:Uid="PasswordLabel">Password</TextBlock>
+                        <PasswordBox Password="{Binding Password,Mode=TwoWay}"></PasswordBox>
+                        <Button Click="LoginButton_Click" BorderBrush="Transparent" Padding="30,5" Margin="0,10" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppBackgroundBrush}" HorizontalAlignment="Left" x:Uid="LoginButton">Log in</Button>
+                        <HyperlinkButton HorizontalAlignment="Left" x:Uid="SignUpButton" Foreground="{StaticResource AppAccentBrush}" NavigateUri="http://www.lightnovel.cn/member.php?mod=register"></HyperlinkButton>
+                    </StackPanel>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Uid="RecentReadingSection" x:Name="RecentReadingItem" Header="Recent" Visibility="{Binding RecentSection.IsEmpty, Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,-0,0,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{ThemeResource AppAccentBrush}" BorderBrush="Transparent" Grid.Column="0" Width="50" Height="50">
+                                <SymbolIcon Symbol="Clock" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{ThemeResource AppBackgroundBrush}"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="SemiLight" FontSize="{StaticResource HubSectionHeaderFontSize}" Foreground="{ThemeResource AppAccentBrush}" Language="zh-CN" Text="{Binding}" />
+                        </Grid>
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <GridView Margin="0,0,0,0" ItemsSource="{Binding RecentSection}" ItemTemplate="{StaticResource HistoryItemTemplate}" SelectionMode="None" ItemClick="RecentItem_Click" IsItemClickEnabled="True"  ScrollViewer.IsHorizontalScrollChainingEnabled="True" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.IsHorizontalRailEnabled="False" ScrollViewer.IsScrollInertiaEnabled="False">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition/>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>
+                    </GridView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Uid="FavoriteSection" Name="FavoriteSection" Visibility="{Binding FavoriteSection.IsEmpty, Converter={StaticResource BooleanToVisibilityReverseConverter}}" Header="Favorite">
+                <HubSection.HeaderTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,-0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{ThemeResource AppAccentBrush}" BorderBrush="Transparent" Grid.Column="0" Width="50" Height="50">
+                                <SymbolIcon Symbol="Favorite" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{ThemeResource AppBackgroundBrush}"/>
+                            </Border>
+                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="SemiLight"  FontSize="{ThemeResource HubSectionHeaderFontSize}" Foreground="{ThemeResource AppAccentBrush}" Language="zh-CN" Text="{Binding}" />
+                        </Grid>
+                        <!--<TextBlock Text="{Binding}" Margin="0,-10,0,20" FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"></TextBlock>-->
+                    </DataTemplate>
+                </HubSection.HeaderTemplate>
+                <DataTemplate>
+                    <GridView ItemsSource="{Binding FavoriteSection}" ItemTemplate="{StaticResource FavourItemTemplate}" SelectionMode="Multiple" ItemClick="FavoriteSectionItem_ItemClike" IsItemClickEnabled="True" IsSwipeEnabled="False" ScrollViewer.IsHorizontalScrollChainingEnabled="True" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.IsHorizontalRailEnabled="False" ScrollViewer.IsScrollInertiaEnabled="False">
+                    </GridView>
+                </DataTemplate>
+            </HubSection>
+            <HubSection x:Name="RecommandSection">
+                <DataTemplate>
+                    <GridView ItemsSource="{Binding Source={StaticResource RecommandCollectionViewSource}}"
+                              ItemTemplate="{StaticResource BookCoverTemplate}"
+                              SelectionMode="None"
+                              ItemClick="RecommandSectionItem_ItemClick"
+                              IsItemClickEnabled="True"
+                              Margin="0,-30,0,20"
+                              ScrollViewer.IsHorizontalScrollChainingEnabled="True" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.IsHorizontalRailEnabled="False" ScrollViewer.IsScrollInertiaEnabled="False">
+                        <GridView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Background="{ThemeResource AppAccentBrush}" BorderBrush="Transparent" Grid.Column="0" Width="50" Height="50">
+                                                <SymbolIcon Symbol="{Binding Key, Converter={StaticResource StringToSymbolConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="{ThemeResource AppBackgroundBrush}"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" FontWeight="SemiLight" FontSize="{ThemeResource HubSectionHeaderFontSize}" Foreground="{ThemeResource AppAccentBrush}" Language="zh-CN" Text="{Binding Key}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </GridView.GroupStyle>
+                        <GridView.ItemContainerStyle>
+                            <Style TargetType="GridViewItem">
+                                <Setter Property="Margin" Value="0,10,20,0"></Setter>
+                            </Style>
+                        </GridView.ItemContainerStyle>
+                    </GridView>
+                </DataTemplate>
+            </HubSection>
+
+        </Hub>
+        <Image Name="LogoImage" Source="Assets/LK_Logo.png" Stretch="None" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="620,0,0,0" Grid.Row="0" Opacity="0.75">
+            <Image.RenderTransform>
+                <TranslateTransform x:Name="LogoImageTranslate" X="0"></TranslateTransform>
+            </Image.RenderTransform>
+        </Image>
+        
+        <!--<SearchBox Grid.Column="3" TabIndex="2" Foreground="{ThemeResource AppAccentBrush}" BorderBrush="{ThemeResource AppAccentBrushSemiLight}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="40,0" Width="160" SearchHistoryEnabled="True" QuerySubmitted="SearchBox_QuerySubmitted" ></SearchBox>-->
+        <Button HorizontalAlignment="Right" Click="UserAccount_Click" VerticalAlignment="Center" Margin="260,0" Visibility="{Binding IsSignedIn, Converter={StaticResource BooleanToVisibilityConverter}}" Background="Transparent" >
+            <Button.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition/>
+                </TransitionCollection>
+            </Button.Transitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <SymbolIcon Grid.Column="0" Grid.RowSpan="2" Symbol="ContactPresence" Foreground="{ThemeResource AppBackgroundBrush}" ></SymbolIcon>
+                <TextBlock Text="{Binding UserName}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Margin="10,0,0,0" FontSize="{ThemeResource AppFontSizeLarge}" Style="{StaticResource AppTextAccentStyle}" Foreground="{ThemeResource AppBackgroundBrush}"></TextBlock>
+                <!--<Button Grid.Column="1" Grid.Row="1"  Style="{StaticResource PureButtonStyle}" Name="LogoutButton" Click="LogoutButton_Click" FontWeight="SemiLight">Log out</Button>-->
+            </Grid>
+        </Button>
+    </Grid>
+</Page>

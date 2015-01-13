@@ -1,0 +1,3 @@
+MainPackage=C:\Users\Yupeng\Source\Workspaces\Light Novel Client for WP and Windows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.0.4_Bundle\LightNovelClient.Windows_1.1.0.4_AnyCPU.appx
+SymbolPackage=C:\Users\Yupeng\Source\Workspaces\Light Novel Client for WP and Windows\LightNovelClient\LightNovelClient.Windows\AppPackages\LightNovelClient.Windows_1.1.0.4_Test\LightNovelClient.Windows_1.1.0.4_AnyCPU.appxsym
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\Light Novel Client for WP and Windows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.0.4_Bundle\LightNovelClient.Windows_1.1.0.4_language-en.appx

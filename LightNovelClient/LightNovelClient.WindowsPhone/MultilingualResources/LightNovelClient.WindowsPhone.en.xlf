@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="en" original="LightNovelClient.WindowsPhone_Multilingual.prilog.xml" tool-id="MultilingualAppToolkit" product-name="LightNovelClient.WindowsPhone" product-version="1.0.0.0" build-num="0">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1085.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="Resources">
+        <trans-unit id="Resources\UserNameLabel\Text" translate="yes" xml:space="preserve">
+          <source>User Name</source>
+          <target state="new">User Name</target>
+        </trans-unit>
+        <trans-unit id="Resources\SignUpButton\Content" translate="yes" xml:space="preserve">
+          <source>Sign up</source>
+          <target state="new">Sign up</target>
+        </trans-unit>
+        <trans-unit id="Resources\SearchResultLabel\Text" translate="yes" xml:space="preserve">
+          <source>Result for :</source>
+          <target state="new">Result for :</target>
+        </trans-unit>
+        <trans-unit id="Resources\RecentReadingSection\Header" translate="yes" xml:space="preserve">
+          <source>Recent Reading</source>
+          <target state="new">Recent Reading</target>
+        </trans-unit>
+        <trans-unit id="Resources\PinButton" translate="yes" xml:space="preserve">
+          <source>Pin this volume to "Start Screen"</source>
+          <target state="new">Pin this volume to "Start Screen"</target>
+        </trans-unit>
+        <trans-unit id="Resources\PasswordLabel\Text" translate="yes" xml:space="preserve">
+          <source>Password</source>
+          <target state="new">Password</target>
+        </trans-unit>
+        <trans-unit id="Resources\LoginSection\Header" translate="yes" xml:space="preserve">
+          <source>User Sign-in</source>
+          <target state="new">User Sign-in</target>
+        </trans-unit>
+        <trans-unit id="Resources\LoginButton\Content" translate="yes" xml:space="preserve">
+          <source>Sign in</source>
+          <target state="new">Sign in</target>
+        </trans-unit>
+        <trans-unit id="Resources\IndexButton" translate="yes" xml:space="preserve">
+          <source>Open/Close Index</source>
+          <target state="new">Open/Close Index</target>
+        </trans-unit>
+        <trans-unit id="Resources\FavoriteSection\Header" translate="yes" xml:space="preserve">
+          <source>Favorite Collection</source>
+          <target state="new">Favorite Collection</target>
+        </trans-unit>
+        <trans-unit id="Resources\FavoriteButton" translate="yes" xml:space="preserve">
+          <source>Add this volume to Favorites</source>
+          <target state="new">Add this volume to Favorites</target>
+        </trans-unit>
+        <trans-unit id="Resources\ApplicationName" translate="yes" xml:space="preserve">
+          <source>Light Novel</source>
+          <target state="new">Light Novel</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
