@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Windows.ApplicationModel;
 using Windows.Foundation.Collections;
 using Windows.Security.Credentials;
 using Windows.Storage;
@@ -41,7 +42,10 @@ namespace LightNovel.Common
 				_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
 			if (!_appSettings.ContainsKey(FontSizeKey))
 				_appSettings.Add(FontSizeKey, 19.0);
-
+			if (!_appSettings.ContainsKey(SavedAppVersion))
+			{
+				_appSettings.Add(SavedAppVersion, "00.00.00.00");
+			}
 			try
 			{
 				var creds = _Vault.FindAllByResource("lightnovel.cn");
@@ -121,6 +125,35 @@ namespace LightNovel.Common
 				_appSettings[FontSizeKey] = value;
 				NotifyPropertyChanged();
 			}
+		}
+
+		private const string SavedAppVersionKey = "SavedAppVersion";
+		public string SavedAppVersion
+		{
+			get
+			{
+				var val = (string)_appSettings[SavedAppVersionKey];
+				return (string)val;
+			}
+
+			private set
+			{
+				_appSettings[SavedAppVersionKey] = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		public void UpdateSavedAppVersion()
+		{
+			var CurrentVersion = Package.Current.Id.Version;
+			SavedAppVersion = String.Format("{0}.{1}.{2}.{3}", CurrentVersion.Major.ToString("D2"), CurrentVersion.Minor.ToString("D2"), CurrentVersion.Revision.ToString("D2"), CurrentVersion.Build.ToString("D2"));
+		}
+
+		// String.Compare(SavedAppVersion, thresholdVersion) <= 0
+
+		public bool IsSavedAppVersionLessThan(string thresholdVersion = "00.00.00.00")
+		{
+			return String.Compare(SavedAppVersion, thresholdVersion) < 0;
 		}
 
 		public void SetUserNameAndPassword(string userName,string password)

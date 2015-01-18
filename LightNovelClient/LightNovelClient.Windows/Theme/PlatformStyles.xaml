@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel.Theme">
+    <x:Double x:Key="PosterWidth">620</x:Double>
+    <!--  Accent colors  -->
+    <!--  Lime Green  -->
+    <Color x:Key="AppAccentColor">#FFA4C400</Color>
+    <!--  Semi Light Lime Green  -->
+    <Color x:Key="AppAccentColorSemiLight">#FFCAE05A</Color>
+    <!--  Light Lime Green  -->
+    <Color x:Key="AppAccentColorLight">#FFE5FA78</Color>
+    <!--  10 percent Black  -->
+    <Color x:Key="SemiTransparentBlack10Color">#19000000</Color>
+    
+    <!--  Font sizes  -->
+    <!--  13pt  -->
+    <x:Double x:Key="AppFontSizeSmall">13</x:Double>
+    <!--  15pt  -->
+    <x:Double x:Key="AppFontSizeNormal">15</x:Double>
+    <!--  17pt  -->
+    <x:Double x:Key="AppFontSizeMedium">17</x:Double>
+    <!--  20pt  -->
+    <x:Double x:Key="AppFontSizeMediumLarge">20</x:Double>
+    <!--  24pt  -->
+    <x:Double x:Key="AppFontSizeLarge">24</x:Double>
+    <!--  32pt  -->
+    <x:Double x:Key="AppFontSizeExtraLarge">32</x:Double>
+    <!--  42pt  -->
+    <x:Double x:Key="AppFontSizeExtraExtraLarge">42</x:Double>
+    <!--  140pt  -->
+    <x:Double x:Key="AppFontSizeHuge">140</x:Double>
+
+</ResourceDictionary>

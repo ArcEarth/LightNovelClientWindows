@@ -1,111 +1,226 @@
 ﻿using LightNovel.Common;
+using LightNovel.Controls;
+using LightNovel.Service;
+using LightNovel.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Net;
+using System.Runtime.CompilerServices;
+//using System.IO;
+using System.Threading.Tasks;
+//using System.Runtime.InteropServices.WindowsRuntime;
+//using System.Windows.Input;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
-using Windows.UI.ViewManagement;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.System;
+using Windows.UI;
+using Windows.UI.Popups;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.Extensions;
+//using PostSharp.Patterns.Model;
 
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
+// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
 namespace LightNovel
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
+	public class TemplateSelectorContent : ContentControl
+	{
+		public DataTemplateSelector CententTemplateSelector { get; set; }
+
+		protected override void OnContentChanged(object oldContent, object newContent)
+		{
+			base.OnContentChanged(oldContent, newContent);
+			if (CententTemplateSelector != null)
+				ContentTemplate = CententTemplateSelector.SelectTemplate(newContent, this);
+		}
+	}
+
+
+	public class NovelLineDataTemplateSelector : DataTemplateSelector
+	{
+		public DataTemplate IllustrationDataTemplate { get; set; }
+		public DataTemplate TextDataTemplate { get; set; }
+		protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+		{
+			//FrameworkElement element = container as FrameworkElement;
+			if (item != null && item is LineViewModel)
+			{
+				LineViewModel line = item as LineViewModel;
+
+				if (line.IsImage)
+					return IllustrationDataTemplate;
+				else
+					return TextDataTemplate;
+			}
+
+			return base.SelectTemplate(item, container);
+		}
+	}
+
+
 	public sealed partial class ReadingPage : Page
 	{
-		private NavigationHelper navigationHelper;
-		private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
 		public ReadingPage()
 		{
 			this.InitializeComponent();
-
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+			this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
+			ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+			//Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+			//ScrollSwitch = false;
+			//DisableAnimationScrollingFlag = true;
+			//ContentRegion.SizeChanged += ContentRegion_SizeChanged;
+			//ContentColumns.ColumnsChanged += ContentColumns_LayoutUpdated;
+			//ContentScrollViewer.LayoutUpdated += ScrollToPage_ContentColumns_LayoutUpdated;
+			//ViewModel.CommentsListLoaded += ViewModel_CommentsListLoaded;
+			Flyout.SetAttachedFlyout(this, ImagePreviewFlyout);
+			RefreshThemeColor();
 		}
 
-		/// <summary>
-		/// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
-		/// </summary>
-		public NavigationHelper NavigationHelper
+		private bool CanGoBack()
 		{
-			get { return this.navigationHelper; }
+			if (this.UsingLogicalIndexPage && IsIndexPanelOpen)
+			{
+				return true;
+			}
+			else
+			{
+				return this.navigationHelper.CanGoBack();
+			}
 		}
-
-		/// <summary>
-		/// Gets the view model for this <see cref="Page"/>.
-		/// This can be changed to a strongly typed view model.
-		/// </summary>
-		public ObservableDictionary DefaultViewModel
+		private void GoBack()
 		{
-			get { return this.defaultViewModel; }
+			if (this.UsingLogicalIndexPage && IsIndexPanelOpen)
+			{
+				// When logical page navigation is in effect and there's a selected item that
+				// item's details are currently displayed.  Clearing the selection will return to
+				// the item list.  From the user's point of view this is a logical backward
+				// navigation.
+				IsIndexPanelOpen = false;
+			}
+			else
+			{
+				this.navigationHelper.GoBack();
+			}
 		}
 
-		/// <summary>
-		/// Populates the page with content passed during navigation.  Any saved state is also
-		/// provided when recreating a page from a prior session.
-		/// </summary>
-		/// <param name="sender">
-		/// The source of the event; typically <see cref="NavigationHelper"/>
-		/// </param>
-		/// <param name="e">Event data that provides both the navigation parameter passed to
-		/// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
-		/// a dictionary of state preserved by this page during an earlier
-		/// session.  The state will be null the first time a page is visited.</param>
-		private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+		void ContentListView_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
+			int index = (int)ContentListView.GetValue(ContentListViewChangeViewRequestProperty);
+			if (index >= 0 && e.NewSize.Height > 10 && ContentListView.Items.Count > 0 && index < ContentListView.Items.Count)
+			{
+				ContentListView.UpdateLayout();
+				ContentListView.ScrollIntoView(ViewModel.Contents[index], ScrollIntoViewAlignment.Leading);
+				index = -1;
+				ContentListView.SizeChanged -= ContentListView_SizeChanged;
+			}
 		}
 
-		/// <summary>
-		/// Preserves state associated with this page in case the application is suspended or the
-		/// page is discarded from the navigation cache.  Values must conform to the serialization
-		/// requirements of <see cref="SuspensionManager.SessionState"/>.
-		/// </summary>
-		/// <param name="sender">The source of the event; typically <see cref="NavigationHelper"/></param>
-		/// <param name="e">Event data that provides an empty dictionary to be populated with
-		/// serializable state.</param>
-		private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
+		public static readonly DependencyProperty ContentListViewChangeViewRequestProperty =
+			DependencyProperty.Register("ContentListViewChangeViewRequestProperty", typeof(int),
+			typeof(ListView), new PropertyMetadata(-1, null));
+
+
+
+		int GetCurrentLineNo()
 		{
+			return ContentListView.GetFirstVisibleIndex();
 		}
 
-		#region NavigationHelper registration
 
-		/// <summary>
-		/// The methods provided in this section are simply used to allow
-		/// NavigationHelper to respond to the page's navigation methods.
-		/// <para>
-		/// Page specific logic should be placed in event handlers for the  
-		/// <see cref="NavigationHelper.LoadState"/>
-		/// and <see cref="NavigationHelper.SaveState"/>.
-		/// The navigation parameter is available in the LoadState method 
-		/// in addition to page state preserved during an earlier session.
-		/// </para>
-		/// </summary>
-		/// <param name="e">Provides data for navigation methods and event
-		/// handlers that cannot cancel the navigation request.</param>
-		protected override void OnNavigatedTo(NavigationEventArgs e)
+		void ChangeView(int page, int line = -1)
 		{
-			this.navigationHelper.OnNavigatedTo(e);
+			if (line >= 0)
+			{
+				if (ContentListView.Items.Count > 0 )
+				{
+					ContentListView.UpdateLayout();
+					ContentListView.ScrollIntoView(ViewModel.Contents[line]);
+				}
+				else if (line < ContentListView.Items.Count)
+				{
+					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
+					ContentListView.SizeChanged += ContentListView_SizeChanged;
+				}
+
+			}
 		}
 
-		protected override void OnNavigatedFrom(NavigationEventArgs e)
+		void UpdateContentsView(IEnumerable<LineViewModel> lines)
+		{ 
+		}
+
+		public bool UsingLogicalIndexPage { get { return true; } }
+
+		void ChangeState(string stateName, bool useTransitions = true)
 		{
-			this.navigationHelper.OnNavigatedFrom(e);
+			//IndexCollapsedToExpandedKeyFrame.Value = -IndexRegion.Width;
+			//ContentCollapsedToExpandedKeyFrame.Value = -IndexRegion.Width;
+			//IndexExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
+			//ContentExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
+			VisualStateManager.GoToState(this, stateName, useTransitions);
+			//this.navigationHelper.GoBackCommand.RaiseCanExecuteChanged();
 		}
 
-		#endregion
+		private void IllustrationViewGrid_Loaded(object sender, RoutedEventArgs e)
+		{
+			var img = (sender as Grid).GetFirstDescendantOfType<Image>();
+			var indicator = (sender as Grid).GetFirstDescendantOfType<ProgressBar>();
+			var bitmap = img.Source as BitmapImage;
+			bitmap.SetValue(BitmapLoadingIndicatorProperty, indicator);
+		}
+		private async void PrevChapterButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
+			{
+				await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo - 1, -1);
+				//ChangeView(-1, ViewModel.ChapterData.Lines.Count - 2);
+			}
+		}
+
+		private async void NextChapterButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
+			{
+				await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo + 1, 0);
+			}
+		}
+
+		private void SyncIndexSelection()
+		{
+			ListViewExtensions.SetItemToBringIntoView(VolumeListView,ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo]);
+		}
+
+		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var line = (LineViewModel)e.ClickedItem;
+
+			if (!line.IsImage && !ViewModel.EnableComments)
+				return;
+
+			var container = ContentListView.ContainerFromItem(line);
+			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
+			CommentsFlyout.ShowAt((FrameworkElement)container);
+			if (line.HasComments)
+			{
+				await line.LoadCommentsAsync();
+			}
+		}
 	}
 }

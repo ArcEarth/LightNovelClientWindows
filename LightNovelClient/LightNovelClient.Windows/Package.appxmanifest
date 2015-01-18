@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.0.4" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.0.5" />
   <Properties>
     <DisplayName>LightNovel</DisplayName>
     <PublisherDisplayName>Arc Earth</PublisherDisplayName>
@@ -22,7 +22,7 @@
             <m2:ShowOn Tile="wide310x150Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
-        <m2:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#105446" />
+        <m2:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#A4C400" />
         <m2:InitialRotationPreference>
           <m2:Rotation Preference="portrait" />
           <m2:Rotation Preference="landscape" />

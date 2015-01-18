@@ -1,15 +1,22 @@
 ﻿using LightNovel.Common;
 using LightNovel.Service;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI.StartScreen;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace LightNovel.ViewModels
@@ -31,6 +38,7 @@ namespace LightNovel.ViewModels
 		//public object OldValue { get; }
 		//public object NewValue { get; }
 	}
+
 	public class ReadingPageViewModel : INotifyPropertyChanged
 	{
 		public ReadingPageViewModel()
@@ -44,6 +52,20 @@ namespace LightNovel.ViewModels
 			_Foreground = App.Current.Settings.Foreground;
 			//this.PropertyChanged += ReadingPageViewModel_PropertyChanged;
 		}
+
+		//protected override bool HasMoreItemsOverride()
+		//{ 
+		//		if (ChapterNo < 0 || VolumeData == null)
+		//			return false;
+		//		return ChapterNo < VolumeData.Chapters.Count - 1;
+		//}
+
+		//protected override async Task<IEnumerable<LineViewModel>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
+		//{
+		//	var NextChapterData = await CachedClient.GetChapterAsync(VolumeData.Chapters[ChapterNo + 1].Id);
+		//	return _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterData.Id));
+		//}
+
 
 		async void ReadingPageViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -95,7 +117,23 @@ namespace LightNovel.ViewModels
 				if (_SeriesData != value)
 				{
 					_SeriesData = value;
-					Index = _SeriesData.Volumes;
+					Index = (from vol in _SeriesData.Volumes
+							select new VolumeViewModel
+							{
+								Title = vol.Title,
+								Label = vol.Label,
+								Description = vol.Description,
+								Author = vol.Author,
+								CoverImageUri = new Uri(vol.CoverImageUri),
+								Chapters = vol.Chapters.Select(chapter => new ChapterPreviewModel
+								{
+									No = chapter.ChapterNo,
+									Id = chapter.Id,
+									Title = chapter.Title,
+									VolumeNo = vol.VolumeNo,
+								}).ToList()
+							}).ToList();
+
 					NotifyPropertyChanged("Header");
 				}
 			}
@@ -112,7 +150,9 @@ namespace LightNovel.ViewModels
 				if (_VolumeData != value)
 				{
 					_VolumeData = value;
+#if WINDOWS_APP
 					SeconderyIndex = _VolumeData.Chapters;
+#endif
 					NotifyPropertyChanged("Header");
 					NotifyPropertyChanged("IsFavored");
 					NotifyPropertyChanged("IsPinned");
@@ -155,8 +195,8 @@ namespace LightNovel.ViewModels
 		private int _LineNo = -1;
 		private int _PageNo = -1;
 		private int _PagesCount = -1;
-		private IList<LineViewModel> _Contents;
-		private IList<Volume> _Index;
+		private IList _Contents;
+		private IList<VolumeViewModel> _Index;
 		private IList<Chapter> _SeconderyIndex;
 
 		public bool IsLoading
@@ -264,7 +304,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public IList<LineViewModel> Contents
+		public IList Contents
 		{
 			get { return _Contents; }
 			private set
@@ -277,7 +317,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public IList<Volume> Index
+		public IList<VolumeViewModel> Index
 		{
 			get { return _Index; }
 			private set
@@ -289,6 +329,8 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
+
+#if WINDOWS_APP
 
 		public IList<Chapter> SeconderyIndex
 		{
@@ -302,6 +344,7 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
+#endif
 
 		public bool IsPinned
 		{
@@ -474,8 +517,23 @@ namespace LightNovel.ViewModels
 					chapter.Title = VolumeData.Chapters[chapterNo.Value].Title;
 					ChapterData = chapter; //VolumeData.Chapters[chapterNo.Value] =
 					ChapterNo = chapterNo.Value;
+
+					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id));
+					//_storage.AddRange(lvms);
+					//NotifyOfInsertedItems(0, _storage.Count);
+					//NotifyPropertyChanged("Contents");
 					Contents = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id)).ToList();
 
+					//var collection = new PagelizedIncrementalVector<LineViewModel>(ChapterNo,new List<int>(VolumeData.Chapters.Select(c=>0)), lvms);
+					//collection.AccuirePageData = async chptNo =>
+					//{
+					//	return (await CachedClient.GetChapterAsync(VolumeData.Chapters[chptNo].Id))
+					//		.Lines.Select(line => new LineViewModel(line, ChapterData.Id)); 
+					//};
+
+					//collection.CollectionChanged += collection_CollectionChanged;
+
+					//Contents = collection;
 					//SeconderyIndex = VolumeData.Chapters;
 					//NotifyPropertyChanged("SeconderyIndex");
 				}
@@ -489,7 +547,10 @@ namespace LightNovel.ViewModels
 				IsLoading = false;
 				if (lineNo != null) //&& LineNo != lineNo.Value)
 				{
-					LineNo = lineNo.Value;
+					if (LineNo >= 0)
+						LineNo = lineNo.Value;
+					else
+						lineNo = Contents.Count - lineNo;
 				} 
 				return;
 			}
@@ -498,19 +559,27 @@ namespace LightNovel.ViewModels
 
 			if (lineNo != null) //&& LineNo != lineNo.Value)
 			{
-				LineNo = lineNo.Value;
-			}
+				if (lineNo.Value >= 0)
+					LineNo = lineNo.Value;
+				else
+					LineNo = Contents.Count + lineNo.Value;
+			} 
 
 			if (EnableComments && Contents!=null)
 			{
 				var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
 				foreach (var cln in CommentsList)
 				{
-					Contents[cln - 1].MarkAsCommented();
+					((LineViewModel)Contents[cln - 1]).MarkAsCommented();
 				}
 				if (CommentsListLoaded != null)
 					CommentsListLoaded.Invoke(this, CommentsList);
 			}
+		}
+
+		void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			Debug.WriteLine(String.Format("Contents Collection size cahnged, Count = {0}", Contents.Count));
 		}
 
 		public bool IsDataLoaded
@@ -553,12 +622,12 @@ namespace LightNovel.ViewModels
 				}
 				else
 				{
-					var imageLine = Contents.FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
+					var imageLine = Contents.Cast<LineViewModel>().FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
 					if (imageLine != null)
 						bookmark.DescriptionImageUri = imageLine.Content;
 				}
 
-				var textLines = from line in Contents
+				var textLines = from line in Contents.Cast<LineViewModel>()
 								where line.ContentType == LineContentType.TextContent && line.No >= LineNo && line.No <= LineNo + 5
 								select line.Content;
 				var builder = new StringBuilder();
@@ -806,23 +875,8 @@ namespace LightNovel.ViewModels
 			}
 		}
 	}
-	public class SeriesViewModel : INotifyPropertyChanged
+	public class SeriesViewModel : KeyGroup<string,VolumeViewModel>, INotifyPropertyChanged 
 	{
-		private Series _dataConrtext;
-
-		public Series DataContext
-		{
-			get { return _dataConrtext; }
-			set
-			{
-				if (_dataConrtext != value)
-				{
-					LoadData(value);
-					_dataConrtext = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
 		private string _title;
 		private string _author;
 		private string _illustrator;
@@ -905,7 +959,6 @@ namespace LightNovel.ViewModels
 		public SeriesViewModel()
 		{
 			_isLoading = false;
-			Volumes = new ObservableCollection<VolumeViewModel>();
 		}
 
 		private bool _isLoading;
@@ -918,52 +971,6 @@ namespace LightNovel.ViewModels
 				NotifyPropertyChanged();
 			}
 		}
-		public void Load(Series series)
-		{
-			DataContext = series;
-		}
-		public async Task LoadDataAsync(string serId, string volId = "", string cptId = "")
-		{
-			IsLoading = true;
-			Id = serId;
-			try
-			{
-				var series = await CachedClient.GetSeriesAsync(serId);
-				DataContext = series;
-				//foreach (var vvm in Volumes)
-				//{
-				//	await vvm.LoadDataAsync(vvm.Id);
-				//}
-			}
-			catch (Exception exception)
-			{
-				IsLoading = false;
-				Id = null;
-				throw exception;
-				//MessageBox.Show("Network issue occured, please check your wi-fi or data setting and try again.\nError Code:" + exception.Message, "Network issue", MessageBoxButton.OK);
-			}
-		}
-
-		private void LoadData(Series series)
-		{
-			IsLoading = true;
-
-			Title = series.Title;
-			Author = series.Author;
-			CoverImageUri = new Uri(series.CoverImageUri);
-			Illustrator = series.Illustrator;
-			Volumes.Clear();
-			foreach (var vol in series.Volumes)
-			{
-				var vvm = new VolumeViewModel
-				{
-					DataContext = vol
-				};
-				Volumes.Add(vvm);
-			}
-			IsLoading = false;
-		}
-		public ObservableCollection<VolumeViewModel> Volumes { get; set; }
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -974,23 +981,10 @@ namespace LightNovel.ViewModels
 			}
 		}
 	}
-	public class VolumeViewModel : INotifyPropertyChanged
+	public class VolumeViewModel : IList<ChapterPreviewModel>, INotifyPropertyChanged
 	{
-		private Volume _dataConrtext;
 
-		public Volume DataContext
-		{
-			get { return _dataConrtext; }
-			set
-			{
-				if (_dataConrtext != value)
-				{
-					LoadData(value);
-					_dataConrtext = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
+		#region Self Properties
 		private string _title;
 		private string _author;
 		private string _illustrator;
@@ -1073,11 +1067,8 @@ namespace LightNovel.ViewModels
 			set;
 		}
 
-		public VolumeViewModel()
-		{
-			_isLoading = false;
-			ChapterList = new ObservableCollection<ChapterPreviewModel>();
-		}
+		public IList<ChapterPreviewModel> Chapters { get; set; }
+
 		private bool _isLoading;
 		public bool IsLoading
 		{
@@ -1089,79 +1080,109 @@ namespace LightNovel.ViewModels
 				NotifyPropertyChanged();
 			}
 		}
-		public async Task LoadDataAsync(string id)
+		#endregion
+
+
+		#region IList
+
+		public void Add(ChapterPreviewModel value)
 		{
-			//if (Id == id) return;
-			IsLoading = true;
-			Id = id;
-			try
+			throw new NotImplementedException();
+		}
+
+		public void Clear()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool Contains(ChapterPreviewModel value)
+		{
+			Debug.WriteLine("Contains Get Called");
+			return Chapters.Contains(value);
+		}
+
+		public int IndexOf(ChapterPreviewModel value)
+		{
+			Debug.WriteLine("IndexOf Get Called");
+			return Chapters.IndexOf(value);
+		}
+
+		public void Insert(int index, ChapterPreviewModel value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool IsFixedSize
+		{
+			get { return true; }
+		}
+
+		public bool IsReadOnly
+		{
+			get { return true; }
+		}
+
+		public bool Remove(ChapterPreviewModel value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RemoveAt(int index)
+		{
+			throw new NotImplementedException();
+		}
+
+		public ChapterPreviewModel this[int index]
+		{
+			get
 			{
-				var volume = await CachedClient.GetVolumeAsync(id);
-				DataContext = volume;
-				IsLoading = true;
-				var firstChapter = await CachedClient.GetChapterAsync(volume.Chapters[0].Id);
-				var imageLine = firstChapter.Lines.FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
-				if (imageLine != null)
-					FirstIllustrationUri = new Uri(imageLine.Content);
-				IsLoading = false;
-				//Title = volume.Title;
-				//Author = volume.Author;
-				//Description = volume.Description;
-				//CoverImageUri = new Uri(volume.CoverImageUri);
-				//Illustrator = volume.Illustrator;
-				//ChapterList.Clear();
-				//int no = 0;
-				//foreach (var cp in volume.ChapterDescriptorList)
-				//{
-				//    var cpvm = new ChapterPreviewModel
-				//    {
-				//        Title = cp.Title,
-				//        Id = cp.Id,
-				//        No = no++
-				//    };
-				//    ChapterList.Add(cpvm);
-				//}
-				//IsLoading = false;
+				if (index >= Chapters.Count)
+					Debug.WriteLine("Shit! Index out of range at : " + index);
+				//Debug.WriteLine(String.Format("this[{0}]",index));
+				return Chapters[index];
 			}
-			catch (Exception exception)
+			set
 			{
-				IsLoading = false;
-				Id = null;
-				throw exception;
-				//MessageBox.Show("Network issue occured, please check your wi-fi or data setting and try again.\nError Code:" + exception.Message, "Network issue", MessageBoxButton.OK);
+				throw new NotImplementedException();
 			}
 		}
 
-		private void LoadData(Volume volume)
+		public void CopyTo(ChapterPreviewModel[] array, int index)
 		{
-			IsLoading = true;
-			if (Id == volume.Id)
-			{
-				Description = volume.Description;
-				return;
-			}
-
-			Id = volume.Id;
-			Title = volume.Title;
-			Author = volume.Author;
-			Illustrator = volume.Illustrator;
-			Publisher = volume.Publisher;
-			Description = volume.Description;
-			CoverImageUri = new Uri(volume.CoverImageUri);
-			ChapterList.Clear();
-			foreach (var cp in volume.Chapters)
-			{
-				var cpvm = new ChapterPreviewModel
-				{
-					Id = cp.Id,
-					No = cp.ChapterNo,
-					Title = cp.Title,
-				};
-				ChapterList.Add(cpvm);
-			}
-			IsLoading = false;
+			//Debug.WriteLine("CopyTo Called");
+			((IList)Chapters).CopyTo(array, index);
 		}
-		public ObservableCollection<ChapterPreviewModel> ChapterList { get; set; }
+
+		public int Count
+		{
+			get
+			{
+				Debug.WriteLine("Count Get Called");
+				return Chapters.Count;
+			}
+		}
+
+		public bool IsSynchronized
+		{
+			get { return false; }
+		}
+
+		public object SyncRoot
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			Debug.WriteLine("GetEnumerator() Get Called");
+			return Chapters.GetEnumerator();
+		}
+		public IEnumerator<ChapterPreviewModel> GetEnumerator()
+		{
+			Debug.WriteLine("GetEnumerator() Get Called");
+			return Chapters.GetEnumerator();
+		}
+		#endregion 
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -1173,7 +1194,11 @@ namespace LightNovel.ViewModels
 		}
 
 		public string Id { get; set; }
+
+		public string Label { get; set; }
 	}
+
+
 	public class ChapterPreviewModel : INotifyPropertyChanged
 	{
 		string _title;
@@ -1207,6 +1232,12 @@ namespace LightNovel.ViewModels
 			}
 		}
 
+		public int VolumeNo
+		{
+			get;
+			set;
+		}
+
 		public bool IsDownloaded { get; set; }
 		public string NavigateUri
 		{
@@ -1222,6 +1253,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 	}
+
 	public class ContentSectionViewModel : INotifyPropertyChanged
 	{
 		private Chapter _dataContext;
@@ -1575,6 +1607,16 @@ namespace LightNovel.ViewModels
 			No = line.No;
 		}
 
+		public Uri ImageUri
+		{
+			get
+			{
+				if (!_content.StartsWith("http://"))
+					return null;
+				return new Uri(_content, UriKind.Absolute);
+			}
+		}
+
 		public LineViewModel(string content)
 		{
 			_content = content;
@@ -1660,7 +1702,7 @@ namespace LightNovel.ViewModels
 
 		public bool IsImage
 		{
-			get { return _content.StartsWith("http"); }
+			get { return Uri.IsWellFormedUriString(_content, UriKind.Absolute); }
 		}
 
 		public ObservableCollection<Comment> Comments
@@ -1699,7 +1741,7 @@ namespace LightNovel.ViewModels
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine("Comments load failed : line_id = " + lineId + " ,chapter_id = " + ParentChapterId);
+					Debug.WriteLine("Comments load failed : line_id = " + lineId + " ,chapter_id = " + ParentChapterId + "exception : " + ex.Message);
 				}
 				IsLoading = false;
 			}

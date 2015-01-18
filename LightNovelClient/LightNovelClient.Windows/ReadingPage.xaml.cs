@@ -37,50 +37,12 @@ using WinRTXamlToolkit.Controls.Extensions;
 
 namespace LightNovel
 {
-	public class BooleanToSymbolConverter : IValueConverter
-	{
-		public Symbol TrueSymbol { get; set; }
-		public Symbol FalseSymbol { get; set; }
-
-		public object Convert(object value, Type targetType, object parameter, string language)
-		{
-			if ((bool)value)
-				return TrueSymbol;
-			else
-				return FalseSymbol;
-
-		}
-
-		public object ConvertBack(
-			object value,
-			Type targetType,
-			object parameter,
-			string language)
-		{
-			throw new NotImplementedException();
-		}
-	}
 
 	/// <summary>
 	/// A page that displays details for a single item within a group.
 	/// </summary>
 	public sealed partial class ReadingPage : Page, INotifyPropertyChanged
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
-		private NavigationHelper navigationHelper;
-		private ObservableDictionary defaultViewModel = new ObservableDictionary();
-		private ContentSectionViewModel chapterViewModel = new ContentSectionViewModel();
-		private SeriesViewModel seriesViewModel = new SeriesViewModel();
-		private ReadingPageViewModel viewModel = new ReadingPageViewModel();
-		private NovelPositionIdentifier navigationId;
 
 		/// <summary>
 		/// Identifies the <see cref="ParagrahNoProperty"/> dependency property.
@@ -89,31 +51,9 @@ namespace LightNovel
 			DependencyProperty.Register("ParagrahViewModel", typeof(LineViewModel),
 			typeof(Paragraph), new PropertyMetadata(null, null));
 
-		public static readonly DependencyProperty BitmapLoadingIndicatorProperty =
-			DependencyProperty.Register("BitmapImageLoadingIndicator", typeof(ProgressBar),
-			typeof(BitmapImage), new PropertyMetadata(null, null));
-
-
-
-		public ReadingPageViewModel ViewModel
-		{
-			get
-			{
-				return viewModel;
-			}
-		}
-
-		public string IndexClosedState = "IndexClosed";
-		public string IndexOpenState = "IndexOpen";
-
-		//private EasingDoubleKeyFrame IndexCollapsedToExpandedKeyFrame;
-		//private EasingDoubleKeyFrame ContentCollapsedToExpandedKeyFrame;
-		//private EasingDoubleKeyFrame IndexExpandedToCollapsedKeyFrame;
-		//private EasingDoubleKeyFrame ContentExpandedToCollapsedKeyFrame;
 
 		private double PictureMargin = 8;
 		private int ColumnsPerScreen = 2;
-		//private int MinmumColumnWidth = 500;
 
 		private int MinimumWidthForSupportingTwoPanes = 768;
 		public bool UsingLogicalIndexPage
@@ -121,30 +61,6 @@ namespace LightNovel
 			get
 			{
 				return Window.Current.Bounds.Width < MinimumWidthForSupportingTwoPanes;
-			}
-		}
-
-		private bool _indexOpened;
-		public bool IsIndexPanelOpen
-		{
-			get
-			{
-				return _indexOpened;
-			}
-			set
-			{
-				if (value == _indexOpened) return;
-				_indexOpened = value;
-				if (value)
-				{
-					ChangeState(IndexOpenState, true);
-				}
-				else
-				{
-					ChangeState(IndexClosedState, true);
-				}
-				NotifyPropertyChanged();
-				IndexButton.IsChecked = value;
 			}
 		}
 
@@ -166,34 +82,6 @@ namespace LightNovel
 			RefreshThemeColor();
 		}
 
-		private void RefreshThemeColor()
-		{
-			var bgColor = ((SolidColorBrush)ViewModel.Background).Color;
-			var fgColor = ((SolidColorBrush)ViewModel.Foreground).Color;
-			ContentTextBrush.Color = fgColor;
-			ContentBackgroundBrush.Color = bgColor;
-			var accentColor = (Color)App.Current.Resources["AppAccentColor"];
-
-			bgColor.R = (byte)(0.8 * bgColor.R + 0.2 * fgColor.R);
-			bgColor.G = (byte)(0.8 * bgColor.G + 0.2 * fgColor.G);
-			bgColor.B = (byte)(0.8 * bgColor.B + 0.2 * fgColor.B);
-			bgColor.A = 0xBB;
-			FlyoutBackgroundBrush.Color = bgColor;
-
-			fgColor.R = (byte)(0.7 * accentColor.R + 0.3 * fgColor.R);
-			fgColor.G = (byte)(0.7 * accentColor.G + 0.3 * fgColor.G);
-			fgColor.B = (byte)(0.7 * accentColor.B + 0.3 * fgColor.B);
-			CommentedTextBrush.Color = fgColor;
-		}
-
-		void RequestCommentsInView()
-		{
-			//var lineNo = GetCurrentLineNo();
-			//for (int idx = lineNo; idx < Math.Min(lineNo + 30, ViewModel.Contents.Count); idx++)
-			//{
-			//	ViewModel.Contents[idx].LoadCommentsAsync();
-			//}
-		}
 
 		void ViewModel_CommentsListLoaded(object sender, IEnumerable<int> e)
 		{
@@ -206,60 +94,29 @@ namespace LightNovel
 			RequestCommentsInView();
 		}
 
-		void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		void ChangeView(int page, int line = -1)
 		{
-			var vm = sender as ReadingPageViewModel;
-			switch (e.PropertyName)
+			if (line >= 0)
+				page = GetPageNoFromLineNo(ViewModel.LineNo); // Use Line index if assigned
+
+			if (page >= 0) // Use page index instead of line index
 			{
-				case "LineNo":
-					if (!ViewModel.SuppressViewChange)
-					{
-						var page = GetPageNoFromLineNo(ViewModel.LineNo);
-						if (page >= 0)
-							ViewModel.PageNo = page;
-						else
-						{
-							RequestChangeView(null, ViewModel.LineNo);
-						}
-					}
-					break;
-				case "PageNo":
-					if (!ViewModel.SuppressViewChange)
-						if (!ContentColumns.IsLayoutValiad || ContentColumns.Visibility != Windows.UI.Xaml.Visibility.Visible)
-						{
-							RequestChangeView(ViewModel.PageNo, null);
-						}
-						else
-						{
-							ScrollToPage(ViewModel.PageNo, DisableAnimationScrollingFlag);
-							DisableAnimationScrollingFlag = true;
-						}
-					break;
-				case "VolumeNo":
-					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
-					LoadingAheadTask = null;
-					break;
-				case "ChapterNo":
-					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
-					LoadingAheadTask = null;
-					break;
-				case "Contents":
-					UpdateContentsView(vm.Contents);
-					break;
-				case "Index":
-					break;
-				case "IsLoading":
-					if (ViewModel.IsLoading)
-						VisualStateManager.GoToState(this, "Loading", true);
-					else
-					{
-						VisualStateManager.GoToState(this, "Ready", true);
-					}
-					break;
-				default:
-					break;
+				// Is Current View state fully loaded
+				if (ContentColumns.Visibility != Visibility.Visible || !ContentColumns.IsLayoutValiad)
+				{
+					RequestDelayedChangeView(ViewModel.PageNo);
+				}
+				else
+				{
+					ScrollToPage(ViewModel.PageNo, DisableAnimationScrollingFlag);
+					DisableAnimationScrollingFlag = true;
+				}
+			} else if (line >= 0)
+			{
+				RequestDelayedChangeView(-1,line);
 			}
 		}
+
 		private bool CanGoBack()
 		{
 			if (this.UsingLogicalIndexPage && IsIndexPanelOpen && ChapterListView.SelectedItem != null)
@@ -368,9 +225,8 @@ namespace LightNovel
 		{
 			var currentLine = ViewModel.LineNo;
 			Debug.WriteLine("ContentRegion_SizeChanged, lineNo: {0}", currentLine);
-			//var displaySize = new Size(e.NewSize.Width, e.NewSize.Height);
 			Relayout_ContentColumn(e.NewSize);
-			RequestChangeView(null,currentLine);
+			RequestDelayedChangeView(-1,currentLine);
 		}
 
 		void ContentColumns_LayoutUpdated(object sender, object e)
@@ -379,138 +235,33 @@ namespace LightNovel
 			ViewModel.PagesCount = ContentColumns.Children.Count;
 		}
 
-		/// <summary>
-		/// Gets the NavigationHelper used to aid in navigation and process lifetime management.
-		/// </summary>
-		public NavigationHelper NavigationHelper
-		{
-			get { return this.navigationHelper; }
-		}
-
-		//public SeriesViewModel SeriesViewModel
-		//{
-		//	get { return chapterViewModel; }
-		//}
-
-		/// <summary>
-		/// Populates the page with content passed during navigation.  Any saved state is also
-		/// provided when recreating a page from a prior session.
-		/// </summary>
-		/// <param name="sender">
-		/// The source of the event; typically <see cref="NavigationHelper"/>
-		/// </param>
-		/// <param name="e">Event data that provides both the navigation parameter passed to
-		/// <see cref="Frame.Navigate(Type, object)"/> when this page was initially requested and
-		/// a dictionary of state preserved by this page during an earlier
-		/// session.  The state will be null the first time a page is visited.</param>
-		private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
-		{
-			// TODO: Create an appropriate data model for your problem domain to replace the sample data
-			Debug.WriteLine("LoadState");
-			//Relayout_ContentColumn(ContentRegion.RenderSize);
-			if (e.PageState == null)
-			{
-				var nav = navigationId = NovelPositionIdentifier.Parse((string)e.NavigationParameter);
-
-				if (nav.SeriesId != null && (nav.VolumeNo == -1 || nav.ChapterNo == -1))
-				{
-					IsIndexPanelOpen = true;
-				}
-
-				await viewModel.LoadDataAsync(nav);
-			}
-			else
-			{
-				if (e.PageState.ContainsKey("LoadingBreak"))
-				{
-					var nav = navigationId = NovelPositionIdentifier.Parse((string)e.PageState["LoadingBreak"]);
-					await viewModel.LoadDataAsync(nav);
-				}
-				else
-				{
-					var volumeNo = (int)e.PageState["VolumeNo"];
-					var chapterNo = (int)e.PageState["ChapterNo"];
-					var seriesId = (int)e.PageState["SeriesId"];
-					await viewModel.LoadDataAsync(seriesId, volumeNo, chapterNo, null);
-				}
-				var horizontalOffset = (double)e.PageState["HorizontalOffset"];
-				var verticalOffset = (double)e.PageState["VerticalOffset"];
-				ContentScrollViewer.ChangeView(horizontalOffset, verticalOffset, null, true);
-				//SyncIndexSelectedItem();
-			}
-			NotifyPropertyChanged("IsPinned");
-			NotifyPropertyChanged("IsFavored");
-		}
-		async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
-		{
-			Debug.WriteLine("Saving States");
-			e.PageState.Add("HorizontalOffset", ContentScrollViewer.HorizontalOffset);
-			e.PageState.Add("VerticalOffset", ContentScrollViewer.VerticalOffset);
-			if (ViewModel.IsLoading || ViewModel.SeriesId == 0 || !ViewModel.IsDataLoaded)
-			{
-				e.PageState.Add("LoadingBreak", navigationId.ToString());
-			}
-			else
-			{
-				e.PageState.Add("SeriesId", ViewModel.SeriesId);
-				e.PageState.Add("ChapterNo", ViewModel.ChapterNo);
-				e.PageState.Add("VolumeNo", ViewModel.VolumeNo);
-				var bookmark = ViewModel.CreateBookmark();
-				await UpdateHistoryListAsync(bookmark);
-				await UpdateTileAsync(bookmark);
-			}
-		}
-
-		private static async Task UpdateHistoryListAsync(BookmarkInfo bookmark)
-		{
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			App.Current.RecentList.RemoveAll(item => item.Position.SeriesId == bookmark.Position.SeriesId);
-			App.Current.RecentList.Add(bookmark);
-			App.Current.IsHistoryListChanged = true;
-			await App.Current.SaveHistoryDataAsync();
-		}
-
-		private async Task<bool> UpdateTileAsync(BookmarkInfo bookmark)
-		{
-			if (SecondaryTile.Exists(ViewModel.SeriesId.ToString()))
-			{
-				var tile = new SecondaryTile(ViewModel.SeriesId.ToString());
-				string args = bookmark.Position.ToString();
-				tile.Arguments = args;
-				var result = await tile.UpdateAsync();
-				return true;
-			}
-			return false;
-		}
-
 		public bool ScrollSwitch { get; set; }
 		public bool UseTargetLine { get; set; }
 		public int TargetLineNo { get; set; }
 		public int TargetPageNo { get; set; }
 
-		void RequestChangeView(int? page, int? line)
+		void RequestDelayedChangeView(int page, int line = -1)
 		{
-			if (page != null && line.Value >= 0)
+			if (page >= 0)
 			{
 				ScrollSwitch = true;
 				UseTargetLine = false;
-				TargetPageNo = page.Value;
+				TargetPageNo = page;
 			}
-			else if (line != null && line.Value >= 0)
+			else if (line >= 0)
 			{
 				ScrollSwitch = true;
 				UseTargetLine = true;
-				TargetLineNo = line.Value;
+				TargetLineNo = line;
 			}
 		}
 
-		void ScrollToPage(int page, bool disableAnimation)
+		bool ScrollToPage(int page, bool disableAnimation)
 		{
 			if (ContentScrollViewer.HorizontalScrollMode != ScrollMode.Disabled)
-				ContentScrollViewer.ChangeView(ContentColumns.Margin.Left + page * ContentColumns.ColumnWidth + 0.1, null, null, disableAnimation);
+				return ContentScrollViewer.ChangeView(ContentColumns.Margin.Left + page * ContentColumns.ColumnWidth + 0.1, null, null, disableAnimation);
 			else
-				ContentScrollViewer.ChangeView(null, ContentColumns.Margin.Top + page * ContentColumns.ColumnHeight + 0.1, null, disableAnimation);
+				return ContentScrollViewer.ChangeView(null, ContentColumns.Margin.Top + page * ContentColumns.ColumnHeight + 0.1, null, disableAnimation);
 		}
 
 		void ScrollToPage_ContentColumns_LayoutUpdated(object sender, object e)
@@ -518,16 +269,23 @@ namespace LightNovel
 			//Debug.WriteLine("ScrollViewer_LayoutUpdated , Size ({0},{1})", ContentScrollViewer.ActualWidth,ContentScrollViewer.ActualHeight);
 			if (!ScrollSwitch || !ContentColumns.IsLayoutValiad || ContentColumns.Visibility != Windows.UI.Xaml.Visibility.Visible || TotalPage <= 0)
 				return;
+
+			var page = TargetPageNo;
+
 			if (UseTargetLine)
+				page = GetPageNoFromLineNo(TargetLineNo);
+
+			if (page >= 0)
 			{
-				ViewModel.PageNo = GetPageNoFromLineNo(TargetLineNo);
+				ScrollToPage(page, true);
+				ScrollSwitch = false;
+				Debug.WriteLine("Delayed Scroll Appears!");
 			}
 			else
 			{
-				ScrollToPage(TargetPageNo, true);
+				Debug.WriteLine("Delayed Scroll Failed!");
 			}
-			ScrollSwitch = false;
-			Debug.WriteLine("Delayed Scroll Appears!");
+
 		}
 
 		private void UpdateContentsView(IEnumerable<LineViewModel> lines)
@@ -634,13 +392,6 @@ namespace LightNovel
 			RichTextColumns.ResetOverflowLayout(ContentColumns, null);
 		}
 
-		void Illustration_Tapped(object sender, TappedRoutedEventArgs e)
-		{
-			//PageBottomCommandBar.IsOpen = true;
-			//PageBottomCommandBar.IsEnabled = true;
-			Flyout.ShowAttachedFlyout((FrameworkElement)sender);
-		}
-
 		private async void PrevChapterButton_Click(object sender, RoutedEventArgs e)
 		{
 			int page = GetCurrentPageNo();
@@ -680,29 +431,6 @@ namespace LightNovel
 				ViewModel.PageNo = page;
 			}
 		}
-
-		#region NavigationHelper registration
-
-		/// <summary>
-		/// The methods provided in this section are simply used to allow
-		/// NavigationHelper to respond to the page's navigation methods.
-		/// Page specific logic should be placed in event handlers for the  
-		/// <see cref="Common.NavigationHelper.LoadState"/>
-		/// and <see cref="Common.NavigationHelper.SaveState"/>.
-		/// The navigation parameter is available in the LoadState method 
-		/// in addition to page state preserved during an earlier session.
-		/// </summary>
-		protected override void OnNavigatedTo(NavigationEventArgs e)
-		{
-			this.navigationHelper.OnNavigatedTo(e);
-		}
-
-		protected override void OnNavigatedFrom(NavigationEventArgs e)
-		{
-			this.navigationHelper.OnNavigatedFrom(e);
-		}
-
-		#endregion
 
 		private void ContentScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
 		{
@@ -786,8 +514,6 @@ namespace LightNovel
 			RequestCommentsInView();
 
 		}
-		public Task<Chapter> LoadingAheadTask { get; set; }
-
 		public int TotalPage
 		{
 			get
@@ -860,49 +586,6 @@ namespace LightNovel
 			}
 		}
 
-		private void IndexButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (IsIndexPanelOpen == false)
-			{
-				IsIndexPanelOpen = true;
-				SyncIndexSelection();
-			}
-			else
-			{
-				IsIndexPanelOpen = false;
-			}
-		}
-
-		private void SyncIndexSelection()
-		{
-			if (!ViewModel.IsLoading)
-			{
-				if (VolumeListView.SelectedIndex != ViewModel.VolumeNo)
-					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
-				if (ChapterListView.SelectedIndex != ViewModel.ChapterNo)
-					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
-				VolumeListView.ScrollIntoView(VolumeListView.SelectedItem, ScrollIntoViewAlignment.Leading);
-				ChapterListView.ScrollIntoView(ChapterListView.SelectedItem, ScrollIntoViewAlignment.Leading);
-			}
-		}
-
-		//private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-		//{
-		//	var pageBox = sender as TextBox;
-		//	int page = (int)((ContentScrollViewer.HorizontalOffset + 0.1) / ContentTextBlock.Width);
-		//	try
-		//	{
-		//		int newPage = int.Parse(pageBox.Text);
-		//		ViewModel.PageNo = newPage;
-		//	}
-		//	catch (Exception)
-		//	{
-		//		ViewModel.PageNo = page;
-		//		return;
-		//	}
-		//}
-
-
 		private void PageBox_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
 			int result;
@@ -942,160 +625,7 @@ namespace LightNovel
 			this.navigationHelper.GoBackCommand.RaiseCanExecuteChanged();
 		}
 
-		private async void VolumeListView_ItemClick(object sender, ItemClickEventArgs e)
-		{
-			var list = (ListView)sender;
-			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
-			{
-				list.SelectedItem = e.ClickedItem;
-				await ViewModel.LoadDataAsync(null, list.SelectedIndex, 0, 0);
-				NotifyPropertyChanged("IsFavored");
-
-			}
-		}
-		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
-		{
-			var list = (ListView)sender;
-			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
-			{
-				list.SelectedItem = e.ClickedItem;
-				await ViewModel.LoadDataAsync(null, null, list.SelectedIndex, 0);
-				if (UsingLogicalIndexPage)
-					IsIndexPanelOpen = false;
-
-			}
-			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
-			{
-				IsIndexPanelOpen = false;
-			}
-
-
-		}
-
-		private async void PinButton_Click(object sender, RoutedEventArgs e)
-		{
-			var button = sender as AppBarToggleButton;
-			var transform = button.TransformToVisual(pageRoot);
-			Point location = transform.TransformPoint(new Point(0, 0));
-			if (!SecondaryTile.Exists(ViewModel.SeriesId.ToString()))
-			{
-				Size size = new Size(150, 150);
-				var bookmark = ViewModel.CreateBookmark();
-				//ViewModel.IsLoading = true;
-				var imageUri = await App.CreateTileImageAsync(new Uri(bookmark.DescriptionImageUri));
-				//ViewModel.IsLoading = false;
-				string args = bookmark.Position.ToString();
-				var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), ViewModel.SeriesData.Title, args, imageUri, TileSize.Default);
-				//var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), "LightNovel", ViewModel.SeriesData.Title, args, TileOptions.ShowNameOnLogo, imageUri);
-				button.IsChecked = await tile.RequestCreateForSelectionAsync(new Rect(location, size));
-				if (button.IsChecked.Value)
-				{
-					var icon = (button.Content as Viewbox).Child as SymbolIcon;
-					icon.Symbol = Symbol.UnPin;
-				}
-			}
-			else
-			{
-				var tile = new SecondaryTile(ViewModel.SeriesId.ToString());
-				button.IsChecked = !await tile.RequestDeleteAsync(location);
-				if (!button.IsChecked.Value)
-				{
-					var icon = (button.Content as Viewbox).Child as SymbolIcon;
-					icon.Symbol = Symbol.Pin;
-				}
-			}
-		}
-
-		private async void BookmarkButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (!ViewModel.IsFavored)
-			{
-				await ViewModel.AddCurrentVolumeToFavoriteAsync();
-			}
-			else
-			{
-				await ViewModel.RemoveCurrentVolumeFromFavoriteAsync();
-			}
-		}
-
-
 		public bool DisableAnimationScrollingFlag { get; set; }
-
-		private async void IllustrationSaveButton_Click(object sender, RoutedEventArgs e)
-		{
-			MessageDialog diag = new MessageDialog("Your image have saved successfully");
-
-			try
-			{
-				var fileSavePicker = new FileSavePicker();
-				var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
-				var uri = new Uri(lvm.Content);
-
-				//ScrollViewer sv = (ScrollViewer)(((Grid)((FrameworkElement)((FrameworkElement)sender).Parent).Parent).Children[0]);
-				//Image img = sv.Content as Image;
-				//var uri = (img.Source as BitmapImage).UriSource;
-
-				var downloadTask = HttpWebRequest.CreateHttp(uri).GetResponseAsync();
-				fileSavePicker.FileTypeChoices.Add(".jpg Image", new List<string> { ".jpg" });
-				fileSavePicker.DefaultFileExtension = ".jpg";
-				fileSavePicker.SuggestedFileName = System.IO.Path.GetFileName(uri.LocalPath);
-				var target = await fileSavePicker.PickSaveFileAsync();
-				using (var sourceStream = (await downloadTask).GetResponseStream())
-				{
-					using (var targetStream = await target.OpenStreamForWriteAsync())
-					{
-						await sourceStream.CopyToAsync(targetStream);
-					}
-				}
-			}
-			catch (Exception)
-			{
-				diag.Content = "Saving file failed";
-			}
-			await diag.ShowAsync();
-		}
-
-		private void IndexRegion_LostFocus(object sender, RoutedEventArgs e)
-		{
-			//if (IndexOpened)
-			//	IndexOpened = false;
-		}
-
-		private void ContentRegion_Tapped(object sender, TappedRoutedEventArgs e)
-		{
-			if (IsIndexPanelOpen)
-			{
-				IsIndexPanelOpen = false;
-				e.Handled = true;
-			}
-			else
-				e.Handled = false;
-		}
-
-		private void FontSizeButton_Click(object sender, RoutedEventArgs e)
-		{
-			var item = sender as MenuFlyoutItem;
-			ViewModel.FontSize = item.FontSize;
-			ContentTextBlock.FontWeight = item.FontWeight;
-			// Request an update of the layout since the font size is changed
-			RichTextColumns.ResetOverflowLayout(ContentColumns, null);
-			//ContentColumns.InvalidateMeasure();
-		}
-
-		private void ReadingThemButton_Click(object sender, RoutedEventArgs e)
-		{
-			var item = sender as MenuFlyoutItem;
-			ViewModel.Foreground = item.Foreground;
-			ViewModel.Background = item.Background;
-			if (item.Text == "Dark")
-				this.RequestedTheme = ElementTheme.Dark;
-			else
-				this.RequestedTheme = ElementTheme.Light;
-			RefreshThemeColor();
-			//App.Current.Resources["AppReadingBackgroundBrush"] = item.Background;
-			//App.Current.Resources["AppBackgroundBrush"] = ViewModel.Background;
-			//App.Current.Resources["AppForegroundBrush"] = ViewModel.Foreground;
-		}
 
 		private void ContentRegion_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
@@ -1111,8 +641,13 @@ namespace LightNovel
 
 		private async void ContentTextBlock_Tapped(object sender, TappedRoutedEventArgs e)
 		{
-			if (!ViewModel.EnableComments)
+			if (IsIndexPanelOpen)
+			{
+				IsIndexPanelOpen = false;
+				e.Handled = true;
 				return;
+			}
+
 			var p = e.GetPosition((UIElement)sender);
 			TextPointer tp = null;
 			if (sender is RichTextBlock)
@@ -1139,54 +674,36 @@ namespace LightNovel
 				}
 			}
 			if (element == null) return;
+
 			var line = (LineViewModel)element.GetValue(ParagrahViewModelProperty);
+
+			if (!line.IsImage && !ViewModel.EnableComments)
+					return;
 
 			if (line.HasNoComment)
 			{
 				ContentTextBlock.Select(element.ContentStart, element.ContentEnd);
-				((FrameworkElement)CommentsLayout.Content).DataContext = line;
+				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
 			}
 			else
 			{
-				((FrameworkElement)CommentsLayout.Content).DataContext = line;
+				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
-				//CommentsLayout.ShowAt((FrameworkElement)sender);
 				await line.LoadCommentsAsync();
 			}
 		}
 
-		private async void CommentSubmitButton_Click(object sender, RoutedEventArgs e)
+		private void SyncIndexSelection()
 		{
-			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
-			var commentText = CommentInputBox.Text;
-			CommentInputBox.Text = string.Empty;
-			await lvm.AddCommentAsync(commentText);
-		}
-
-		private void CommentInputBox_KeyDown(object sender, KeyRoutedEventArgs e)
-		{
-			if (e.Key == VirtualKey.Enter)
+			if (!ViewModel.IsLoading)
 			{
-				CommentSubmitButton_Click(sender, null);
-			}
-		}
-
-		private void IllustrationFullScreenButton_Click(object sender, RoutedEventArgs e)
-		{
-			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
-			((ImagePreviewFlyout.Content) as FrameworkElement).DataContext = lvm;
-			Flyout.ShowAttachedFlyout(this);
-		}
-
-		private void Illustration_DownloadProgress(object sender, DownloadProgressEventArgs e)
-		{
-			var bitmap = sender as BitmapImage;
-			var progressBar = bitmap.GetValue(BitmapLoadingIndicatorProperty) as ProgressBar;
-			progressBar.Value = e.Progress;
-			if (e.Progress == 100)
-			{
-				progressBar.GetVisualParent().Visibility = Visibility.Collapsed;
+				if (VolumeListView.SelectedIndex != ViewModel.VolumeNo)
+					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
+				if (ChapterListView.SelectedIndex != ViewModel.ChapterNo)
+					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
+				VolumeListView.ScrollIntoView(VolumeListView.SelectedItem, ScrollIntoViewAlignment.Leading);
+				ChapterListView.ScrollIntoView(ChapterListView.SelectedItem, ScrollIntoViewAlignment.Leading);
 			}
 		}
 	}

@@ -31,6 +31,8 @@ using WinRTXamlToolkit.Imaging;
 using Windows.UI.StartScreen;
 using Windows.Storage.Streams;
 using Windows.Graphics.Imaging;
+using Windows.UI.ViewManagement;
+using Windows.UI;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -64,6 +66,11 @@ namespace LightNovel
 			}
 		}
 
+		public void ChangeTheme(ApplicationTheme background, Windows.UI.Color accentColor)
+		{
+
+		}
+
 		void OnResuming(object sender, object e)
 		{
 
@@ -86,6 +93,13 @@ namespace LightNovel
 			//CurrentState = new ApplicationState();
 
 			Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
+
+#if WINDOWS_PHONE_APP
+			Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
+				 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
+			var statusBar = StatusBar.GetForCurrentView();
+			statusBar.BackgroundOpacity = 0;
+#endif
 
 			Frame rootFrame = Window.Current.Content as Frame;
 
@@ -159,6 +173,7 @@ namespace LightNovel
 				}
 			}
 
+			Settings.UpdateSavedAppVersion();
 			//App.CurrentState.SignInAutomaticlly();
 			// Ensure the current window is active
 			Window.Current.Activate();

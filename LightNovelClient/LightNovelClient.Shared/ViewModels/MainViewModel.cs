@@ -64,7 +64,7 @@ namespace LightNovel.ViewModels
 
 		public async Task<IEnumerable<FavourVolume>> LoadAsync(int maxItemCount = 9)
 		{
-			if (!IsLoading && LightKindomHtmlClient.IsSignedIn)
+			if (!IsLoading && !IsLoaded && LightKindomHtmlClient.IsSignedIn)
 			{
 				IsLoading = true;
 				try
@@ -83,13 +83,14 @@ namespace LightNovel.ViewModels
 					}
 
 					IsLoading = false;
-
+					IsLoaded = true;
 					return favList;
 				}
 				catch (Exception exception)
 				{
 					Debug.WriteLine(exception.Message);
 					IsLoading = false;
+					IsLoaded = false;
 				}
 
 			}
@@ -305,7 +306,6 @@ namespace LightNovel.ViewModels
 			//UserName = Settings.UserName;
 			//Password = Settings.Password;
 			SeriesIndex = null;
-			HistoryViewList = null;
 			IsIndexDataLoaded = false;
 			IsRecentDataLoaded = false;
 			IsRecommandLoaded = false;
@@ -316,6 +316,11 @@ namespace LightNovel.ViewModels
 			//{
 			//    Text = reader.ReadToEnd();    
 			//}
+		}
+
+		public bool IsOnline
+		{
+			get { return App.IsConnectedToInternet(); }
 		}
 
 		//async void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -340,10 +345,6 @@ namespace LightNovel.ViewModels
 		private string _loadingText;
 		private string _userName;
 		private string _password; 
-		private IList<KeyGroup<string, BookCoverViewModel>> _recommandBookItems;
-		private ObservableCollection<HistoryItemViewModel> _historyViewList;
-		private ObservableCollection<FavourVolume> _favourList;
-		private ObservableCollection<Descriptor> _recentList;
 		private HistoryItemViewModel _lastReadSection;
 		private Uri _coverBackgroundImageUri;
 
@@ -445,57 +446,6 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public ObservableCollection<HistoryItemViewModel> HistoryViewList
-		{
-			get { return _historyViewList; }
-			set
-			{
-				if (_historyViewList != value)
-				{
-					_historyViewList = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public ObservableCollection<FavourVolume> FavouriateList
-		{
-			get { return _favourList; }
-			set
-			{
-				if (_favourList != value)
-				{
-					_favourList = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-		public ObservableCollection<Descriptor> RecentList
-		{
-			get { return _recentList; }
-			set
-			{
-				if (_recentList != value)
-				{
-					_recentList = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-
-		public IList<KeyGroup<string, BookCoverViewModel>> RecommandBookItems
-		{
-			get { return _recommandBookItems; }
-			set
-			{
-				if (_recommandBookItems != value)
-				{
-					_recommandBookItems = value;
-					NotifyPropertyChanged();
-				}
-			}
-			
-		}
-
 		public bool IsRecentDataLoaded
 		{
 			get { return _isRecentDataLoaded; }
@@ -551,7 +501,7 @@ namespace LightNovel.ViewModels
 		/// </summary>
 		public async Task LoadSeriesIndexDataAsync()
 		{
-			if (IsLoading || IsIndexDataLoaded) return;
+			if (IsIndexDataLoaded) return;
 			LoadingText = "Loading series index data...";
 			IsLoading = true;
 			try
@@ -579,119 +529,85 @@ namespace LightNovel.ViewModels
 			IsLoading = false;
 		}
 
-		public async Task LoadRecommandDataAsync()
-		{
-			if (IsLoading || IsRecommandLoaded) return;
-			LoadingText = "Loading recommend books";
-			IsLoading = true;
-			try
-			{
-				var recommandBookGroups = await CachedClient.GetRecommandedBookLists();
-				RecommandBookItems = new List<KeyGroup<string, BookCoverViewModel>>();
-				foreach (var bookGroup in recommandBookGroups)
-				{
-					var group = new KeyGroup<string, BookCoverViewModel>
-					{
-						Key = bookGroup.Key
-					};
-					if (bookGroup.Value.Count <= 12)
-						group.AddRange(bookGroup.Value.Select(x=>new BookCoverViewModel(x)));
-					else
-						group.AddRange(bookGroup.Value.Take(12).Select(x=>new BookCoverViewModel(x)));
-					RecommandBookItems.Add(group);
-				}
-				IsRecommandLoaded = true;
-			}
-			catch (Exception exception)
-			{
-				IsLoading = false;
-				//throw exception;
-				Debug.WriteLine("Exception when retrieving recommended books : " + exception.Message);
-				//MessageBox.Show(exception.Message, "Exception when retriving recommanded books", MessageBoxButton.OK);
-			}
-			IsLoading = false;
+		//public async Task LoadUserRecentAsync()
+		//{
+		//	if (!IsLoading && !IsUserRecentLoaded && IsSignedIn)
+		//	{
+		//		LoadingText = "Loading user recent...";
+		//		IsLoading = true;
 
-		}
+		//		if (RecentList == null)
+		//			RecentList = new ObservableCollection<Descriptor>();
+		//		try
+		//		{
+		//			RecentList.Clear();
+		//			var recentList = (await LightKindomHtmlClient.GetUserRecentViewedVolumesAsync()).ToList();
+		//			foreach (var item in recentList)
+		//			{
+		//				RecentList.Add(item);
+		//			}
+		//		}
+		//		catch (Exception exception)
+		//		{
+		//			Debug.WriteLine("Load User recent failed : " + exception.Message);
+		//			//MessageBox.Show("Load User recent failed.");
+		//		}
 
-		public async Task LoadUserRecentAsync()
-		{
-			if (!IsLoading && !IsUserRecentLoaded && IsSignedIn)
-			{
-				LoadingText = "Loading user recent...";
-				IsLoading = true;
+		//		IsLoading = false;
+		//		LoadingText = "";
+		//	}
+		//}
 
-				if (RecentList == null)
-					RecentList = new ObservableCollection<Descriptor>();
-				try
-				{
-					RecentList.Clear();
-					var recentList = (await LightKindomHtmlClient.GetUserRecentViewedVolumesAsync()).ToList();
-					foreach (var item in recentList)
-					{
-						RecentList.Add(item);
-					}
-				}
-				catch (Exception exception)
-				{
-					Debug.WriteLine("Load User recent failed : " + exception.Message);
-					//MessageBox.Show("Load User recent failed.");
-				}
+		//public async Task UpdateRecentViewAsync()
+		//{
+		//	if (IsLoading || !App.Current.IsHistoryListChanged)
+		//		return;
+		//	LoadingText = "updating recent data...";
+		//	IsLoading = true;
+		//	if (HistoryViewList == null)
+		//		HistoryViewList = new ObservableCollection<HistoryItemViewModel>();
+		//	if (App.Current.RecentList == null)
+		//		await App.Current.LoadHistoryDataAsync();
+		//	var historyList = App.Current.RecentList;
 
-				IsLoading = false;
-				LoadingText = "";
-			}
-		}
-
-		public async Task UpdateRecentViewAsync()
-		{
-			if (IsLoading || !App.Current.IsHistoryListChanged)
-				return;
-			LoadingText = "updating recent data...";
-			IsLoading = true;
-			if (HistoryViewList == null)
-				HistoryViewList = new ObservableCollection<HistoryItemViewModel>();
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			var historyList = App.Current.RecentList;
-
-			HistoryViewList.Clear();
-			for (int idx = historyList.Count - 1; idx >= 0; idx--)
-			{
-				var item = historyList[idx];
-				var hvm = new HistoryItemViewModel
-				{
-					Position = item.Position,
-					ProgressPercentage = item.Progress,
-					CoverImageUri = item.DescriptionImageUri,
-					Description = item.ContentDescription,
-					ChapterTitle = item.ChapterTitle,
-					VolumeTitle = item.VolumeTitle,
-					SeriesTitle = item.SeriesTitle,
-					UpdateTime = item.ViewDate
-				};
-				HistoryViewList.Add(hvm);
-			}
-			//Windows.UI.StartScreen.SecondaryTile tile;
-			//var mainTile = ShellTile.ActiveTiles.FirstOrDefault();
-			//if (mainTile != null && historyList.Count > 0)
-			//{
-			//	var latestItem = historyList[historyList.Count - 1];
-			//	var imageUri = new Uri(latestItem.DescriptionImageUri);
-			//	var data = new FlipTileData
-			//	{
-			//		SmallBackgroundImage = imageUri,
-			//		BackgroundImage = imageUri,
-			//		Title = "Light Novel",
-			//		BackTitle = latestItem.VolumeTitle,
-			//		BackContent = latestItem.ContentDescription,
-			//	};
-			//	mainTile.Update(data);
-			//	CoverBackgroundImageUri = imageUri;
-			//}
-			App.Current.IsHistoryListChanged = false;
-			IsLoading = false;
-			IsRecentDataLoaded = true;
-		}
+		//	HistoryViewList.Clear();
+		//	for (int idx = historyList.Count - 1; idx >= 0; idx--)
+		//	{
+		//		var item = historyList[idx];
+		//		var hvm = new HistoryItemViewModel
+		//		{
+		//			Position = item.Position,
+		//			ProgressPercentage = item.Progress,
+		//			CoverImageUri = item.DescriptionImageUri,
+		//			Description = item.ContentDescription,
+		//			ChapterTitle = item.ChapterTitle,
+		//			VolumeTitle = item.VolumeTitle,
+		//			SeriesTitle = item.SeriesTitle,
+		//			UpdateTime = item.ViewDate
+		//		};
+		//		HistoryViewList.Add(hvm);
+		//	}
+		//	//Windows.UI.StartScreen.SecondaryTile tile;
+		//	//var mainTile = ShellTile.ActiveTiles.FirstOrDefault();
+		//	//if (mainTile != null && historyList.Count > 0)
+		//	//{
+		//	//	var latestItem = historyList[historyList.Count - 1];
+		//	//	var imageUri = new Uri(latestItem.DescriptionImageUri);
+		//	//	var data = new FlipTileData
+		//	//	{
+		//	//		SmallBackgroundImage = imageUri,
+		//	//		BackgroundImage = imageUri,
+		//	//		Title = "Light Novel",
+		//	//		BackTitle = latestItem.VolumeTitle,
+		//	//		BackContent = latestItem.ContentDescription,
+		//	//	};
+		//	//	mainTile.Update(data);
+		//	//	CoverBackgroundImageUri = imageUri;
+		//	//}
+		//	App.Current.IsHistoryListChanged = false;
+		//	IsLoading = false;
+		//	IsRecentDataLoaded = true;
+		//}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -716,7 +632,22 @@ namespace LightNovel.ViewModels
 
 		internal async Task<bool> TryLogInWithStoredCredentialAsync()
 		{
-			IsSignedIn = await App.Current.SignInAutomaticllyAsync();
+			if (!IsOnline)
+				return false;
+			if (App.Current.IsSignedIn)
+			{
+				IsSignedIn = true;
+				UserName = App.Current.User.UserName;
+			}
+			else
+			{
+				UserName = "Signing in...";
+				IsSignedIn = await App.Current.SignInAutomaticllyAsync();
+				if (IsSignedIn)
+					UserName = App.Current.User.UserName;
+				else
+					UserName = "Tap to Sign in";
+			}
 			return IsSignedIn;
 		}
 
@@ -732,47 +663,6 @@ namespace LightNovel.ViewModels
 				UserName = App.Current.User.UserName;
 			}
 			return IsSignedIn;
-			//if (IsSignedIn || String.IsNullOrWhiteSpace(UserName) || String.IsNullOrWhiteSpace(Password))
-			//	return;
-			//var session = Settings.Credential;
-			//if (session != null && !session.Expired) // Login with credential cookie
-			//{
-			//	LightKindomHtmlClient.Credential = Settings.Credential;
-			//	IsSignedIn = true;
-			//	return;
-			//}
-			//IsLoading = true;
-			//LoadingText = "Logging into Light Kindom";
-			//try
-			//{
-			//	var credential = await LightKindomHtmlClient.LoginAsync(UserName, Password);
-			//	IsSignedIn = true;
-			//	Settings.UserName = UserName;
-			//	Settings.Password = Password;
-			//	Settings.Credential = credential;
-			//}
-			//catch (Exception exception)
-			//{
-			//	throw exception;
-			//	//MessageBox.Show("Login failed, please check your network and username / password.");
-			//}
-			//IsLoading = false;
-			//LoadingText = "";
-		}
-
-		public bool IsFavoriteLoaded
-		{
-			get
-			{
-				return FavouriateList != null;
-			}
-		}
-		public bool IsUserRecentLoaded
-		{
-			get
-			{
-				return RecentList != null;
-			}
 		}
 	}
 }

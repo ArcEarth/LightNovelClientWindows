@@ -10,23 +10,10 @@
       xmlns:service="using:LightNovel.Service"
       xmlns:toolkit="using:WinRTXamlToolkit.Controls"
       x:Name="pageRoot"
-      DataContext="{Binding ViewModel,
-                            RelativeSource={RelativeSource Self}}"
+      DataContext="{Binding ViewModel,RelativeSource={RelativeSource Self}}"
       SizeChanged="pageRoot_SizeChanged"
       mc:Ignorable="d">
-    <!--
-        <Page.TopAppBar>
-        <AppBar IsSticky="True" IsOpen="True">
-        
-        </AppBar>
-        </Page.TopAppBar>
-    -->
 
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
     <Page.Resources>
         <!--  Collection of items displayed by this page  -->
         <CollectionViewSource x:Name="VolumesViewSource" Source="{Binding Index}" />
@@ -45,14 +32,14 @@
                                         FalseSymbol="Pin"
                                         TrueSymbol="UnPin" />
 
-        <SolidColorBrush x:Name="ContentTextBrush" ></SolidColorBrush>
+        <SolidColorBrush x:Name="ContentForegroundBrush" ></SolidColorBrush>
         <SolidColorBrush x:Name="ContentBackgroundBrush" ></SolidColorBrush>
         <SolidColorBrush x:Name="CommentedTextBrush" ></SolidColorBrush>
-        <SolidColorBrush x:Name="FlyoutBackgroundBrush" Color="{ThemeResource AppSemitransparentColor}"></SolidColorBrush>
+
         <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">
             <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="100,0" >
-                    <ProgressBar HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource FlyoutBackgroundBrush}" Maximum="100" Minimum="0" Value="0"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="100,0" >
+                    <ProgressBar HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource AppSemitransparentBrush}" Maximum="100" Minimum="0" Value="0"/>
                     <TextBlock x:Uid="ImageLoadingIndicator" Foreground="{ThemeResource AppAccentBrush}" HorizontalAlignment="Center" Margin="0,40,0,0" FontWeight="SemiBold" FontSize="{ThemeResource AppFontSizeMedium}">Image Loading...</TextBlock>
                 </StackPanel>
                 <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
@@ -63,8 +50,8 @@
                 <Rectangle Width="5" HorizontalAlignment="Left" Fill="{ThemeResource AppAccentBrush}" Visibility="{Binding HasComments,Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
         </DataTemplate>
-        <Flyout x:Key="CommentsLayout"
-                x:Name="CommentsLayout"
+        <Flyout x:Key="CommentsFlyout"
+                x:Name="CommentsFlyout"
                 Placement="Right"
                 >
             <Grid Width="250" MaxHeight="600">
@@ -75,8 +62,8 @@
                 </Grid.RowDefinitions>
                 <!--Image Tools-->
                 <Grid Background="{ThemeResource AppAccentBrush}" Visibility="{Binding IsImage,Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppBackgroundBrush}">Picture</TextBlock>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppBackgroundBrush}">Picture</TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
                         <Button x:Uid="ImageDownloadButton"
                         Grid.Row="2"
                         Width="40"
@@ -184,8 +171,8 @@
                     <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                    <Setter Property="Background" Value="{StaticResource AppBackgroundBrush}" />
-                    <Setter Property="BorderBrush" Value="{ThemeResource AppForegroundBrush}" />
+                    <Setter Property="Background" Value="{StaticResource AppSemitransparentBrush}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}" />
                     <Setter Property="BorderThickness" Value="1" />
                     <Setter Property="Padding" Value="5,5,5,5" />
                 </Style>
@@ -236,7 +223,7 @@
                     <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />-->
-                    <Setter Property="Background" Value="{StaticResource FlyoutBackgroundBrush}" />
+                    <Setter Property="Background" Value="{StaticResource AppSemitransparentBrush}" />
                     <Setter Property="BorderBrush" Value="Transparent" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Padding" Value="5" />
@@ -909,7 +896,7 @@
                                            Language="zh-CN"
                                            Padding="20,0,0,0"
                                            Style="{ThemeResource AppTextTitle3Style}"
-                                           Foreground="{ThemeResource ContentTextBrush}"
+                                           Foreground="{ThemeResource ContentForegroundBrush}"
                                            Text="{Binding Title}"
                                            TextTrimming="WordEllipsis" />
                             </Grid>
@@ -976,8 +963,7 @@
               Grid.Column="1"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-              KeyDown="ContentRegion_KeyDown"
-              Tapped="ContentRegion_Tapped">
+              KeyDown="ContentRegion_KeyDown">
             <Grid.RenderTransform>
                 <CompositeTransform TranslateX="0" />
             </Grid.RenderTransform>
@@ -1008,14 +994,14 @@
                                    TextAlignment="Left"
                                    TextWrapping="WrapWholeWords"
                                    Tapped="ContentTextBlock_Tapped" 
-                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsLayout}"/>
+                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"/>
                     <controls:RichTextColumns.ColumnTemplate>
                         <DataTemplate>
                             <RichTextBlockOverflow Width="640"
                                                    Height="668"
                                                    Padding="40,40"
                                                    Tapped="ContentTextBlock_Tapped"
-                                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsLayout}"/>
+                                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"/>
                         </DataTemplate>
                     </controls:RichTextColumns.ColumnTemplate>
                 </controls:RichTextColumns>

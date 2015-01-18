@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Converters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\CachedClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\IncrementalLoadingBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\UserInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ExpanderView.cs" />
@@ -38,6 +39,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\WrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HubPage.Shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReadingPage.Shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SearchResultsPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModels.cs" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\AppIcon.png" />
@@ -77,12 +80,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Theme\StandardStyles.xaml">
+    <Page Include="$(MSBuildThisFileDirectory)Theme\SharedStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controls\MultilingualResources\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Service\" />
   </ItemGroup>
 </Project>

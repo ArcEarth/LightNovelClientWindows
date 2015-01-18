@@ -93,12 +93,12 @@ namespace LightNovel
 			else
 			{
 				QueryText = e.NavigationParameter as String;
-				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText).ContinueWith(result =>
+				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText).ContinueWith(async result =>
 				{
 					Results = result.Result;
 					var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
 					this.DefaultViewModel["Results"] = bvms;
-					this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,()=>{
+					await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,()=>{
 						resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
 						if (Results == null || Results.Count == 0)
 							VisualStateManager.GoToState(this, "NoResultsFound", true);
@@ -127,8 +127,8 @@ namespace LightNovel
 			// Communicate results through the view model
 			this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
 
-			//if (QueryTask != null)
-			//	await QueryTask;
+			if (QueryTask != null)
+				await QueryTask;
 		}
 		private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{

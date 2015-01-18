@@ -1,21 +1,88 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using LightNovel.Controls;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
-// A Custom implementation to the Windows 8.1 SearchBox control in windows phone
-namespace Windows.UI.Xaml.Controls
+// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
+
+namespace LightNovel.Controls
 {
-	// Summary:
-	//     Represents a control that can be used to enter search query text.
-	public class SearchBox : Control
+	public class LocalContentSuggestionSettings
 	{
+	}
+
+	public class SearchBoxResultSuggestionChosenEventArgs
+	{
+	}
+
+	public class SearchBoxQueryChangedEventArgs
+	{
+		public string QueryText { get; set; }
+	}
+	public class SearchBoxQuerySubmittedEventArgs
+	{
+		public string QueryText { get; set; }
+	}
+	public class SearchBoxSuggestionsRequestedEventArgs
+	{
+	}
+	public sealed partial class SearchBox : UserControl
+	{
+
 		// Summary:
 		//     Initializes a new instance of the SearchBox class.
 
-		public SearchBox() { }
+		public SearchBox() {
+			InitializeComponent();
+		}
 
+		static DependencyProperty _IsExpandedProperty =
+			DependencyProperty.Register("IsExpanded", typeof(bool),
+			typeof(SearchBox), new PropertyMetadata(false, OnIsExpandedChanged));
+
+		public static DependencyProperty IsExpandedProperty
+		{
+			get
+			{
+				return _IsExpandedProperty;
+			}
+		}
+
+		public bool IsExpanded
+		{
+			get
+			{
+				return (bool)GetValue(_IsExpandedProperty);
+			}
+			set
+			{
+				SetValue(_IsExpandedProperty, value);
+			}
+		}
+
+		private static void OnIsExpandedChanged (DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var box = d as SearchBox;
+			if ((bool)e.NewValue == true)
+			{
+				box.ExpandingAnimation.To = box.Width;
+				VisualStateManager.GoToState(box, "ExpandedState", true);
+			}
+			else
+			{
+				VisualStateManager.GoToState(box, "NonExpandedState", true);
+			}
+		}
 		// Summary:
 		//     Gets or sets a value that determines whether the suggested search query is
 		//     activated when the user presses Enter.
@@ -23,15 +90,28 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     true if the suggested search query is activated when the user presses Enter;
 		//     otherwise, false. The default is false.
-		
-		public bool ChooseSuggestionOnEnter { get; set; }
+
+		public bool ChooseSuggestionOnEnter
+		{
+			get
+			{
+				return (bool)GetValue(_ChooseSuggestionOnEnterProperty);
+			}
+			set
+			{
+				SetValue(_ChooseSuggestionOnEnterProperty, value);
+			}
+		}
 		//
 		// Summary:
 		//     Identifies the ChooseSuggestionOnEnter dependency property.
 		//
 		// Returns:
 		//     The identifier for the ChooseSuggestionOnEnter dependency property.
-		static DependencyProperty _ChooseSuggestionOnEnterProperty = null;
+		static DependencyProperty _ChooseSuggestionOnEnterProperty =
+			DependencyProperty.Register("ChooseSuggestionOnEnter", typeof(bool),
+			typeof(SearchBox), new PropertyMetadata(false, null));
+
 		public static DependencyProperty ChooseSuggestionOnEnterProperty
 		{
 			get
@@ -47,8 +127,18 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     true if the user can search by typing anywhere in the app; otherwise, false.
 		//     The default is false.
-		
-		public bool FocusOnKeyboardInput { get; set; }
+
+		public bool FocusOnKeyboardInput
+		{
+			get
+			{
+				return (bool)GetValue(_FocusOnKeyboardInputProperty);
+			}
+			set
+			{
+				SetValue(_FocusOnKeyboardInputProperty, value);
+			}
+		}
 		//
 		// Summary:
 		//     Identifies the FocusOnKeyboardInput dependency property.
@@ -56,7 +146,10 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     The identifier for the FocusOnKeyboardInput dependency property.
 
-		static DependencyProperty _FocusOnKeyboardInputProperty = null;
+		static DependencyProperty _FocusOnKeyboardInputProperty =
+			DependencyProperty.Register("FocusOnKeyboardInput", typeof(bool),
+			typeof(SearchBox), new PropertyMetadata(false, null));
+
 		public static DependencyProperty FocusOnKeyboardInputProperty
 		{
 			get
@@ -72,15 +165,27 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     The text that is displayed in the control when no value is entered. The default
 		//     is an empty string ("").
-		
-		public string PlaceholderText { get; set; }
+
+		public string PlaceholderText
+		{
+			get
+			{
+				return (string)GetValue(_PlaceholderTextProperty);
+			}
+			set
+			{
+				SetValue(_PlaceholderTextProperty, value);
+			}
+		}
 		//
 		// Summary:
 		//     Identifies the PlaceholderText dependency property.
 		//
 		// Returns:
 		//     The identifier for the PlaceholderText dependency property.
-		static DependencyProperty _PlaceholderTextProperty = null;
+		static DependencyProperty _PlaceholderTextProperty =
+			DependencyProperty.Register("PlaceholderText", typeof(string),
+			typeof(SearchBox), new PropertyMetadata(null, null));
 
 		public static DependencyProperty PlaceholderTextProperty
 		{
@@ -97,8 +202,18 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     A string containing the text contents of the search box. The default is an
 		//     empty string ("").
-		
-		public string QueryText { get; set; }
+
+		public string QueryText
+		{
+			get
+			{
+				return (string)GetValue(_QueryTextProperty);
+			}
+			set
+			{
+				SetValue(_QueryTextProperty, value);
+			}
+		}
 		//
 		// Summary:
 		//     Identifies the QueryText dependency property.
@@ -106,7 +221,10 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     The identifier for the QueryText dependency property.
 
-		static DependencyProperty _QueryTextProperty = null;
+		static DependencyProperty _QueryTextProperty =
+			DependencyProperty.Register("QueryText", typeof(string),
+			typeof(SearchBox), new PropertyMetadata(String.Empty, null));
+
 		public static DependencyProperty QueryTextProperty
 		{
 			get
@@ -122,16 +240,28 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     A string that identifies the context of the search. The default is an empty
 		//     string ("").
-		
-		public string SearchHistoryContext { get; set; }
-		//
+
+		public string SearchHistoryContext
+		{
+			get
+			{
+				return (string)GetValue(_SearchHistoryContextProperty);
+			}
+			set
+			{
+				SetValue(_SearchHistoryContextProperty, value);
+			}
+		}
 		// Summary:
 		//     Identifies the SearchHistoryContext dependency property.
 		//
 		// Returns:
 		//     The identifier for the SearchHistoryContext dependency property.
 
-		static DependencyProperty _SearchHistoryContextProperty = null;
+		static DependencyProperty _SearchHistoryContextProperty =
+			DependencyProperty.Register("SearchHistoryContext", typeof(string),
+			typeof(SearchBox), new PropertyMetadata(String.Empty, null));
+
 		public static DependencyProperty SearchHistoryContextProperty
 		{
 			get
@@ -148,8 +278,18 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     true if search suggestions are made from the search history; otherwise, false.
 		//     The default is true.
-		
-		public bool SearchHistoryEnabled { get; set; }
+
+		public bool SearchHistoryEnabled
+		{
+			get
+			{
+				return (bool)GetValue(_SearchHistoryEnabledProperty);
+			}
+			set
+			{
+				SetValue(_SearchHistoryEnabledProperty, value);
+			}
+		}
 		//
 		// Summary:
 		//     Identifies the SearchHistoryEnabled dependency property.
@@ -157,7 +297,10 @@ namespace Windows.UI.Xaml.Controls
 		// Returns:
 		//     The identifier for the SearchHistoryEnabled dependency property.
 
-		static DependencyProperty _SearchHistoryEnabledProperty = null;
+		static DependencyProperty _SearchHistoryEnabledProperty =
+			DependencyProperty.Register("SearchHistoryEnabled", typeof(bool),
+			typeof(SearchBox), new PropertyMetadata(false, null));
+
 		public static DependencyProperty SearchHistoryEnabledProperty
 		{
 			get
@@ -169,28 +312,28 @@ namespace Windows.UI.Xaml.Controls
 		// Summary:
 		//     Occurs when the FocusOnKeyboardInput property is true and the app receives
 		//     textual keyboard input.
-		
+
 		public event TypedEventHandler<SearchBox, RoutedEventArgs> PrepareForFocusOnKeyboardInput;
 		//
 		// Summary:
 		//     Occurs when the query text changes.
-		
+
 		public event TypedEventHandler<SearchBox, SearchBoxQueryChangedEventArgs> QueryChanged;
 		//
 		// Summary:
 		//     Occurs when the user submits a search query.
-		
+
 		public event TypedEventHandler<SearchBox, SearchBoxQuerySubmittedEventArgs> QuerySubmitted;
 		//
 		// Summary:
 		//     Occurs when the user picks a suggested search result.
-		
+
 		public event TypedEventHandler<SearchBox, SearchBoxResultSuggestionChosenEventArgs> ResultSuggestionChosen;
 		//
 		// Summary:
 		//     Occurs when the user's query text changes and the app needs to provide new
 		//     suggestions to display in the search pane.
-		
+
 		public event TypedEventHandler<SearchBox, SearchBoxSuggestionsRequestedEventArgs> SuggestionsRequested;
 
 		// Summary:
@@ -201,26 +344,46 @@ namespace Windows.UI.Xaml.Controls
 		// Parameters:
 		//   settings:
 		//     The new settings for local content suggestions.
-		
+
 		public void SetLocalContentSuggestionSettings(LocalContentSuggestionSettings settings)
 		{ }
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			if (!IsExpanded)
+			{
+				IsExpanded = true;
+				InputBox.Focus(FocusState.Keyboard);
+			}
+			else
+				if (!String.IsNullOrEmpty(QueryText))
+				{
+					QuerySubmitted(this, new SearchBoxQuerySubmittedEventArgs { QueryText = this.QueryText });
+				}
+		}
+
+		private void TextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+		{
+			if ((e.Key ==  Windows.System.VirtualKey.Accept || e.Key ==  Windows.System.VirtualKey.Enter) && !String.IsNullOrEmpty(QueryText) && QuerySubmitted != null)
+			{
+				QuerySubmitted(this, new SearchBoxQuerySubmittedEventArgs { QueryText = this.QueryText });
+			}		
+		}
+
+		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			QueryText = ((TextBox)sender).Text;
+			if (QueryChanged != null)
+			{
+				QueryChanged(this, new SearchBoxQueryChangedEventArgs { QueryText = this.QueryText });
+			}
+		}
+
+		private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+		{
+			IsExpanded = false;
+		}
+
 	}
 
-	public class LocalContentSuggestionSettings
-	{
-	}
-
-	public class SearchBoxResultSuggestionChosenEventArgs
-	{
-	}
-
-	public class SearchBoxQueryChangedEventArgs
-	{
-	}
-	public class SearchBoxQuerySubmittedEventArgs
-	{
-	}
-	public class SearchBoxSuggestionsRequestedEventArgs
-	{
-	}
 }
