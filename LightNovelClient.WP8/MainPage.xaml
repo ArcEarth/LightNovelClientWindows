@@ -107,7 +107,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="/Assets/logo.png" HorizontalAlignment="Left" Margin="20,10,0,0" Grid.Column="0"></Image>
+                        <Image Source="/Assets/LogoG-310x150.png" HorizontalAlignment="Left" Stretch="None" Margin="-10,0,0,0" Grid.Column="0" VerticalAlignment="Center"></Image>
                         <StackPanel Margin="50,0,0,0" VerticalAlignment="Bottom" Grid.Column="1" Visibility="{Binding IsSignedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock Text="{Binding UserName}" Style="{StaticResource PhoneTextAccentStyle}"  ></TextBlock>
                             <Button Style="{StaticResource PureButtonStyle}" Name="LogoutButton" Click="LogoutButton_Click" >Log out</Button>
@@ -140,7 +140,7 @@
                 <phone:LongListSelector Margin="20,-34,0,0" ItemsSource="{Binding FavouriateList}">
                     <phone:LongListSelector.ItemTemplate>
                         <DataTemplate>
-                            <Button Margin="0,10,0,0" Style="{StaticResource PureButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <Button Margin="0,10,0,0" Style="{StaticResource PureButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Click="Button_Click">
                                 <StackPanel HorizontalAlignment="Stretch">
                                     <TextBlock Margin="0" Text="{Binding SeriesTitle}" FontSize="{StaticResource PhoneFontSizeLarge}" Style="{StaticResource PhoneTextAccentStyle}"></TextBlock>
                                     <StackPanel Orientation="Horizontal">
@@ -309,10 +309,10 @@
                 </phone:PanoramaItem.HeaderTemplate>
                 <Grid x:Name="AllTabLayoutRoot" Margin="0,-36,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button VerticalAlignment="Top" Foreground="{StaticResource PhoneBackgroundBrush}" Background="{StaticResource PhoneAccentBrush}" Grid.Column="0" Width="50" Height="50" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource MagnifyIconCirclebackground}"/>
+                    <Button VerticalAlignment="Top" Visibility="Collapsed" Foreground="{StaticResource PhoneBackgroundBrush}" Background="{StaticResource PhoneAccentBrush}" Grid.Column="0" Width="50" Height="50" toolkit:TiltEffect.IsTiltEnabled="True" Style="{StaticResource MagnifyIconCirclebackground}"/>
                     <phone:LongListSelector Grid.Column="1" ItemsSource="{Binding SeriesIndex}" LayoutMode="List" IsGroupingEnabled="True" HideEmptyGroups="True" JumpListStyle="{StaticResource SerIndexJumpListStyle}" >
                         <phone:LongListSelector.ItemTemplate>
                             <DataTemplate>
@@ -336,12 +336,18 @@
                 <!--Double line list with image placeholder and text wrapping using a floating header that scrolls with the content-->
             </phone:PanoramaItem>
             <phone:PanoramaItem Header="Settings">
-                <StackPanel>
+                <StackPanel Margin="0,-30,0,0">
+                    <TextBlock Style="{StaticResource PhoneTextSubtleStyle}"><Run>*WP 8 version will not be update anymore.</Run><LineBreak/><Run>Update to WP8.1 to get the latest App!</Run></TextBlock>
                     <Button Click="ClearCacheButton_OnClick">Clear Cache</Button>
                     <Button Click="ClearHistoryButtonBase_OnClick">Clear History</Button>
-                    <Button Click="ClearBookmarkButtonBase_OnClick">Clear Bookmark</Button>
-                    <toolkit:ToggleSwitch IsChecked="{Binding Settings.EnableComments,Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}">Show Comments</toolkit:ToggleSwitch>
+                    <!--<Button Click="ClearBookmarkButtonBase_OnClick">Clear Bookmark</Button>-->
+                    <toolkit:ToggleSwitch IsChecked="{Binding Settings.EnableComments,Mode=TwoWay}" SwitchForeground="{StaticResource PhoneAccentBrush}" Margin="0,0,0,-20">Show Comments</toolkit:ToggleSwitch>
                     <TextBlock Style="{StaticResource PhoneTextAccentStyle}" FontWeight="Light" TextWrapping="Wrap" Visibility="{Binding Settings.EnableComments,Converter={StaticResource BooleanToVisibilityConverter}}">*Warning : Comments is still in testing, enable it may bring accidential crush when reading!</TextBlock>
+                    <Rectangle Height="5" Fill="{StaticResource PhoneAccentBrush}" Margin="10,10" Opacity="0.5"></Rectangle>
+                    <TextBlock  Style="{StaticResource PhoneTextAccentStyle}"  Text="Special thanks and All Data Credit : "></TextBlock>
+                    <HyperlinkButton FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="{StaticResource PhoneAccentBrush}" Margin="20,10,60,0" HorizontalAlignment="Left" NavigateUri="http://lknovel.lightnovel.cn/">Lknovel.lightnovel.cn</HyperlinkButton>
+                    <Image Source="/Assets/logo.png" Margin="30,0,0,10" Stretch="None" HorizontalAlignment="Left"></Image>
+                    <HyperlinkButton HorizontalAlignment="Left" NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">Windows Client Support</HyperlinkButton>
                 </StackPanel>
             </phone:PanoramaItem>
             <!--Panorama item three-->

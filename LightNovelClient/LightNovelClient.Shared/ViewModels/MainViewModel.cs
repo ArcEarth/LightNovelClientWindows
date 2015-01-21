@@ -171,7 +171,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task LoadLocalAsync()
+		public async Task LoadLocalAsync(bool SkipLatest = false)
 		{
 			if (IsLoading)
 				return;
@@ -181,6 +181,10 @@ namespace LightNovel.ViewModels
 			var historyList = App.Current.RecentList;
 
 			this.Clear();
+
+			int begin = historyList.Count - 1;
+			if (SkipLatest)
+				--begin;
 			for (int idx = historyList.Count - 1; idx >= 0; idx--)
 			{
 				var item = historyList[idx];
@@ -281,6 +285,7 @@ namespace LightNovel.ViewModels
 						this.Add(group);
 					}
 					IsLoading = false;
+					IsLoaded = true;
 					NotifyPropertyChanged("IsEmpty");
 					return recommandBookGroups;
 				}

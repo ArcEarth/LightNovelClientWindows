@@ -204,7 +204,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Rectangle Fill="{ThemeResource AppAccentBrush}" HorizontalAlignment="Stretch"/>
-        <Hub Name="RootHub"
+        <Hub Name="RootHub" SectionsInViewChanged="RootHub_SectionsInViewChanged"
              Grid.Row="0"
              Grid.RowSpan="2"
              ScrollViewer.IsHorizontalScrollChainingEnabled="True"
@@ -403,11 +403,6 @@
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
                         </GridView.GroupStyle>
-                        <!--<GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="3"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>-->
                         <!--<GridView.ItemContainerStyle>
                             <Style TargetType="GridViewItem">
                                 <Setter Property="Margin" Value="0,10,20,0" />
@@ -472,12 +467,25 @@
                                                    TextTrimming="WordEllipsis"></TextBlock>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
-                                <ListView.ItemContainerStyle>
+                                <!--<ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
-                                        <Setter Property="Margin" Value="0" />
-                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <ContentPresenter x:Name="contentPresenter"
+                                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                          Content="{TemplateBinding Content}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          Margin="{TemplateBinding Padding}" />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+
                                     </Style>
-                                </ListView.ItemContainerStyle>
+                                </ListView.ItemContainerStyle>-->
                                 <!--<GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel Orientation="Vertical"/>

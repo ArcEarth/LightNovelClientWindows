@@ -169,5 +169,14 @@ namespace LightNovel
 			var uri = new Uri(NavigateUri, UriKind.Relative);
 			NavigationService.Navigate(uri);
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			var elem = sender as FrameworkElement;
+			var fv = elem.DataContext as LightNovel.Service.FavourVolume;
+			string NavigateUri = String.Format("/SeriesViewPage.xaml?id={0}&volume={1}", "", fv.VolumeId);// It's Volume View
+			var uri = new Uri(NavigateUri, UriKind.Relative);
+			NavigationService.Navigate(uri);
+		}
 	}
 }

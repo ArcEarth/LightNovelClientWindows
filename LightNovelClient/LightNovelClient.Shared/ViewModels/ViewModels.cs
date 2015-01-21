@@ -824,6 +824,17 @@ namespace LightNovel.ViewModels
 
 	public class HistoryItemViewModel : INotifyPropertyChanged
 	{
+		public HistoryItemViewModel() { }
+		public HistoryItemViewModel(BookmarkInfo item){
+			Position = item.Position;
+			ProgressPercentage = item.Progress;
+			CoverImageUri = item.DescriptionImageUri;
+			Description = item.ContentDescription;
+			ChapterTitle = item.ChapterTitle;
+			VolumeTitle = item.VolumeTitle;
+			SeriesTitle = item.SeriesTitle;
+			UpdateTime = item.ViewDate;
+		}
 		public NovelPositionIdentifier Position { get; set; }
 
 		public double ProgressPercentage { get; set; }

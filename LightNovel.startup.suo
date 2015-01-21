@@ -1,6 +1,7 @@
 {
   "MRU": [
-    "LightNovelClient.WindowsPhone"
+    "LightNovelClient.WindowsPhone",
+    "LightNovelClientWP8"
   ],
   "MultiProjectConfigurations": {}
 }

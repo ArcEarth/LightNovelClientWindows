@@ -63,9 +63,14 @@ namespace LightNovel.Common
 			return task;
 		}
 
-		public static Task<List<Descriptor>> GetSeriesIndexAsync(bool forceRefresh = false)
+		public static async Task<List<Descriptor>> GetSeriesIndexAsync(bool forceRefresh = false)
 		{
-			return DataCache.GetAsync("series_index", () => LightKindomHtmlClient.GetSeriesIndexAsync(), DateTime.Now.AddDays(7));
+			var index = await DataCache.GetAsync("series_index", () => LightKindomHtmlClient.GetSeriesIndexAsync(), DateTime.Now.AddDays(7));
+			if (index.Count == 0)
+			{
+				index = await DataCache.GetAsync("series_index", () => LightKindomHtmlClient.GetSeriesIndexAsync(), DateTime.Now.AddDays(7),true);
+			}
+			return index;
 		}
 
 		public static Task<IList<KeyValuePair<string, IList<BookItem>>>> GetRecommandedBookLists()
