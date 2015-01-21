@@ -3,7 +3,6 @@ using LightNovel.Service;
 using LightNovel.ViewModels;
 using Q42.WinRT.Data;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using WinRTXamlToolkit.Controls.Extensions;
 using LightNovel.Controls;
+using Windows.UI.ViewManagement;
 
 namespace LightNovel
 {
@@ -167,6 +167,7 @@ namespace LightNovel
 			}
 			else
 			{
+				ViewModel.IsSignedIn = true;
 				ViewModel.UserName = App.Current.User.UserName;
 				LoginTask = ViewModel.FavoriteSection.LoadAsync();
 			}
@@ -174,6 +175,13 @@ namespace LightNovel
 #if WINDOWS_APP
 			if (HubScrollViewer != null)
 				HubScrollViewer.ViewChanged += HubScrollViewer_ViewChanged;
+#else //WINDOWS_PHONE_APP
+			var statusBar = StatusBar.GetForCurrentView();
+			statusBar.ProgressIndicator.Text = "Synchronizing...";
+			statusBar.ProgressIndicator.ProgressValue = null;
+			statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
+			await statusBar.HideAsync();
+			await statusBar.ProgressIndicator.ShowAsync();
 #endif
 			if (LoadingRecentTask != null)
 			{
@@ -239,6 +247,8 @@ namespace LightNovel
 
 				}
 			}
+#else
+			await statusBar.ProgressIndicator.HideAsync();
 #endif
 		}
 
@@ -246,7 +256,7 @@ namespace LightNovel
 		void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
 		{
 			ScrollViewer viewer = sender as ScrollViewer;
-			LogoImageTranslate.X = -Math.Min(viewer.HorizontalOffset, 600);
+			LogoImageTranslate.X = -Math.Min(viewer.HorizontalOffset, 660);
 		}
 #endif
 		private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)

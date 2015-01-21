@@ -6,7 +6,15 @@
     </header>
     <body>
       <group id="Resources">
-        <trans-unit id="Resources\UserNameLabel\WatermarkText" translate="yes" xml:space="preserve">
+        <trans-unit id="Resources\NoAccountHintLabel\Text" translate="yes" xml:space="preserve">
+          <source>现在还有没账户?</source>
+          <target state="new">现在还有没账户?</target>
+        </trans-unit>
+        <trans-unit id="Resources\SigninPopupTitle\Text" translate="yes" xml:space="preserve">
+          <source>登陆"轻之国度"账户</source>
+          <target state="new">登陆"轻之国度"账户</target>
+        </trans-unit>
+        <trans-unit id="Resources\UserNameLabel\PlaceholderText" translate="yes" xml:space="preserve">
           <source>用户名</source>
           <target state="new">用户名</target>
         </trans-unit>
@@ -83,8 +91,8 @@
           <target state="new">在这里输入评论</target>
         </trans-unit>
         <trans-unit id="Resources\ApplicationName" translate="yes" xml:space="preserve">
-          <source>轻之国度</source>
-          <target state="new">轻之国度</target>
+          <source>轻阅读</source>
+          <target state="new">轻阅读</target>
         </trans-unit>
       </group>
     </body>

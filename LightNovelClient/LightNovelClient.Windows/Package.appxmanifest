@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.0.5" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.2.8" />
   <Properties>
     <DisplayName>LightNovel</DisplayName>
     <PublisherDisplayName>Arc Earth</PublisherDisplayName>
-    <Logo>Assets\StoreLogo-50.png</Logo>
+    <Logo>Assets\Logo-50.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
@@ -15,14 +15,14 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LightNovelClient.Windows.App">
-      <m2:VisualElements DisplayName="Light Novel" Square150x150Logo="Assets\Logo-150.png" Square30x30Logo="Assets\Logo-30.png" Description="The Windows 8 Client for LightNovel.cn, which provides you the most rich light novel reading experiences." ForegroundText="light" BackgroundColor="#105446" ToastCapable="false">
+      <m2:VisualElements DisplayName="LightNovel" Square150x150Logo="Assets\Logo-150.png" Square30x30Logo="Assets\Logo-30.png" Description="The Windows 8 Client for LightNovel.cn, which provides you the most rich light novel reading experiences." ForegroundText="light" BackgroundColor="#8CC63F" ToastCapable="false">
         <m2:DefaultTile Square310x310Logo="Assets\Logo-310.png" Wide310x150Logo="Assets\Logo-310x150.png" Square70x70Logo="Assets\Logo-70.png">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
             <m2:ShowOn Tile="wide310x150Logo" />
           </m2:ShowNameOnTiles>
         </m2:DefaultTile>
-        <m2:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#A4C400" />
+        <m2:SplashScreen Image="Assets\SplashScreen-620x300.png" BackgroundColor="#8CC63F" />
         <m2:InitialRotationPreference>
           <m2:Rotation Preference="portrait" />
           <m2:Rotation Preference="landscape" />

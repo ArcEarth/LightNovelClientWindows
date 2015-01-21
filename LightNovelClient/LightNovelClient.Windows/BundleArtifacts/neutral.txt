@@ -1,3 +1,5 @@
-MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.0.5_Bundle\LightNovelClient.Windows_1.1.0.5_AnyCPU.appx
-SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\AppPackages\LightNovelClient.Windows_1.1.0.5_Test\LightNovelClient.Windows_1.1.0.5_AnyCPU.appxsym
-ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.0.5_Bundle\LightNovelClient.Windows_1.1.0.5_language-en.appx
+MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_AnyCPU.appx
+SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\AppPackages\LightNovelClient.Windows_1.1.2.7_Test\LightNovelClient.Windows_1.1.2.7_AnyCPU.appxsym
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_language-en.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_scale-140.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_scale-180.appx

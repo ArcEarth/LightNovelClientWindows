@@ -1,13 +1,10 @@
-﻿using System;
+﻿using LightNovel.Service;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using LightNovel.Data;
-using LightNovel.Service;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using Q42.WinRT.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 
 namespace LightNovel.Common

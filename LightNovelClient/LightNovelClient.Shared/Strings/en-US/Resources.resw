@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -174,7 +173,13 @@
   <data name="SignUpButton.Content" xml:space="preserve">
     <value>Sign up for Light-Kingdom</value>
   </data>
-  <data name="UserNameLabel.WatermarkText" xml:space="preserve">
+  <data name="UserNameLabel.PlaceholderText" xml:space="preserve">
     <value>User Name</value>
+  </data>
+  <data name="SigninPopupTitle.Text" xml:space="preserve">
+    <value>Lightnovel.cn Account</value>
+  </data>
+  <data name="NoAccountHintLabel.Text" xml:space="preserve">
+    <value>Don't have an account yet?</value>
   </data>
 </root>

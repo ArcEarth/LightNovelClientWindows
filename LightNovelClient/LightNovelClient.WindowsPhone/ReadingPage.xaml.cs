@@ -146,14 +146,14 @@ namespace LightNovel
 
 		void ChangeView(int page, int line = -1)
 		{
-			if (line >= 0)
+			if (line >= 0 && line < ContentListView.Items.Count)
 			{
 				if (ContentListView.Items.Count > 0 )
 				{
 					ContentListView.UpdateLayout();
 					ContentListView.ScrollIntoView(ViewModel.Contents[line]);
 				}
-				else if (line < ContentListView.Items.Count)
+				else
 				{
 					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
 					ContentListView.SizeChanged += ContentListView_SizeChanged;
@@ -204,7 +204,9 @@ namespace LightNovel
 
 		private void SyncIndexSelection()
 		{
-			ListViewExtensions.SetItemToBringIntoView(VolumeListView,ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo]);
+			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
+			VolumeListView.UpdateLayout();
+			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
 		}
 
 		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -217,9 +219,36 @@ namespace LightNovel
 			var container = ContentListView.ContainerFromItem(line);
 			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 			CommentsFlyout.ShowAt((FrameworkElement)container);
-			if (line.HasComments)
+			//CommentInputBox.Focus(Windows.UI.Xaml.FocusState.Unfocused);
+			if (line.HasComments && !line.IsLoading)
 			{
 				await line.LoadCommentsAsync();
+			}
+		}
+
+		private void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+		{
+			if (args.InRecycleQueue)
+				return;
+			var line = (LineViewModel)args.Item;
+			if (args.Phase == 0 && line.HasComments && !line.IsLoading)
+				line.LoadCommentsAsync();
+		}
+
+		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var list = (ListView)sender;
+			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
+			{
+				list.SelectedItem = e.ClickedItem;
+				var cpvm = e.ClickedItem as ChapterPreviewModel;
+				if (UsingLogicalIndexPage)
+					IsIndexPanelOpen = false;
+				await ViewModel.LoadDataAsync(null, cpvm.VolumeNo, cpvm.No, 0);
+			}
+			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
+			{
+				IsIndexPanelOpen = false;
 			}
 		}
 	}

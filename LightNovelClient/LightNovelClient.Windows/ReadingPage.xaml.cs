@@ -91,7 +91,7 @@ namespace LightNovel
 				//var fcolor = (ViewModel.Foreground as SolidColorBrush).Color;
 				para.Foreground = CommentedTextBrush; //(SolidColorBrush)App.Current.Resources["AppAccentBrushLight"];
 			}
-			RequestCommentsInView();
+			//await RequestCommentsInViewAsync();
 		}
 
 		void ChangeView(int page, int line = -1)
@@ -511,7 +511,7 @@ namespace LightNovel
 
 			int lineNo = GetCurrentLineNo();
 			ViewModel.ReportViewChanged(page, lineNo);
-			RequestCommentsInView();
+			//RequestCommentsInView();
 
 		}
 		public int TotalPage
@@ -704,6 +704,35 @@ namespace LightNovel
 					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
 				VolumeListView.ScrollIntoView(VolumeListView.SelectedItem, ScrollIntoViewAlignment.Leading);
 				ChapterListView.ScrollIntoView(ChapterListView.SelectedItem, ScrollIntoViewAlignment.Leading);
+			}
+		}
+
+		private async void VolumeListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var list = (ListView)sender;
+			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
+			{
+				list.SelectedItem = e.ClickedItem;
+				await ViewModel.LoadDataAsync(null, list.SelectedIndex, 0, 0);
+				NotifyPropertyChanged("IsFavored");
+
+			}
+		}
+
+		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var list = (ListView)sender;
+			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
+			{
+				list.SelectedItem = e.ClickedItem;
+				var cpvm = e.ClickedItem as ChapterPreviewModel;
+				if (UsingLogicalIndexPage)
+					IsIndexPanelOpen = false;
+				await ViewModel.LoadDataAsync(null, cpvm.VolumeNo, cpvm.No, 0);
+			}
+			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
+			{
+				IsIndexPanelOpen = false;
 			}
 		}
 	}

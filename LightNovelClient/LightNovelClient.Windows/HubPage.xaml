@@ -294,8 +294,7 @@
                Margin="640,0,0,0"
                HorizontalAlignment="Left"
                VerticalAlignment="Center"
-               Opacity="0.75"
-               Source="Assets/LK_Logo.png"
+               Source="Assets/Logo-310x150.png"
                Stretch="None">
             <Image.RenderTransform>
                 <TranslateTransform x:Name="LogoImageTranslate" X="0" />
@@ -346,10 +345,11 @@
                         Padding="0,0,30,40"
                         Header="Favorite"
                         DataContext="{Binding FavoriteSection}"
+                        Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}" 
                         HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
                 <DataTemplate>
-                    <Grid Margin="0,20,0,0">
-                        <GridView IsItemClickEnabled="True"
+                    <GridView Margin="0,20,0,0"
+                                  IsItemClickEnabled="True"
                                   IsSwipeEnabled="False"
                                   ItemClick="FavoriteSectionItem_ItemClike"
                                   ItemTemplate="{StaticResource FavourItemTemplate}"
@@ -358,16 +358,7 @@
                                   ScrollViewer.IsHorizontalRailEnabled="False"
                                   ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                                   ScrollViewer.IsScrollInertiaEnabled="False"
-                                  SelectionMode="Multiple"
-                                  Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}" />
-                        <TextBlock MaxWidth="300"
-                                   FontSize="{ThemeResource AppFontSizeLarge}"
-                                   Foreground="{ThemeResource AppAccentBrush}"
-                                   TextWrapping="WrapWholeWords"
-                                   Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityConverter}}">
-                            :( No favourite yet. Add some by tap the &quot;Favourite&quot; button when you read!
-                        </TextBlock>
-                    </Grid>
+                                  SelectionMode="Multiple"/>
                 </DataTemplate>
             </HubSection>
             <HubSection x:Name="RecommandSection"
@@ -595,13 +586,14 @@
                    Opacity="0.5"
                    Tapped="SigninPopupBackButton_Click"
                    Visibility="{Binding ElementName=SigninPopup,
-                                        Path=Visibility}" />
+                                        Path=IsOpen,Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Popup Name="SigninPopup"
                Grid.RowSpan="2"
                Grid.ColumnSpan="2"
                Margin="0,-150,0,0"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Center"
+               IsOpen="False"
                Visibility="Collapsed">
             <Popup.Transitions>
                 <TransitionCollection>
@@ -645,7 +637,6 @@
                               Click="SigninPopupBackButton_Click"
                               Foreground="{ThemeResource AppBackgroundBrush}"
                               Icon="Back" />
-                <!--  <HyperlinkButton Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="SignUpButton" Foreground="{StaticResource AppBackgroundBrush }" NavigateUri="http://www.lightnovel.cn/member.php?mod=register"></HyperlinkButton>  -->
                 <Viewbox Grid.Row="1"
                          Grid.RowSpan="3"
                          Grid.Column="0"
@@ -706,6 +697,8 @@
                         <SymbolIcon Symbol="Forward" />
                     </Viewbox>
                 </Button>
+                <TextBlock x:Uid="NoAccountHintLabel" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,2" > Don't have n account yet?</TextBlock>
+                <HyperlinkButton Grid.Row="3" Grid.Column="1" Margin="15,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="SignUpButton" Foreground="{StaticResource AppBackgroundBrush }" FontSize="{ThemeResource AppFontSizeNormal}" NavigateUri="http://www.lightnovel.cn/member.php?mod=register">Sign up for Lightnovel.cn</HyperlinkButton>
             </Grid>
         </Popup>
 

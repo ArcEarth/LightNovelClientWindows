@@ -37,11 +37,9 @@
         <SolidColorBrush x:Name="CommentedTextBrush" ></SolidColorBrush>
 
         <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">
-            <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="100,0" >
-                    <ProgressBar HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource AppSemitransparentBrush}" Maximum="100" Minimum="0" Value="0"/>
-                    <TextBlock x:Uid="ImageLoadingIndicator" Foreground="{ThemeResource AppAccentBrush}" HorizontalAlignment="Center" Margin="0,40,0,0" FontWeight="SemiBold" FontSize="{ThemeResource AppFontSizeMedium}">Image Loading...</TextBlock>
-                </StackPanel>
+            <Grid HorizontalAlignment="Stretch">
+                <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource AppSemitransparentBrush}" VerticalAlignment="Center" Margin="100,0,100,100" Maximum="100" Minimum="0" Value="0"/>
+                <TextBlock x:Uid="ImageLoadingIndicator" Foreground="{ThemeResource AppAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="{ThemeResource AppFontSizeMedium}" Visibility="{Binding Visibility,ElementName=ProgressBar}">Image Loading...</TextBlock>
                 <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
                     <Image.Source>
                         <BitmapImage UriSource="{Binding Content}" x:Name="IllustrationBitmap" DownloadProgress="Illustration_DownloadProgress"></BitmapImage>

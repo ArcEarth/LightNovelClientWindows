@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using LightNovel.Common;
-using LightNovel;
 using LightNovel.Service;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -25,14 +17,10 @@ using Windows.Networking.Connectivity;
 using Windows.Storage;
 using Windows.Web.Http;
 using System.Net;
-using Windows.UI.Xaml.Media.Imaging;
-using WinRTXamlToolkit.IO.Extensions;
-using WinRTXamlToolkit.Imaging;
 using Windows.UI.StartScreen;
 using Windows.Storage.Streams;
 using Windows.Graphics.Imaging;
 using Windows.UI.ViewManagement;
-using Windows.UI;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -154,22 +142,24 @@ namespace LightNovel
 				rootFrame.ContentTransitions = null;
 				rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
-				// When the navigation stack isn't restored navigate to the first page,
-				// configuring the new page by passing required information as a navigation
-				// parameter
-				if (string.IsNullOrEmpty(e.Arguments))
-				{
+			}
+
+			// When the navigation stack isn't restored navigate to the first page,
+			// configuring the new page by passing required information as a navigation
+			// parameter
+			if (string.IsNullOrEmpty(e.Arguments))
+			{
+				if (rootFrame.Content == null || rootFrame.CurrentSourcePageType != typeof(HubPage))
 					if (!rootFrame.Navigate(typeof(HubPage), e.Arguments))
 					{
 						throw new Exception("Failed to create initial page");
 					}
-				}
-				else
+			}
+			else
+			{
+				if (!rootFrame.Navigate(typeof(ReadingPage), e.Arguments))
 				{
-					if (!rootFrame.Navigate(typeof(ReadingPage), e.Arguments))
-					{
-						throw new Exception("Failed to create Reading Page");
-					}
+					throw new Exception("Failed to create Reading Page");
 				}
 			}
 
@@ -546,18 +536,40 @@ namespace LightNovel
 
 		private async static Task<T> GetFromLocalFolderAsAsync<T>(string filePath) where T : class
 		{
-			var file = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filePath);
-			var content = await Windows.Storage.FileIO.ReadTextAsync(file);
-			return JsonConvert.DeserializeObject<T>(content);
+			try
+			{
+				var file = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filePath);
+				var content = await Windows.Storage.FileIO.ReadTextAsync(file);
+				return JsonConvert.DeserializeObject<T>(content);
+			} catch
+			{
+				return null;
+			}		
 		}
-
+		private async static Task<T> GetFromRoamingFolderAsAsync<T>(string filePath) where T : class
+		{
+			try
+			{
+				var file = await Windows.Storage.ApplicationData.Current.RoamingFolder.GetFileAsync(filePath);
+				var content = await Windows.Storage.FileIO.ReadTextAsync(file);
+				return JsonConvert.DeserializeObject<T>(content);
+			} catch
+			{
+				return null;
+			}
+		}
 		private async Task SaveToLocalFolderAsync(object obj, string path)
 		{
 			var file = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.OpenIfExists);
 			var content = JsonConvert.SerializeObject(obj);
 			await Windows.Storage.FileIO.WriteTextAsync(file, content);
 		}
-
+		private async Task SaveToRoamingFolderAsync(object obj, string path)
+		{
+			var file = await Windows.Storage.ApplicationData.Current.RoamingFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.OpenIfExists);
+			var content = JsonConvert.SerializeObject(obj);
+			await Windows.Storage.FileIO.WriteTextAsync(file, content);
+		}
 		public Task loadHistoryDataTask = null;
 		public async Task LoadHistoryDataAsync()
 		{
@@ -569,15 +581,14 @@ namespace LightNovel
 				return;
 			}
 
-			try
+			RecentList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
+
+			if (RecentList == null)
 			{
 				RecentList = await GetFromLocalFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
 			}
-			catch (FileNotFoundException exception)
-			{
-				Debug.WriteLine(exception.Message);
-				RecentList = new List<BookmarkInfo>();
-			}
+
+
 			if (RecentList == null)
 				RecentList = new List<BookmarkInfo>();
 
@@ -585,9 +596,11 @@ namespace LightNovel
 
 		public async Task SaveHistoryDataAsync()
 		{
+			if (RecentList.Count > 20)
+				RecentList.RemoveRange(20, RecentList.Count - 20);
 			if (RecentList != null)
 			{
-				await SaveToLocalFolderAsync(RecentList, LocalRecentFilePath);
+				await SaveToRoamingFolderAsync(RecentList, LocalRecentFilePath);
 				IsHistoryListChanged = false;
 			}
 		}

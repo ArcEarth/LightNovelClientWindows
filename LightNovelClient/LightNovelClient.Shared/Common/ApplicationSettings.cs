@@ -1,7 +1,6 @@
 ﻿using LightNovel.Service;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -42,9 +41,9 @@ namespace LightNovel.Common
 				_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
 			if (!_appSettings.ContainsKey(FontSizeKey))
 				_appSettings.Add(FontSizeKey, 19.0);
-			if (!_appSettings.ContainsKey(SavedAppVersion))
+			if (!_appSettings.ContainsKey(SavedAppVersionKey))
 			{
-				_appSettings.Add(SavedAppVersion, "00.00.00.00");
+				_appSettings.Add(SavedAppVersionKey, "00.00.00.00");
 			}
 			try
 			{

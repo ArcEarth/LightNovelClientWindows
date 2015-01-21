@@ -211,7 +211,7 @@
              SectionHeaderClick="Hub_SectionHeaderClick"
              TabIndex="0"
              Margin="0,0,0,0"
-             Padding="0,59,0,0"
+             Padding="0,0,0,0"
              >
             <Hub.Transitions>
                 <TransitionCollection>
@@ -222,12 +222,12 @@
                 <DataTemplate>
                     <Image Name="LogoImage"
                        Grid.ColumnSpan="4"
-                           Margin="0,0,0,0"
+                           Margin="-30,-30,0,0"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
-                       Opacity="0.75"
-                       Source="Assets/LK_Logo.png"
-                       Stretch="None">
+                           Height="120"
+                       Source="Assets/Logo-310x150.png"
+                       Stretch="Uniform">
                         <Image.RenderTransform>
                             <TranslateTransform x:Name="LogoImageTranslate" X="0" />
                         </Image.RenderTransform>
@@ -239,7 +239,7 @@
                     <Button Style="{ThemeResource PureButtonStyle}" 
                             VerticalAlignment="Stretch" 
                             Width="360"
-                            Margin="-20,-33,0,0"
+                            Margin="-20,-66,0,0"
                             Padding="0"
                             DataContext="{Binding}"
                             Click="LastReadSection_Clicked">
@@ -311,7 +311,7 @@
             <HubSection x:Uid="RecentReadingSection"
                         x:Name="RecentReadingItem"
                         Header="Recent"
-                        Margin="0,-6,0,0"
+                        Margin="0,-36,0,0"
                         Padding="0,0,0,0"
                         DataContext="{Binding RecentSection}"
                         Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
@@ -333,7 +333,7 @@
             <HubSection x:Uid="FavoriteSection"
                         Name="FavoriteSection"
                         Padding="0,0,0,0"
-                        Margin="0,-6,0,0"
+                        Margin="0,-36,0,0"
                         Header="Favorite"
                         Visibility="{Binding IsEmpty,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
                         DataContext="{Binding FavoriteSection}"
@@ -354,11 +354,11 @@
             </HubSection>
             <HubSection x:Name="RecommandSection"
                         Padding="0,0,0,0"
-                        Margin="0,-6,0,0"
+                        Margin="0,-67,0,0"
                         Width="600"
                         DataContext="{Binding RecommandSection}">
                 <DataTemplate>
-                    <GridView Margin="0,-35,0,0"
+                    <GridView Margin="0,0,0,0"
                               Padding="0"
                               VerticalAlignment="Stretch"
                               IsItemClickEnabled="True"
@@ -374,7 +374,7 @@
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="2">
+                                        <Grid Margin="2,0,2,2">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="50" />
                                                 <ColumnDefinition Width="*" />
@@ -420,10 +420,10 @@
 
             <HubSection x:Name="AllSection"
                         Padding="0,0,0,0"
-                        Margin="0,-6,0,0">
+                        Margin="0,-67,0,0">
                 <DataTemplate>
                     <SemanticZoom
-                        Margin="0,-35,0,0"
+                        Margin="0,0,0,0"
                         Padding="0"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
@@ -445,7 +445,7 @@
                                     <GroupStyle HidesIfEmpty="True">
                                         <GroupStyle.HeaderTemplate>
                                             <DataTemplate>
-                                                <Border Margin="2" 
+                                                <Border Margin="2,0,2,2"
                                                 Grid.Column="0"
                                                 Width="50"
                                                 Height="50"
@@ -463,7 +463,13 @@
                                 </ListView.GroupStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource AppAccentBrush}" Text="{Binding Title}" FontSize="{ThemeResource AppFontSizeMediumLarge}" HorizontalAlignment="Left"></TextBlock>
+                                        <TextBlock VerticalAlignment="Center" 
+                                                   MaxWidth="330"
+                                                   Foreground="{ThemeResource AppAccentBrush}" 
+                                                   Text="{Binding Title}" 
+                                                   FontSize="{ThemeResource AppFontSizeMediumLarge}" 
+                                                   HorizontalAlignment="Left"
+                                                   TextTrimming="WordEllipsis"></TextBlock>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                                 <ListView.ItemContainerStyle>
@@ -544,7 +550,7 @@
         </Button>
 
         <controls:SearchBox x:Uid="HubSearchBox"
-                   Width="360"
+                   Width="330"
                    Height="40"
                    Margin="20,0"
                    HorizontalAlignment="Right"
@@ -560,10 +566,9 @@
                    Grid.RowSpan="2"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Stretch"
-                   Fill="{ThemeResource AppBackgroundBrush}"
-                   Opacity="0.5"
+                   Fill="{ThemeResource AppSemitransparentBrush}"
                    Visibility="{Binding ElementName=SigninPopup,
-                                        Path=Visibility}" />
+                                        Path=IsOpen,Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Popup Name="SigninPopup"
                Grid.RowSpan="2"
                Grid.ColumnSpan="2"
@@ -571,7 +576,7 @@
                HorizontalAlignment="Stretch"
                IsLightDismissEnabled="True"
                VerticalAlignment="Center"
-               Visibility="Collapsed">
+               Visibility="Visible">
             <Popup.Transitions>
                 <TransitionCollection>
                     <EntranceThemeTransition />
@@ -590,12 +595,14 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Border Grid.ColumnSpan="2" Background="{ThemeResource AppAccentBrushSemiLight}">
-                    <TextBlock Margin="100,5,100,5"
-                               HorizontalAlignment="Center"
+                    <TextBlock Margin="20,5,10,5"
+                               x:Uid="SigninPopupTitle"
+                               HorizontalAlignment="Stretch"
                                VerticalAlignment="Center"
+                               FontWeight="SemiBold"
                                Foreground="{ThemeResource AppBackgroundBrush}"
-                               Style="{ThemeResource AppTextLargeStyle}">
-                        Signin to lightnovel account
+                               TextAlignment="Center"
+                               Style="{ThemeResource AppTextLargeStyle}">Lightnovel.cn Account
                     </TextBlock>
                 </Border>
                 <ProgressBar Grid.ColumnSpan="2"
@@ -605,24 +612,20 @@
                              Visibility="{Binding IsLoading,
                                                   Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                <AppBarButton Margin="20,5"
-                              BorderBrush="{ThemeResource AppBackgroundBrush}"
-                              Click="SigninPopupBackButton_Click"
-                              Foreground="{ThemeResource AppBackgroundBrush}"
-                              Icon="Back" />
-
                 <!--  <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="UserNameLabel">User Name</TextBlock>  -->
-                <toolkit:WatermarkTextBox x:Uid="UserNameLabel"
-                                          Grid.Row="1"
-                                          Height="30"
-                                          Margin="50,20"
-                                          HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Center"
-                                          IsEnabled="{Binding IsLoading,
-                                                              Converter={StaticResource BooleanNegationConverter},
-                                                              ConverterParameter=False}"
-                                          Text="{Binding UserName,
-                                                         Mode=TwoWay}" />
+                <TextBox x:Uid="UserNameLabel"
+                        Grid.Row="1"
+                        Height="30"
+                        Margin="50,20"
+                        PlaceholderText="UserName"
+                        Foreground="{ThemeResource AppForegroundBrush}"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        IsEnabled="{Binding IsLoading,
+                                            Converter={StaticResource BooleanNegationConverter},
+                                            ConverterParameter=False}"
+                        Text="{Binding UserName,
+                                        Mode=TwoWay}" />
                 <!--  <TextBox Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="{Binding UserName,Mode=TwoWay}" Margin="30,20" Width="200" ></TextBox>  -->
                 <!--  <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="PasswordLabel">Password</TextBlock>  -->
                 <PasswordBox x:Uid="PasswordLabel"
@@ -640,12 +643,14 @@
                                                 Mode=TwoWay}"
                              PlaceholderText="Password" />
                 <Button x:Uid="LoginButton"
+                        x:Name="LoginButton"
+                        AutomationProperties.AutomationId="LoginButton"
                         Grid.Row="2"
                         Grid.Column="1"
                         Width="30"
                         Height="30"
-                        MinWidth="30"
-                        MinHeight="30"
+                        MinWidth="50"
+                        MinHeight="50"
                         Padding="0"
                         Margin="50,20"
                         HorizontalAlignment="Right"
@@ -655,16 +660,21 @@
                         BorderThickness="1"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
-                        
                         Click="LoginButton_Click"
                         Foreground="{StaticResource AppBackgroundBrush}"
                         IsEnabled="{Binding IsLoading,
                                             Converter={StaticResource BooleanNegationConverter},
                                             ConverterParameter=False}">
-                    <Viewbox Margin="0" >
-                        <SymbolIcon Symbol="Forward" />
+                    <Viewbox Margin="0" Stretch="Uniform" HorizontalAlignment="Stretch"  VerticalAlignment="Top">
+                        <SymbolIcon Margin="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Symbol="Forward" />
                     </Viewbox>
                 </Button>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Left" Margin="50,0,0,5" >
+                    <TextBlock x:Uid="NoAccountHintLabel" VerticalAlignment="Bottom" Margin="0,2" > Don't have n account yet?</TextBlock>
+                    <HyperlinkButton Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" x:Uid="SignUpButton" Foreground="{StaticResource AppBackgroundBrush }" FontSize="{ThemeResource AppFontSizeNormal}" NavigateUri="http://www.lightnovel.cn/member.php?mod=register">Sign up for Lightnovel.cn</HyperlinkButton>
+                </StackPanel>
+
             </Grid>
         </Popup>
 

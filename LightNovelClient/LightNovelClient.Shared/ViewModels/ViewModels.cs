@@ -9,14 +9,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.StartScreen;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace LightNovel.ViewModels
@@ -150,9 +145,6 @@ namespace LightNovel.ViewModels
 				if (_VolumeData != value)
 				{
 					_VolumeData = value;
-#if WINDOWS_APP
-					SeconderyIndex = _VolumeData.Chapters;
-#endif
 					NotifyPropertyChanged("Header");
 					NotifyPropertyChanged("IsFavored");
 					NotifyPropertyChanged("IsPinned");
@@ -181,10 +173,17 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
+#if WINDOWS_APP // USE Long header
 				if (SeriesData != null && VolumeData != null && ChapterData != null)
 					return SeriesData.Title + " / " + VolumeData.Title + " / " + ChapterData.Title;
 				else
 					return "Loading...";
+#else // WINDOWS_PHONE_APP
+				if (SeriesData != null && VolumeData != null && ChapterData != null)
+					return VolumeData.Title;
+				else
+					return "Loading...";
+#endif
 			}
 		}
 
@@ -197,7 +196,7 @@ namespace LightNovel.ViewModels
 		private int _PagesCount = -1;
 		private IList _Contents;
 		private IList<VolumeViewModel> _Index;
-		private IList<Chapter> _SeconderyIndex;
+		private IList<ChapterPreviewModel> _SeconderyIndex;
 
 		public bool IsLoading
 		{
@@ -245,6 +244,10 @@ namespace LightNovel.ViewModels
 				if (_ChapterNo != value)
 				{
 					_ChapterNo = value;
+#if WINDOWS_APP
+					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
+					SeconderyIndex = Index[_VolumeNo].Chapters;
+#endif
 					NotifyPropertyChanged();
 				}
 			}
@@ -332,7 +335,7 @@ namespace LightNovel.ViewModels
 
 #if WINDOWS_APP
 
-		public IList<Chapter> SeconderyIndex
+		public IList<ChapterPreviewModel> SeconderyIndex
 		{
 			get { return _SeconderyIndex; }
 			private set
@@ -522,8 +525,12 @@ namespace LightNovel.ViewModels
 					//_storage.AddRange(lvms);
 					//NotifyOfInsertedItems(0, _storage.Count);
 					//NotifyPropertyChanged("Contents");
-					Contents = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id)).ToList();
-
+					Contents = lvms.ToList();
+					if (Contents.Count == 0)
+					{
+						Contents = new LineViewModel[] { new LineViewModel(1,"Failed to load data :("),
+										new LineViewModel(2,"Sorry, the content you request is currently unavailable.")};
+					}
 					//var collection = new PagelizedIncrementalVector<LineViewModel>(ChapterNo,new List<int>(VolumeData.Chapters.Select(c=>0)), lvms);
 					//collection.AccuirePageData = async chptNo =>
 					//{
@@ -545,13 +552,7 @@ namespace LightNovel.ViewModels
 										new LineViewModel(2,"Please check your Internet Connectivity."),
 										new LineViewModel(3,"Exception detail : " + ex.Message) };
 				IsLoading = false;
-				if (lineNo != null) //&& LineNo != lineNo.Value)
-				{
-					if (LineNo >= 0)
-						LineNo = lineNo.Value;
-					else
-						lineNo = Contents.Count - lineNo;
-				} 
+				LineNo = 0;
 				return;
 			}
 
@@ -559,6 +560,8 @@ namespace LightNovel.ViewModels
 
 			if (lineNo != null) //&& LineNo != lineNo.Value)
 			{
+				if (lineNo >= Contents.Count)
+					lineNo = 0;
 				if (lineNo.Value >= 0)
 					LineNo = lineNo.Value;
 				else
@@ -602,7 +605,7 @@ namespace LightNovel.ViewModels
 					SeriesId = SeriesId.ToString(),//App.CurrentSeries.Id,
 					LineNo = LineNo,
 				},
-				Progress = LineNo / Contents.Count,
+				Progress = Contents.Count != 0 ? (LineNo / Contents.Count) : 0,
 			};
 
 			if (IsDataLoaded)
@@ -1722,16 +1725,16 @@ namespace LightNovel.ViewModels
 
 		public async Task LoadCommentsAsync()
 		{
-			if (HasNoComment || String.IsNullOrEmpty(ParentChapterId)) 
+			if (HasNoComment || String.IsNullOrEmpty(ParentChapterId) || IsLoading) 
 				return;
 			if (LoadCommentTask == null && Comments.Count == 0)
 			{
 				string lineId = No.ToString();
 				Debug.WriteLine("Loading Comments : line_id = " + lineId + " ,chapter_id = " + ParentChapterId);
 				LoadCommentTask = LightKindomHtmlClient.GetCommentsAsync(lineId, ParentChapterId);
+				IsLoading = true;
 				try
 				{
-					IsLoading = true;
 					var comments = await LoadCommentTask;
 					foreach (var comment in comments)
 					{

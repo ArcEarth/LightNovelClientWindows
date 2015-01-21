@@ -1,16 +1,16 @@
 ﻿using LightNovel.Common;
-using LightNovel.Controls;
 using LightNovel.Service;
 using LightNovel.ViewModels;
+using LightNovel.Controls;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+
 //using System.IO;
 using System.Threading.Tasks;
 //using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,12 +25,10 @@ using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using WinRTXamlToolkit.Controls.Extensions;
 
 namespace LightNovel
 {
@@ -145,13 +143,13 @@ namespace LightNovel
 			//App.Current.Resources["AppForegroundBrush"] = ViewModel.Foreground;
 		}
 
-		void RequestCommentsInView()
+		async Task RequestCommentsInViewAsync()
 		{
-			//var lineNo = GetCurrentLineNo();
-			//for (int idx = lineNo; idx < Math.Min(lineNo + 30, ViewModel.Contents.Count); idx++)
-			//{
-			//	ViewModel.Contents[idx].LoadCommentsAsync();
-			//}
+			var lineNo = GetCurrentLineNo();
+			for (int idx = lineNo; idx < Math.Min(lineNo + 30, ViewModel.Contents.Count); idx++)
+			{
+				await (ViewModel.Contents[idx] as LineViewModel).LoadCommentsAsync();
+			}
 		}
 
 		void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -346,36 +344,6 @@ namespace LightNovel
 			}
 		}
 
-		private async void VolumeListView_ItemClick(object sender, ItemClickEventArgs e)
-		{
-			var list = (ListView)sender;
-			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
-			{
-				list.SelectedItem = e.ClickedItem;
-				await ViewModel.LoadDataAsync(null, list.SelectedIndex, 0, 0);
-				NotifyPropertyChanged("IsFavored");
-
-			}
-		}
-		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
-		{
-			var list = (ListView)sender;
-			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
-			{
-				list.SelectedItem = e.ClickedItem;
-				var cpvm = e.ClickedItem as ChapterPreviewModel;
-				if (UsingLogicalIndexPage)
-					IsIndexPanelOpen = false;
-				await ViewModel.LoadDataAsync(null, cpvm.VolumeNo, cpvm.No, 0);
-			}
-			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
-			{
-				IsIndexPanelOpen = false;
-			}
-
-
-		}
-
 		private async void PinButton_Click(object sender, RoutedEventArgs e)
 		{
 			var button = sender as AppBarToggleButton;
@@ -428,19 +396,20 @@ namespace LightNovel
 
 			try
 			{
-				var fileSavePicker = new FileSavePicker();
 				var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
 				var uri = new Uri(lvm.Content);
-
-				//ScrollViewer sv = (ScrollViewer)(((Grid)((FrameworkElement)((FrameworkElement)sender).Parent).Parent).Children[0]);
-				//Image img = sv.Content as Image;
-				//var uri = (img.Source as BitmapImage).UriSource;
-
 				var downloadTask = HttpWebRequest.CreateHttp(uri).GetResponseAsync();
+				var localName = System.IO.Path.GetFileName(uri.LocalPath);
+#if WINDOWS_APP
+				var fileSavePicker = new FileSavePicker();
 				fileSavePicker.FileTypeChoices.Add(".jpg Image", new List<string> { ".jpg" });
 				fileSavePicker.DefaultFileExtension = ".jpg";
-				fileSavePicker.SuggestedFileName = System.IO.Path.GetFileName(uri.LocalPath);
+				fileSavePicker.SuggestedFileName = localName;
 				var target = await fileSavePicker.PickSaveFileAsync();
+#else
+				var folder = KnownFolders.SavedPictures;
+				var target = await folder.CreateFileAsync(localName, CreationCollisionOption.GenerateUniqueName);
+#endif
 				using (var sourceStream = (await downloadTask).GetResponseStream())
 				{
 					using (var targetStream = await target.OpenStreamForWriteAsync())
@@ -484,9 +453,12 @@ namespace LightNovel
 
 		private async void CommentSubmitButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (String.IsNullOrEmpty(CommentInputBox.Text))
+				return;
 			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
 			var commentText = CommentInputBox.Text;
 			CommentInputBox.Text = string.Empty;
+			//CommentInputBox.Focus(Windows.UI.Xaml.FocusState.Unfocused);
 			await lvm.AddCommentAsync(commentText);
 		}
 
@@ -513,9 +485,9 @@ namespace LightNovel
 			progressBar.Value = e.Progress;
 			if (e.Progress == 100)
 			{
-				var container = progressBar.GetVisualParent();
+				var container = progressBar;//.Ge.GetVisualParent();
 				if (container != null)
-					progressBar.GetVisualParent().Visibility = Visibility.Collapsed;
+					container.Visibility = Visibility.Collapsed;
 			}
 		}
 	}

@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,7 +117,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationName" xml:space="preserve">
-    <value>轻之国度</value>
+    <value>轻阅读</value>
   </data>
   <data name="CommentInputBox.PlaceholderText" xml:space="preserve">
     <value>在这里输入评论</value>
@@ -174,7 +173,13 @@
   <data name="SignUpButton.Content" xml:space="preserve">
     <value>注册"轻之国度"</value>
   </data>
-  <data name="UserNameLabel.WatermarkText" xml:space="preserve">
+  <data name="UserNameLabel.PlaceholderText" xml:space="preserve">
     <value>用户名</value>
+  </data>
+  <data name="SigninPopupTitle.Text" xml:space="preserve">
+    <value>登陆"轻之国度"账户</value>
+  </data>
+  <data name="NoAccountHintLabel.Text" xml:space="preserve">
+    <value>现在还有没账户?</value>
   </data>
 </root>

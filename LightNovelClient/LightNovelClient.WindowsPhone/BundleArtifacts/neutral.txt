@@ -1,0 +1,6 @@
+MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\bin\Release\LightNovelClient.WindowsPhone_1.1.2.3_Bundle\LightNovelClient.WindowsPhone_1.1.2.3_AnyCPU.appx
+SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\AppPackages\LightNovelClient.WindowsPhone_1.1.2.3_Test\LightNovelClient.WindowsPhone_1.1.2.3_AnyCPU.appxsym
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\bin\Release\LightNovelClient.WindowsPhone_1.1.2.3_Bundle\LightNovelClient.WindowsPhone_1.1.2.3_language-en.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\bin\Release\LightNovelClient.WindowsPhone_1.1.2.3_Bundle\LightNovelClient.WindowsPhone_1.1.2.3_scale-100.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\bin\Release\LightNovelClient.WindowsPhone_1.1.2.3_Bundle\LightNovelClient.WindowsPhone_1.1.2.3_scale-140.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.WindowsPhone\bin\Release\LightNovelClient.WindowsPhone_1.1.2.3_Bundle\LightNovelClient.WindowsPhone_1.1.2.3_scale-180.appx
