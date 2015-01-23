@@ -168,6 +168,8 @@ namespace LightNovel
 
 				}
 			}
+
+			UpdateTile();
 #else
 			await statusBar.ProgressIndicator.HideAsync();
 #endif

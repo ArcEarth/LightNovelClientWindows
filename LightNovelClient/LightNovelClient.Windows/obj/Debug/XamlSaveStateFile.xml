@@ -1,6 +1,6 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-    <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windows\obj\debug\intermediatexaml\lightnovelclient.store.exe" HashGuid="615f49af-d8a6-932e-f3be-ede4b336647b" />
+    <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windows\obj\debug\intermediatexaml\lightnovelclient.store.exe" HashGuid="3bb5333c-48e2-f18d-8444-10b4a2d6abaf" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelservice\bin\debug\lightnovel.service.dll" HashGuid="8079d626-99b9-f7fa-290a-b59d3cc3401e" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\newtonsoft.json.6.0.8\lib\netcore45\newtonsoft.json.dll" HashGuid="fd3dfcab-cf69-c796-78a2-2423dadb814b" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.1.2.6.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="9ae986bb-5773-4b0f-5ffe-3a76d9adae67" />

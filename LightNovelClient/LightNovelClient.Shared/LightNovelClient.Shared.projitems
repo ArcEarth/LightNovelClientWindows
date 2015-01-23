@@ -39,6 +39,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\WrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HubPage.Shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifaction\BadgeContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifaction\Common.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifaction\ContentInterfaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifaction\TileContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Notifaction\ToastContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadingPage.Shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchResultsPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />

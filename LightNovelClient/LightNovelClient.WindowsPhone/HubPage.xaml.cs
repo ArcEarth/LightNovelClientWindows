@@ -100,6 +100,7 @@ namespace LightNovel
 			} else if (e.AddedSections.Contains(RecommandSection) && !ViewModel.RecommandSection.IsLoading && !ViewModel.RecommandSection.IsLoaded)
 			{
 				await ViewModel.RecommandSection.LoadAsync();
+				UpdateTile();
 			}
 		}
 
