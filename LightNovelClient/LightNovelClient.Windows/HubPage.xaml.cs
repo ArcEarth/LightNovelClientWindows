@@ -45,10 +45,36 @@ namespace LightNovel
 			Task LoadingIndexTask = null;
 			Task LoadingRecommandTask = null;
 			//Task LoadingFavouriteTask = null;
-			Task LoadingRecentTask = null;
+			//Task LoadingRecentTask = null;
 			Task LoginTask = null;
 
 			ViewModel.IsLoading = true;
+
+			if (App.Current.RecentList == null)
+				await App.Current.LoadHistoryDataAsync();
+			if (App.Current.RecentList.Count > 0)
+			{
+				ViewModel.LastReadSection = new HistoryItemViewModel(App.Current.RecentList[App.Current.RecentList.Count - 1]);
+				await ViewModel.RecentSection.LoadLocalAsync(true);
+			}
+			else
+			{
+				ViewModel.LastReadSection = new HistoryItemViewModel
+				{
+					Position = new NovelPositionIdentifier
+					{
+						SeriesId = "337",
+						VolumeNo = 0,
+						VolumeId = "1138",
+						ChapterNo = 0,
+						ChapterId = "8683"
+					},
+					SeriesTitle = "机巧少女不会受伤",
+					VolumeTitle = "第一卷 ",
+					Description = "机巧魔术──那是由内藏魔术回路的自动人偶与人偶使所使用的魔术。在英国最高学府的华尔普吉斯皇家机巧学院里，正举行着一场选出顶尖人偶使「魔王」的战斗「夜会」。来自日本的留学生雷真和他的搭档──少女型态的人偶夜夜，为了参加「夜会」，打算挑战其他入选者，夺取对方的资格。他们锁定的目标是下届魔王呼声极高的候选人，别名「暴龙」的美少女夏琳！然而就在雷真向她挑战时，突然出现意外的伏兵……？ 交响曲式学园战斗动作剧，第一集登场！",
+					CoverImageUri = "http://lknovel.lightnovel.cn/illustration/image/20120813/20120813085826_34455.jpg"
+				};
+			}
 
 			if (!ViewModel.RecommandSection.IsLoaded && !ViewModel.RecommandSection.IsLoading)
 			{
@@ -70,8 +96,6 @@ namespace LightNovel
 					});
 				});
 			}
-
-			LoadingRecentTask = ViewModel.RecentSection.LoadLocalAsync();
 
 			if (!App.Current.IsSignedIn)
 			{
@@ -104,55 +128,20 @@ namespace LightNovel
 			await statusBar.HideAsync();
 			await statusBar.ProgressIndicator.ShowAsync();
 #endif
-			if (LoadingRecentTask != null)
-			{
-				await LoadingRecentTask;
-				if (ViewModel.RecentSection.Count > 0)
-				{
-					ViewModel.LastReadSection = ViewModel.RecentSection.FirstOrDefault();
-					ViewModel.RecentSection.RemoveAt(0);
-				}
-			}
+
 			if (LoadingRecommandTask != null)
 				await LoadingRecommandTask;
 			if (LoadingIndexTask != null)
 				await LoadingIndexTask;
-
-			if (ViewModel.LastReadSection == null)
-			{
-				var bvm = ViewModel.RecommandSection[0][0];
-				ViewModel.LastReadSection = new HistoryItemViewModel
-				{
-					Position = new NovelPositionIdentifier
-					{
-						SeriesId = bvm.Id,
-						VolumeNo = 0,
-						ChapterNo = 0,
-					},
-					SeriesTitle = bvm.Title,
-					Description = bvm.Description,
-					CoverImageUri = bvm.CoverImageUri,
-				};
-				try
-				{
-					var series = await CachedClient.GetSeriesAsync(bvm.Id);
-					var chapter = await CachedClient.GetChapterAsync(series.Volumes[0].Chapters[0].Id);
-					var imageLine = chapter.Lines.FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
-					ViewModel.LastReadSection.CoverImageUri = imageLine.Content;
-					ViewModel.LastReadSection.Description = series.Description;
-				}
-				catch (Exception)
-				{
-					Debug.WriteLine("Failed to download the Cover Image.");
-				}
-			}
-
 			if (LoginTask != null)
 				await LoginTask;
+
+			UpdateTile();
 
 			ViewModel.IsLoading = false;
 
 #if  WINDOWS_APP
+
 			foreach (var group in ViewModel.RecommandSection)
 			{
 				foreach (var item in group)

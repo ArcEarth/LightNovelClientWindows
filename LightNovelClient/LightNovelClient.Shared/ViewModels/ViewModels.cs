@@ -210,6 +210,14 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
+		public bool IsSignedIn
+		{
+			get
+			{
+				return App.Current.IsSignedIn;
+			}
+		}
+
 		public int SeriesId
 		{
 			get { return _SeriesId; }
@@ -363,7 +371,7 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
-				if (Index == null || App.Current.User == null || App.Current.User.FavoriteList == null)
+				if (Index == null || !App.Current.IsSignedIn || App.Current.User == null || App.Current.User.FavoriteList == null)
 					return false;
 				return App.Current.User.FavoriteList.Any(vol => vol.VolumeId == VolumeData.Id);
 			}
@@ -371,6 +379,8 @@ namespace LightNovel.ViewModels
 
 		public async Task<bool> AddCurrentVolumeToFavoriteAsync()
 		{
+			if (!App.Current.IsSignedIn)
+				return false;
 			var result = await App.Current.User.AddUserFavriteAsync(VolumeData,SeriesData.Title);
 			if (result)
 				NotifyPropertyChanged("IsFavored");
@@ -379,6 +389,8 @@ namespace LightNovel.ViewModels
 
 		public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
 		{
+			if (!App.Current.IsSignedIn)
+				return false; 
 			var favol = App.Current.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
 			if (favol == null)
 				return true;
@@ -471,20 +483,27 @@ namespace LightNovel.ViewModels
 			{
 				try
 				{
+					string volDesc = null;
 					if (nav.SeriesId == null)
 					{
 						var volume = await CachedClient.GetVolumeAsync(nav.VolumeId);
 						nav.SeriesId = volume.ParentSeriesId;
+						SeriesId = int.Parse(nav.SeriesId);
+						volDesc = volume.Description;
 					}
-					var series = await CachedClient.GetSeriesAsync(nav.SeriesId);
-					var result = series.Volumes.FirstOrDefault(vol => vol.Id == nav.VolumeId);
-					if (result != null)
-						nav.VolumeNo = series.Volumes.IndexOf(result);
+					SeriesData = await CachedClient.GetSeriesAsync(nav.SeriesId);
+					VolumeData = SeriesData.Volumes.FirstOrDefault(vol => vol.Id == nav.VolumeId);
+					if (VolumeData != null)
+					{
+						nav.VolumeNo = SeriesData.Volumes.IndexOf(VolumeData);
+						VolumeNo = nav.VolumeNo;
+					}
 					else // This is the case that we need to refresh the series data!
 					{
-						series = await CachedClient.GetSeriesAsync(nav.SeriesId, true);
-						result = series.Volumes.FirstOrDefault(vol => vol.Id == nav.VolumeId);
-						nav.VolumeNo = series.Volumes.IndexOf(result);
+						SeriesData = await CachedClient.GetSeriesAsync(nav.SeriesId, true);
+						VolumeData = SeriesData.Volumes.FirstOrDefault(vol => vol.Id == nav.VolumeId);
+						nav.VolumeNo = SeriesData.Volumes.IndexOf(VolumeData);
+						VolumeNo = nav.VolumeNo;
 					}
 				}
 				catch (Exception exception)
@@ -497,29 +516,29 @@ namespace LightNovel.ViewModels
 
 		}
 
-		public async Task LoadDataAsync(int? seriesId, int? volumeNo = 0, int? chapterNo = 0, int? lineNo = null)
+		public async Task LoadDataAsync(int seriesId, int volumeNo = 0, int chapterNo = 0, int lineNo = 0)
 		{
 			IsLoading = true;
 			try
 			{
-				if (seriesId != null && (SeriesData == null || seriesId != int.Parse(SeriesData.Id)))
+				if (seriesId > 0 && (SeriesData == null || seriesId != int.Parse(SeriesData.Id)))
 				{
 					SeriesData = await CachedClient.GetSeriesAsync(seriesId.ToString());
-					SeriesId = seriesId.Value;
+					SeriesId = seriesId;
 				}
-				if (volumeNo != null && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[volumeNo.Value].Id))
+				if (volumeNo >= 0 && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[volumeNo].Id))
 				{
-					VolumeData = SeriesData.Volumes[volumeNo.Value];// = await CachedClient.GetVolumeAsync(SeriesData.Volumes[volumeNo.Value].Id);
-					VolumeNo = volumeNo.Value;
+					VolumeData = SeriesData.Volumes[volumeNo];// = await CachedClient.GetVolumeAsync(SeriesData.Volumes[volumeNo.Value].Id);
+					VolumeNo = volumeNo;
 					var task = CachedClient.GetChapterAsync(VolumeData.Chapters[0].Id);
 					//NotifyPropertyChanged("Index");
 				}
-				if (chapterNo != null && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[chapterNo.Value].Id))
+				if (chapterNo >= 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[chapterNo].Id))
 				{
-					var chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo.Value].Id);
-					chapter.Title = VolumeData.Chapters[chapterNo.Value].Title;
+					var chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id);
+					chapter.Title = VolumeData.Chapters[chapterNo].Title;
 					ChapterData = chapter; //VolumeData.Chapters[chapterNo.Value] =
-					ChapterNo = chapterNo.Value;
+					ChapterNo = chapterNo;
 
 					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id));
 					//_storage.AddRange(lvms);
@@ -558,15 +577,13 @@ namespace LightNovel.ViewModels
 
 			IsLoading = false;
 
-			if (lineNo != null) //&& LineNo != lineNo.Value)
-			{
-				if (lineNo >= Contents.Count)
-					lineNo = 0;
-				if (lineNo.Value >= 0)
-					LineNo = lineNo.Value;
-				else
-					LineNo = Contents.Count + lineNo.Value;
-			} 
+
+			if (lineNo >= Contents.Count)
+				lineNo = 0;
+			if (lineNo >= 0)
+				LineNo = lineNo;
+			else
+				LineNo = Contents.Count + lineNo;
 
 			if (EnableComments && Contents!=null)
 			{
@@ -613,7 +630,7 @@ namespace LightNovel.ViewModels
 				bookmark.ChapterTitle = ChapterData.Title;
 				bookmark.VolumeTitle = VolumeData.Title;
 				bookmark.SeriesTitle = SeriesData.Title;
-
+				bookmark.DescriptionThumbnailUri = VolumeData.CoverImageUri;
 				bookmark.DescriptionImageUri = VolumeData.CoverImageUri;
 
 				if (CachedClient.ChapterCache.ContainsKey(VolumeData.Chapters[0].Id) && CachedClient.ChapterCache[VolumeData.Chapters[0].Id].IsCompleted && !CachedClient.ChapterCache[VolumeData.Chapters[0].Id].IsFaulted)
@@ -662,7 +679,7 @@ namespace LightNovel.ViewModels
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+		public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{

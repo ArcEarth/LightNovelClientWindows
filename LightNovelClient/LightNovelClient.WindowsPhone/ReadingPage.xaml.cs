@@ -82,13 +82,7 @@ namespace LightNovel
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 			this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
 			ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-			//Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-			//ScrollSwitch = false;
-			//DisableAnimationScrollingFlag = true;
-			//ContentRegion.SizeChanged += ContentRegion_SizeChanged;
-			//ContentColumns.ColumnsChanged += ContentColumns_LayoutUpdated;
-			//ContentScrollViewer.LayoutUpdated += ScrollToPage_ContentColumns_LayoutUpdated;
-			//ViewModel.CommentsListLoaded += ViewModel_CommentsListLoaded;
+			RegisterForShare();
 			Flyout.SetAttachedFlyout(this, ImagePreviewFlyout);
 			RefreshThemeColor();
 		}
@@ -146,19 +140,16 @@ namespace LightNovel
 
 		void ChangeView(int page, int line = -1)
 		{
-			if (line >= 0 && line < ContentListView.Items.Count)
+			if (line >= 0)
 			{
-				if (ContentListView.Items.Count > 0 )
+				if (ContentListView.Items.Count == 0)				{
+					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
+					ContentListView.SizeChanged += ContentListView_SizeChanged;
+				} else if (line < ContentListView.Items.Count)
 				{
 					ContentListView.UpdateLayout();
 					ContentListView.ScrollIntoView(ViewModel.Contents[line]);
 				}
-				else
-				{
-					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
-					ContentListView.SizeChanged += ContentListView_SizeChanged;
-				}
-
 			}
 		}
 
@@ -189,7 +180,7 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
 			{
-				await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo - 1, -1);
+				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1);
 				//ChangeView(-1, ViewModel.ChapterData.Lines.Count - 2);
 			}
 		}
@@ -198,7 +189,7 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
 			{
-				await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo + 1, 0);
+				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0);
 			}
 		}
 
@@ -244,12 +235,13 @@ namespace LightNovel
 				var cpvm = e.ClickedItem as ChapterPreviewModel;
 				if (UsingLogicalIndexPage)
 					IsIndexPanelOpen = false;
-				await ViewModel.LoadDataAsync(null, cpvm.VolumeNo, cpvm.No, 0);
+				await ViewModel.LoadDataAsync(-1, cpvm.VolumeNo, cpvm.No, 0);
 			}
 			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
 			{
 				IsIndexPanelOpen = false;
 			}
 		}
+
 	}
 }

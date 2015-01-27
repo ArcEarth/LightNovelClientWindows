@@ -431,7 +431,7 @@
                         Margin="0,-4,0,0">
                 <DataTemplate>
                     <SemanticZoom 
-                        Width="450"
+                        Width="400"
                         Margin="0"
                         Padding="0"
                         HorizontalContentAlignment="Stretch"
@@ -440,6 +440,7 @@
                             <ListView 
                               Margin="0"
                               Padding="0"
+                              Width="400"
                               HorizontalAlignment="Stretch"
                               IsItemClickEnabled="True"
                               ItemClick="IndexListView_ItemClick"
@@ -470,7 +471,7 @@
                                 </ListView.GroupStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock VerticalAlignment="Center" Foreground="{ThemeResource AppAccentBrush}" Text="{Binding Title}" HorizontalAlignment="Left"></TextBlock>
+                                        <TextBlock Width="350" VerticalAlignment="Center" Foreground="{ThemeResource AppAccentBrush}" Text="{Binding Title}" HorizontalAlignment="Left"></TextBlock>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                                 <ListView.ItemContainerStyle>
@@ -514,21 +515,21 @@
                 </DataTemplate>
             </HubSection>
 
-            <!--  Double line list with image placeholder and text wrapping using a floating header that scrolls with the content  -->
-            <!--  </HubSection>  -->
-            <!--
-                <HubSection Header="Settings">
+            <HubSection x:Uid="AboutSection" Padding="0,0,30,40" Header="About" HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
                 <DataTemplate>
-                <StackPanel>
-                <Button Click="ClearCacheButton_Click">Clear Cache</Button>
-                <Button Click="ClearHistoryButtonBase_Click">Clear History</Button>
-                <Button Click="ClearBookmarkButtonBase_Click">Clear Bookmark</Button>
-                <ToggleSwitch IsOn="{Binding Settings.EnableComments,Mode=TwoWay}" Foreground="{StaticResource AppAccentBrush}">Show Comments</ToggleSwitch>
-                <TextBlock Style="{StaticResource AppTextAccentStyle}" FontWeight="Light" TextWrapping="Wrap" Visibility="{Binding Settings.EnableComments,Converter={StaticResource BooleanToVisibilityConverter}}">*Warning : Comments is still in testing, enable it may bring accidential crush when reading!</TextBlock>
-                </StackPanel>
+                    <StackPanel Width="300" Margin="10,50" VerticalAlignment="Center">
+                        <TextBlock x:Uid="ReviewLabel" Style="{ThemeResource AppTextNormalStyle}" TextWrapping="WrapWholeWords">If you like this App, Please rate us 5 Star and share your feedback!</TextBlock>
+                        <HyperlinkButton x:Uid="ReviewButton" Margin="10,10" FontSize="{ThemeResource AppFontSizeMediumLarge}" Foreground="{ThemeResource AppAccentBrush}" FontWeight="SemiBold" NavigateUri="{StaticResource StoreReviewLink}" Content="Rate and review in Store"></HyperlinkButton>
+                        <TextBlock x:Uid="ProjectLabel" Margin="0,20,0,0" Style="{ThemeResource AppTextNormalStyle}" TextWrapping="WrapWholeWords">If you want to contribute or have detailed feedback, please visit our project home!</TextBlock>
+                        <HyperlinkButton x:Uid="ProjectButton" Margin="10,10,0,30" FontSize="{ThemeResource AppFontSizeMediumLarge}" Foreground="{ThemeResource AppAccentBrush}" FontWeight="SemiBold" NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">Project Home</HyperlinkButton>
+                        <TextBlock x:Uid="DataCreditLabel" Style="{ThemeResource AppTextNormalStyle}" Text="Special thanks and Data Credit : "></TextBlock>
+                        <HyperlinkButton FontSize="{StaticResource AppFontSizeSmall}" Foreground="{StaticResource AppAccentBrush}" Margin="10,10,0,0" HorizontalAlignment="Left" NavigateUri="http://lknovel.lightnovel.cn/" >
+                            <Image Source="/Assets/LK_Logo.png"  Stretch="None" HorizontalAlignment="Left" ></Image>
+                        </HyperlinkButton>
+
+                    </StackPanel>
                 </DataTemplate>
-                </HubSection>
-            -->
+            </HubSection>
         </Hub>
         <Button Margin="220,0"
                 HorizontalAlignment="Right"

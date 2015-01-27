@@ -105,5 +105,6 @@ namespace LightNovel
 		}
 
 		public bool IsLoadingIndex { get; set; }
+
 	}
 }

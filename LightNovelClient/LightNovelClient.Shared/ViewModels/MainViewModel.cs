@@ -60,14 +60,14 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task<IEnumerable<FavourVolume>> LoadAsync(int maxItemCount = 9)
+		public async Task<IEnumerable<FavourVolume>> LoadAsync(bool foreceRefresh = false, int maxItemCount = 9)
 		{
 			if (!IsLoading && !IsLoaded && LightKindomHtmlClient.IsSignedIn)
 			{
 				IsLoading = true;
 				try
 				{
-					await App.Current.User.SyncFavoriteListAsync();
+					await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
 
 					var favList = App.Current.User.FavoriteList.Take(maxItemCount);
 
@@ -185,7 +185,7 @@ namespace LightNovel.ViewModels
 			int begin = historyList.Count - 1;
 			if (SkipLatest)
 				--begin;
-			for (int idx = historyList.Count - 1; idx >= 0; idx--)
+			for (int idx = begin; idx >= 0; idx--)
 			{
 				var item = historyList[idx];
 				var hvm = new HistoryItemViewModel
@@ -199,6 +199,8 @@ namespace LightNovel.ViewModels
 					SeriesTitle = item.SeriesTitle,
 					UpdateTime = item.ViewDate
 				};
+				if (!String.IsNullOrEmpty(item.DescriptionThumbnailUri))
+					hvm.CoverImageUri = item.DescriptionThumbnailUri;
 				this.Add(hvm);
 				if (this.Count >= 10) // Load the first 10th to show
 					break;

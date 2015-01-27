@@ -75,7 +75,7 @@ namespace LightNovel.Controls
 			var box = d as SearchBox;
 			if ((bool)e.NewValue == true)
 			{
-				box.ExpandingAnimation.To = box.Width;
+				//box.ExpandingAnimation.To = box.Width;
 				VisualStateManager.GoToState(box, "ExpandedState", true);
 			}
 			else

@@ -194,11 +194,11 @@
 
     <!--  This grid acts as a root panel for the page.  -->
     <Grid Background="{ThemeResource AppBackgroundBrush}">
-        <Grid.ChildrenTransitions>
+        <!--<Grid.ChildrenTransitions>
             <TransitionCollection>
-                <EntranceThemeTransition />
+                <EdgeUIThemeTransition/>
             </TransitionCollection>
-        </Grid.ChildrenTransitions>
+        </Grid.ChildrenTransitions>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
@@ -213,11 +213,11 @@
              Margin="0,0,0,0"
              Padding="0,0,0,0"
              >
-            <Hub.Transitions>
+            <!--<Hub>
                 <TransitionCollection>
                     <PaneThemeTransition/>
                 </TransitionCollection>
-            </Hub.Transitions>
+            </Hub>-->
             <Hub.HeaderTemplate>
                 <DataTemplate>
                     <Image Name="LogoImage"
@@ -236,13 +236,13 @@
             </Hub.HeaderTemplate>
             <HubSection Margin="0,0,0,0" Width="360" Padding="0" VerticalAlignment="Stretch" DataContext="{Binding LastReadSection}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <DataTemplate>
-                    <Button Style="{ThemeResource PureButtonStyle}" 
+                    <ListViewItem  
                             VerticalAlignment="Stretch" 
                             Width="360"
-                            Margin="-20,-66,0,0"
+                            Margin="-20,-66.5,0,0"
                             Padding="0"
                             DataContext="{Binding}"
-                            Click="LastReadSection_Clicked">
+                            Tapped="LastReadSection_Clicked">
                         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -304,7 +304,7 @@
                                      Value="{Binding ProgressPercentage}" />
                         </Grid>
 
-                    </Button>
+                    </ListViewItem>
                 </DataTemplate>
             </HubSection>
 
@@ -327,6 +327,11 @@
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"
                               SelectionMode="None">
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </ListView.ItemContainerTransitions>
                     </ListView>
                 </DataTemplate>
             </HubSection>
@@ -349,7 +354,13 @@
                                 ScrollViewer.IsHorizontalRailEnabled="False"
                                 ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                                 ScrollViewer.IsScrollInertiaEnabled="False"
-                                SelectionMode="None"/>
+                                SelectionMode="None">
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </ListView.ItemContainerTransitions>
+                    </ListView>
                 </DataTemplate>
             </HubSection>
             <HubSection x:Name="RecommandSection"
@@ -370,6 +381,11 @@
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"
                               SelectionMode="None">
+                        <GridView.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EntranceThemeTransition/>
+                            </TransitionCollection>
+                        </GridView.ItemContainerTransitions>                        
                         <GridView.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
@@ -428,6 +444,7 @@
                             <ListView 
                               Margin="0"
                               Padding="0"
+                                Width="340"
                               HorizontalAlignment="Stretch"
                               IsItemClickEnabled="True"
                               ItemClick="IndexListView_ItemClick"
@@ -459,7 +476,7 @@
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock VerticalAlignment="Center" 
-                                                   MaxWidth="330"
+                                                   Width="320"
                                                    Foreground="{ThemeResource AppAccentBrush}" 
                                                    Text="{Binding Title}" 
                                                    FontSize="{ThemeResource AppFontSizeMediumLarge}" 
@@ -523,6 +540,21 @@
                     </SemanticZoom>
                 </DataTemplate>
             </HubSection>
+            <HubSection x:Uid="AboutSection" Margin="0,-36,0,0" Header="About" HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock x:Uid="ReviewLabel" Style="{ThemeResource AppTextNormalStyle}" TextWrapping="WrapWholeWords">If you like this App, Please rate us 5 Star and share your feedback!</TextBlock>
+                        <HyperlinkButton x:Uid="ReviewButton" Margin="10,10" FontSize="{ThemeResource AppFontSizeMediumLarge}" Foreground="{ThemeResource AppAccentBrush}" FontWeight="SemiBold" NavigateUri="{StaticResource StoreReviewLink}" Content="Rate and review in Store"></HyperlinkButton>
+                        <TextBlock x:Uid="ProjectLabel" Margin="0,20,0,0" Style="{ThemeResource AppTextNormalStyle}" TextWrapping="WrapWholeWords">If you want to contribute or have detailed feedback, please visit our project home!</TextBlock>
+                        <HyperlinkButton x:Uid="ProjectButton" Margin="10,10,0,30" FontSize="{ThemeResource AppFontSizeMediumLarge}" Foreground="{ThemeResource AppAccentBrush}" FontWeight="SemiBold" NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">Project Home</HyperlinkButton>
+                        <TextBlock x:Uid="DataCreditLabel" Style="{ThemeResource AppTextNormalStyle}" Text="Special thanks and Data Credit : "></TextBlock>
+                        <HyperlinkButton FontSize="{StaticResource AppFontSizeSmall}" Foreground="{StaticResource AppAccentBrush}" Margin="10,10,60,0" HorizontalAlignment="Left" NavigateUri="http://lknovel.lightnovel.cn/" >
+                            <Image Source="/Assets/LK_Logo.png"  Stretch="None" HorizontalAlignment="Left" ></Image>
+                        </HyperlinkButton>
+                        
+                    </StackPanel>
+                </DataTemplate>
+            </HubSection>
 
             <!--  Double line list with image placeholder and text wrapping using a floating header that scrolls with the content  -->
             <!--  </HubSection>  -->
@@ -570,26 +602,18 @@
                    SearchHistoryEnabled="True"
                    TabIndex="2" />
 
-        <Rectangle Name="SigninMask"
-                   Grid.RowSpan="2"
-                   HorizontalAlignment="Stretch"
-                   VerticalAlignment="Stretch"
-                   Fill="{ThemeResource AppSemitransparentBrush}"
-                   Visibility="{Binding ElementName=SigninPopup,
-                                        Path=IsOpen,Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Popup Name="SigninPopup"
                Grid.RowSpan="2"
-               Grid.ColumnSpan="2"
-               Margin="0,-150,0,0"
+               Margin="0,-350,0,0"
                HorizontalAlignment="Stretch"
                IsLightDismissEnabled="True"
                VerticalAlignment="Center"
                Visibility="Visible">
-            <Popup.Transitions>
+            <Popup.ChildTransitions>
                 <TransitionCollection>
-                    <EntranceThemeTransition />
+                    <PopupThemeTransition/>
                 </TransitionCollection>
-            </Popup.Transitions>
+            </Popup.ChildTransitions>
             <Grid Width="{Binding ElementName=pageRoot,
                                   Path=ActualWidth}"
                   MinWidth="{Binding ElementName=pageRoot,
@@ -660,7 +684,7 @@
                         MinWidth="50"
                         MinHeight="50"
                         Padding="0"
-                        Margin="50,20"
+                        Margin="51,20"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Background="{StaticResource AppAccentBrush}"

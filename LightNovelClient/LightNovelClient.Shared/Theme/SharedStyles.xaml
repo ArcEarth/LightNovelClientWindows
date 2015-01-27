@@ -59,22 +59,24 @@
     <Color x:Key="AppBorderColor">#99000000</Color>
     <!--  40 percent Black  -->
     <Color x:Key="AppSubtleColor">#66000000</Color>
-    
-    <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{StaticResource AppAccentColor}"/>
 
-    <SolidColorBrush x:Key="AppForegroundBrush" Color="{StaticResource AppForegroundColor}" />
-    <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{StaticResource AppForegroundDimColor}" />
-    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackgroundColor}" />
-    <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{StaticResource AppBackgroundDimColor}" />
+    <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{ThemeResource AppAccentColor}"/>
 
-    <SolidColorBrush x:Key="AppSubtleBrush" Color="{StaticResource AppSubtleColor}" />
+    <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
+    <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
+
+    <SolidColorBrush x:Key="AppSubtleBrush" Color="{ThemeResource AppSubtleColor}" />
     <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />
-    <SolidColorBrush x:Key="AppSemitransparentBrush" Color="{StaticResource AppSemitransparentColor}" />
-    <SolidColorBrush x:Key="AppAccentBrush" Color="{StaticResource AppAccentColor}" />
-    <SolidColorBrush x:Key="AppAccentBrushSemiLight" Color="{StaticResource AppAccentColorSemiLight}" />
-    <SolidColorBrush x:Key="AppAccentBrushLight" Color="{StaticResource AppAccentColorLight}" />
-    <SolidColorBrush x:Key="SemiTransparentBlackBrush10" Color="{StaticResource SemiTransparentBlack10Color}" />
+    <SolidColorBrush x:Key="AppSemitransparentBrush" Color="{ThemeResource AppSemitransparentColor}" />
+    <SolidColorBrush x:Key="AppAccentBrush" Color="{ThemeResource AppAccentColor}" />
+    <SolidColorBrush x:Key="AppAccentBrushSemiLight" Color="{ThemeResource AppAccentColorSemiLight}" />
+    <SolidColorBrush x:Key="AppAccentBrushLight" Color="{ThemeResource AppAccentColorLight}" />
+    <SolidColorBrush x:Key="SemiTransparentBlackBrush10" Color="{ThemeResource SemiTransparentBlack10Color}" />
 
+    <SolidColorBrush x:Key="ToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
+    <SolidColorBrush x:Key="ToggleButtonCheckedPressedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
     <SolidColorBrush x:Key="AppBarToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="AppBarToggleButtonCheckedBorderThemeBrush" Color="Transparent" />
     <SolidColorBrush x:Key="AppBarToggleButtonCheckedPointerOverBackgroundThemeBrush" Color="{ThemeResource AppAccentColorLight}" />

@@ -29,6 +29,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace LightNovel
 {
@@ -62,7 +63,7 @@ namespace LightNovel
 	public sealed partial class ReadingPage : Page, INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+		public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{
@@ -247,17 +248,18 @@ namespace LightNovel
 					var volumeNo = (int)e.PageState["VolumeNo"];
 					var chapterNo = (int)e.PageState["ChapterNo"];
 					var seriesId = (int)e.PageState["SeriesId"];
-					await viewModel.LoadDataAsync(seriesId, volumeNo, chapterNo, null);
+					var lineNo = (int)e.PageState["LineNo"];
+					await viewModel.LoadDataAsync(seriesId, volumeNo, chapterNo, lineNo);
 				}
+#if WINDOWS_APP
 				var horizontalOffset = (double)e.PageState["HorizontalOffset"];
 				var verticalOffset = (double)e.PageState["VerticalOffset"];
-#if WINDOWS_APP
 				ContentScrollViewer.ChangeView(horizontalOffset, verticalOffset, null, true);
 #endif
 				//SyncIndexSelectedItem();
 			}
-			NotifyPropertyChanged("IsPinned");
-			NotifyPropertyChanged("IsFavored");
+			ViewModel.NotifyPropertyChanged("IsPinned");
+			ViewModel.NotifyPropertyChanged("IsFavored");
 		}
 		async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
@@ -268,13 +270,16 @@ namespace LightNovel
 #else
 			this.BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed; // Request to hide the bottom appbar when navigating from
 #endif
-			if (ViewModel.IsLoading || ViewModel.SeriesId == 0 || !ViewModel.IsDataLoaded)
+			if (ViewModel.IsLoading || ViewModel.SeriesId <= 0 || !ViewModel.IsDataLoaded)
 			{
 				e.PageState.Add("LoadingBreak", navigationId.ToString());
 			}
 			else
 			{
-				ViewModel.ReportViewChanged(null, GetCurrentLineNo());
+#if WINDOWS_PHONE_APP
+				int currentLine = GetCurrentLineNo();
+				ViewModel.ReportViewChanged(null, currentLine);
+#endif
 				e.PageState.Add("SeriesId", ViewModel.SeriesId);
 				e.PageState.Add("ChapterNo", ViewModel.ChapterNo);
 				e.PageState.Add("VolumeNo", ViewModel.VolumeNo);
@@ -380,15 +385,62 @@ namespace LightNovel
 
 		private async void BookmarkButton_Click(object sender, RoutedEventArgs e)
 		{
+
 			if (!ViewModel.IsFavored)
 			{
-				await ViewModel.AddCurrentVolumeToFavoriteAsync();
+				if (!App.Current.IsSignedIn)
+				{
+					MessageDialog diag = new MessageDialog("登陆后才可以收藏到轻国哦:) 如果您不需要和轻国账号同步，App会自动帮您把看过的书保存在“最近”里的，这个列表会在您的设备之间自动同步！");
+					await diag.ShowAsync();
+					ViewModel.NotifyPropertyChanged("IsFavored");
+					return;
+				}
+				else
+				{
+					var result = await ViewModel.AddCurrentVolumeToFavoriteAsync();
+					if (!result)
+					{
+						MessageDialog diag = new MessageDialog("收藏失败:(请检查一下网络连接再重试:)");
+						await diag.ShowAsync();
+					}
+				}
 			}
 			else
 			{
 				await ViewModel.RemoveCurrentVolumeFromFavoriteAsync();
 			}
 		}
+
+		private void ShareButton_Click(object sender, RoutedEventArgs e)
+		{
+			DataTransferManager.ShowShareUI();
+		}
+
+		private void RegisterForShare()
+		{
+			DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+			dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager,
+				DataRequestedEventArgs>(this.ShareHtmlHandler);
+		}
+
+		private void ShareHtmlHandler(DataTransferManager sender, DataRequestedEventArgs e)
+		{
+			DataRequest request = e.Request;
+			request.Data.Properties.Title = ViewModel.VolumeData.Title;
+			request.Data.Properties.Description =
+				ViewModel.SeriesData.Description;
+			request.Data.Properties.PackageFamilyName = "10039ArcEarth.LightNovel_9cwd8qnzd32wr";
+			request.Data.Properties.ApplicationName = "LightNovel";
+			var wpLink = new Uri("http://www.windowsphone.com/s?appid=c0d0077f-5426-47ee-bc97-f4c48d277095");
+			request.Data.Properties.ApplicationListingUri = wpLink;
+			var lkLink = new Uri("http://lknovel.lightnovel.cn/main/book/" + ViewModel.VolumeData.Id + ".html");
+			request.Data.SetWebLink(lkLink);
+			string html = "<h3>" + ViewModel.VolumeData.Title + "</h3><p><img src=\"" + ViewModel.VolumeData.CoverImageUri + "\"></p><p>" + ViewModel.VolumeData.Description + "</p><p>Read full article at <a href=\"" + lkLink.AbsoluteUri + "\">here</a></p>" + "<p>Download the best client for read at <a href=\"" + wpLink.AbsoluteUri + "\">Windows Phone Store</a></p>";
+			string htmlFormat = HtmlFormatHelper.CreateHtmlFormat(html);
+			request.Data.SetHtmlFormat(htmlFormat);
+		}
+
+
 
 		private async void IllustrationSaveButton_Click(object sender, RoutedEventArgs e)
 		{

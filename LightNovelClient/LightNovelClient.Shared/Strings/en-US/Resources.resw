@@ -137,7 +137,7 @@
   <data name="HubSearchBox.PlaceholderText" xml:space="preserve">
     <value>Search by title or author</value>
   </data>
-  <data name="IndexButton.Label" xml:space="preserve">
+  <data name="IndexButton_Label" xml:space="preserve">
     <value>Index</value>
   </data>
   <data name="IndexButton_ToolTip" xml:space="preserve">
@@ -181,5 +181,26 @@
   </data>
   <data name="NoAccountHintLabel.Text" xml:space="preserve">
     <value>Don't have an account yet?</value>
+  </data>
+  <data name="AboutSection.Header" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ReviewLabel.Text" xml:space="preserve">
+    <value>If you like this App, Please rate us 5 Star and share your feedback :)</value>
+  </data>
+  <data name="ReviewButton.Content" xml:space="preserve">
+    <value>Rate and review in Store</value>
+  </data>
+  <data name="ProjectLabel.Text" xml:space="preserve">
+    <value>If you want to contribute or have detailed feedback, please visit our project home!</value>
+  </data>
+  <data name="ProjectButton.Content" xml:space="preserve">
+    <value>Project Home</value>
+  </data>
+  <data name="DataCreditLabel.Text" xml:space="preserve">
+    <value>Special thanks and Data Credit : </value>
+  </data>
+  <data name="ShareButton.Label" xml:space="preserve">
+    <value>Share</value>
   </data>
 </root>

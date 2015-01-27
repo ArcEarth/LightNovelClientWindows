@@ -36,6 +36,8 @@ namespace LightNovel
 				return Symbol.Like;
 			if (name.Contains("新"))
 				return Symbol.Calendar;
+			if (name == "About" || name.Contains("关于"))
+				return Symbol.Message;
 			return Symbol.Library;
 		}
 
@@ -278,7 +280,7 @@ namespace LightNovel
 				ViewModel.IsLoading = false;
 				SigninPopup.IsOpen = false;
 				SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-				await ViewModel.FavoriteSection.LoadAsync();
+				await ViewModel.FavoriteSection.LoadAsync(true);
 			}
 		}
 

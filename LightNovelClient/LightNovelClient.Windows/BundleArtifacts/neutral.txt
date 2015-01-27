@@ -1,5 +1,5 @@
-MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_AnyCPU.appx
-SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\AppPackages\LightNovelClient.Windows_1.1.2.7_Test\LightNovelClient.Windows_1.1.2.7_AnyCPU.appxsym
-ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_language-en.appx
-ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_scale-140.appx
-ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.2.7_Bundle\LightNovelClient.Windows_1.1.2.7_scale-180.appx
+MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.3.9_Bundle\LightNovelClient.Windows_1.1.3.9_AnyCPU.appx
+SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\AppPackages\LightNovelClient.Windows_1.1.3.9_Test\LightNovelClient.Windows_1.1.3.9_AnyCPU.appxsym
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.3.9_Bundle\LightNovelClient.Windows_1.1.3.9_language-en.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.3.9_Bundle\LightNovelClient.Windows_1.1.3.9_scale-140.appx
+ResourcePack=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovelClient\LightNovelClient.Windows\bin\Release\LightNovelClient.Windows_1.1.3.9_Bundle\LightNovelClient.Windows_1.1.3.9_scale-180.appx

@@ -187,6 +187,7 @@ namespace LightNovel.Service
 		public double Progress { get; set; }
 		public string ContentDescription { get; set; }
 		public string DescriptionImageUri { get; set; }
+		public string DescriptionThumbnailUri { get; set; }
 		public string ChapterTitle { get; set; }
 		public string VolumeTitle { get; set; }
 		public string SeriesTitle { get; set; }

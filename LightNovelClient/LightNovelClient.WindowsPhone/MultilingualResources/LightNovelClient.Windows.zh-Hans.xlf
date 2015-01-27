@@ -6,6 +6,34 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\ShareButton\Label" translate="yes" xml:space="preserve">
+          <source>分享</source>
+          <target state="new">分享</target>
+        </trans-unit>
+        <trans-unit id="Resources\DataCreditLabel\Text" translate="yes" xml:space="preserve">
+          <source>特别感谢与数据来源：</source>
+          <target state="new">特别感谢与数据来源：</target>
+        </trans-unit>
+        <trans-unit id="Resources\AboutSection\Header" translate="yes" xml:space="preserve">
+          <source>关于</source>
+          <target state="new">关于</target>
+        </trans-unit>
+        <trans-unit id="Resources\ReviewLabel\Text" translate="yes" xml:space="preserve">
+          <source>如果您喜欢这个应用，请在商店中给我们五星并提出您的意见 :)</source>
+          <target state="new">如果您喜欢这个应用，请在商店中给我们五星并提出您的意见 :)</target>
+        </trans-unit>
+        <trans-unit id="Resources\ReviewButton\Content" translate="yes" xml:space="preserve">
+          <source>评分与反馈</source>
+          <target state="new">评分与反馈</target>
+        </trans-unit>
+        <trans-unit id="Resources\ProjectLabel\Text" translate="yes" xml:space="preserve">
+          <source>如果您希望参与与改善这个项目，请访问我们的项目主页:</source>
+          <target state="new">如果您希望参与与改善这个项目，请访问我们的项目主页:</target>
+        </trans-unit>
+        <trans-unit id="Resources\ProjectButton\Content" translate="yes" xml:space="preserve">
+          <source>项目主页</source>
+          <target state="new">项目主页</target>
+        </trans-unit>
         <trans-unit id="Resources\NoAccountHintLabel\Text" translate="yes" xml:space="preserve">
           <source>现在还有没账户?</source>
           <target state="new">现在还有没账户?</target>
@@ -62,6 +90,10 @@
           <source>打开/关闭 目录</source>
           <target state="new">打开/关闭 目录</target>
         </trans-unit>
+        <trans-unit id="Resources\IndexButton_Label" translate="yes" xml:space="preserve">
+          <source>目录</source>
+          <target state="new">目录</target>
+        </trans-unit>
         <trans-unit id="Resources\FontSizeButton\Label" translate="yes" xml:space="preserve">
           <source>字号</source>
           <target state="new">字号</target>
@@ -69,10 +101,6 @@
         <trans-unit id="Resources\HubSearchBox\PlaceholderText" translate="yes" xml:space="preserve">
           <source>搜索书名,作者</source>
           <target state="new">搜索书名,作者</target>
-        </trans-unit>
-        <trans-unit id="Resources\IndexButton\Label" translate="yes" xml:space="preserve">
-          <source>目录</source>
-          <target state="new">目录</target>
         </trans-unit>
         <trans-unit id="Resources\FavoriteSection\Header" translate="yes" xml:space="preserve">
           <source>用户收藏</source>

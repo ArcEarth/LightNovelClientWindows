@@ -71,6 +71,7 @@ namespace LightNovel
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 			this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
+			RegisterForShare();
 			ScrollSwitch = false;
 			DisableAnimationScrollingFlag = true;
 			ContentRegion.SizeChanged += ContentRegion_SizeChanged;
@@ -399,7 +400,7 @@ namespace LightNovel
 			{
 				if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
 				{
-					await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo - 1, null);
+					await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1);
 					ViewModel.PageNo = TotalPage - 2;
 				}
 			}
@@ -419,7 +420,7 @@ namespace LightNovel
 			{
 				if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
 				{
-					await ViewModel.LoadDataAsync(null, null, ViewModel.ChapterNo + 1, null);
+					await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0);
 					ViewModel.PageNo = 0;
 				}
 			}
@@ -559,26 +560,25 @@ namespace LightNovel
 				var column = (RichTextBlockOverflow)ContentColumns.Children[page];
 				if (column.ContentStart == null)
 					return -1;
-				var idx = column.ContentStart.Offset;
-
-				// Should use binary search
-				//int lineNo = 0;
-				//while (ContentTextBlock.Blocks[lineNo].ContentEnd.Offset < idx)
-				//	lineNo++;
-
-				int a = 0, b = ContentTextBlock.Blocks.Count - 1, mid = (a + b) / 2;
-				while (b > a)
+				var tp = column.GetPositionFromPoint(new Point{X=column.ActualWidth*0.5,Y=column.ActualHeight*0.5});
+				var element = tp.Parent as TextElement;
+				while (element != null && !(element is Paragraph))
 				{
-					mid = (a + b) / 2;
-					if (ContentTextBlock.Blocks[mid].ContentEnd.Offset < idx)
-						a = mid + 1;
-					else if (ContentTextBlock.Blocks[mid].ContentStart.Offset > idx)
-						b = mid - 1;
+					if (element.ContentStart != null
+						&& element != element.ElementStart.Parent)
+					{
+						element = element.ElementStart.Parent as TextElement;
+					}
 					else
-						return mid;
+					{
+						element = null;
+					}
 				}
+				if (element == null) return -1;
 
-				return mid;
+				var line = (LineViewModel)element.GetValue(ParagrahViewModelProperty);
+
+				return line.No - 1;
 			}
 			else
 			{
@@ -713,7 +713,7 @@ namespace LightNovel
 			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
 			{
 				list.SelectedItem = e.ClickedItem;
-				await ViewModel.LoadDataAsync(null, list.SelectedIndex, 0, 0);
+				await ViewModel.LoadDataAsync(-1, list.SelectedIndex, 0, 0);
 				NotifyPropertyChanged("IsFavored");
 
 			}
@@ -728,7 +728,7 @@ namespace LightNovel
 				var cpvm = e.ClickedItem as ChapterPreviewModel;
 				if (UsingLogicalIndexPage)
 					IsIndexPanelOpen = false;
-				await ViewModel.LoadDataAsync(null, cpvm.VolumeNo, cpvm.No, 0);
+				await ViewModel.LoadDataAsync(-1, cpvm.VolumeNo, cpvm.No, 0);
 			}
 			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
 			{
