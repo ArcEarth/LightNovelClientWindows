@@ -110,77 +110,78 @@ namespace LightNovel
 
 		void UpdateTile()
 		{
-			var imgs = ViewModel.RecommandSection.First(g => g.Key.Contains("更新")).Take(6).ToArray();
-			var ImgUri = imgs[0].CoverImageUri;
-			//var ImgUri = "http://www.rockyoursox.myewebsite.com/img/mid/33/polar-bear-cubs.jpg";
-			//var tileContent = TileContentFactory.CreateTileSquare310x310Image();
-			//tileContent.AddImageQuery = true;
-			//tileContent.Image.Src = ImgUri;
-			//tileContent.Image.Alt = "Web Image";
-			var tileContent = TileContentFactory.CreateTileSquare310x310ImageCollectionAndText01();
-			tileContent.AddImageQuery = true;
-			//tileContent.Lang = "zh-cn";
-			tileContent.ImageMain.Src = imgs[0].CoverImageUri;
-			tileContent.ImageMain.Alt = imgs[0].Title;
-			tileContent.ImageSmall1.Src = imgs[1].CoverImageUri;
-			tileContent.ImageSmall1.Alt = imgs[1].Title;
-			tileContent.ImageSmall2.Src = imgs[2].CoverImageUri;
-			tileContent.ImageSmall2.Alt = imgs[2].Title;
-			tileContent.ImageSmall3.Src = imgs[3].CoverImageUri;
-			tileContent.ImageSmall3.Alt = imgs[3].Title;
-			tileContent.ImageSmall4.Src = imgs[4].CoverImageUri;
-			tileContent.ImageSmall4.Alt = imgs[4].Title;
-			tileContent.TextCaptionWrap.Text = imgs[0].Description;
-			// Create a notification for the Wide310x150 tile using one of the available templates for the size.
-			//var wide310x150Content = TileContentFactory.CreateTileWide310x150ImageAndText01();
-			//wide310x150Content.TextCaptionWrap.Text = "This tile notification uses web images";
-			//wide310x150Content.Image.Src = ImgUri;
-			//wide310x150Content.Image.Alt = "Web image";
-			var wide310x150Content = TileContentFactory.CreateTileWide310x150PeekImageCollection05();
-			wide310x150Content.AddImageQuery = true;
-			//wide310x150Content.Lang = "zh-cn";
-			wide310x150Content.ImageMain.Src = imgs[0].CoverImageUri;
-			wide310x150Content.ImageMain.Alt = imgs[0].Title;
-			wide310x150Content.ImageSecondary.Src = imgs[0].CoverImageUri;
-			wide310x150Content.ImageSecondary.Alt = imgs[0].Title;
-			wide310x150Content.ImageSmallColumn1Row1.Src = imgs[1].CoverImageUri;
-			wide310x150Content.ImageSmallColumn1Row1.Alt = imgs[1].Title;
-			wide310x150Content.ImageSmallColumn1Row2.Src = imgs[2].CoverImageUri;
-			wide310x150Content.ImageSmallColumn1Row2.Alt = imgs[2].Title;
-			wide310x150Content.ImageSmallColumn2Row1.Src = imgs[3].CoverImageUri;
-			wide310x150Content.ImageSmallColumn2Row1.Alt = imgs[3].Title;
-			wide310x150Content.ImageSmallColumn2Row2.Src = imgs[4].CoverImageUri;
-			wide310x150Content.ImageSmallColumn2Row2.Alt = imgs[4].Title;
-			wide310x150Content.TextHeading.Text = imgs[0].Title;
-			wide310x150Content.TextBodyWrap.Text = imgs[0].Description;
+			try
+			{
+				var imgs = ViewModel.RecommandSection.First(g => g.Key.Contains("更新")).Take(6).ToArray();
 
-			// Create a notification for the Square150x150 tile using one of the available templates for the size.
-			var square150x150Content = TileContentFactory.CreateTileSquare150x150PeekImageAndText02();
-			//square150x150Content.Lang = "zh-cn";
-			square150x150Content.Image.Src = imgs[0].CoverImageUri;
-			square150x150Content.Image.Alt = imgs[0].Title;
-			square150x150Content.TextHeading.Text = imgs[0].Title;
-			square150x150Content.TextBodyWrap.Text = imgs[0].Description;
-			//var square150x150Content = TileContentFactory.CreateTileSquare150x150Image();
-			//square150x150Content.Image.Src = ImgUri;
-			//square150x150Content.Image.Alt = "Web image";
+				var tileContent = TileContentFactory.CreateTileSquare310x310ImageCollectionAndText01();
+				tileContent.AddImageQuery = true;
 
-			var square71x71Content = TileContentFactory.CreateTileSquare71x71Image();
-			square71x71Content.Image.Src = imgs[0].CoverImageUri; ;
-			square71x71Content.Image.Alt = imgs[0].Title;
+				tileContent.ImageMain.Src = imgs[0].CoverImageUri;
+				tileContent.ImageMain.Alt = imgs[0].Title;
+				tileContent.ImageSmall1.Src = imgs[1].CoverImageUri;
+				tileContent.ImageSmall1.Alt = imgs[1].Title;
+				tileContent.ImageSmall2.Src = imgs[2].CoverImageUri;
+				tileContent.ImageSmall2.Alt = imgs[2].Title;
+				tileContent.ImageSmall3.Src = imgs[3].CoverImageUri;
+				tileContent.ImageSmall3.Alt = imgs[3].Title;
+				tileContent.ImageSmall4.Src = imgs[4].CoverImageUri;
+				tileContent.ImageSmall4.Alt = imgs[4].Title;
+				tileContent.TextCaptionWrap.Text = imgs[0].Description;
+				// Create a notification for the Wide310x150 tile using one of the available templates for the size.
+				//var wide310x150Content = TileContentFactory.CreateTileWide310x150ImageAndText01();
+				//wide310x150Content.TextCaptionWrap.Text = "This tile notification uses web images";
+				//wide310x150Content.Image.Src = ImgUri;
+				//wide310x150Content.Image.Alt = "Web image";
+				var wide310x150Content = TileContentFactory.CreateTileWide310x150PeekImageCollection05();
+				wide310x150Content.AddImageQuery = true;
+				//wide310x150Content.Lang = "zh-cn";
+				wide310x150Content.ImageMain.Src = imgs[0].CoverImageUri;
+				wide310x150Content.ImageMain.Alt = imgs[0].Title;
+				wide310x150Content.ImageSecondary.Src = imgs[0].CoverImageUri;
+				wide310x150Content.ImageSecondary.Alt = imgs[0].Title;
+				wide310x150Content.ImageSmallColumn1Row1.Src = imgs[1].CoverImageUri;
+				wide310x150Content.ImageSmallColumn1Row1.Alt = imgs[1].Title;
+				wide310x150Content.ImageSmallColumn1Row2.Src = imgs[2].CoverImageUri;
+				wide310x150Content.ImageSmallColumn1Row2.Alt = imgs[2].Title;
+				wide310x150Content.ImageSmallColumn2Row1.Src = imgs[3].CoverImageUri;
+				wide310x150Content.ImageSmallColumn2Row1.Alt = imgs[3].Title;
+				wide310x150Content.ImageSmallColumn2Row2.Src = imgs[4].CoverImageUri;
+				wide310x150Content.ImageSmallColumn2Row2.Alt = imgs[4].Title;
+				wide310x150Content.TextHeading.Text = imgs[0].Title;
+				wide310x150Content.TextBodyWrap.Text = imgs[0].Description;
 
-			// Attached the Square71x71 template to the Square150x150 template.
-			square150x150Content.Square71x71Content = square71x71Content;
+				// Create a notification for the Square150x150 tile using one of the available templates for the size.
+				var square150x150Content = TileContentFactory.CreateTileSquare150x150PeekImageAndText02();
+				//square150x150Content.Lang = "zh-cn";
+				square150x150Content.Image.Src = imgs[0].CoverImageUri;
+				square150x150Content.Image.Alt = imgs[0].Title;
+				square150x150Content.TextHeading.Text = imgs[0].Title;
+				square150x150Content.TextBodyWrap.Text = imgs[0].Description;
+				//var square150x150Content = TileContentFactory.CreateTileSquare150x150Image();
+				//square150x150Content.Image.Src = ImgUri;
+				//square150x150Content.Image.Alt = "Web image";
 
-			// Attach the Square150x150 template to the Wide310x150 template.
-			wide310x150Content.Square150x150Content = square150x150Content;
+				var square71x71Content = TileContentFactory.CreateTileSquare71x71Image();
+				square71x71Content.Image.Src = imgs[0].CoverImageUri; ;
+				square71x71Content.Image.Alt = imgs[0].Title;
 
-			// Attach the Wide310x150 template to the Square310x310 template.
-			tileContent.Wide310x150Content = wide310x150Content;
+				// Attached the Square71x71 template to the Square150x150 template.
+				square150x150Content.Square71x71Content = square71x71Content;
 
-			// Send the notification to the application’s tile.
-			TileUpdateManager.CreateTileUpdaterForApplication().Update(tileContent.CreateNotification());
+				// Attach the Square150x150 template to the Wide310x150 template.
+				wide310x150Content.Square150x150Content = square150x150Content;
 
+				// Attach the Wide310x150 template to the Square310x310 template.
+				tileContent.Wide310x150Content = wide310x150Content;
+
+				// Send the notification to the application’s tile.
+				TileUpdateManager.CreateTileUpdaterForApplication().Update(tileContent.CreateNotification());
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine(exception.Message);
+			}
 		}
 #if  WINDOWS_APP
 		void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)

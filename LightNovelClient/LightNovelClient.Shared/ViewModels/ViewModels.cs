@@ -34,6 +34,13 @@ namespace LightNovel.ViewModels
 		//public object NewValue { get; }
 	}
 
+	public enum PreCachePolicy
+	{
+		DoNotCache = 0,
+		CachePrev = -1,
+		CacheNext = 1,
+	}
+
 	public class ReadingPageViewModel : INotifyPropertyChanged
 	{
 		public ReadingPageViewModel()
@@ -79,7 +86,8 @@ namespace LightNovel.ViewModels
 				case "ChapterNo":
 					if (ChapterData == null || ChapterData.Id != VolumeData.Chapters[ChapterNo].Id)
 					{
-						ChapterData = VolumeData.Chapters[ChapterNo] = await CachedClient.GetChapterAsync(VolumeData.Chapters[ChapterNo].Id);
+						ChapterData = await CachedClient.GetChapterAsync(VolumeData.Chapters[ChapterNo].Id);
+						//VolumeData.Chapters[ChapterNo];
 						//CommentIndex = (await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterNo.ToString())).ToList();
 					}
 					break;
@@ -112,22 +120,23 @@ namespace LightNovel.ViewModels
 				if (_SeriesData != value)
 				{
 					_SeriesData = value;
+					//Index = _SeriesData.Volumes;
 					Index = (from vol in _SeriesData.Volumes
-							select new VolumeViewModel
-							{
-								Title = vol.Title,
-								Label = vol.Label,
-								Description = vol.Description,
-								Author = vol.Author,
-								CoverImageUri = new Uri(vol.CoverImageUri),
-								Chapters = vol.Chapters.Select(chapter => new ChapterPreviewModel
-								{
-									No = chapter.ChapterNo,
-									Id = chapter.Id,
-									Title = chapter.Title,
-									VolumeNo = vol.VolumeNo,
-								}).ToList()
-							}).ToList();
+							 select new VolumeViewModel
+							 {
+								 Title = vol.Title,
+								 Label = vol.Label,
+								 Description = vol.Description,
+								 Author = vol.Author,
+								 CoverImageUri = new Uri(vol.CoverImageUri),
+								 Chapters = vol.Chapters.Select(chapter => new ChapterPreviewModel
+								 {
+									 No = chapter.ChapterNo,
+									 Id = chapter.Id,
+									 Title = chapter.Title,
+									 VolumeNo = vol.VolumeNo,
+								 }).ToList()
+							 }).ToList();
 
 					NotifyPropertyChanged("Header");
 				}
@@ -226,6 +235,10 @@ namespace LightNovel.ViewModels
 				if (_SeriesId != value)
 				{
 					_SeriesId = value;
+					if (_SeriesId > 0 && (SeriesData == null || SeriesId != int.Parse(SeriesData.Id)))
+					{
+						throw new NotImplementedException("Set SeriesData before set series ID");
+					}
 					NotifyPropertyChanged();
 				}
 			}
@@ -239,6 +252,10 @@ namespace LightNovel.ViewModels
 				if (_VolumeNo != value)
 				{
 					_VolumeNo = value;
+					if (_VolumeNo > 0 && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[VolumeNo].Id))
+					{
+						throw new NotImplementedException("Set VolumeData before set series ID");
+					} 
 					NotifyPropertyChanged();
 				}
 			}
@@ -256,7 +273,14 @@ namespace LightNovel.ViewModels
 					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
 					SeconderyIndex = Index[_VolumeNo].Chapters;
 #endif
+					if (_ChapterNo > 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[ChapterNo].Id))
+					{
+						throw new NotImplementedException("Set ChapterData before set series ID");
+					} 
+					
 					NotifyPropertyChanged();
+					NotifyPropertyChanged("HasPrev");
+					NotifyPropertyChanged("HasNext");
 				}
 			}
 		}
@@ -288,7 +312,20 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
-
+		public bool HasPrev
+		{
+			get
+			{
+				return (SeriesData != null) && (_ChapterNo > 0);
+			}
+		}
+		public bool HasNext
+		{
+			get
+			{
+				return (SeriesData != null) && (VolumeData != null) && (_ChapterNo + 1 < VolumeData.Chapters.Count); ;
+			}
+		}
 		public bool EnableComments
 		{
 			get
@@ -488,10 +525,10 @@ namespace LightNovel.ViewModels
 					{
 						var volume = await CachedClient.GetVolumeAsync(nav.VolumeId);
 						nav.SeriesId = volume.ParentSeriesId;
-						SeriesId = int.Parse(nav.SeriesId);
 						volDesc = volume.Description;
 					}
 					SeriesData = await CachedClient.GetSeriesAsync(nav.SeriesId);
+					SeriesId = int.Parse(nav.SeriesId);
 					VolumeData = SeriesData.Volumes.FirstOrDefault(vol => vol.Id == nav.VolumeId);
 					if (VolumeData != null)
 					{
@@ -509,6 +546,11 @@ namespace LightNovel.ViewModels
 				catch (Exception exception)
 				{
 					Debug.WriteLine("Error in converting navigator data : {0}", exception.Message);
+					Contents = new LineViewModel[] { new LineViewModel(1,"Failed to resolve data navigator :("),
+										new LineViewModel(2,"Please contact Check your Internet connection."),
+										new LineViewModel(3,"Exception detail : " + exception.Message) };
+					IsLoading = false;
+					LineNo = 0;
 					return;
 				}
 			}
@@ -516,7 +558,7 @@ namespace LightNovel.ViewModels
 
 		}
 
-		public async Task LoadDataAsync(int seriesId, int volumeNo = 0, int chapterNo = 0, int lineNo = 0)
+		public async Task LoadDataAsync(int seriesId, int volumeNo = 0, int chapterNo = 0, int lineNo = 0, PreCachePolicy preCachePolicy = PreCachePolicy.CacheNext)
 		{
 			IsLoading = true;
 			try
@@ -536,9 +578,23 @@ namespace LightNovel.ViewModels
 				if (chapterNo >= 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[chapterNo].Id))
 				{
 					var chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id);
+
+					// Fix for cached page leads to no content
+					if (chapter.Lines.Count == 0)
+						chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id,true);
+
 					chapter.Title = VolumeData.Chapters[chapterNo].Title;
 					ChapterData = chapter; //VolumeData.Chapters[chapterNo.Value] =
 					ChapterNo = chapterNo;
+
+					if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
+					{
+						// Pre caching next chapter
+						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo+1].Id);
+					} else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
+					{
+						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Id);
+					}
 
 					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id));
 					//_storage.AddRange(lvms);
@@ -585,21 +641,33 @@ namespace LightNovel.ViewModels
 			else
 				LineNo = Contents.Count + lineNo;
 
+			var bookmark = CreateBookmark();
+			await App.Current.UpdateHistoryListAsync(bookmark);
+			await App.UpdateSecondaryTileAsync(bookmark);
+
 			if (EnableComments && Contents!=null)
 			{
-				var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
-				foreach (var cln in CommentsList)
+				try
 				{
-					((LineViewModel)Contents[cln - 1]).MarkAsCommented();
+					var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
+					foreach (var cln in CommentsList)
+					{
+						((LineViewModel)Contents[cln - 1]).MarkAsCommented();
+					}
+					if (CommentsListLoaded != null)
+						CommentsListLoaded.Invoke(this, CommentsList);
 				}
-				if (CommentsListLoaded != null)
-					CommentsListLoaded.Invoke(this, CommentsList);
+				catch (Exception exception)
+				{
+					Debug.WriteLine(exception);
+				}
+
 			}
 		}
 
 		void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			Debug.WriteLine(String.Format("Contents Collection size cahnged, Count = {0}", Contents.Count));
+			Debug.WriteLine(String.Format("Contents Collection size changed, Count = {0}", Contents.Count));
 		}
 
 		public bool IsDataLoaded
@@ -1285,263 +1353,6 @@ namespace LightNovel.ViewModels
 		}
 	}
 
-	public class ContentSectionViewModel : INotifyPropertyChanged
-	{
-		private Chapter _dataContext;
-		public Chapter DataContext
-		{
-			get { return _dataContext; }
-			private set
-			{
-				if (_dataContext == value) return;
-				LoadData(value);
-				_dataContext = value;
-				NotifyPropertyChanged();
-				CurrentLineNo = 1;
-			}
-		}
-		//string NovelUrl;
-		//string NovelText;
-		public ObservableCollection<LineViewModel> Lines
-		{
-			get { return _lines; }
-			set
-			{
-				_lines = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-
-		string _title;
-		public string Title
-		{
-			get { return _title; }
-			set
-			{
-				_title = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public int ChapterNo
-		{
-			get;
-			set;
-		}
-		public bool IsLoading
-		{
-			get { return _isLoading; }
-			set
-			{
-				_isLoading = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public double ProgressPercentage
-		{
-			get
-			{
-				if (Lines.Count > 0)
-					return (double)CurrentLineNo / (double)Lines.Count;
-				else
-					return 0;
-			}
-		}
-		public int CurrentLineNo
-		{
-			get { return _currentLineNo; }
-			set
-			{
-				_currentLineNo = value;
-				NotifyPropertyChanged();
-				NotifyPropertyChanged("ProgressPercentage");
-			}
-		}
-
-		/// <summary>
-		/// Gets the chapter number. e.g. the 3rd Chapter
-		/// </summary>
-		/// <value>
-		/// The chapter no.
-		/// </value>
-		public ContentSectionViewModel()
-		{
-			IsLoading = false;
-			Lines = new ObservableCollection<LineViewModel>();
-		}
-
-		public BookmarkInfo CreateBookmarkFromCurrentPage()
-		{
-			var imageLine = Lines.FirstOrDefault(line => line.IsImage);
-			var bookmark = new BookmarkInfo
-			{
-				ViewDate = DateTime.Now,
-				Position = new NovelPositionIdentifier
-				{
-					ChapterId = ChapterId,
-					ChapterNo = ChapterNo,
-					VolumeId = ParentVolumeId,
-					VolumeNo = 0,//App.CurrentVolume.VolumeNo,
-					SeriesId = ParentSeriesId,//App.CurrentSeries.Id,
-					LineNo = CurrentLineNo,
-				},
-				ChapterTitle = Title,
-				VolumeTitle = "",//App.CurrentVolume.Title,
-				SeriesTitle = "",//App.CurrentSeries.Title,
-				Progress = ProgressPercentage,
-			};
-
-			if (imageLine != null)
-				bookmark.DescriptionImageUri = imageLine.Content;
-			else
-				bookmark.DescriptionImageUri = null;
-			var textLines = from line in Lines where !line.IsImage && line.No >= CurrentLineNo && line.No <= CurrentLineNo + 2 select line.Content;
-			var builder = new StringBuilder();
-			bookmark.ContentDescription = textLines.Aggregate(builder, (b, s) => { b.AppendLine(s); return b; }).ToString();
-
-			//bookmark.DescriptionImageUri = (from line in Lines where line.IsImage && line.Id < CurrentLineNo select line.Content).FirstOrDefault(),
-
-			//if (bookmark.DescriptionImageUri == null) 
-			//    bookmark.;
-
-			return bookmark;
-		}
-
-		public async Task LoadCommentListAsync()
-		{
-			var commentedLines = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterId);
-			foreach (var lId in commentedLines)
-			{
-				if (Lines[lId - 1].No != lId)
-					Debug.WriteLine("Can't find explicit comment line");
-				Lines[lId - 1].MarkAsCommented();
-			}
-		}
-
-		public async Task LoadCommentsAsync(LineViewModel lineView)
-		{
-			if (lineView.Comments.Count != 0)
-				return;
-			string lineId = lineView.No.ToString();
-
-			Debug.WriteLine("Loading Comments : line_id = " + lineId + " ,chapter_id = " + ChapterId);
-			try
-			{
-				lineView.IsLoading = true;
-				var comments = await LightKindomHtmlClient.GetCommentsAsync(lineId, ChapterId);
-				foreach (var comment in comments)
-				{
-					lineView.Comments.Add(new Comment(comment));
-				}
-				lineView.IsLoading = false;
-			}
-			catch (Exception)
-			{
-				Debug.WriteLine("Comments load failed : line_id = " + lineId + " ,chapter_id = " + ChapterId);
-			}
-		}
-
-		public async Task LoadDataAsync(string id, bool loadCommentsList)
-		{
-			//await DataCache.ClearAll();
-			if (this.ChapterId == id) return;
-			IsLoading = true;
-			ChapterId = id;
-			Chapter chapter = null;
-			try
-			{
-				chapter = await CachedClient.GetChapterAsync(id);
-			}
-			catch (Exception exception)
-			{
-				IsLoading = false;
-				ChapterId = null;
-				throw exception;
-				//MessageBox.Show("Network issue occured, please check your wi-fi or data setting and try again.\nError Code:" + exception.Message, "Network issue", MessageBoxButton.OK);
-			}
-			if (chapter != null)
-				DataContext = chapter;
-			if (!loadCommentsList)
-			{
-				IsLoading = false;
-				return;
-			}
-			try
-			{
-				await LoadCommentListAsync();
-			}
-			catch (Exception exception)
-			{
-				Debug.WriteLine("Failed to retrive comment data : " + exception.Message);
-				//MessageBox.Show(exception.Message, "Failed to retrive comment data.", MessageBoxButton.OK);
-			}
-			IsLoading = false;
-		}
-
-		public void Load(Chapter chapter)
-		{
-			DataContext = chapter;
-		}
-
-		private void LoadData(Chapter chapter)
-		{
-			if (chapter == null)
-				throw new ArgumentNullException("chapter");
-			Title = chapter.Title;
-			NextChapterId = chapter.NextChapterId;
-			PrevChapterId = chapter.PrevChapterId;
-			ParentVolumeId = chapter.ParentVolumeId;
-			ParentSeriesId = chapter.ParentSeriesId;
-			ChapterNo = chapter.ChapterNo;
-			Lines.Clear();
-			foreach (var line in chapter.Lines)
-			{
-				if (line == null)
-				{
-					System.Diagnostics.Debug.WriteLine("null Lines in chapter data");
-					continue;
-				}
-				var lv = new LineViewModel(line, chapter.Id);
-				if (lv != null)
-					Lines.Add(lv);
-			}
-		}
-		public async Task LoadNextChapterAsync(bool loadCommentsList)
-		{
-			if (!IsLoading && !String.IsNullOrEmpty(NextChapterId))
-				await LoadDataAsync(NextChapterId, loadCommentsList);
-		}
-		internal async Task LoadPrevChapterAsync(bool loadCommentsList)
-		{
-			if (!IsLoading && !String.IsNullOrEmpty(PrevChapterId))
-			{
-				await LoadDataAsync(PrevChapterId, loadCommentsList);
-				CurrentLineNo = Lines[Lines.Count - 1].No;
-			}
-		}
-
-		private ObservableCollection<LineViewModel> _lines;
-		private bool _isLoading;
-		private int _currentLineNo;
-		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			if (PropertyChanged != null)
-			{
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
-		public string ChapterId { get; set; }
-		public string NextChapterId { get; set; }
-		public string PrevChapterId { get; set; }
-		public string ParentVolumeId { get; set; }
-		public string ParentSeriesId { get; set; }
-
-	}
-
 	public class Comment : INotifyPropertyChanged
 	{
 		private string _author;
@@ -1634,6 +1445,7 @@ namespace LightNovel.ViewModels
 			//	_content = line.Content; // Add the indent
 			//else
 			_content = line.Content;
+			IsImage = line.ContentType == LineContentType.ImageContent;
 			ParentChapterId = chapterId;
 			No = line.No;
 		}
@@ -1656,6 +1468,7 @@ namespace LightNovel.ViewModels
 		{
 			No = id;
 			_content = content;
+			IsImage = false;
 		}
 		public LineViewModel(string content, params string[] comments)
 		{
@@ -1733,7 +1546,9 @@ namespace LightNovel.ViewModels
 
 		public bool IsImage
 		{
-			get { return Uri.IsWellFormedUriString(_content, UriKind.Absolute); }
+			get;
+			set;
+			//get { return Uri.IsWellFormedUriString(_content, UriKind.Absolute); }
 		}
 
 		public ObservableCollection<Comment> Comments

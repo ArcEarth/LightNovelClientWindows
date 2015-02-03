@@ -438,8 +438,8 @@ namespace LightNovel
 			int page = GetCurrentPageNo();
 			ViewModel.ReportViewChanged(page, null);
 
-			if (TotalPage - page < 50 && (LoadingAheadTask == null || LoadingAheadTask.IsFaulted) && !string.IsNullOrEmpty(ViewModel.ChapterData.NextChapterId))
-				LoadingAheadTask = CachedClient.GetChapterAsync(ViewModel.ChapterData.NextChapterId);
+			//if (TotalPage - page < 50 && (LoadingAheadTask == null || LoadingAheadTask.IsFaulted) && !string.IsNullOrEmpty(ViewModel.ChapterData.NextChapterId))
+			//	LoadingAheadTask = CachedClient.GetChapterAsync(ViewModel.ChapterData.NextChapterId);
 
 			//double offsetRatio = 0;
 			if (page == TotalPage - ColumnsPerScreen)

@@ -72,11 +72,9 @@ namespace LightNovel
 		}
 
 		private NavigationHelper navigationHelper;
-		private ObservableDictionary defaultViewModel = new ObservableDictionary();
-		private ContentSectionViewModel chapterViewModel = new ContentSectionViewModel();
-		private SeriesViewModel seriesViewModel = new SeriesViewModel();
-		private ReadingPageViewModel viewModel = new ReadingPageViewModel();
 		private NovelPositionIdentifier navigationId;
+
+		private ReadingPageViewModel viewModel = new ReadingPageViewModel();
 
 		public ReadingPageViewModel ViewModel
 		{
@@ -224,6 +222,13 @@ namespace LightNovel
 		{
 			// TODO: Create an appropriate data model for your problem domain to replace the sample data
 			Debug.WriteLine("LoadState");
+
+#if WINDOWS_PHONE_APP
+				//this.BottomAppBar = PageBottomCommandBar;
+				//this.BottomAppBar.Visibility = Visibility.Visible;
+				var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+				await statusBar.HideAsync();
+#endif
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
 			if (e.PageState == null)
 			{
@@ -268,7 +273,7 @@ namespace LightNovel
 			e.PageState.Add("HorizontalOffset", ContentScrollViewer.HorizontalOffset);
 			e.PageState.Add("VerticalOffset", ContentScrollViewer.VerticalOffset);
 #else
-			this.BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed; // Request to hide the bottom appbar when navigating from
+			//this.BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed; // Request to hide the bottom appbar when navigating from
 #endif
 			if (ViewModel.IsLoading || ViewModel.SeriesId <= 0 || !ViewModel.IsDataLoaded)
 			{
@@ -285,32 +290,9 @@ namespace LightNovel
 				e.PageState.Add("VolumeNo", ViewModel.VolumeNo);
 				e.PageState.Add("LineNo", ViewModel.LineNo);
 				var bookmark = ViewModel.CreateBookmark();
-				await UpdateHistoryListAsync(bookmark);
-				await UpdateTileAsync(bookmark);
+				await App.Current.UpdateHistoryListAsync(bookmark);
+				await App.UpdateSecondaryTileAsync(bookmark);
 			}
-		}
-
-		private static async Task UpdateHistoryListAsync(BookmarkInfo bookmark)
-		{
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			App.Current.RecentList.RemoveAll(item => item.Position.SeriesId == bookmark.Position.SeriesId);
-			App.Current.RecentList.Add(bookmark);
-			App.Current.IsHistoryListChanged = true;
-			await App.Current.SaveHistoryDataAsync();
-		}
-
-		private async Task<bool> UpdateTileAsync(BookmarkInfo bookmark)
-		{
-			if (SecondaryTile.Exists(ViewModel.SeriesId.ToString()))
-			{
-				var tile = new SecondaryTile(ViewModel.SeriesId.ToString());
-				string args = bookmark.Position.ToString();
-				tile.Arguments = args;
-				var result = await tile.UpdateAsync();
-				return true;
-			}
-			return false;
 		}
 
 		#region NavigationHelper registration
@@ -495,10 +477,10 @@ namespace LightNovel
 			var item = sender as MenuFlyoutItem;
 			ViewModel.Foreground = item.Foreground;
 			ViewModel.Background = item.Background;
-			if (item.Text == "Dark")
-				this.RequestedTheme = ElementTheme.Dark;
-			else
-				this.RequestedTheme = ElementTheme.Light;
+			//if (item.Text == "Dark")
+			//	this.RequestedTheme = ElementTheme.Dark;
+			//else
+			//	this.RequestedTheme = ElementTheme.Light;
 			RefreshThemeColor();
 
 		}

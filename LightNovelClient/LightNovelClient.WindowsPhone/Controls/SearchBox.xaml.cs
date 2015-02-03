@@ -313,7 +313,7 @@ namespace LightNovel.Controls
 		//     Occurs when the FocusOnKeyboardInput property is true and the app receives
 		//     textual keyboard input.
 
-		public event TypedEventHandler<SearchBox, RoutedEventArgs> PrepareForFocusOnKeyboardInput;
+		//public event TypedEventHandler<SearchBox, RoutedEventArgs> PrepareForFocusOnKeyboardInput;
 		//
 		// Summary:
 		//     Occurs when the query text changes.
@@ -328,13 +328,13 @@ namespace LightNovel.Controls
 		// Summary:
 		//     Occurs when the user picks a suggested search result.
 
-		public event TypedEventHandler<SearchBox, SearchBoxResultSuggestionChosenEventArgs> ResultSuggestionChosen;
+		//public event TypedEventHandler<SearchBox, SearchBoxResultSuggestionChosenEventArgs> ResultSuggestionChosen;
 		//
 		// Summary:
 		//     Occurs when the user's query text changes and the app needs to provide new
 		//     suggestions to display in the search pane.
 
-		public event TypedEventHandler<SearchBox, SearchBoxSuggestionsRequestedEventArgs> SuggestionsRequested;
+		//public event TypedEventHandler<SearchBox, SearchBoxSuggestionsRequestedEventArgs> SuggestionsRequested;
 
 		// Summary:
 		//     Specifies whether suggestions based on local files are automatically displayed

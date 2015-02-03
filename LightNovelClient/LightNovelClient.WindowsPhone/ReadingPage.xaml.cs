@@ -142,13 +142,14 @@ namespace LightNovel
 		{
 			if (line >= 0)
 			{
-				if (ContentListView.Items.Count == 0)				{
+				ContentListView.UpdateLayout();
+				if (ContentListView.Items.Count == 0)				
+				{
 					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
 					ContentListView.SizeChanged += ContentListView_SizeChanged;
 				} else if (line < ContentListView.Items.Count)
 				{
-					ContentListView.UpdateLayout();
-					ContentListView.ScrollIntoView(ViewModel.Contents[line]);
+					ContentListView.ScrollIntoView(ViewModel.Contents[line], ScrollIntoViewAlignment.Leading);
 				}
 			}
 		}
@@ -180,7 +181,7 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
 			{
-				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1);
+				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1, PreCachePolicy.CachePrev );
 				//ChangeView(-1, ViewModel.ChapterData.Lines.Count - 2);
 			}
 		}
@@ -189,12 +190,13 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
 			{
-				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0);
+				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0, PreCachePolicy.CacheNext);
 			}
 		}
 
 		private void SyncIndexSelection()
 		{
+			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
 			VolumeListView.UpdateLayout();
 			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
@@ -217,13 +219,13 @@ namespace LightNovel
 			}
 		}
 
-		private void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+		private async void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 		{
 			if (args.InRecycleQueue)
 				return;
 			var line = (LineViewModel)args.Item;
 			if (args.Phase == 0 && line.HasComments && !line.IsLoading)
-				line.LoadCommentsAsync();
+				await line.LoadCommentsAsync();
 		}
 
 		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -241,6 +243,12 @@ namespace LightNovel
 			{
 				IsIndexPanelOpen = false;
 			}
+		}
+
+		private void IndexPanel_Closed(object sender, object e)
+		{
+			if (IsIndexPanelOpen)
+				IsIndexPanelOpen = false;
 		}
 
 	}

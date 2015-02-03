@@ -63,6 +63,18 @@ namespace LightNovel
 			this.navigationHelper.SaveState += navigationHelper_SaveState;
 		}
 
+		void LoadResultIntoView()
+		{
+			var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
+			this.DefaultViewModel["Results"] = bvms;
+			resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
+			if (Results == null || Results.Count == 0)
+				VisualStateManager.GoToState(this, "NoResultsFound", true);
+			else
+			{
+				VisualStateManager.GoToState(this, "ResultsFound", true);
+			}
+		}
 		/// <summary>
 		/// Populates the page with content passed during navigation.  Any saved state is also
 		/// provided when recreating a page from a prior session.
@@ -77,19 +89,32 @@ namespace LightNovel
 			if (e.PageState != null)
 			{
 				QueryText = (string)e.PageState["QueryText"];
-				var results = (string)e.PageState["Results"];
-				QueryTask = null;
-				Results = JsonConvert.DeserializeObject<List<BookItem>>(results);
+				if (e.PageState.ContainsKey("Results"))
+				{
+					var results = (string)e.PageState["Results"];
+					QueryTask = null;
+					Results = JsonConvert.DeserializeObject<List<BookItem>>(results);
+					LoadResultIntoView();
+				} else
+				{
+					Results = null;
+					QueryTask = null;
+				}
 			}
 			else
 			{
 				QueryText = e.NavigationParameter as String;
+			}
+
+			if (Results == null && QueryTask == null)
+			{
 				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText).ContinueWith(async result =>
 				{
 					Results = result.Result;
 					var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
 					this.DefaultViewModel["Results"] = bvms;
-					await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,()=>{
+					await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+					{
 						resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
 						if (Results == null || Results.Count == 0)
 							VisualStateManager.GoToState(this, "NoResultsFound", true);
@@ -98,7 +123,6 @@ namespace LightNovel
 							VisualStateManager.GoToState(this, "ResultsFound", true);
 						}
 					});
-
 				});
 			}
 
@@ -124,8 +148,11 @@ namespace LightNovel
 		private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
 			e.PageState.Add("QueryText", QueryText);
-			var results = JsonConvert.SerializeObject(Results);
-			e.PageState.Add("Results", results);
+			if (Results != null)
+			{
+				var results = JsonConvert.SerializeObject(Results);
+				e.PageState.Add("Results", results);
+			}
 		}
 
 		void ResultsGridView_ItemClick(object sender, ItemClickEventArgs e)

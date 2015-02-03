@@ -505,6 +505,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 userType.AddMemberName("HyperLinkUri");
                 userType.AddMemberName("CoverImageUri");
                 userType.AddMemberName("ItemType");
+                userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
@@ -513,6 +514,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 userType.AddEnumValue("Series", global::LightNovel.Service.BookItemType.Series);
                 userType.AddEnumValue("Volume", global::LightNovel.Service.BookItemType.Volume);
                 userType.AddEnumValue("Chapter", global::LightNovel.Service.BookItemType.Chapter);
+                userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 

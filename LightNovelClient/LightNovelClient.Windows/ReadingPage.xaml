@@ -10,7 +10,9 @@
       xmlns:service="using:LightNovel.Service"
       xmlns:toolkit="using:WinRTXamlToolkit.Controls"
       x:Name="pageRoot"
-      DataContext="{Binding ViewModel,RelativeSource={RelativeSource Self}}"
+      DataContext="{Binding ViewModel,
+                            RelativeSource={RelativeSource Self}}"
+      NavigationCacheMode="Required"
       SizeChanged="pageRoot_SizeChanged"
       mc:Ignorable="d">
 
@@ -32,131 +34,185 @@
                                         FalseSymbol="Pin"
                                         TrueSymbol="UnPin" />
 
-        <SolidColorBrush x:Name="ContentForegroundBrush" ></SolidColorBrush>
-        <SolidColorBrush x:Name="ContentBackgroundBrush" ></SolidColorBrush>
-        <SolidColorBrush x:Name="CommentedTextBrush" ></SolidColorBrush>
+        <SolidColorBrush x:Name="ContentForegroundBrush" />
+        <SolidColorBrush x:Name="ContentBackgroundBrush" />
+        <SolidColorBrush x:Name="CommentedTextBrush" />
 
         <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">
             <Grid HorizontalAlignment="Stretch">
-                <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource AppSemitransparentBrush}" VerticalAlignment="Center" Margin="100,0,100,100" Maximum="100" Minimum="0" Value="0"/>
-                <TextBlock x:Uid="ImageLoadingIndicator" Foreground="{ThemeResource AppAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="{ThemeResource AppFontSizeMedium}" Visibility="{Binding Visibility,ElementName=ProgressBar}">Image Loading...</TextBlock>
-                <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                <ProgressBar x:Name="ProgressBar"
+                             Margin="100,0,100,100"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Background="{ThemeResource AppSemitransparentBrush}"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             Maximum="100"
+                             Minimum="0"
+                             Value="0" />
+                <TextBlock x:Uid="ImageLoadingIndicator"
+                           Margin="0,0,0,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="{ThemeResource AppFontSizeMedium}"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AppAccentBrush}"
+                           Visibility="{Binding Visibility,
+                                                ElementName=ProgressBar}">
+                    Image Loading...
+                </TextBlock>
+                <Image HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Stretch="Uniform">
                     <Image.Source>
-                        <BitmapImage UriSource="{Binding Content}" x:Name="IllustrationBitmap" DownloadProgress="Illustration_DownloadProgress"></BitmapImage>
+                        <BitmapImage x:Name="IllustrationBitmap"
+                                     DownloadProgress="Illustration_DownloadProgress"
+                                     UriSource="{Binding Content}" />
                     </Image.Source>
                 </Image>
-                <Rectangle Width="5" HorizontalAlignment="Left" Fill="{ThemeResource AppAccentBrush}" Visibility="{Binding HasComments,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Rectangle Width="5"
+                           HorizontalAlignment="Left"
+                           Fill="{ThemeResource AppAccentBrush}"
+                           Visibility="{Binding HasComments,
+                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </DataTemplate>
         <Flyout x:Key="CommentsFlyout"
                 x:Name="CommentsFlyout"
-                Placement="Right"
-                >
+                Placement="Right">
             <Grid Width="250" MaxHeight="600">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <!--Image Tools-->
-                <Grid Background="{ThemeResource AppAccentBrush}" Visibility="{Binding IsImage,Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppBackgroundBrush}">Picture</TextBlock>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                <!--  Image Tools  -->
+                <Grid Background="{ThemeResource AppAccentBrush}" Visibility="{Binding IsImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock x:Uid="PictureToolLabel"
+                               Margin="5"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="{ThemeResource AppFontSizeMedium}"
+                               FontWeight="SemiBold"
+                               Foreground="{ThemeResource AppBackgroundBrush}">
+                        Picture
+                    </TextBlock>
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button x:Uid="ImageDownloadButton"
-                        Grid.Row="2"
-                        Width="40"
-                        Height="40"
-                        Margin="0"
-                        Click="IllustrationSaveButton_Click"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppAccentBrush}"
-                        BorderBrush="{ThemeResource TransparentBrush}"
-                        BorderThickness="1"
-                        Padding="0"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
-                            <Viewbox HorizontalAlignment="Center" Width="40" VerticalAlignment="Center" Height="40">
-                                <SymbolIcon Margin="5" Symbol="Download" Foreground="{ThemeResource AppBackgroundBrush}"></SymbolIcon>
+                                Grid.Row="2"
+                                Width="40"
+                                Height="40"
+                                Margin="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource AppAccentBrush}"
+                                BorderBrush="{ThemeResource TransparentBrush}"
+                                BorderThickness="1"
+                                Click="IllustrationSaveButton_Click"
+                                Foreground="{ThemeResource AppBackgroundBrush}"
+                                Padding="0">
+                            <Viewbox Width="40"
+                                     Height="40"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+                                <SymbolIcon Margin="5"
+                                            Foreground="{ThemeResource AppBackgroundBrush}"
+                                            Symbol="Download" />
                             </Viewbox>
                         </Button>
                         <Button x:Uid="ImageFullScreenButton"
-                        Grid.Row="2"
-                        Width="40"
-                        Height="40"
-                        Margin="0"
-                        Click="IllustrationFullScreenButton_Click"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppAccentBrush}"
-                        BorderBrush="{ThemeResource TransparentBrush}"
-                        BorderThickness="1"
-                        Padding="0"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
-                            <Viewbox HorizontalAlignment="Center" Width="40" VerticalAlignment="Center" Height="40">
-                                <SymbolIcon Margin="5" Symbol="FullScreen" Foreground="{ThemeResource AppBackgroundBrush}"></SymbolIcon>
+                                Grid.Row="2"
+                                Width="40"
+                                Height="40"
+                                Margin="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource AppAccentBrush}"
+                                BorderBrush="{ThemeResource TransparentBrush}"
+                                BorderThickness="1"
+                                Click="IllustrationFullScreenButton_Click"
+                                Foreground="{ThemeResource AppBackgroundBrush}"
+                                Padding="0">
+                            <Viewbox Width="40"
+                                     Height="40"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+                                <SymbolIcon Margin="5"
+                                            Foreground="{ThemeResource AppBackgroundBrush}"
+                                            Symbol="FullScreen" />
                             </Viewbox>
                         </Button>
                     </StackPanel>
                 </Grid>
-                <!--Comment Tools-->
+                <!--  Comment Tools  -->
                 <TextBlock x:Uid="NoCommentLabel"
                            Grid.Row="1"
-                           Visibility="{Binding HasNoComment,Converter={StaticResource BooleanToVisibilityConverter}}"
-                           Foreground="{ThemeResource AppForegroundBrush}" 
-                           TextWrapping="WrapWholeWords"
-                           Style="{ThemeResource AppTextAccentStyle}"
+                           Margin="5"
                            FontSize="{ThemeResource AppFontSizeMedium}"
-                           Margin="5">
-                    Send the first comment.</TextBlock>
+                           Foreground="{ThemeResource AppForegroundBrush}"
+                           Style="{ThemeResource AppTextAccentStyle}"
+                           TextWrapping="WrapWholeWords"
+                           Visibility="{Binding HasNoComment,
+                                                Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Send the first comment.
+                </TextBlock>
                 <ProgressBar Grid.Row="1"
-                             Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityConverter}}"
-                             IsIndeterminate="True" 
-                             Foreground="{ThemeResource AppAccentBrush}" Margin="0,0,0,5"></ProgressBar>
+                             Margin="0,0,0,5"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             IsIndeterminate="True"
+                             Visibility="{Binding IsLoading,
+                                                  Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <ListView Grid.Row="1"
-                          Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityReverseConverter}}" 
-                          ItemsSource="{Binding Comments}">
+                          ItemsSource="{Binding Comments}"
+                          Visibility="{Binding IsLoading,
+                                               Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Content}" Foreground="{ThemeResource AppForegroundBrush}" TextWrapping="WrapWholeWords"/>
+                            <TextBlock Foreground="{ThemeResource AppForegroundBrush}"
+                                       Text="{Binding Content}"
+                                       TextWrapping="WrapWholeWords" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="Margin" Value="1" />
                             <Setter Property="MinHeight" Value="20" />
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
                 <TextBox x:Uid="CommentInputBox"
                          x:Name="CommentInputBox"
                          Grid.Row="2"
-                         FontSize="{ThemeResource AppFontSizeMedium}"
-                         FontWeight="Light"
-                         PlaceholderText="Input comment here"
-                         VerticalAlignment="Stretch"
                          HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
                          VerticalContentAlignment="Center"
-                         MaxLength="300"
+                         Background="{ThemeResource AppBackgroundDimBrush}"
                          BorderBrush="{ThemeResource TransparentBrush}"
                          BorderThickness="1"
+                         FontSize="{ThemeResource AppFontSizeMedium}"
+                         FontWeight="Light"
+                         Foreground="{ThemeResource AppForegroundBrush}"
                          KeyDown="CommentInputBox_KeyDown"
-                         Background="{ThemeResource AppBackgroundDimBrush}" Foreground="{ThemeResource AppForegroundBrush}"></TextBox>
+                         MaxLength="300"
+                         PlaceholderText="Input comment here" />
                 <Button x:Uid="SubmmitButton"
                         Grid.Row="2"
                         Width="40"
                         Height="40"
                         Margin="0"
-                        Click="CommentSubmitButton_Click"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Background="{ThemeResource AppAccentBrush}"
                         BorderBrush="{ThemeResource TransparentBrush}"
                         BorderThickness="1"
-                        Padding="0"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
-                    <Viewbox HorizontalAlignment="Center" Width="40" VerticalAlignment="Center" Height="40">
-                        <SymbolIcon Margin="10" Symbol="PostUpdate"></SymbolIcon>
+                        Click="CommentSubmitButton_Click"
+                        Foreground="{ThemeResource AppBackgroundBrush}"
+                        Padding="0">
+                    <Viewbox Width="40"
+                             Height="40"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center">
+                        <SymbolIcon Margin="10" Symbol="PostUpdate" />
                     </Viewbox>
                 </Button>
             </Grid>
@@ -242,57 +298,57 @@
                     Padding="20,0">
             <CommandBar.PrimaryCommands>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
-                <AppBarButton x:Name="FontSizeButton"
-                              x:Uid="FontSizeButton"
-                          Width="50"
-                          Height="65"
-                          Margin="10,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          Icon="FontSize"
-                          IsCompact="False"
-                          Label="Font Size"
-                          Padding="0">
+                <AppBarButton x:Uid="FontSizeButton"
+                              x:Name="FontSizeButton"
+                              Width="50"
+                              Height="65"
+                              Margin="10,0"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="FontSize"
+                              IsCompact="False"
+                              Label="Font Size"
+                              Padding="0">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeSmall}"
-                                        FontWeight="SemiLight"
-                                        Text="Subtle" />
+                                            FontSize="{ThemeResource AppFontSizeSmall}"
+                                            FontWeight="SemiLight"
+                                            Text="Subtle" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeNormal}"
-                                        FontWeight="SemiLight"
-                                        Text="Small" />
+                                            FontSize="{ThemeResource AppFontSizeNormal}"
+                                            FontWeight="SemiLight"
+                                            Text="Small" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeMedium}"
-                                        FontWeight="Light"
-                                        Text="Normal" />
+                                            FontSize="{ThemeResource AppFontSizeMedium}"
+                                            FontWeight="Light"
+                                            Text="Normal" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                        FontWeight="Light"
-                                        Text="Large" />
+                                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                            FontWeight="Light"
+                                            Text="Large" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeLarge}"
-                                        FontWeight="Light"
-                                        Text="Huge" />
+                                            FontSize="{ThemeResource AppFontSizeLarge}"
+                                            FontWeight="Light"
+                                            Text="Huge" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton x:Name="ReadingStyleButton"
-                              x:Uid="ReadingStyleButton"
-                          Width="50"
-                          Height="65"
-                          Margin="10,0,20,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          Icon="FontColor"
-                          IsCompact="False"
-                          Label="Theme"
-                          Padding="0">
+                <AppBarButton x:Uid="ReadingStyleButton"
+                              x:Name="ReadingStyleButton"
+                              Width="50"
+                              Height="65"
+                              Margin="10,0,20,0"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="FontColor"
+                              IsCompact="False"
+                              Label="Theme"
+                              Padding="0">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyout.MenuFlyoutPresenterStyle>
@@ -301,101 +357,108 @@
                                 </Style>
                             </MenuFlyout.MenuFlyoutPresenterStyle>
                             <MenuFlyoutItem Background="Black"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="White"
-                                        Text="Dark" />
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="White"
+                                            Text="Dark" />
                             <MenuFlyoutItem Background="LightGray"
-                                        Click="ReadingThemButton_Click"
-                                        Text="Gray" />
+                                            Click="ReadingThemButton_Click"
+                                            Text="Gray" />
                             <MenuFlyoutItem Background="#FFD1E6B1"
-                                        Click="ReadingThemButton_Click"
-                                        Text="Green" />
+                                            Click="ReadingThemButton_Click"
+                                            Text="Green" />
                             <MenuFlyoutItem Background="#FFFCF5E8"
-                                        Click="ReadingThemButton_Click"
-                                        Text="Sepia" />
+                                            Click="ReadingThemButton_Click"
+                                            Text="Sepia" />
                             <MenuFlyoutItem Background="White"
-                                        Click="ReadingThemButton_Click"
-                                        Text="Light" />
+                                            Click="ReadingThemButton_Click"
+                                            Text="Light" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />
                 <AppBarToggleButton x:Name="CommentEnableButton"
-                          Width="50"
-                          Height="65"
-                          Margin="10,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
-                          ToolTipService.ToolTip="Toggle if enable the comments in reading"
-                          IsChecked="{Binding EnableComments,Mode=TwoWay}"
-                          Label="Comments"
-                          Padding="0">
+                                    Width="50"
+                                    Height="65"
+                                    Margin="10,0"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="{ThemeResource TransparentBrush}"
+                                    Foreground="{ThemeResource AppBackgroundBrush}"
+                                    IsChecked="{Binding EnableComments,
+                                                        Mode=TwoWay}"
+                                    IsCompact="False"
+                                    Label="Comments"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Toggle if enable the comments in reading">
                     <Viewbox Margin="8">
                         <SymbolIcon Symbol="Comment" />
                     </Viewbox>
                 </AppBarToggleButton>
-                <AppBarButton x:Name="ShareButton"
-                          x:Uid="ShareButton"
-                          Width="50"
-                          Height="65"
-                          Margin="10,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
+                <AppBarButton x:Uid="ShareButton"
+                              x:Name="ShareButton"
+                              Width="50"
+                              Height="65"
+                              Margin="10,0"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
                               Click="ShareButton_Click"
-                          Label="Share"
-                          Padding="0">
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              IsCompact="False"
+                              Label="Share"
+                              Padding="0">
                     <Viewbox Margin="9,11,10,10">
-                        <Path Fill="{ThemeResource AppBackgroundBrush}" Width="47.5" Height="44.3333" Stretch="Fill" Data="F1 M 19,31.6667C 22.4978,31.6667 25.3333,34.5022 25.3333,38C 25.3333,40.0017 24.4047,41.7865 22.9548,42.9471C 24.9536,49.0304 30.5383,53.4894 37.2083,53.8333C 37.2083,56.2887 38.2245,58.5067 39.8593,60.0898L 38,60.1667C 27.79,60.1667 19.1923,53.2639 16.619,43.8706C 14.3012,42.9295 12.6667,40.6557 12.6667,38C 12.6667,34.5022 15.5022,31.6667 19,31.6667 Z M 45.125,15.8333C 48.6228,15.8333 51.4583,18.6689 51.4583,22.1667C 51.4583,25.6645 48.6228,28.5 45.125,28.5C 41.6337,28.5 38.8022,25.675 38.7917,22.1861C 38.5294,22.1732 38.2655,22.1667 38,22.1667C 31.8493,22.1667 26.5178,25.6738 23.896,30.7973C 22.5009,29.8471 20.8153,29.2917 19,29.2917L 17.559,29.4103C 20.9149,21.4339 28.8034,15.8333 38,15.8333C 39.6024,15.8333 41.165,16.0034 42.6709,16.3263C 43.4256,16.0088 44.2548,15.8333 45.125,15.8333 Z M 45.9167,47.5C 47.3141,47.5 48.6058,47.9526 49.6532,48.7191C 52.2485,45.8991 53.8333,42.1347 53.8333,38C 53.8333,34.5408 52.724,31.3407 50.8417,28.736C 52.6012,27.2036 53.7393,24.9758 53.8278,22.4809C 57.7488,26.4794 60.1667,31.9574 60.1667,38C 60.1667,44.8738 57.0379,51.0169 52.1268,55.0828C 51.5466,57.9822 48.9868,60.1667 45.9167,60.1667C 42.4189,60.1667 39.5833,57.3311 39.5833,53.8333C 39.5833,50.3355 42.4189,47.5 45.9167,47.5 Z " HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Path Width="47.5"
+                              Height="44.3333"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Data="F1 M 19,31.6667C 22.4978,31.6667 25.3333,34.5022 25.3333,38C 25.3333,40.0017 24.4047,41.7865 22.9548,42.9471C 24.9536,49.0304 30.5383,53.4894 37.2083,53.8333C 37.2083,56.2887 38.2245,58.5067 39.8593,60.0898L 38,60.1667C 27.79,60.1667 19.1923,53.2639 16.619,43.8706C 14.3012,42.9295 12.6667,40.6557 12.6667,38C 12.6667,34.5022 15.5022,31.6667 19,31.6667 Z M 45.125,15.8333C 48.6228,15.8333 51.4583,18.6689 51.4583,22.1667C 51.4583,25.6645 48.6228,28.5 45.125,28.5C 41.6337,28.5 38.8022,25.675 38.7917,22.1861C 38.5294,22.1732 38.2655,22.1667 38,22.1667C 31.8493,22.1667 26.5178,25.6738 23.896,30.7973C 22.5009,29.8471 20.8153,29.2917 19,29.2917L 17.559,29.4103C 20.9149,21.4339 28.8034,15.8333 38,15.8333C 39.6024,15.8333 41.165,16.0034 42.6709,16.3263C 43.4256,16.0088 44.2548,15.8333 45.125,15.8333 Z M 45.9167,47.5C 47.3141,47.5 48.6058,47.9526 49.6532,48.7191C 52.2485,45.8991 53.8333,42.1347 53.8333,38C 53.8333,34.5408 52.724,31.3407 50.8417,28.736C 52.6012,27.2036 53.7393,24.9758 53.8278,22.4809C 57.7488,26.4794 60.1667,31.9574 60.1667,38C 60.1667,44.8738 57.0379,51.0169 52.1268,55.0828C 51.5466,57.9822 48.9868,60.1667 45.9167,60.1667C 42.4189,60.1667 39.5833,57.3311 39.5833,53.8333C 39.5833,50.3355 42.4189,47.5 45.9167,47.5 Z "
+                              Fill="{ThemeResource AppBackgroundBrush}"
+                              Stretch="Fill" />
                     </Viewbox>
                 </AppBarButton>
                 <AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />
                 <AppBarToggleButton x:Uid="FavoriteButton"
-                                Grid.Column="5"
-								IsEnabled="{Binding IsSignedIn}"
-                                Width="50"
-                                Height="65"
-                                Margin="10,0,20,0"
-                                IsCompact="False"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SemiTransparentBlackBrush10}"
-                                BorderBrush="Transparent"
-                                Click="BookmarkButton_Click"
-                                Foreground="{StaticResource AppBackgroundBrush}"
-                                IsChecked="{Binding IsFavored}"
-                                ToolTipService.ToolTip="Bookmark current page"
-                                Label="Favrite">
+                                    Grid.Column="5"
+                                    Width="50"
+                                    Height="65"
+                                    Margin="10,0,20,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{StaticResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="Transparent"
+                                    Click="BookmarkButton_Click"
+                                    Foreground="{StaticResource AppBackgroundBrush}"
+                                    IsChecked="{Binding IsFavored}"
+                                    IsCompact="False"
+                                    IsEnabled="{Binding IsSignedIn}"
+                                    Label="Favrite"
+                                    ToolTipService.ToolTip="Bookmark current page">
                     <Viewbox Margin="10">
                         <SymbolIcon Symbol="Favorite" />
                     </Viewbox>
                 </AppBarToggleButton>
-                <AppBarToggleButton x:Name="PinButton"
-                                x:Uid="PinButton"
-                                Width="50"
-                                Height="65"
-                                Margin="10,0,20,0"
-                                IsCompact="False"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SemiTransparentBlackBrush10}"
-                                BorderBrush="Transparent"
-                                Click="PinButton_Click"
-                                Label="Pin"
-                                Foreground="{StaticResource AppBackgroundBrush}"
-                                IsChecked="{Binding IsPinned}"
-                                ToolTipService.ToolTip="Pin this page to Start">
+                <AppBarToggleButton x:Uid="PinButton"
+                                    x:Name="PinButton"
+                                    Width="50"
+                                    Height="65"
+                                    Margin="10,0,20,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{StaticResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="Transparent"
+                                    Click="PinButton_Click"
+                                    Foreground="{StaticResource AppBackgroundBrush}"
+                                    IsChecked="{Binding IsPinned}"
+                                    IsCompact="False"
+                                    Label="Pin"
+                                    ToolTipService.ToolTip="Pin this page to Start">
                     <Viewbox Margin="10">
                         <SymbolIcon Symbol="{Binding IsChecked, ElementName=PinButton, Converter={StaticResource IsPinnedToSymbolConverter}}" />
                     </Viewbox>
                 </AppBarToggleButton>
             </CommandBar.PrimaryCommands>
-            <!--Download and manual layout function not enabled in this build-->
+            <!--  Download and manual layout function not enabled in this build  -->
             <!--<CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="DownloadButton"
                           Width="50"
@@ -722,8 +785,8 @@
                            TextAlignment="Center" />
             </StackPanel>
             <!--  <AppBarSeparator Grid.Column="3" VerticalAlignment="Center" Foreground="{ThemeResource AppBackgroundBrush}" HorizontalAlignment="Center" Padding="0"/>  -->
-            <AppBarToggleButton x:Name="IndexButton"
-                                x:Uid="IndexButton"
+            <AppBarToggleButton x:Uid="IndexButton"
+                                x:Name="IndexButton"
                                 Grid.Column="4"
                                 Width="50"
                                 Height="50"
@@ -909,10 +972,10 @@
                                            MaxHeight="80"
                                            HorizontalAlignment="Stretch"
                                            VerticalAlignment="Stretch"
+                                           Foreground="{ThemeResource ContentForegroundBrush}"
                                            Language="zh-CN"
                                            Padding="20,0,0,0"
                                            Style="{ThemeResource AppTextTitle3Style}"
-                                           Foreground="{ThemeResource ContentForegroundBrush}"
                                            Text="{Binding Title}"
                                            TextTrimming="WordEllipsis" />
                             </Grid>
@@ -1000,6 +1063,7 @@
                                    Width="640"
                                    Height="668"
                                    VerticalAlignment="Top"
+                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"
                                    FontFamily="Segoe UI"
                                    FontSize="{Binding FontSize}"
                                    FontWeight="Light"
@@ -1007,17 +1071,16 @@
                                    IsTextSelectionEnabled="False"
                                    Language="zh-CN"
                                    Padding="40,40"
+                                   Tapped="ContentTextBlock_Tapped"
                                    TextAlignment="Left"
-                                   TextWrapping="WrapWholeWords"
-                                   Tapped="ContentTextBlock_Tapped" 
-                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"/>
+                                   TextWrapping="WrapWholeWords" />
                     <controls:RichTextColumns.ColumnTemplate>
                         <DataTemplate>
                             <RichTextBlockOverflow Width="640"
                                                    Height="668"
+                                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"
                                                    Padding="40,40"
-                                                   Tapped="ContentTextBlock_Tapped"
-                                                   FlyoutBase.AttachedFlyout="{StaticResource CommentsFlyout}"/>
+                                                   Tapped="ContentTextBlock_Tapped" />
                         </DataTemplate>
                     </controls:RichTextColumns.ColumnTemplate>
                 </controls:RichTextColumns>

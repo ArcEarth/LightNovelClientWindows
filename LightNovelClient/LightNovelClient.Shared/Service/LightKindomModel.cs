@@ -55,7 +55,7 @@ namespace LightNovel.Service
 		public string Description { get; set; }
 	}
 
-	public class Volume : List<ChapterProperties>
+	public class Volume
 	{
 		public string Id { get; set; }
 		public string Label { get; set; }
@@ -86,10 +86,7 @@ namespace LightNovel.Service
 		//        return LightNovelService.Series(ParentSeriesId);
 		//    }
 		//}
-		public IList<ChapterProperties> Chapters { get { return this; } set {
-			this.Clear();
-			this.AddRange(value);
-		} }
+		public IList<ChapterProperties> Chapters { get; set; }
 		//public Volume NextVolume { get { return LightNovelService.Volume(NextVolumeId); } }
 		//public Volume PrevVolume { get { return LightNovelService.Volume(PrevVolumeId); } }
 		public string NextVolumeId { get; set; }
@@ -97,7 +94,7 @@ namespace LightNovel.Service
 		public string ParentSeriesId { get; set; }
 	}
 
-	public class Series : List<Volume>
+	public class Series
 	{
 		public string Id { get; set; }
 		public string Title { get; set; }
@@ -110,7 +107,7 @@ namespace LightNovel.Service
 		public string Illustrator { get; set; }
 		public string Publisher { get; set; }
 
-		public IList<Volume> Volumes { get { return this; }}
+		public IList<Volume> Volumes { get; set; }
 	}
 
 	public enum LineContentType
@@ -134,13 +131,13 @@ namespace LightNovel.Service
 
 	public interface IChapterProperties
 	{
-		public string Id { get; set; }
-		public string Title { get; set; }
-		public int ChapterNo { get; set; }
-		public string NextChapterId { get; set; }
-		public string PrevChapterId { get; set; }
-		public string ParentVolumeId { get; set; }
-		public string ParentSeriesId { get; set; }
+		string Id { get; set; }
+		string Title { get; set; }
+		int ChapterNo { get; set; }
+		string NextChapterId { get; set; }
+		string PrevChapterId { get; set; }
+		string ParentVolumeId { get; set; }
+		string ParentSeriesId { get; set; }
 	}
 
 	public class ChapterProperties : IChapterProperties
@@ -154,20 +151,17 @@ namespace LightNovel.Service
 		public string ParentSeriesId { get; set; }
 	}
 
-	public class Chapter : List<Line>, IChapterProperties
+	public class Chapter : ChapterProperties
 	{
-		public Chapter()
-		{
-			//_lines = new List<Line>();
-		}
-		public string Id { get; set; }
-		public string Title { get; set; }
-		public int ChapterNo { get; set; }
-		public string NextChapterId { get; set; }
-		public string PrevChapterId { get; set; }
-		public string ParentVolumeId { get; set; }
-		public IList<Line> Lines { get { return this; } }
-		public string ParentSeriesId { get; set; }
+		public IList<Line> Lines { get; set; }
+
+		//public string Id { get; set; }
+		//public string Title { get; set; }
+		//public int ChapterNo { get; set; }
+		//public string NextChapterId { get; set; }
+		//public string PrevChapterId { get; set; }
+		//public string ParentVolumeId { get; set; }
+		//public string ParentSeriesId { get; set; }
 	}
 	//public enum NavigatorType
 	//{
@@ -206,6 +200,7 @@ namespace LightNovel.Service
 		public string ChapterTitle { get; set; }
 		public string VolumeTitle { get; set; }
 		public string SeriesTitle { get; set; }
+		public string DescriptionThumbnailUri { get; set; }
 	}
 
 }

@@ -1,6 +1,7 @@
 ﻿<Page x:Class="LightNovel.ReadingPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:controls="using:LightNovel.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:data="using:LightNovel.Data"
@@ -9,16 +10,17 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:service="using:LightNovel.Service"
       xmlns:toolkit="using:WinRTXamlToolkit.Controls"
-      xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
       x:Name="pageRoot"
-      DataContext="{Binding ViewModel,RelativeSource={RelativeSource Self}}"
+      DataContext="{Binding ViewModel,
+                            RelativeSource={RelativeSource Self}}"
+      NavigationCacheMode="Required"
       mc:Ignorable="d">
 
     <Page.Resources>
         <!--  Collection of items displayed by this page  -->
-        <CollectionViewSource x:Name="VolumesViewSource" 
-                              Source="{Binding Index}" 
-                              IsSourceGrouped="True"/>
+        <CollectionViewSource x:Name="VolumesViewSource"
+                              IsSourceGrouped="True"
+                              Source="{Binding Index}" />
 
         <QuadraticEase x:Key="QuadraticEaseOut" EasingMode="EaseOut" />
         <QuadraticEase x:Key="QuadraticEaseInOut" EasingMode="EaseInOut" />
@@ -27,20 +29,44 @@
                                         FalseSymbol="Pin"
                                         TrueSymbol="UnPin" />
 
-        <SolidColorBrush x:Name="ContentForegroundBrush" ></SolidColorBrush>
-        <SolidColorBrush x:Name="ContentBackgroundBrush" ></SolidColorBrush>
-        <SolidColorBrush x:Name="CommentedTextBrush" ></SolidColorBrush>
+        <SolidColorBrush x:Name="ContentForegroundBrush" />
+        <SolidColorBrush x:Name="ContentBackgroundBrush" />
+        <SolidColorBrush x:Name="CommentedTextBrush" />
 
         <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">
             <Grid Loaded="IllustrationViewGrid_Loaded">
-                <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Stretch" Foreground="{ThemeResource AppAccentBrush}" Background="{ThemeResource AppSemitransparentBrush}" VerticalAlignment="Center" Margin="10,0,10,20" Maximum="100" Minimum="0" Value="0"/>
-                <TextBlock x:Uid="ImageLoadingIndicator" Foreground="{ThemeResource AppAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontWeight="SemiBold" FontSize="{ThemeResource AppFontSizeMedium}" Visibility="{Binding Visibility,ElementName=ProgressBar}">Image Loading...</TextBlock>
-                <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Visibility="{Binding IsImage,Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ProgressBar x:Name="ProgressBar"
+                             Margin="10,0,10,20"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Background="{ThemeResource AppSemitransparentBrush}"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             Maximum="100"
+                             Minimum="0"
+                             Value="0" />
+                <TextBlock x:Uid="ImageLoadingIndicator"
+                           Margin="0,0,0,0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontSize="{ThemeResource AppFontSizeMedium}"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AppAccentBrush}"
+                           Visibility="{Binding Visibility,
+                                                ElementName=ProgressBar}">
+                    Image Loading...
+                </TextBlock>
+                <Image HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Stretch="Uniform"
+                       Visibility="{Binding IsImage,
+                                            Converter={StaticResource BooleanToVisibilityConverter}}">
                     <!--<Interactivity:Interaction.Behaviors>
                         <Core:IncrementalUpdateBehavior Phase="3"/>
                     </Interactivity:Interaction.Behaviors>-->
                     <Image.Source>
-                        <BitmapImage UriSource="{Binding ImageUri}" x:Name="IllustrationBitmap" DownloadProgress="Illustration_DownloadProgress"></BitmapImage>
+                        <BitmapImage x:Name="IllustrationBitmap"
+                                     DownloadProgress="Illustration_DownloadProgress"
+                                     UriSource="{Binding ImageUri}" />
                     </Image.Source>
                 </Image>
                 <!--<TextBlock Text="{Binding Content}"    Visibility="{Binding IsImage,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
@@ -49,32 +75,39 @@
                                                            TextAlignment="Left"
                                                            Margin="12,0"
                                                            Foreground="{StaticResource AppForegroundBrush}"
-                                                           FontSize="{StaticResource AppFontSizeMedium}" 
+                                                           FontSize="{StaticResource AppFontSizeMedium}"
                                                            FontWeight="Normal"
                                                            Language="Chinese"/>-->
-                <Rectangle Width="5" HorizontalAlignment="Left" Fill="{ThemeResource AppAccentBrush}" Visibility="{Binding HasComments,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Rectangle Width="5"
+                           HorizontalAlignment="Left"
+                           Fill="{ThemeResource AppAccentBrush}"
+                           Visibility="{Binding HasComments,
+                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="TextLineViewTemplate" d:DataType="{system:Type vm:LineViewModel}">
             <Grid>
-                <Rectangle Width="5" HorizontalAlignment="Left" Fill="{ThemeResource AppAccentBrush}" Visibility="{Binding HasComments,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding Content}"
-                    TextWrapping="Wrap"
-                    HorizontalAlignment="Left"
-                    TextAlignment="Left"
-                    Margin="12,0"
-                    Foreground="{Binding Foreground,ElementName=ContentListView}"
-                    FontSize="{Binding FontSize,ElementName=ContentListView}"
-                    FontWeight="Normal"
-                    Language="Chinese"/>
+                <Rectangle Width="5"
+                           HorizontalAlignment="Left"
+                           Fill="{ThemeResource AppAccentBrush}"
+                           Visibility="{Binding HasComments,
+                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <TextBlock Margin="12,0"
+                           HorizontalAlignment="Left"
+                           FontSize="{Binding FontSize,
+                                              ElementName=ContentListView}"
+                           FontWeight="Normal"
+                           Foreground="{Binding Foreground,
+                                                ElementName=ContentListView}"
+                           Text="{Binding Content}"
+                           TextAlignment="Left"
+                           TextWrapping="Wrap" />
             </Grid>
         </DataTemplate>
         <local:NovelLineDataTemplateSelector x:Key="LineViewTemplateSelector"
                                              IllustrationDataTemplate="{StaticResource IllustrationViewTemplate}"
-                                             TextDataTemplate="{StaticResource TextLineViewTemplate}">
-        </local:NovelLineDataTemplateSelector>
-        <CollectionViewSource 
-            x:Key="LinesViewSource" Source="{Binding Contents}" />
+                                             TextDataTemplate="{StaticResource TextLineViewTemplate}" />
+        <CollectionViewSource x:Key="LinesViewSource" Source="{Binding Contents}" />
         <!--<DataTemplate x:Key="LineViewTemplateSelectorTemplate">
             <local:TemplateSelectorContent>
                 <local:TemplateSelectorContent.ContentTemplateSelector>
@@ -82,59 +115,63 @@
             </local:TemplateSelectorContent>
         </DataTemplate>-->
 
-        <DataTemplate x:Key="LineViewTemplateWithoutComment" d:DataType="{system:Type vm:LineViewModel}">
-        </DataTemplate>
+        <DataTemplate x:Key="LineViewTemplateWithoutComment" d:DataType="{system:Type vm:LineViewModel}" />
 
         <Flyout x:Key="CommentsFlyout"
                 x:Name="CommentsFlyout"
-                Placement="Top"
-                >
+                Placement="Top">
             <Grid Height="250">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <!--Comment Tools-->
+                <!--  Comment Tools  -->
                 <TextBlock x:Uid="NoCommentLabel"
                            Grid.Row="0"
-                           Visibility="{Binding HasNoComment,Converter={StaticResource BooleanToVisibilityConverter}}"
-                           Foreground="{ThemeResource AppForegroundBrush}" 
-                           TextWrapping="WrapWholeWords"
-                           Style="{ThemeResource AppTextAccentStyle}"
+                           Margin="5"
                            FontSize="{ThemeResource AppFontSizeMedium}"
-                           Margin="5">
-                    Send the first comment.</TextBlock>
+                           Foreground="{ThemeResource AppForegroundBrush}"
+                           Style="{ThemeResource AppTextAccentStyle}"
+                           TextWrapping="WrapWholeWords"
+                           Visibility="{Binding HasNoComment,
+                                                Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Send the first comment.
+                </TextBlock>
                 <ProgressBar Grid.Row="0"
-                             Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityConverter}}"
-                             IsIndeterminate="True" 
-                             Foreground="{ThemeResource AppAccentBrush}" Margin="0,0,0,5"></ProgressBar>
+                             Margin="0,0,0,5"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             IsIndeterminate="True"
+                             Visibility="{Binding IsLoading,
+                                                  Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <ListView Grid.Row="0"
                           MaxHeight="250"
-                          Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityReverseConverter}}" 
-                          ItemsSource="{Binding Comments}">
+                          ItemsSource="{Binding Comments}"
+                          Visibility="{Binding IsLoading,
+                                               Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Content}" MaxWidth="350" 
-                                       Foreground="{ThemeResource AppForegroundBrush}" 
-                                       FontSize="{ThemeResource AppFontSizeNormal}" 
+                            <TextBlock MaxWidth="350"
+                                       FontSize="{ThemeResource AppFontSizeNormal}"
                                        FontWeight="SemiBold"
-                                       TextWrapping="WrapWholeWords"/>
+                                       Foreground="{ThemeResource AppForegroundBrush}"
+                                       Text="{Binding Content}"
+                                       TextWrapping="WrapWholeWords" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListViewItem">
                                         <ContentPresenter x:Name="contentPresenter"
-                                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          Content="{TemplateBinding Content}"
+                                                          Margin="{TemplateBinding Padding}"
                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          Margin="{TemplateBinding Padding}" />
+                                                          Content="{TemplateBinding Content}"
+                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -145,74 +182,90 @@
                 <TextBox x:Uid="CommentInputBox"
                          x:Name="CommentInputBox"
                          Grid.Row="1"
-                         TabIndex="2"
-                         FontSize="{ThemeResource AppFontSizeMedium}"
-                         FontWeight="Light"
-                         PlaceholderText="Input comment here"
-                         VerticalAlignment="Stretch"
                          HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
                          VerticalContentAlignment="Center"
-                         MaxLength="300"
+                         Background="{ThemeResource AppBackgroundDimBrush}"
                          BorderBrush="{ThemeResource TransparentBrush}"
                          BorderThickness="1"
+                         FontSize="{ThemeResource AppFontSizeMedium}"
+                         FontWeight="Light"
+                         Foreground="{ThemeResource AppForegroundBrush}"
                          KeyDown="CommentInputBox_KeyDown"
-                         Background="{ThemeResource AppBackgroundDimBrush}" Foreground="{ThemeResource AppForegroundBrush}"></TextBox>
+                         MaxLength="300"
+                         PlaceholderText="Input comment here"
+                         TabIndex="2" />
                 <Button x:Uid="SubmmitButton"
                         Grid.Row="1"
                         Margin="0"
-                        Click="CommentSubmitButton_Click"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         Background="{ThemeResource AppAccentBrush}"
                         BorderBrush="{ThemeResource TransparentBrush}"
                         BorderThickness="1"
-                        Padding="0"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
-                    <Viewbox HorizontalAlignment="Center" Width="40" VerticalAlignment="Center" Height="40">
-                        <SymbolIcon Margin="10" Symbol="PostUpdate"></SymbolIcon>
+                        Click="CommentSubmitButton_Click"
+                        Foreground="{ThemeResource AppBackgroundBrush}"
+                        Padding="0">
+                    <Viewbox Width="40"
+                             Height="40"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center">
+                        <SymbolIcon Margin="10" Symbol="PostUpdate" />
                     </Viewbox>
                 </Button>
-                <!--Image Tools-->
-                <Grid Visibility="{Binding IsImage,Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" Height="50" Margin="0" >
+                <!--  Image Tools  -->
+                <Grid Grid.Row="2"
+                      Height="50"
+                      Margin="0"
+                      Visibility="{Binding IsImage,
+                                           Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--<TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppAccentBrush}">Picture</TextBlock>-->
                     <Button x:Uid="ImageDownloadButton"
-                        Grid.Column="0"
-                        Margin="0,0,5,0"
-                        MinHeight="60"
-                        HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch"
-                        Click="IllustrationSaveButton_Click"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppAccentBrush}"
-                        BorderBrush="{ThemeResource TransparentBrush}"
-                        BorderThickness="0"
-                        Padding="0"
-                        Foreground="{ThemeResource AppAccentBrush}">
-                        <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
-                            <SymbolIcon Margin="3" Symbol="Download" Foreground="{ThemeResource AppBackgroundBrush}"></SymbolIcon>
+                            Grid.Column="0"
+                            MinHeight="60"
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="IllustrationSaveButton_Click"
+                            Foreground="{ThemeResource AppAccentBrush}"
+                            Padding="0">
+                        <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Stretch="Uniform">
+                            <SymbolIcon Margin="3"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Symbol="Download" />
                         </Viewbox>
                     </Button>
                     <Button x:Uid="ImageFullScreenButton"
-                        Grid.Column="1"
-                        HorizontalContentAlignment="Stretch"
-                        VerticalContentAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        MinHeight="60"
-                        Click="IllustrationFullScreenButton_Click"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppAccentBrush}"
-                        BorderBrush="{ThemeResource TransparentBrush}"
-                        BorderThickness="0"
-                        Padding="0"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
-                        <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
-                            <SymbolIcon Margin="3" Symbol="FullScreen" Foreground="{ThemeResource AppBackgroundBrush}"></SymbolIcon>
+                            Grid.Column="1"
+                            MinHeight="60"
+                            Margin="5,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="IllustrationFullScreenButton_Click"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Padding="0">
+                        <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Stretch="Uniform">
+                            <SymbolIcon Margin="3"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Symbol="FullScreen" />
                         </Viewbox>
                     </Button>
                 </Grid>
@@ -288,180 +341,192 @@
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar x:Name="PageBottomCommandBar"
-                    ClosedDisplayMode="Minimal"
                     Background="{ThemeResource AppAccentBrush}"
                     BorderBrush="Transparent"
                     BorderThickness="0"
+                    ClosedDisplayMode="Minimal"
                     Foreground="{ThemeResource AppBackgroundBrush}"
+                    IsOpen="{Binding IsLoading,
+                                     Converter={StaticResource BooleanNegationConverter}}"
                     Padding="20,0">
             <CommandBar.PrimaryCommands>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
-                <AppBarButton x:Name="ReadingStyleButton"
-                              x:Uid="ReadingStyleButton"
-                          Margin="0,0,0,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          Icon="FontColor"
-                          IsCompact="False"
-                          Label="Theme"
-                          Padding="0">
+                <AppBarButton x:Uid="ReadingStyleButton"
+                              x:Name="ReadingStyleButton"
+                              Margin="0,0,0,0"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="FontColor"
+                              IsCompact="False"
+                              Label="Theme"
+                              Padding="0">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyout.MenuFlyoutPresenterStyle>
                                 <Style TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalAlignment" Value="Bottom"/>
-                                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}"/>
-                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}" />
+                                    <Setter Property="BorderThickness" Value="1" />
                                 </Style>
                             </MenuFlyout.MenuFlyoutPresenterStyle>
-                            <MenuFlyoutItem Background="Black"
+                            <MenuFlyoutItem Height="60"
                                             Margin="-20,-11,0,0"
-                                            Height="60"
-                                            Padding="0"
                                             HorizontalContentAlignment="Center"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="White"
-                                        Text="Dark" />
-                            <MenuFlyoutItem Background="LightGray"
+                                            Background="Black"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="White"
+                                            Padding="0"
+                                            Text="Dark" />
+                            <MenuFlyoutItem Height="60"
                                             Margin="-20,0,0,0"
-                                            Height="60"
-                                            Padding="0"
                                             HorizontalContentAlignment="Center"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="Black"
-                                        Text="Gray" />
-                            <MenuFlyoutItem Background="#FFD1E6B1"
+                                            Background="LightGray"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="Black"
+                                            Padding="0"
+                                            Text="Gray" />
+                            <MenuFlyoutItem Height="60"
                                             Margin="-20,0,0,0"
-                                            Height="60"
-                                            Padding="0"
                                             HorizontalContentAlignment="Center"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="Black"
-                                        Text="Green" />
-                            <MenuFlyoutItem Background="#FFFCF5E8"
+                                            Background="#FFD1E6B1"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="Black"
+                                            Padding="0"
+                                            Text="Green" />
+                            <MenuFlyoutItem Height="60"
                                             Margin="-20,0,0,0"
-                                            Height="60"
-                                            Padding="0"
                                             HorizontalContentAlignment="Center"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="Black"
-                                        Text="Sepia" />
-                            <MenuFlyoutItem Background="White"
+                                            Background="#FFFCF5E8"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="Black"
+                                            Padding="0"
+                                            Text="Sepia" />
+                            <MenuFlyoutItem Height="60"
                                             Margin="-20,0,0,28"
-                                            Height="60"
-                                            Padding="0"
                                             HorizontalContentAlignment="Center"
-                                        Click="ReadingThemButton_Click"
-                                        Foreground="Black"
-                                        Text="Light" />
+                                            Background="White"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="Black"
+                                            Padding="0"
+                                            Text="Light" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Name="CommentEnableButton"
-                          Margin="0,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="Transparent"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
-                          ToolTipService.ToolTip="Toggle if enable the comments in reading"
-                          IsChecked="{Binding EnableComments,Mode=TwoWay}"
-                          Label="Comments"
-                          Padding="0">
+                                    Margin="0,0"
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="Transparent"
+                                    Foreground="{ThemeResource AppBackgroundBrush}"
+                                    IsChecked="{Binding EnableComments,
+                                                        Mode=TwoWay}"
+                                    IsCompact="False"
+                                    Label="Comments"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Toggle if enable the comments in reading">
                     <Viewbox Margin="8">
                         <SymbolIcon Symbol="Comment" />
                     </Viewbox>
                 </AppBarToggleButton>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Uid="FavoriteButton"
-                                IsCompact="False"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SemiTransparentBlackBrush10}"
-                                BorderBrush="Transparent"
-                                Click="BookmarkButton_Click"
-                                IsEnabled="{Binding IsSignedIn}"
-                                Foreground="{StaticResource AppBackgroundBrush}"
-                                IsChecked="{Binding IsFavored}"
-                                ToolTipService.ToolTip="Bookmark current page"
-                                Label="Favrite">
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{StaticResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="Transparent"
+                                    Click="BookmarkButton_Click"
+                                    Foreground="{StaticResource AppBackgroundBrush}"
+                                    IsChecked="{Binding IsFavored}"
+                                    IsCompact="False"
+                                    IsEnabled="{Binding IsSignedIn}"
+                                    Label="Favrite"
+                                    ToolTipService.ToolTip="Bookmark current page">
                     <Viewbox Margin="10">
                         <SymbolIcon Symbol="Favorite" />
                     </Viewbox>
                 </AppBarToggleButton>
-                <AppBarToggleButton x:Name="PinButton"
-                                x:Uid="PinButton"
-                                IsCompact="False"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="{StaticResource SemiTransparentBlackBrush10}"
-                                BorderBrush="Transparent"
-                                Click="PinButton_Click"
-                                Label="Pin"
-                                Foreground="{StaticResource AppBackgroundBrush}"
-                                IsChecked="{Binding IsPinned}"
-                                ToolTipService.ToolTip="Pin this page to Start">
+                <AppBarToggleButton x:Uid="PinButton"
+                                    x:Name="PinButton"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="{StaticResource SemiTransparentBlackBrush10}"
+                                    BorderBrush="Transparent"
+                                    Click="PinButton_Click"
+                                    Foreground="{StaticResource AppBackgroundBrush}"
+                                    IsChecked="{Binding IsPinned}"
+                                    IsCompact="False"
+                                    Label="Pin"
+                                    ToolTipService.ToolTip="Pin this page to Start">
                     <Viewbox Margin="10">
                         <SymbolIcon Symbol="{Binding IsChecked, ElementName=PinButton, Converter={StaticResource IsPinnedToSymbolConverter}}" />
                     </Viewbox>
                 </AppBarToggleButton>
             </CommandBar.PrimaryCommands>
-            <!--Download and manual layout function not enabled in this build-->
+            <!--  Download and manual layout function not enabled in this build  -->
             <CommandBar.SecondaryCommands>
-                <AppBarButton Grid.Column="1"
-                          x:Name="ShareButton"
-                          x:Uid="ShareButton"
-                          Margin="0,0,0,0"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
+                <AppBarButton x:Uid="ShareButton"
+                              x:Name="ShareButton"
+                              Grid.Column="1"
+                              Margin="0,0,0,0"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
                               Click="ShareButton_Click"
-                          Label="Share"
-                          Padding="0">
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              IsCompact="False"
+                              Label="Share"
+                              Padding="0">
                     <Viewbox Margin="0">
-                        <Canvas x:Name="appbar_share" Width="76" Height="76">
-                            <Path Fill="{ThemeResource AppBackgroundBrush}" Stroke="{ThemeResource AppBackgroundBrush}" Width="47.5" Height="44.3333" Canvas.Left="12.6667" Canvas.Top="15.8333" Stretch="Fill" Data="F1 M 19,31.6667C 22.4978,31.6667 25.3333,34.5022 25.3333,38C 25.3333,40.0017 24.4047,41.7865 22.9548,42.9471C 24.9536,49.0304 30.5383,53.4894 37.2083,53.8333C 37.2083,56.2887 38.2245,58.5067 39.8593,60.0898L 38,60.1667C 27.79,60.1667 19.1923,53.2639 16.619,43.8706C 14.3012,42.9295 12.6667,40.6557 12.6667,38C 12.6667,34.5022 15.5022,31.6667 19,31.6667 Z M 45.125,15.8333C 48.6228,15.8333 51.4583,18.6689 51.4583,22.1667C 51.4583,25.6645 48.6228,28.5 45.125,28.5C 41.6337,28.5 38.8022,25.675 38.7917,22.1861C 38.5294,22.1732 38.2655,22.1667 38,22.1667C 31.8493,22.1667 26.5178,25.6738 23.896,30.7973C 22.5009,29.8471 20.8153,29.2917 19,29.2917L 17.559,29.4103C 20.9149,21.4339 28.8034,15.8333 38,15.8333C 39.6024,15.8333 41.165,16.0034 42.6709,16.3263C 43.4256,16.0088 44.2548,15.8333 45.125,15.8333 Z M 45.9167,47.5C 47.3141,47.5 48.6058,47.9526 49.6532,48.7191C 52.2485,45.8991 53.8333,42.1347 53.8333,38C 53.8333,34.5408 52.724,31.3407 50.8417,28.736C 52.6012,27.2036 53.7393,24.9758 53.8278,22.4809C 57.7488,26.4794 60.1667,31.9574 60.1667,38C 60.1667,44.8738 57.0379,51.0169 52.1268,55.0828C 51.5466,57.9822 48.9868,60.1667 45.9167,60.1667C 42.4189,60.1667 39.5833,57.3311 39.5833,53.8333C 39.5833,50.3355 42.4189,47.5 45.9167,47.5 Z "/>
+                        <Canvas x:Name="appbar_share"
+                                Width="76"
+                                Height="76">
+                            <Path Canvas.Left="12.6667"
+                                  Canvas.Top="15.8333"
+                                  Width="47.5"
+                                  Height="44.3333"
+                                  Data="F1 M 19,31.6667C 22.4978,31.6667 25.3333,34.5022 25.3333,38C 25.3333,40.0017 24.4047,41.7865 22.9548,42.9471C 24.9536,49.0304 30.5383,53.4894 37.2083,53.8333C 37.2083,56.2887 38.2245,58.5067 39.8593,60.0898L 38,60.1667C 27.79,60.1667 19.1923,53.2639 16.619,43.8706C 14.3012,42.9295 12.6667,40.6557 12.6667,38C 12.6667,34.5022 15.5022,31.6667 19,31.6667 Z M 45.125,15.8333C 48.6228,15.8333 51.4583,18.6689 51.4583,22.1667C 51.4583,25.6645 48.6228,28.5 45.125,28.5C 41.6337,28.5 38.8022,25.675 38.7917,22.1861C 38.5294,22.1732 38.2655,22.1667 38,22.1667C 31.8493,22.1667 26.5178,25.6738 23.896,30.7973C 22.5009,29.8471 20.8153,29.2917 19,29.2917L 17.559,29.4103C 20.9149,21.4339 28.8034,15.8333 38,15.8333C 39.6024,15.8333 41.165,16.0034 42.6709,16.3263C 43.4256,16.0088 44.2548,15.8333 45.125,15.8333 Z M 45.9167,47.5C 47.3141,47.5 48.6058,47.9526 49.6532,48.7191C 52.2485,45.8991 53.8333,42.1347 53.8333,38C 53.8333,34.5408 52.724,31.3407 50.8417,28.736C 52.6012,27.2036 53.7393,24.9758 53.8278,22.4809C 57.7488,26.4794 60.1667,31.9574 60.1667,38C 60.1667,44.8738 57.0379,51.0169 52.1268,55.0828C 51.5466,57.9822 48.9868,60.1667 45.9167,60.1667C 42.4189,60.1667 39.5833,57.3311 39.5833,53.8333C 39.5833,50.3355 42.4189,47.5 45.9167,47.5 Z "
+                                  Fill="{ThemeResource AppBackgroundBrush}"
+                                  Stretch="Fill"
+                                  Stroke="{ThemeResource AppBackgroundBrush}" />
                         </Canvas>
                     </Viewbox>
                 </AppBarButton>
-                <AppBarButton x:Name="FontSizeButton"
-                              x:Uid="FontSizeButton"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          Icon="FontSize"
-                          IsCompact="False"
-                          Label="Font Size"
-                          Padding="0">
+                <AppBarButton x:Uid="FontSizeButton"
+                              x:Name="FontSizeButton"
+                              VerticalAlignment="Center"
+                              Background="{ThemeResource SemiTransparentBlackBrush10}"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="FontSize"
+                              IsCompact="False"
+                              Label="Font Size"
+                              Padding="0">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeSmall}"
-                                        FontWeight="SemiLight"
-                                        Text="Subtle" />
+                                            FontSize="{ThemeResource AppFontSizeSmall}"
+                                            FontWeight="SemiLight"
+                                            Text="Subtle" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeNormal}"
-                                        FontWeight="SemiLight"
-                                        Text="Small" />
+                                            FontSize="{ThemeResource AppFontSizeNormal}"
+                                            FontWeight="SemiLight"
+                                            Text="Small" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeMedium}"
-                                        FontWeight="Light"
-                                        Text="Normal" />
+                                            FontSize="{ThemeResource AppFontSizeMedium}"
+                                            FontWeight="Light"
+                                            Text="Normal" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                        FontWeight="Light"
-                                        Text="Large" />
+                                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                            FontWeight="Light"
+                                            Text="Large" />
                             <MenuFlyoutItem Click="FontSizeButton_Click"
-                                        FontSize="{ThemeResource AppFontSizeLarge}"
-                                        FontWeight="Light"
-                                        Text="Huge" />
+                                            FontSize="{ThemeResource AppFontSizeLarge}"
+                                            FontWeight="Light"
+                                            Text="Huge" />
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
@@ -501,8 +566,8 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition x:Name="ContentRow" Height="*" />
         </Grid.RowDefinitions>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="LoadingStates">
@@ -586,10 +651,10 @@
                     <Storyboard>
 
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed"/>
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="False"/>
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="False" />
                         </ObjectAnimationUsingKeyFrames>
 
                         <DoubleAnimation Duration="0"
@@ -608,7 +673,7 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                         </ObjectAnimationUsingKeyFrames>-->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True"/>
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True" />
                         </ObjectAnimationUsingKeyFrames>
                         <DoubleAnimation Duration="0"
                                          Storyboard.TargetName="IndexPanel"
@@ -654,7 +719,7 @@
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False"/>
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False" />
                             </ObjectAnimationUsingKeyFrames>
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
                                 <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
@@ -663,7 +728,7 @@
                                 <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedKeyFrame"
                                                       EasingFunction="{StaticResource QuadraticEaseOut}"
                                                       KeyTime="0:0:0.25"
-                                                      Value="-640" />
+                                                      Value="-330" />
                             </DoubleAnimationUsingKeyFrames>
                             <DoubleAnimation Duration="0:0:0.25"
                                              Storyboard.TargetName="IndexPanel"
@@ -676,49 +741,58 @@
 
         </VisualStateManager.VisualStateGroups>
 
-        <Grid x:Name="TitlePanel"
-              Background="{ThemeResource AppAccentBrush}">
+        <Grid x:Name="TitlePanel" Background="{ThemeResource AppAccentBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="35" />
             </Grid.ColumnDefinitions>
-            <TextBlock  Grid.Column="1"
-                        x:Name="pageTitle"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Foreground="{StaticResource AppBackgroundBrush}"
-                        IsHitTestVisible="false"
-                        Margin="10,0"
-                        Language="zh-CN"
-                        Style="{ThemeResource AppTextTitle1Style}"
-                        Text="{Binding Header}"
-                        TextTrimming="None"
-                        TextWrapping="NoWrap" />
-            <ToggleButton   x:Name="IndexButton"
-                            x:Uid="IndexButton"
-                            Grid.Column="0"
-                            Padding="0,-10"
-                            TabIndex="1"
-                            Width="40"
-                            Height="60"
-                            MinWidth="40"
-                            MinHeight="40"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            VerticalAlignment="Center"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            BorderThickness="0"
-                            Click="IndexButton_Click"
-                            Foreground="{StaticResource AppBackgroundBrush}"
-                            IsChecked="{Binding IsIndexPanelOpen,
-                                                ElementName=pageRoot,
-                                                Mode=OneWay}"
-                            ToolTipService.ToolTip="Open/Close the index panel">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="pageTitle"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       Margin="10,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource AppBackgroundBrush}"
+                       IsHitTestVisible="false"
+                       Language="zh-CN"
+                       Style="{ThemeResource AppTextTitle1Style}"
+                       Text="{Binding Header}"
+                       TextTrimming="None"
+                       TextWrapping="NoWrap" />
+            <ToggleButton x:Uid="IndexButton"
+                          x:Name="IndexButton"
+                          Grid.Row="1"
+                          Grid.Column="0"
+                          Width="40"
+                          Height="60"
+                          MinWidth="40"
+                          MinHeight="40"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          Background="Transparent"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          Click="IndexButton_Click"
+                          Foreground="{StaticResource AppBackgroundBrush}"
+                          IsChecked="{Binding IsIndexPanelOpen,
+                                              ElementName=pageRoot,
+                                              Mode=OneWay}"
+                          Padding="0,-10"
+                          TabIndex="1"
+                          ToolTipService.ToolTip="Open/Close the index panel">
 
-                <Viewbox Margin="0" Height="40" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Viewbox Width="40"
+                         Height="40"
+                         Margin="0"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
                     <SymbolIcon Symbol="List" />
                 </Viewbox>
             </ToggleButton>
@@ -728,17 +802,22 @@
 
         <Popup x:Name="IndexPanel"
                Grid.Row="1"
-               Visibility="{Binding IsLoading,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
-               Width="400"
-               VerticalAlignment="Top" 
-               Height="580">
+               Width="330"
+               Height="{Binding ActualHeight,
+                                ElementName=ContentRow}"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Closed="IndexPanel_Closed"
+               IsLightDismissEnabled="True"
+               Visibility="{Binding IsLoading,
+                                    Converter={StaticResource BooleanToVisibilityReverseConverter}}">
             <Popup.RenderTransform>
-                <TranslateTransform X="-400" ></TranslateTransform>
+                <TranslateTransform X="-330" />
             </Popup.RenderTransform>
             <Popup.ChildTransitions>
                 <TransitionCollection>
                     <!--<PaneThemeTransition Edge="Left"></PaneThemeTransition>-->
-                    <EntranceThemeTransition FromHorizontalOffset="-400"></EntranceThemeTransition>
+                    <EntranceThemeTransition FromHorizontalOffset="-330" />
                 </TransitionCollection>
             </Popup.ChildTransitions>
             <!--<Popup.Transitions>
@@ -749,81 +828,91 @@
 
             <!--<Grid x:Name="VolumeListMeanu"
                   Background="{ThemeResource AppAccentBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">-->
-            <ListView x:Name="VolumeListView"
+            <Grid Width="330"
+                  Height="{Binding ActualHeight,
+                                   ElementName=ContentRow}"
+                  Background="{ThemeResource AppAccentBrushSemiLight}">
+                <ListView x:Name="VolumeListView"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
                           AutomationProperties.AutomationId="ItemsListView"
                           AutomationProperties.Name="Items"
-                          HorizontalAlignment="Left" VerticalAlignment="Top"
-                          Background="{ThemeResource AppAccentBrushSemiLight}"
                           IsItemClickEnabled="True"
-                          SelectionMode="Single"
-                          Height="580"
-                          Width="400"
-                          ScrollViewer.IsVerticalScrollChainingEnabled="False"
                           ItemClick="ChapterListView_ItemClick"
                           ItemsSource="{Binding Source={StaticResource VolumesViewSource}}"
-                          Padding="10,20,0,20"
+                          Padding="10,20,10,20"
+                          ScrollViewer.IsVerticalScrollChainingEnabled="False"
+                          SelectionMode="Single"
                           TabIndex="1">
-                <ListView.GroupStyle>
-                    <GroupStyle>
-                        <GroupStyle.HeaderTemplate>
-                            <DataTemplate>
-                                <Grid Height="100" Margin="6" Width="350">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="40" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Border Grid.RowSpan="2"
-                                        Width="80"
-                                        Margin="0,0,0,0"
-                                        Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
-                                        <Image AutomationProperties.Name="{Binding Title}"
-                                           Source="{Binding CoverImageUri}"
-                                           Stretch="UniformToFill" />
-                                    </Border>
-                                    <Ellipse Grid.Row="0"
-                                         Grid.Column="2"
-                                         Width="40"
-                                         Height="40"
-                                         HorizontalAlignment="Center"
-                                         Fill="{ThemeResource AppAccentBrush}" />
-                                    <TextBlock Grid.Row="0"
-                                           Grid.Column="2"
-                                           Margin="0,8,0,0"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Top"
-                                           Foreground="{ThemeResource AppBackgroundBrush}"
-                                           Language="zh-CN"
-                                           Style="{ThemeResource AppTextTitle3Style}"
-                                           Text="{Binding Label}"
-                                           TextWrapping="NoWrap" />
-                                    <TextBlock Grid.Row="1"
-                                           Grid.Column="2"
-                                           Grid.ColumnSpan="2"
-                                           VerticalAlignment="Center"
-                                           Language="zh-CN"
-                                           Style="{ThemeResource AppTextTitle2Style}"
-                                           Text="{Binding Title}"
-                                           TextWrapping="WrapWholeWords" />
-                                </Grid>
-                            </DataTemplate>
-                        </GroupStyle.HeaderTemplate>
-                    </GroupStyle>
-                </ListView.GroupStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Margin="20,0,0,0" Width="330" Text="{Binding Title}" HorizontalAlignment="Left" FontSize="{ThemeResource AppFontSizeMediumLarge}" TextTrimming="WordEllipsis"></TextBlock>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Margin" Value="0,0,0,0" />
-                        <!--<Setter Property="Template">
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid Width="300"
+                                          Height="100"
+                                          MaxWidth="300"
+                                          Margin="6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="20" />
+                                            <ColumnDefinition Width="40" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.RowSpan="2"
+                                                Width="80"
+                                                Margin="0,0,0,0"
+                                                Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
+                                            <Image AutomationProperties.Name="{Binding Title}"
+                                                   Source="{Binding CoverImageUri}"
+                                                   Stretch="UniformToFill" />
+                                        </Border>
+                                        <Ellipse Grid.Row="0"
+                                                 Grid.Column="2"
+                                                 Width="40"
+                                                 Height="40"
+                                                 HorizontalAlignment="Center"
+                                                 Fill="{ThemeResource AppAccentBrush}" />
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="2"
+                                                   Margin="0,8,0,0"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Top"
+                                                   Foreground="{ThemeResource AppBackgroundBrush}"
+                                                   Language="zh-CN"
+                                                   Style="{ThemeResource AppTextTitle3Style}"
+                                                   Text="{Binding Label}"
+                                                   TextWrapping="NoWrap" />
+                                        <TextBlock Grid.Row="1"
+                                                   Grid.Column="2"
+                                                   Grid.ColumnSpan="2"
+                                                   VerticalAlignment="Center"
+                                                   Language="zh-CN"
+                                                   Style="{ThemeResource AppTextTitle2Style}"
+                                                   Text="{Binding Title}"
+                                                   TextWrapping="WrapWholeWords" />
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Width="260"
+                                       Margin="20,0"
+                                       HorizontalAlignment="Left"
+                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                       Text="{Binding Title}"
+                                       TextTrimming="WordEllipsis" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="0,0,0,0" />
+                            <!--<Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListViewItem">
                                             <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -852,9 +941,10 @@
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>-->
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
 
             <!--
                 <Button Grid.Column="2" Background="{ThemeResource AppAccentBrush}" BorderBrush="{ThemeResource AppAccentBrush}" Foreground="{ThemeResource AppAccentBrushLight}" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Height="30" Padding="0">
@@ -872,10 +962,18 @@
             <!--</Grid>-->
         </Popup>
 
-        <StackPanel x:Name="LoadingIndicator" VerticalAlignment="Center" Grid.Row="1" Visibility="Collapsed"  Grid.ColumnSpan="2"
-                    Grid.Column="0" Margin="0,0,0,0" >
-            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True"></ProgressBar>
-            <TextBlock HorizontalAlignment="Center" Text="Loading..." FontSize="{ThemeResource AppFontSizeSmall}" FontWeight="SemiBold"></TextBlock>
+        <StackPanel x:Name="LoadingIndicator"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Top"
+                    Visibility="Collapsed">
+            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" />
+            <TextBlock HorizontalAlignment="Center"
+                       FontSize="{ThemeResource AppFontSizeSmall}"
+                       FontWeight="SemiBold"
+                       Text="Loading..." />
         </StackPanel>
 
         <!--  Back button and page title  -->
@@ -888,20 +986,21 @@
                 <TranslateTransform Y="0" />
             </Grid.RenderTransform>
 
-            <ListView x:Name="ContentListView" ItemsSource="{Binding Contents}" 
-                      Margin="0,0,0,20" Grid.ColumnSpan="2"
-                      Padding="0"
-                      IsHoldingEnabled="False"
-                      IsSwipeEnabled="False"
-                      IsRightTapEnabled="False"
-                      IsDoubleTapEnabled="False"
-                      IsItemClickEnabled="True"
-                      SelectionMode="None"
+            <ListView x:Name="ContentListView"
+                      Grid.ColumnSpan="2"
+                      Margin="0,0,0,20"
                       FontSize="{Binding FontSize}"
                       Foreground="{Binding Foreground}"
+                      IsDoubleTapEnabled="False"
+                      IsHoldingEnabled="False"
+                      IsItemClickEnabled="True"
+                      IsRightTapEnabled="False"
+                      IsSwipeEnabled="False"
                       ItemClick="ContentListView_ItemClick"
                       ItemTemplateSelector="{StaticResource LineViewTemplateSelector}"
-                      >
+                      ItemsSource="{Binding Contents}"
+                      Padding="0"
+                      SelectionMode="None">
                 <!--<ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <EntranceThemeTransition/>
@@ -909,40 +1008,40 @@
                 </ListView.ItemContainerTransitions>-->
                 <ListView.Header>
                     <Button x:Name="VerticalPrevButton"
-                    Click="PrevChapterButton_Click"
-                    Height="30"
-                    MinHeight="30"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    Template="{ThemeResource VerticalPreviousTemplate}"
-                    Background="{ThemeResource AppAccentBrush}"
-                    BorderBrush="Transparent"
-                    BorderThickness="0"
-                    Foreground="{Binding Foreground}"
-                    Opacity="0.5">
+                            Width="100"
+                            Height="30"
+                            MinHeight="30"
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Click="PrevChapterButton_Click"
+                            Foreground="{Binding Foreground}"
+                            Opacity="0.5"
+                            Template="{ThemeResource VerticalPreviousTemplate}">
                         Prev Chapter
                     </Button>
                 </ListView.Header>
                 <ListView.Footer>
                     <Button x:Name="VerticalNextButton"
-                    Click="NextChapterButton_Click"
-                    Height="30"
-                    MinHeight="30"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    Background="{ThemeResource AppAccentBrush}"
-                    BorderBrush="Transparent"
-                    BorderThickness="0"
-                    Foreground="{Binding Foreground}"
-                    Template="{ThemeResource VerticalNextTemplate}"
-                    Opacity="0.5">
+                            Width="100"
+                            Height="30"
+                            MinHeight="30"
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Click="NextChapterButton_Click"
+                            Foreground="{Binding Foreground}"
+                            Opacity="0.5"
+                            Template="{ThemeResource VerticalNextTemplate}">
                         Next Chapter
                     </Button>
                 </ListView.Footer>
                 <!--<ListView.ItemTemplate>
                     <DataTemplate d:DataType="{system:Type vm:LineViewModel}">
                         <TextBlock Text="{Binding Content}"></TextBlock>
-                        -->
+                -->
                 <!--<controls:ExpanderView  Margin="0,0,0,0"
                                                 Header="{Binding}"
                                                 NonExpandableHeader="{Binding}"
@@ -955,11 +1054,11 @@
                             <controls:ExpanderView.ItemTemplate>
                                 <DataTemplate>
                                     <ListBoxItem>
-                                        <TextBlock Text="{Binding Content}"       
+                                        <TextBlock Text="{Binding Content}"
                                                            TextWrapping="Wrap"
                                                            Margin="0,0,0,0"
                                                            Foreground="{ThemeResource AppSubtleBrush}"
-                                                           FontSize="{ThemeResource AppFontSizeSmall}" 
+                                                           FontSize="{ThemeResource AppFontSizeSmall}"
                                                            FontWeight="SemiLight"/>
                                     </ListBoxItem>
                                 </DataTemplate>
@@ -974,11 +1073,11 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListViewItem">
                                     <ContentPresenter x:Name="contentPresenter"
-                                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          Content="{TemplateBinding Content}"
-                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          Margin="{TemplateBinding Padding}" ></ContentPresenter>
+                                                      Margin="{TemplateBinding Padding}"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                      ContentTransitions="{TemplateBinding ContentTransitions}" />
                                     <!--<Grid                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                         <Rectangle DataContext="{TemplateBinding Content}" Width="5" HorizontalAlignment="Left" Fill="{ThemeResource AppAccentBrush}" Visibility="{Binding HasComments,Converter={StaticResource BooleanToVisibilityConverter}}"/>
 />

@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Converters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\CachedClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\IncrementalLoadingBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\UserInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ExpanderView.cs" />
@@ -46,6 +45,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Notifaction\ToastContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadingPage.Shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchResultsPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\HtmlNodeExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomHtmlClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModels.cs" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LightNovelLogo.png" />
@@ -129,6 +131,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controls\MultilingualResources\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Service\" />
   </ItemGroup>
 </Project>

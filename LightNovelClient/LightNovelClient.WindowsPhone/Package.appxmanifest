@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.4.5" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.4.9" />
   <mp:PhoneIdentity PhoneProductId="8a260f73-d110-4117-8748-645292634468" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>LightNovel</DisplayName>
@@ -18,6 +18,9 @@
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LightNovelClient.WindowsPhone.App">
       <m3:VisualElements DisplayName="LightNovel" Square150x150Logo="Assets\Logo-150.png" Square44x44Logo="Assets\Logo-44.png" Description="Client of LightNovel.cn for Windows Phone 8.1" ForegroundText="light" BackgroundColor="transparent" ToastCapable="false">
         <m3:DefaultTile Wide310x150Logo="Assets\Logo-310x150.png" Square71x71Logo="Assets\Logo-71.png">
+          <m3:ShowNameOnTiles>
+            <m3:ShowOn Tile="square150x150Logo" />
+          </m3:ShowNameOnTiles>
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\SplashScreen-480x800.png" BackgroundColor="#8CC63F" />
         <m3:ApplicationView MinWidth="width320" />

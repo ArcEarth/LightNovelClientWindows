@@ -293,7 +293,10 @@ namespace LightNovel.ViewModels
 				}
 				catch (Exception exception)
 				{
-					throw exception;
+					IsLoading = false;
+					IsLoaded = false; 
+					Debug.WriteLine(exception.Message);
+					return null;
 				}
 
 			}

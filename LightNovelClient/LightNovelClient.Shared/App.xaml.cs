@@ -8,6 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using System.Linq;
 using LightNovel.Common;
 using LightNovel.Service;
 using System.Threading.Tasks;
@@ -41,9 +42,16 @@ namespace LightNovel
 		/// </summary>
 		public App()
 		{
-			this.InitializeComponent();
-			this.Suspending += this.OnSuspending;
-			this.Resuming += this.OnResuming;
+			try
+			{
+				this.InitializeComponent();
+				this.Suspending += this.OnSuspending;
+				this.Resuming += this.OnResuming;
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine(exception.Message);
+			}
 		}
 
 		public static new App Current
@@ -79,7 +87,7 @@ namespace LightNovel
 			}
 #endif
 			//CurrentState = new ApplicationState();
-
+			Debug.WriteLine("AppOnLaunched");
 			Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
 
 #if WINDOWS_PHONE_APP
@@ -144,24 +152,35 @@ namespace LightNovel
 #endif
 			}
 
+			try
+			{
+				await loadHistoryDataTask;
+			}
+			catch { }
+
 			// When the navigation stack isn't restored navigate to the first page,
 			// configuring the new page by passing required information as a navigation
 			// parameter
+
+
+			bool navResult = true;
+
 			if (string.IsNullOrEmpty(e.Arguments))
 			{
 				if (rootFrame.Content == null || rootFrame.CurrentSourcePageType != typeof(HubPage))
-					if (!rootFrame.Navigate(typeof(HubPage), e.Arguments))
-					{
-						throw new Exception("Failed to create initial page");
-					}
+				{
+					navResult = rootFrame.Navigate(typeof(HubPage), e.Arguments);
+				}
 			}
 			else
 			{
-				if (!rootFrame.Navigate(typeof(ReadingPage), e.Arguments))
-				{
-					throw new Exception("Failed to create Reading Page");
-				}
+					navResult = rootFrame.Navigate(typeof(ReadingPage), e.Arguments);
 			}
+			if (!navResult)
+			{
+				navResult = rootFrame.Navigate(typeof(HubPage), null);
+			}
+
 
 			Settings.UpdateSavedAppVersion();
 			//App.CurrentState.SignInAutomaticlly();
@@ -220,6 +239,30 @@ namespace LightNovel
 		public List<FavourVolume> FavoriteList { get; set; }
 
 		public Windows.Storage.StorageFolder IllustrationFolder { get; set; }
+
+		public async Task UpdateHistoryListAsync(BookmarkInfo bookmark)
+		{
+			if (RecentList == null)
+				await LoadHistoryDataAsync();
+			RecentList.RemoveAll(item => item.Position.SeriesId == bookmark.Position.SeriesId);
+			RecentList.Add(bookmark);
+			IsHistoryListChanged = true;
+			await SaveHistoryDataAsync();
+		}
+
+		public static async Task<bool> UpdateSecondaryTileAsync(BookmarkInfo bookmark)
+		{
+			if (SecondaryTile.Exists(bookmark.Position.SeriesId))
+			{
+				var tile = new SecondaryTile(bookmark.Position.SeriesId);
+				string args = bookmark.Position.ToString();
+				tile.Arguments = args;
+				var result = await tile.UpdateAsync();
+				return true;
+			}
+			return false;
+		}
+
 
 		public static BitmapTransform CreateUniformToFillTransform(Size OriginalSize, Size NewSize, HorizontalAlignment hAlign = HorizontalAlignment.Center, VerticalAlignment vAlign = VerticalAlignment.Center)
 		{
@@ -419,11 +462,11 @@ namespace LightNovel
 						imgSize.Width = 310;
 						imgSize.Height = 310;
 						break;
-					case TileSize.Square70x70:
-						sizeSuffix = "-70";
-						imgSize.Width = 70;
-						imgSize.Height = 70;
-						break;
+					//case TileSize.Square70x70:
+					//	sizeSuffix = "-70";
+					//	imgSize.Width = 70;
+					//	imgSize.Height = 70;
+					//	break;
 					case TileSize.Wide310x150:
 						sizeSuffix = "-310x150";
 						imgSize.Width = 310;
@@ -577,20 +620,34 @@ namespace LightNovel
 				return;
 			if (loadHistoryDataTask != null)
 			{
-				await loadHistoryDataTask;
+				try
+				{
+					await loadHistoryDataTask;
+				}
+				catch
+				{
+				}
+
 				return;
 			}
 
-			RecentList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
-
-			if (RecentList == null)
+			try
 			{
-				RecentList = await GetFromLocalFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
-			}
+				RecentList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
 
+				if (RecentList == null)
+				{
+					RecentList = await GetFromLocalFolderAsAsync<List<BookmarkInfo>>(LocalRecentFilePath);
+				}
+			}
+			catch
+			{
+			}
 
 			if (RecentList == null)
 				RecentList = new List<BookmarkInfo>();
+
+			loadHistoryDataTask = null;
 
 		}
 

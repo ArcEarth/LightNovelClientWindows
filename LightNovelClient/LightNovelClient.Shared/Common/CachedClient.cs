@@ -16,7 +16,11 @@ namespace LightNovel.Common
 		public static Dictionary<string, Task<Chapter>> ChapterCache = new Dictionary<string, Task<Chapter>>();
 		public static Dictionary<string, Task<Series>> SeriesCache = new Dictionary<string,Task<Series>>();
 		public static Dictionary<string, Task<Volume>> VolumeCache = new Dictionary<string, Task<Volume>>();
+#if WINDOWS_PHONE_APP
+		private static int MaxCachedUnit = 10;
+#else
 		private static int MaxCachedUnit = 50;
+#endif
 		public static Task<Series> GetSeriesAsync(string id, bool forceRefresh = false)
 		{
 			if (forceRefresh == false && SeriesCache.ContainsKey(id) && !SeriesCache[id].IsFaulted)
@@ -25,7 +29,11 @@ namespace LightNovel.Common
 			{
 				var outdates = from item in SeriesCache where item.Value.IsCompleted select item.Key;
 				foreach (var key in outdates)
+				{
 					SeriesCache.Remove(key);
+					if (SeriesCache.Count < MaxCachedUnit)
+						break;
+				}
 			}
 
 			var task = DataCache.GetAsync("series-" + id, () => LightKindomHtmlClient.GetSeriesAsync(id),DateTime.Now.AddDays(7),forceRefresh);
@@ -34,13 +42,17 @@ namespace LightNovel.Common
 		}
 		public static Task<Volume> GetVolumeAsync(string id, bool forceRefresh = false)
 		{
-			if (VolumeCache.ContainsKey(id) && !VolumeCache[id].IsFaulted)
+			if (!forceRefresh && VolumeCache.ContainsKey(id) && !VolumeCache[id].IsFaulted)
 				return VolumeCache[id];
 			if (VolumeCache.Count > MaxCachedUnit)
 			{
 				var outdates = from item in VolumeCache where item.Value.IsCompleted select item.Key;
 				foreach (var key in outdates)
+				{
 					VolumeCache.Remove(key);
+					if (VolumeCache.Count < MaxCachedUnit)
+						break;
+				}
 			}
 
 			var task = DataCache.GetAsync("volume-" + id, () => LightKindomHtmlClient.GetVolumeAsync(id),null,forceRefresh);
@@ -49,16 +61,20 @@ namespace LightNovel.Common
 		}
 		public static Task<Chapter> GetChapterAsync(string id, bool forceRefresh = false)
 		{
-			if (ChapterCache.ContainsKey(id) && !ChapterCache[id].IsFaulted)
+			if (!forceRefresh && ChapterCache.ContainsKey(id) && !ChapterCache[id].IsFaulted)
 				return ChapterCache[id];
 			if (ChapterCache.Count > MaxCachedUnit)
 			{
 				var outdates = from item in ChapterCache where item.Value.IsCompleted select item.Key;
 				foreach (var key in outdates)
+				{
 					ChapterCache.Remove(key);
+					if (ChapterCache.Count < MaxCachedUnit)
+						break;
+				}
 			}
 
-			var task = DataCache.GetAsync("chapter-" + id, () => LightKindomHtmlClient.GetChapterAsync(id),null,forceRefresh);
+			var task = DataCache.GetAsync("chapter-" + id, () => LightKindomHtmlClient.GetChapterAlterAsync(id),null,forceRefresh);
 			ChapterCache[id] = task;
 			return task;
 		}

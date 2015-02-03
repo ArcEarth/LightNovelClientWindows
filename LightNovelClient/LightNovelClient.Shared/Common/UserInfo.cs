@@ -82,7 +82,7 @@ namespace LightNovel.Common
 
 		public async Task ClearUserInfoAsync()
 		{
-			LightKindomHtmlClient.Logout();
+			await LightKindomHtmlClient.LogoutAsync();
 			await CachedClient.ClearUserFavoriteCacheAsync();
 		}
 

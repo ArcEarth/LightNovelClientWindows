@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using WinRTXamlToolkit.Controls.Extensions;
+
 
 //// The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -32,13 +34,15 @@ namespace LightNovel
 		/// session.  The state will be null the first time a page is visited.</param>
 		private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
 		{
+			//var lv = LastReadSection.GetFirstDescendantOfType<ListViewItem>();
+			//var position = lv.GetPosition(new Point(0,0) , LastReadSection);
 			ViewModel.IsLoading = true;
 			var statusBar = StatusBar.GetForCurrentView();
-			statusBar.ProgressIndicator.Text = "Synchronizing...";
-			statusBar.ProgressIndicator.ProgressValue = null;
-			statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
-			await statusBar.ProgressIndicator.ShowAsync();
-
+			await statusBar.HideAsync();
+			//statusBar.ProgressIndicator.Text = "Synchronizing...";
+			//statusBar.ProgressIndicator.ProgressValue = null;
+			//statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
+			//await statusBar.ProgressIndicator.ShowAsync();
 			if (App.Current.RecentList == null)
 				await App.Current.LoadHistoryDataAsync();
 			if (App.Current.RecentList.Count > 0)
@@ -78,8 +82,8 @@ namespace LightNovel
 
 			ViewModel.IsLoading = false;
 
-			await statusBar.HideAsync();
-			await statusBar.ProgressIndicator.HideAsync();
+			//await statusBar.HideAsync();
+			//await statusBar.ProgressIndicator.HideAsync();
 
 		}
 
@@ -99,8 +103,10 @@ namespace LightNovel
 				IsLoadingIndex = false;
 			} else if (e.AddedSections.Contains(RecommandSection) && !ViewModel.RecommandSection.IsLoading && !ViewModel.RecommandSection.IsLoaded)
 			{
+				ViewModel.IsLoading = true;
 				await ViewModel.RecommandSection.LoadAsync();
 				UpdateTile();
+				ViewModel.IsLoading = false;
 			}
 		}
 
