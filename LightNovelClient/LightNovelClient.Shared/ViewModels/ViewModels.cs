@@ -1444,8 +1444,14 @@ namespace LightNovel.ViewModels
 			//if (line.ContentType == LineContentType.TextContent)
 			//	_content = line.Content; // Add the indent
 			//else
-			_content = line.Content;
+
 			IsImage = line.ContentType == LineContentType.ImageContent;
+#if WINDOWS_PHONE_APP
+			if (!IsImage)
+				_content = "　" + line.Content; // Indent
+			else
+				_content = line.Content;
+#endif
 			ParentChapterId = chapterId;
 			No = line.No;
 		}

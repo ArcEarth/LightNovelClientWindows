@@ -2071,3 +2071,4 @@ namespace LightNovel.LightNovelClient_Windows_XamlTypeInfo
 }
 
 
+

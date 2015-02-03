@@ -102,13 +102,16 @@ namespace LightNovel
 			{
 				if (value == _indexOpened) return;
 				_indexOpened = value;
+
+				bool userTransition = !ViewModel.IsLoading;
+
 				if (value)
 				{
-					ChangeState(IndexOpenState, true);
+					ChangeState(IndexOpenState, userTransition);
 				}
 				else
 				{
-					ChangeState(IndexClosedState, true);
+					ChangeState(IndexClosedState, userTransition);
 				}
 				NotifyPropertyChanged();
 				IndexButton.IsChecked = value;
@@ -137,6 +140,9 @@ namespace LightNovel
 			fgColor.G = (byte)(0.7 * accentColor.G + 0.3 * fgColor.G);
 			fgColor.B = (byte)(0.7 * accentColor.B + 0.3 * fgColor.B);
 			CommentedTextBrush.Color = fgColor;
+
+			var itemListViewSelectedBrush = (SolidColorBrush)App.Current.Resources["ListViewItemSelectedBackgroundThemeBrush"];
+			itemListViewSelectedBrush.Color = ContentBackgroundBrush.Color;
 			//App.Current.Resources["AppReadingBackgroundBrush"] = item.Background;
 			//App.Current.Resources["AppBackgroundBrush"] = ViewModel.Background;
 			//App.Current.Resources["AppForegroundBrush"] = ViewModel.Foreground;
@@ -165,7 +171,10 @@ namespace LightNovel
 						ChangeView(ViewModel.PageNo);
 					break;
 				case "VolumeNo":
+#if WINDOWS_APP
 					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
+#endif
+
 					LoadingAheadTask = null;
 					break;
 				case "ChapterNo":
@@ -237,12 +246,16 @@ namespace LightNovel
 				if (nav.SeriesId != null && (nav.VolumeNo == -1 || nav.ChapterNo == -1))
 				{
 					IsIndexPanelOpen = true;
+				} else
+				{
+					IsIndexPanelOpen = false;
 				}
 
 				await viewModel.LoadDataAsync(nav);
 			}
 			else
 			{
+				IsIndexPanelOpen = false;
 				if (e.PageState.ContainsKey("LoadingBreak"))
 				{
 					var nav = navigationId = NovelPositionIdentifier.Parse((string)e.PageState["LoadingBreak"]);

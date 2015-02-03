@@ -168,4 +168,141 @@
         </Setter>
     </Style>
 
+    <SolidColorBrush x:Key="ListViewItemSelectedBackgroundThemeBrush" Color="#40FFFFFF" />
+
+
+    <ControlTemplate x:Key="ListViewItemTemplate" TargetType="ListViewItem">
+        <Border x:Name="OuterContainer">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="contentPresenter"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="{ThemeResource ListViewItemDisabledThemeOpacity}" />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="SelectionStates">
+                    <VisualState x:Name="Unselecting">
+                        <Storyboard />
+                    </VisualState>
+                    <VisualState x:Name="Unselected">
+                        <Storyboard />
+                    </VisualState>
+                    <VisualState x:Name="UnselectedSwiping">
+                        <Storyboard />
+                    </VisualState>
+                    <VisualState x:Name="Selecting">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="SelectionBackground"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Foreground">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Selected">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="SelectionBackground"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Foreground">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="SelectedSwiping">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="SelectionBackground"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Foreground">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="SelectedUnfocused">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0"
+                                             Storyboard.TargetName="SelectionBackground"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Foreground">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedForegroundThemeBrush}" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="DataVirtualizationStates">
+                    <VisualState x:Name="DataAvailable" />
+                    <VisualState x:Name="DataPlaceholder">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Duration="0"
+                                                           Storyboard.TargetName="PlaceholderTextBlock"
+                                                           Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Duration="0"
+                                                           Storyboard.TargetName="PlaceholderRect"
+                                                           Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0">
+                                    <DiscreteObjectKeyFrame.Value>
+                                        <Visibility>Visible</Visibility>
+                                    </DiscreteObjectKeyFrame.Value>
+                                </DiscreteObjectKeyFrame>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <Grid x:Name="ContentContainer">
+                <Rectangle x:Name="SelectionBackground"
+                           Margin="0"
+                           Fill="{ThemeResource ListViewItemSelectedBackgroundThemeBrush}"
+                           Opacity="0" />
+                <Grid x:Name="ContentBorder"
+                      Margin="4"
+                      Background="{TemplateBinding Background}">
+                    <Grid>
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
+                        <!--
+                            The 'Xg' text simulates the amount of space one line of text will occupy.
+                            In the DataPlaceholder state, the Content is not loaded yet so we
+                            approximate the size of the item using placeholder text.
+                        -->
+                        <TextBlock x:Name="PlaceholderTextBlock"
+                                   Margin="{TemplateBinding Padding}"
+                                   AutomationProperties.AccessibilityView="Raw"
+                                   Foreground="{x:Null}"
+                                   IsHitTestVisible="False"
+                                   Opacity="0"
+                                   Text="Xg" />
+                        <Rectangle x:Name="PlaceholderRect"
+                                   Fill="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                                   Visibility="Collapsed" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+
+
 </ResourceDictionary>

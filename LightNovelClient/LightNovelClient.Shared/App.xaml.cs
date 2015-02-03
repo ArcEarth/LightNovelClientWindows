@@ -653,8 +653,8 @@ namespace LightNovel
 
 		public async Task SaveHistoryDataAsync()
 		{
-			if (RecentList.Count > 20)
-				RecentList.RemoveRange(20, RecentList.Count - 20);
+			if (RecentList.Count > 30)
+				RecentList.RemoveRange(0, RecentList.Count - 30);
 			if (RecentList != null)
 			{
 				await SaveToRoamingFolderAsync(RecentList, LocalRecentFilePath);

@@ -30,6 +30,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 using WinRTXamlToolkit.Controls.Extensions;
 //using PostSharp.Patterns.Model;
 
@@ -166,6 +167,7 @@ namespace LightNovel
 			//ContentCollapsedToExpandedKeyFrame.Value = -IndexRegion.Width;
 			//IndexExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
 			//ContentExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
+			IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			VisualStateManager.GoToState(this, stateName, useTransitions);
 			//this.navigationHelper.GoBackCommand.RaiseCanExecuteChanged();
 		}
@@ -198,12 +200,19 @@ namespace LightNovel
 		{
 			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
+			VolumeListView.SelectedItem = target;
 			VolumeListView.UpdateLayout();
-			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Default);
 		}
 
 		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
+			if (IsIndexPanelOpen)
+			{
+				IsIndexPanelOpen = false;
+				return;
+			}
+
 			var line = (LineViewModel)e.ClickedItem;
 
 			if (!line.IsImage && !ViewModel.EnableComments)
@@ -221,11 +230,99 @@ namespace LightNovel
 
 		private async void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 		{
+			var iv = args.ItemContainer.ContentTemplateRoot as Grid;
 			if (args.InRecycleQueue)
+			{
+				var imageContent = iv.FindName("ImageContent") as Image;
+				var textContent = iv.FindName("TextContent") as TextBlock;
+				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+				progressIndicator.Value = 0;
+				if (imageContent.Source != null)
+				{
+					var bitmap = imageContent.Source as BitmapImage;
+					bitmap.DownloadProgress -= Image_DownloadProgress;
+				} 
+				imageContent.ClearValue(Image.SourceProperty);
+				imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				imageContent.Height = 0;
+				textContent.ClearValue(TextBlock.TextProperty);
+				iv.Height = double.NaN;
+				args.ItemContainer.InvalidateMeasure();
+				args.Handled = true;
 				return;
-			var line = (LineViewModel)args.Item;
-			if (args.Phase == 0 && line.HasComments && !line.IsLoading)
-				await line.LoadCommentsAsync();
+			}
+
+			if (args.Phase == 0)
+			{
+				var imageContent = iv.FindName("ImageContent") as Image;
+				var textContent = iv.FindName("TextContent") as TextBlock;
+				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+				var line = (LineViewModel)args.Item;
+				iv.Height = double.NaN;
+				imageContent.Opacity = 0;
+				imageContent.Height = double.NaN;
+				if (!line.IsImage)
+					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				commentIndicator.Opacity = 0;
+				progressIndicator.Opacity = 0;
+				textContent.Opacity = 1;
+				if (line.IsImage)
+					textContent.Text = "Image Loading...";
+				else
+					textContent.Text = line.Content;
+				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
+			//} else if (args.Phase == 1)
+			//{
+			//	//var textContent = iv.FindName("TextContent") as TextBlock;
+			//	//textContent.Opacity = 1;
+			//	//args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
+			} else if (args.Phase == 1)
+			{
+				var line = (LineViewModel)args.Item;
+				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+				if (line.HasComments)
+					commentIndicator.Opacity = 1;
+				if (line.IsImage)
+					args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
+			} else if (args.Phase == 2)
+			{
+				var line = (LineViewModel)args.Item;
+
+				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+				progressIndicator.Opacity = 1;
+				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
+			} else if (args.Phase == 3)
+			{
+				var line = (LineViewModel)args.Item; 
+				var bitMap = new BitmapImage(line.ImageUri);
+				var imageContent = iv.FindName("ImageContent") as Image;
+				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+				bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
+				bitMap.DownloadProgress += Image_DownloadProgress;
+				imageContent.Source = bitMap;
+				imageContent.Height = double.NaN;
+				imageContent.Opacity = 1;
+				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+			}
+			args.Handled = true;
+		}
+		private void Image_DownloadProgress(object sender, DownloadProgressEventArgs e)
+		{
+			var bitmap = sender as BitmapImage;
+			var progressBar = bitmap.GetValue(BitmapLoadingIndicatorProperty) as ProgressBar;
+			if (progressBar == null) return;
+			progressBar.Value = e.Progress;
+			if (e.Progress == 100)
+			{
+				var iv = progressBar.GetVisualParent();
+				var textContent = iv.FindName("TextContent") as TextBlock;
+				var imageContent = iv.FindName("ImageContent") as Image;
+				textContent.Opacity = 0;
+				progressBar.Opacity = 0;
+				imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+			}
 		}
 
 		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -249,6 +346,11 @@ namespace LightNovel
 		{
 			if (IsIndexPanelOpen)
 				IsIndexPanelOpen = false;
+		}
+
+		private void VolumeIndexItem_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+
 		}
 
 	}
