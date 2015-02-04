@@ -202,7 +202,10 @@ namespace LightNovel
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
 			VolumeListView.SelectedItem = target;
 			VolumeListView.UpdateLayout();
-			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Default);
+			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+			var scrollViewer = VolumeListView.GetScrollViewer();
+			if (scrollViewer != null)
+				scrollViewer.ChangeView(null, scrollViewer.VerticalOffset + 100, null, true);
 		}
 
 		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)

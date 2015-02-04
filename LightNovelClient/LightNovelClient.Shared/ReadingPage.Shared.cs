@@ -233,6 +233,7 @@ namespace LightNovel
 			Debug.WriteLine("LoadState");
 
 #if WINDOWS_PHONE_APP
+			IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 				//this.BottomAppBar = PageBottomCommandBar;
 				//this.BottomAppBar.Visibility = Visibility.Visible;
 				var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();

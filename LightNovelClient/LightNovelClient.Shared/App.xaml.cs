@@ -236,7 +236,8 @@ namespace LightNovel
 			set { _isHistoryListChanged = value; }
 		}
 		public List<BookmarkInfo> RecentList { get; set; }
-		public List<FavourVolume> FavoriteList { get; set; }
+		public List<BookmarkInfo> BookmarkList { get; set; }
+		//public List<FavourVolume> FavoriteList { get; set; }
 
 		public Windows.Storage.StorageFolder IllustrationFolder { get; set; }
 
@@ -614,6 +615,7 @@ namespace LightNovel
 			await Windows.Storage.FileIO.WriteTextAsync(file, content);
 		}
 		public Task loadHistoryDataTask = null;
+		public Task loadBookmarkDataTask = null;
 		public async Task LoadHistoryDataAsync()
 		{
 			if (RecentList != null)
@@ -660,6 +662,60 @@ namespace LightNovel
 				await SaveToRoamingFolderAsync(RecentList, LocalRecentFilePath);
 				IsHistoryListChanged = false;
 			}
+		}
+		public async Task LoadBookmarkDataAsync()
+		{
+			if (BookmarkList != null)
+				return;
+			if (loadBookmarkDataTask != null)
+			{
+				try
+				{
+					await loadBookmarkDataTask;
+				}
+				catch
+				{
+				}
+
+				return;
+			}
+
+			try
+			{
+				BookmarkList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalBookmarkFilePath);
+
+				if (RecentList == null)
+				{
+					RecentList = await GetFromLocalFolderAsAsync<List<BookmarkInfo>>(LocalBookmarkFilePath);
+				}
+			}
+			catch
+			{
+			}
+
+			if (RecentList == null)
+				RecentList = new List<BookmarkInfo>();
+
+			loadHistoryDataTask = null;
+		}
+		public async Task SaveBookmarkDataAsync()
+		{
+			if (RecentList.Count > 30)
+				RecentList.RemoveRange(0, RecentList.Count - 30);
+			if (RecentList != null)
+			{
+				await SaveToRoamingFolderAsync(RecentList, LocalBookmarkFilePath);
+				IsHistoryListChanged = false;
+			}
+		}
+
+		public async Task SynchronizeBookmarkWithUserFavorite()
+		{
+			if (BookmarkList == null)
+				await LoadBookmarkDataAsync();
+			if (User != null && User.FavoriteList == null)
+				await User.SyncFavoriteListAsync();
+			throw new NotImplementedException("SynchronizeBookmarkWithUserFavorite");
 		}
 
 		public async Task<UserInfo> SignInAsync(string userName, string password)
