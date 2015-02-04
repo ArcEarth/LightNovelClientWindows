@@ -766,12 +766,13 @@ namespace LightNovel
 			}
 		}
 
-		public bool SignOut()
+		public async Task<bool> SignOutAsync()
 		{
 			if (!IsSignedIn) return true;
 			App.Current.Settings.SetUserNameAndPassword("", "");
 			App.Current.Settings.Credential = new Session();
 			var clearTask = App.Current.User.ClearUserInfoAsync();
+			await clearTask;
 			App.Current.User = null;
 			return true;
 		}

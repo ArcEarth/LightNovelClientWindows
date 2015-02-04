@@ -208,12 +208,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Rectangle HorizontalAlignment="Stretch" Fill="{ThemeResource AppAccentBrush}" />
-        <ProgressBar x:Name="progressBar"
-                     Grid.Row="1"
-                     VerticalAlignment="Top"
-                     IsIndeterminate="True"
-                     Visibility="{Binding IsLoading,
-                                          Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <Hub Name="RootHub"
              Grid.Row="0"
@@ -406,8 +400,8 @@
                     <ListView Margin="0,0,0,0"
                               IsItemClickEnabled="True"
                               IsSwipeEnabled="False"
-                              ItemClick="FavoriteSectionItem_ItemClike"
-                              ItemTemplate="{StaticResource FavourItemTemplate}"
+                              ItemClick="RecentItem_Click"
+                              ItemTemplate="{StaticResource HistoryItemTemplate}"
                               ItemsSource="{Binding}"
                               ScrollViewer.HorizontalScrollMode="Disabled"
                               ScrollViewer.IsHorizontalRailEnabled="False"
@@ -601,6 +595,50 @@
                         HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
                 <DataTemplate>
                     <StackPanel>
+                        <!--<TextBlock x:Uid="LiveTileLabel"
+                                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{ThemeResource AppAccentBrush}"
+                                   TextWrapping="WrapWholeWords">
+                            Enable Live Tile
+                        </TextBlock>
+                        <TextBlock x:Uid="LiveTileDescription"
+                                   Style="{ThemeResource AppTextNormalStyle}"
+                                   TextWrapping="WrapWholeWords">
+                            Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
+                        </TextBlock>
+                        <ToggleSwitch Margin="0,-15,0,-5"
+                                      IsOn="True"
+                                      Padding="0" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Background="{ThemeResource AppAccentBrush}"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Padding="0">
+                                <StackPanel Margin="5,0" Orientation="Horizontal">
+                                    <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Delete" />
+                                    <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Cache</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="1"
+                                    Background="{ThemeResource AppAccentBrush}"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Padding="0">
+                                <StackPanel Margin="5,0" Orientation="Horizontal">
+                                    <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Calendar" />
+                                    <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Recent</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                        <Rectangle Height="2"
+                                   Margin="0,0,0,10"
+                                   Fill="{ThemeResource AppAccentBrush}" />-->
                         <TextBlock x:Uid="ReviewLabel"
                                    Style="{ThemeResource AppTextNormalStyle}"
                                    TextWrapping="WrapWholeWords">
@@ -661,6 +699,12 @@
             -->
         </Hub>
 
+        <ProgressBar x:Name="progressBar"
+                     Grid.Row="1"
+                     VerticalAlignment="Top"
+                     IsIndeterminate="True"
+                     Visibility="{Binding IsLoading,
+                                          Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Button Width="50"
                 Height="50"
                 MinWidth="40"

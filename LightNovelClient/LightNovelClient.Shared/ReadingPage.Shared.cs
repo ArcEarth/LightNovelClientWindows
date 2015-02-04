@@ -174,13 +174,14 @@ namespace LightNovel
 #if WINDOWS_APP
 					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
 #endif
-
+					SyncIndexSelection();
 					LoadingAheadTask = null;
 					break;
 				case "ChapterNo":
 #if WINDOWS_APP
 					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
 #endif
+					SyncIndexSelection();
 #if WINDOWS_PHONE_APP
 					if (ViewModel.ChapterNo == 0)
 						VerticalPrevButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;

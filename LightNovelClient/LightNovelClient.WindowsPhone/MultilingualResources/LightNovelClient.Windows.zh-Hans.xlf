@@ -6,6 +6,34 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\DarkGrayThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>深灰</source>
+          <target state="new">深灰</target>
+        </trans-unit>
+        <trans-unit id="Resources\LightThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>白昼</source>
+          <target state="new">白昼</target>
+        </trans-unit>
+        <trans-unit id="Resources\SepiaThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>麦秸</source>
+          <target state="new">麦秸</target>
+        </trans-unit>
+        <trans-unit id="Resources\GreenThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>浅绿</source>
+          <target state="new">浅绿</target>
+        </trans-unit>
+        <trans-unit id="Resources\LightGrayThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>浅灰</source>
+          <target state="new">浅灰</target>
+        </trans-unit>
+        <trans-unit id="Resources\DarkThemeItem\Text" translate="yes" xml:space="preserve">
+          <source>黑夜</source>
+          <target state="new">黑夜</target>
+        </trans-unit>
+        <trans-unit id="Resources\CommentEnableButton\Label" translate="yes" xml:space="preserve">
+          <source>评论</source>
+          <target state="new">评论</target>
+        </trans-unit>
         <trans-unit id="Resources\ShareButton\Label" translate="yes" xml:space="preserve">
           <source>分享</source>
           <target state="new">分享</target>

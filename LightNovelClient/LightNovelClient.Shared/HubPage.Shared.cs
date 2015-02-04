@@ -267,6 +267,7 @@ namespace LightNovel
 			catch (Exception)
 			{
 				Debug.WriteLine("Failed to login");
+				App.Current.User = null;
 			}
 
 			if (!App.Current.IsSignedIn)
@@ -339,9 +340,10 @@ namespace LightNovel
 			if (ViewModel.IsSignedIn)
 			{
 				var menu = new PopupMenu();
-				menu.Commands.Add(new UICommand("Log out", (command) =>
+				menu.Commands.Add(new UICommand("Log out",async (command) =>
 				{
-					ViewModel.LogOut();
+					ViewModel.UserName = "Signing out...";
+					await ViewModel.LogOutAsync();
 					ViewModel.UserName = "Tap to Sign in";
 				}));
 				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));

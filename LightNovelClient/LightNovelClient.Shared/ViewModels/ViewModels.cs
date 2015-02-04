@@ -255,7 +255,7 @@ namespace LightNovel.ViewModels
 					if (_VolumeNo > 0 && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[VolumeNo].Id))
 					{
 						throw new NotImplementedException("Set VolumeData before set series ID");
-					} 
+					}
 					NotifyPropertyChanged();
 				}
 			}
@@ -276,8 +276,8 @@ namespace LightNovel.ViewModels
 					if (_ChapterNo > 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[ChapterNo].Id))
 					{
 						throw new NotImplementedException("Set ChapterData before set series ID");
-					} 
-					
+					}
+
 					NotifyPropertyChanged();
 					NotifyPropertyChanged("HasPrev");
 					NotifyPropertyChanged("HasNext");
@@ -418,7 +418,7 @@ namespace LightNovel.ViewModels
 		{
 			if (!App.Current.IsSignedIn)
 				return false;
-			var result = await App.Current.User.AddUserFavriteAsync(VolumeData,SeriesData.Title);
+			var result = await App.Current.User.AddUserFavriteAsync(VolumeData, SeriesData.Title);
 			if (result)
 				NotifyPropertyChanged("IsFavored");
 			return result;
@@ -427,7 +427,7 @@ namespace LightNovel.ViewModels
 		public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
 		{
 			if (!App.Current.IsSignedIn)
-				return false; 
+				return false;
 			var favol = App.Current.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
 			if (favol == null)
 				return true;
@@ -495,9 +495,9 @@ namespace LightNovel.ViewModels
 			IsLoading = true;
 			if (nav.ChapterNo < 0) nav.ChapterNo = 0;
 			if (nav.VolumeNo < 0) nav.VolumeNo = 0;
-			if (nav.ChapterId != null && nav.VolumeId == null && nav.SeriesId == null)
+			try
 			{
-				try
+				if (nav.ChapterId != null && nav.VolumeId == null && nav.SeriesId == null)
 				{
 					if (nav.SeriesId == null)
 					{
@@ -509,23 +509,19 @@ namespace LightNovel.ViewModels
 					var volume = series.Volumes.First(vol => vol.Id == nav.VolumeId);
 					nav.VolumeNo = series.Volumes.IndexOf(volume);
 					nav.ChapterNo = volume.Chapters.IndexOf(volume.Chapters.First(cpt => cpt.Id == nav.ChapterId));
+
 				}
-				catch (Exception exception)
+				else if (nav.VolumeId != null)
 				{
-					Debug.WriteLine("Error in converting navigator data : {0}", exception.Message);
-					return;
-				}
-			}
-			else if (nav.VolumeId != null && nav.SeriesId == null)
-			{
-				try
-				{
-					string volDesc = null;
 					if (nav.SeriesId == null)
 					{
-						var volume = await CachedClient.GetVolumeAsync(nav.VolumeId);
-						nav.SeriesId = volume.ParentSeriesId;
-						volDesc = volume.Description;
+						string volDesc = null;
+						if (nav.SeriesId == null)
+						{
+							var volume = await CachedClient.GetVolumeAsync(nav.VolumeId);
+							nav.SeriesId = volume.ParentSeriesId;
+							volDesc = volume.Description;
+						}
 					}
 					SeriesData = await CachedClient.GetSeriesAsync(nav.SeriesId);
 					SeriesId = int.Parse(nav.SeriesId);
@@ -543,16 +539,16 @@ namespace LightNovel.ViewModels
 						VolumeNo = nav.VolumeNo;
 					}
 				}
-				catch (Exception exception)
-				{
-					Debug.WriteLine("Error in converting navigator data : {0}", exception.Message);
-					Contents = new LineViewModel[] { new LineViewModel(1,"Failed to resolve data navigator :("),
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine("Error in converting navigator data : {0}", exception.Message);
+				Contents = new LineViewModel[] { new LineViewModel(1,"Failed to resolve data navigator :("),
 										new LineViewModel(2,"Please contact Check your Internet connection."),
 										new LineViewModel(3,"Exception detail : " + exception.Message) };
-					IsLoading = false;
-					LineNo = 0;
-					return;
-				}
+				IsLoading = false;
+				LineNo = 0;
+				return;
 			}
 			await LoadDataAsync(int.Parse(nav.SeriesId), nav.VolumeNo, nav.ChapterNo, nav.LineNo);
 
@@ -581,7 +577,7 @@ namespace LightNovel.ViewModels
 
 					// Fix for cached page leads to no content
 					if (chapter.Lines.Count == 0)
-						chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id,true);
+						chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id, true);
 
 					chapter.Title = VolumeData.Chapters[chapterNo].Title;
 					ChapterData = chapter; //VolumeData.Chapters[chapterNo.Value] =
@@ -590,13 +586,14 @@ namespace LightNovel.ViewModels
 					if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
 					{
 						// Pre caching next chapter
-						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo+1].Id);
-					} else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
+						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Id);
+					}
+					else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
 					{
 						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Id);
 					}
 
-					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line,ChapterData.Id));
+					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterData.Id));
 					//_storage.AddRange(lvms);
 					//NotifyOfInsertedItems(0, _storage.Count);
 					//NotifyPropertyChanged("Contents");
@@ -645,7 +642,7 @@ namespace LightNovel.ViewModels
 			await App.Current.UpdateHistoryListAsync(bookmark);
 			await App.UpdateSecondaryTileAsync(bookmark);
 
-			if (EnableComments && Contents!=null)
+			if (EnableComments && Contents != null)
 			{
 				try
 				{
@@ -656,6 +653,11 @@ namespace LightNovel.ViewModels
 					}
 					if (CommentsListLoaded != null)
 						CommentsListLoaded.Invoke(this, CommentsList);
+					//if (!IsFavored && App.Current.User != null && App.Current.User.FavoriteList != null && App.Current.User.FavoriteList.Any(fav=>fav.SeriesTitle == SeriesData.Title))
+					//{
+					//	Debug.WriteLine("Adding Current Volume to User Favorite");
+					//	await AddCurrentVolumeToFavoriteAsync();
+					//}
 				}
 				catch (Exception exception)
 				{
@@ -910,7 +912,8 @@ namespace LightNovel.ViewModels
 	public class HistoryItemViewModel : INotifyPropertyChanged
 	{
 		public HistoryItemViewModel() { }
-		public HistoryItemViewModel(BookmarkInfo item){
+		public HistoryItemViewModel(BookmarkInfo item)
+		{
 			Position = item.Position;
 			ProgressPercentage = item.Progress;
 			CoverImageUri = item.DescriptionImageUri;
@@ -974,7 +977,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 	}
-	public class SeriesViewModel : KeyGroup<string,VolumeViewModel>, INotifyPropertyChanged 
+	public class SeriesViewModel : KeyGroup<string, VolumeViewModel>, INotifyPropertyChanged
 	{
 		private string _title;
 		private string _author;
@@ -1281,7 +1284,7 @@ namespace LightNovel.ViewModels
 			Debug.WriteLine("GetEnumerator() Get Called");
 			return Chapters.GetEnumerator();
 		}
-		#endregion 
+		#endregion
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -1439,7 +1442,7 @@ namespace LightNovel.ViewModels
 			_content = null;
 		}
 
-		public LineViewModel(Line line,string chapterId)
+		public LineViewModel(Line line, string chapterId)
 		{
 			//if (line.ContentType == LineContentType.TextContent)
 			//	_content = line.Content; // Add the indent
@@ -1574,7 +1577,7 @@ namespace LightNovel.ViewModels
 
 		public async Task LoadCommentsAsync()
 		{
-			if (HasNoComment || String.IsNullOrEmpty(ParentChapterId) || IsLoading) 
+			if (HasNoComment || String.IsNullOrEmpty(ParentChapterId) || IsLoading)
 				return;
 			if (LoadCommentTask == null && Comments.Count == 0)
 			{

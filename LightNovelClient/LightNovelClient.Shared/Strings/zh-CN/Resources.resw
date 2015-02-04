@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -202,5 +203,26 @@
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>
+  </data>
+  <data name="CommentEnableButton.Label" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="DarkThemeItem.Text" xml:space="preserve">
+    <value>黑夜</value>
+  </data>
+  <data name="LightGrayThemeItem.Text" xml:space="preserve">
+    <value>浅灰</value>
+  </data>
+  <data name="GreenThemeItem.Text" xml:space="preserve">
+    <value>浅绿</value>
+  </data>
+  <data name="SepiaThemeItem.Text" xml:space="preserve">
+    <value>麦秸</value>
+  </data>
+  <data name="LightThemeItem.Text" xml:space="preserve">
+    <value>白昼</value>
+  </data>
+  <data name="DarkGrayThemeItem.Text" xml:space="preserve">
+    <value>深灰</value>
   </data>
 </root>

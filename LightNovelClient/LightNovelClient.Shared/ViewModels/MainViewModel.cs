@@ -13,22 +13,13 @@ using Windows.Foundation.Collections;
 namespace LightNovel.ViewModels
 {
 	//using StringCoverGroup = KeyGroup<string, BookCoverViewModel>;
-	public class FavoriteSectionViewModel : ObservableCollection<FavourVolume>, INotifyPropertyChanged
+	public class FavoriteSectionViewModel : ObservableCollection<HistoryItemViewModel>, INotifyPropertyChanged
 	{
 		public bool IsEmpty
 		{
 			get { return base.Count == 0; }
 		}
 
-		public void Load(IEnumerable<FavourVolume> favList)
-		{
-			foreach (var item in favList)
-			{
-				this.Add(item);
-			}
-			_isLoaded = true;
-			_isLoading = false;
-		}
 		private bool _isLoaded;
 		private bool _isLoading;
 		public bool IsLoading
@@ -52,7 +43,7 @@ namespace LightNovel.ViewModels
 
 		protected override event PropertyChangedEventHandler PropertyChanged;
 
-		private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		public void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{
@@ -69,20 +60,23 @@ namespace LightNovel.ViewModels
 				{
 					await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
 
-					var favList = App.Current.User.FavoriteList.Take(maxItemCount);
+					var favList = from fav in App.Current.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
 
-					foreach (var item in favList)
+					foreach (var series in favList)
 					{
+						var vol = series.LastOrDefault();
+						var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime};
+						var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+						item.CoverImageUri = volume.CoverImageUri;
+						item.Description = volume.Description;
+						item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
 						this.Add(item);
-						var vol = await CachedClient.GetVolumeAsync(item.VolumeId);
-						item.CoverImageUri = vol.CoverImageUri;
-						item.Description = vol.Description;
 						NotifyPropertyChanged("IsEmpty");
 					}
 
 					IsLoading = false;
 					IsLoaded = true;
-					return favList;
+					return App.Current.User.FavoriteList;
 				}
 				catch (Exception exception)
 				{
@@ -627,15 +621,19 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		internal void LogOut()
+		internal async Task LogOutAsync()
 		{
 			if (!IsSignedIn)
 				return;
-			App.Current.SignOut();
+			IsLoading = true;
+			await App.Current.SignOutAsync();
 			UserName = null;
 			Password = null;
 			IsSignedIn = false;
 			FavoriteSection.Clear(); //Erase the user favorite data
+			FavoriteSection.IsLoaded = false;
+			FavoriteSection.NotifyPropertyChanged("IsEmpty");
+			IsLoading = false;
 		}
 
 		internal async Task<bool> TryLogInWithStoredCredentialAsync()
@@ -665,7 +663,15 @@ namespace LightNovel.ViewModels
 				return true;
 			if (String.IsNullOrWhiteSpace(UserName) || String.IsNullOrWhiteSpace(Password))
 				return false;
-			IsSignedIn = await App.Current.SignInAsync(UserName, Password) != null;
+			try
+			{
+				IsSignedIn = await App.Current.SignInAsync(UserName, Password) != null;
+			}
+			catch (Exception)
+			{
+				IsSignedIn = false;
+				App.Current.User = null;
+			}
 			if (IsSignedIn)
 			{
 				UserName = App.Current.User.UserName;

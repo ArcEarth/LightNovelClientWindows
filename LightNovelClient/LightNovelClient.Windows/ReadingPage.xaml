@@ -376,7 +376,8 @@
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />
-                <AppBarToggleButton x:Name="CommentEnableButton"
+                <AppBarToggleButton x:Uid="CommentEnableButton"
+                                    x:Name="CommentEnableButton"
                                     Width="50"
                                     Height="65"
                                     Margin="10,0"

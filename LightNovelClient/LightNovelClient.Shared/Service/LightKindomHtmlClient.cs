@@ -133,6 +133,7 @@ namespace LightNovel.Service
 					return;
 				if (value == null)
 				{
+					_ci_session = value;//null
 					_fileter.CookieManager.DeleteCookie(_CiSessionCookie);
 					_CiSessionCookie = null;
 					return;
@@ -192,7 +193,7 @@ namespace LightNovel.Service
 		}
 		public static async Task LogoutAsync()
 		{
-			using (var client = NewUserHttpClient())
+			using (var client = NewUserHttpClient(UserAgentType.IE11))
 			{
 				await client.PostAsync(UserLogoutUri, new HttpStringContent(""));
 				Credential = null;
@@ -221,30 +222,35 @@ namespace LightNovel.Service
 					throw new Exception("Invailid user name or password");
 					//return null; // Failed, means that the user/password is incorrect
 				}
-				var raw = resp.Headers["Set-cookie"];
 
 				// This behavier is different for Phone and PC!!!
-				string validCookie;
-				//string[] sperator = {"ci_session="};
-				//raw.Split(sperator,5,StringSplitOptions.RemoveEmptyEntries);
+				//var raw = resp.Headers["Set-cookie"];
+				//string validCookie;
+				////string[] sperator = {"ci_session="};
+				////raw.Split(sperator,5,StringSplitOptions.RemoveEmptyEntries);
 
-				// Total 3, last second is the second = =|||
-				var begin = raw.IndexOf("ci_session=", raw.IndexOf("ci_session=", 11) + 11); // find the forth occurence of "ci_session="
-				var end = raw.IndexOf("path=/", begin + 11) + 5;
-				validCookie = raw.Substring(begin, end - begin + 1);
-
+				//// Total 3, last second is the second = =|||
+				//var begin = raw.IndexOf("ci_session=", raw.IndexOf("ci_session=", 11) + 11); // find the forth occurence of "ci_session="
+				//var end = raw.IndexOf("path=/", begin + 11) + 5;
+				//validCookie = raw.Substring(begin, end - begin + 1);
 				//var doc = await client.GetStringAsync(UserRecentPath);
 
-				validCookie = validCookie.Substring(11, validCookie.IndexOf(';') - 11);
-				Credential = new Session { Key = validCookie, Expries = DateTime.Now.AddDays(1) /*_cookieContainer.GetCookies(SeverBaseUri)[CiSession].Expires*/ };
+				//validCookie = validCookie.Substring(11, validCookie.IndexOf(';') - 11);
+				//Credential = new Session { Key = validCookie, Expries = DateTime.Now.AddDays(1) /*_cookieContainer.GetCookies(SeverBaseUri)[CiSession].Expires*/ };
 
+				var filter = new HttpBaseProtocolFilter();
+				var cookies = filter.CookieManager.GetCookies(SeverBaseUri);
+				if (cookies.Count < 1)
+					throw new Exception("Didn't get proper login token!"); 
+				var cookie = cookies[0];
+				Credential = new Session { Key = cookie.Value, Expries = cookie.Expires.Value.DateTime };
 				//var doc = await client.GetStringAsync(UserRecentPath);
 
 			}
-			using (var anotherClient = NewUserHttpClient(UserAgentType.IE11))
-			{
-				var doc = await anotherClient.GetStringAsync(UserRecentUri);
-			}
+			//using (var anotherClient = NewUserHttpClient(UserAgentType.IE11))
+			//{
+			//	var doc = await anotherClient.GetStringAsync(UserRecentUri);
+			//}
 			return Credential;
 		}
 		public static async Task<IEnumerable<Descriptor>> GetUserRecentViewedVolumesAsync()
@@ -344,7 +350,8 @@ namespace LightNovel.Service
 					var stream = await client.GetInputStreamAsync(UserGetFavourUri);
 					var htmlDoc = new HtmlDocument();
 					htmlDoc.Load(stream.AsStreamForRead());
-
+					if (htmlDoc.DocumentNode.InnerHtml == "")
+						throw new Exception("Credential has expired!");
 					var volNodes = htmlDoc.DocumentNode.Elements("tr").Where(node => node.HasClass("ft-12"));
 					var vols = volNodes.Select(node =>
 					{

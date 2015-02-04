@@ -231,7 +231,7 @@ namespace LightNovel
 			}
 		}
 
-		private async void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+		private void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 		{
 			var iv = args.ItemContainer.ContentTemplateRoot as Grid;
 			if (args.InRecycleQueue)
@@ -266,15 +266,20 @@ namespace LightNovel
 				iv.Height = double.NaN;
 				imageContent.Opacity = 0;
 				imageContent.Height = double.NaN;
-				if (!line.IsImage)
-					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 				commentIndicator.Opacity = 0;
 				progressIndicator.Opacity = 0;
 				textContent.Opacity = 1;
 				if (line.IsImage)
+				{
 					textContent.Text = "Image Loading...";
+					textContent.TextAlignment = TextAlignment.Center;
+				}
 				else
+				{
 					textContent.Text = line.Content;
+					textContent.TextAlignment = TextAlignment.Left;
+					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				}
 				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
 			//} else if (args.Phase == 1)
 			//{
@@ -320,6 +325,7 @@ namespace LightNovel
 			if (e.Progress == 100)
 			{
 				var iv = progressBar.GetVisualParent();
+				if (iv == null) return;
 				var textContent = iv.FindName("TextContent") as TextBlock;
 				var imageContent = iv.FindName("ImageContent") as Image;
 				textContent.Opacity = 0;
@@ -352,6 +358,16 @@ namespace LightNovel
 		}
 
 		private void VolumeIndexItem_Tapped(object sender, TappedRoutedEventArgs e)
+		{
+
+		}
+
+		private void JumpToInputBox_KeyDown(object sender, KeyRoutedEventArgs e)
+		{
+
+		}
+
+		private void JumpToButton_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

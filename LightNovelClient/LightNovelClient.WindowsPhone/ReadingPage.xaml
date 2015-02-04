@@ -409,7 +409,8 @@
                                     <Setter Property="BorderThickness" Value="1" />
                                 </Style>
                             </MenuFlyout.MenuFlyoutPresenterStyle>
-                            <MenuFlyoutItem Height="60"
+                            <MenuFlyoutItem x:Uid="DarkThemeItem"
+                                            Height="60"
                                             Margin="-20,-11,0,0"
                                             HorizontalContentAlignment="Center"
                                             Background="Black"
@@ -417,23 +418,35 @@
                                             Foreground="White"
                                             Padding="0"
                                             Text="Dark" />
-                            <MenuFlyoutItem Height="60"
+                            <MenuFlyoutItem x:Uid="DarkGrayThemeItem"
+                                            Height="60"
+                                            Margin="-20,0,0,0"
+                                            HorizontalContentAlignment="Center"
+                                            Background="DarkGray"
+                                            Click="ReadingThemButton_Click"
+                                            Foreground="Black"
+                                            Padding="0"
+                                            Text="Dark Gray" />
+                            <MenuFlyoutItem x:Uid="LightGrayThemeItem"
+                                            Height="60"
                                             Margin="-20,0,0,0"
                                             HorizontalContentAlignment="Center"
                                             Background="LightGray"
                                             Click="ReadingThemButton_Click"
                                             Foreground="Black"
                                             Padding="0"
-                                            Text="Gray" />
-                            <MenuFlyoutItem Height="60"
+                                            Text="Light Gray" />
+                            <MenuFlyoutItem x:Uid="GreenThemeItem"
+                                            Height="60"
                                             Margin="-20,0,0,0"
                                             HorizontalContentAlignment="Center"
                                             Background="#FFD1E6B1"
                                             Click="ReadingThemButton_Click"
                                             Foreground="Black"
                                             Padding="0"
-                                            Text="Green" />
-                            <MenuFlyoutItem Height="60"
+                                            Text="Mild Green" />
+                            <MenuFlyoutItem x:Uid="SepiaThemeItem"
+                                            Height="60"
                                             Margin="-20,0,0,0"
                                             HorizontalContentAlignment="Center"
                                             Background="#FFFCF5E8"
@@ -441,7 +454,8 @@
                                             Foreground="Black"
                                             Padding="0"
                                             Text="Sepia" />
-                            <MenuFlyoutItem Height="60"
+                            <MenuFlyoutItem x:Uid="LightThemeItem"
+                                            Height="60"
                                             Margin="-20,0,0,28"
                                             HorizontalContentAlignment="Center"
                                             Background="White"
@@ -453,7 +467,8 @@
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
-                <AppBarToggleButton x:Name="CommentEnableButton"
+                <AppBarToggleButton x:Uid="CommentEnableButton"
+                                    x:Name="CommentEnableButton"
                                     Margin="0,0"
                                     VerticalAlignment="Center"
                                     Background="{ThemeResource SemiTransparentBlackBrush10}"
@@ -567,6 +582,49 @@
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
+                <!--<AppBarButton Icon="Go" Label="Jump To ">
+                    <AppBarButton.Flyout>
+                        <Flyout Placement="Bottom">
+                            <Grid>
+                                <TextBox x:Uid="JumpToInputBox"
+                                         x:Name="JumpToInputBox"
+                                         Grid.Row="1"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Stretch"
+                                         VerticalContentAlignment="Center"
+                                         Background="{ThemeResource AppBackgroundDimBrush}"
+                                         BorderBrush="{ThemeResource TransparentBrush}"
+                                         BorderThickness="1"
+                                         FontSize="{ThemeResource AppFontSizeMedium}"
+                                         FontWeight="Light"
+                                         Foreground="{ThemeResource AppForegroundBrush}"
+                                         KeyDown="JumpToInputBox_KeyDown"
+                                         MaxLength="300"
+                                         PlaceholderText="Line No or Keyword"
+                                         TabIndex="2" />
+                                <Button x:Uid="JumpToButton"
+                                        Grid.Row="1"
+                                        Margin="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Background="{ThemeResource AppAccentBrush}"
+                                        BorderBrush="{ThemeResource TransparentBrush}"
+                                        BorderThickness="1"
+                                        Click="JumpToButton_Click"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Padding="0"
+                                        TabIndex="1">
+                                    <Viewbox Width="40"
+                                             Height="40"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center">
+                                        <SymbolIcon Margin="10" Symbol="Forward" />
+                                    </Viewbox>
+                                </Button>
+                            </Grid>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>-->
                 <!--<AppBarButton x:Name="DownloadButton"
                           VerticalAlignment="Center"
                           Background="{ThemeResource SemiTransparentBlackBrush10}"
