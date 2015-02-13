@@ -18,7 +18,65 @@
         <Color x:Key="VolumeTileBackgroundColor">#FFF4FFC1</Color>
         <SolidColorBrush x:Key="VolumeTileBackgroundBrush" Color="Transparent" />
         <local:StringToSymbolConverter x:Key="StringToSymbolConverter" />
-
+        <DataTemplate x:Key="LogoWideTemplate">
+            <Canvas Name="Logo"
+                    Canvas.Left="0"
+                    Canvas.Top="0"
+                    Width="200"
+                    Height="60">
+                <Canvas.RenderTransform>
+                    <TranslateTransform X="0" Y="0" />
+                </Canvas.RenderTransform>
+                <Canvas.Resources />
+                <!--  Unknown tag: metadata  -->
+                <!--  Unknown tag: sodipodi:namedview  -->
+                <Canvas Name="g3606">
+                    <Polygon Name="polygon3608"
+                             Fill="{ThemeResource AppBackgroundBrush}"
+                             FillRule="NonZero"
+                             Points="24,43.4 29,35.7 29,22.6 49.6,7.2 48.9,18.6 34,27.2 34,32.2 47.2,27.5 44.1,35.5 34.1,36.7    31.9,39.8 40.7,40.5 36.4,44.4 29.9,42.5 24,47.9  " />
+                    <Path Name="path3610"
+                          Data="M24 15.6v-4.3h-6.2v36.6H24V17.2h-4.3v-1.7H24z M22 46.9h-2.3v-2.3H22V46.9z M22 18.8v24.6h-2.3V18.8H22z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Polygon Name="polygon3612"
+                             Fill="{ThemeResource AppBackgroundBrush}"
+                             FillRule="NonZero"
+                             Points="4,16.5 17.5,11.3 10,17.6 10,41.1 17.5,47.9 4,42.2  " />
+                </Canvas>
+                <Canvas Name="g3614">
+                    <Path Name="path3618"
+                          Data="M71.9 38.1c0 0.7-0.2 1.2-0.7 1.7s-1.2 0.8-2.2 1c-0.6 0.1-1.3 0.2-2.3 0.3c-1 0.1-2.2 0.1-3.6 0.2   c-1.3 0-2.4 0.1-3.2 0.2s-1.4 0.2-1.8 0.3l0.7-9.9l-1.6-0.1l0.1-2l1.7-0.1l0.2-2.2l-1.7-0.1l0.1-2l1.8 0.1l0.1-2.3l-1.8-0.2l0-1.8   l6.7 0.5L60.9 39l0.5 0c0.3 0 0.7 0 1.1 0s1 0.1 1.5 0.1c0.6 0.1 1.1 0.1 1.6 0.1s0.8 0 1.1 0c1.2 0 2.2-0.2 2.8-0.5   s0.9-0.9 0.9-1.6c0-0.2 0-0.5-0.1-0.8s-0.2-0.6-0.3-0.9l0.9-0.5c0.3 0.6 0.6 1.1 0.7 1.6S71.9 37.7 71.9 38.1z M67.9 33.3   c0 0.4-0.1 0.7-0.4 1s-0.6 0.4-1 0.4c-0.4 0-0.8-0.1-1-0.4s-0.4-0.6-0.4-1c0-0.4 0.1-0.7 0.4-1s0.6-0.4 1-0.4c0.4 0 0.7 0.1 1 0.4   S67.9 32.9 67.9 33.3z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3620"
+                          Data="M77.7 42.6L72.8 42l1.8-11.4h2.2L77.7 42.6z M78.1 27.8l-0.3 0.7l-1-0.5c-0.1 0.1-0.2 0.3-0.4 0.3   s-0.3 0.1-0.4 0.2l0.2 1l-0.8 0.1l-0.2-1c-0.1 0-0.2-0.1-0.4-0.1s-0.2-0.1-0.3-0.2l-0.8 0.7l-0.5-0.6l0.9-0.7   C74 27.5 74 27.3 74 27.2s0-0.3 0-0.5L73 26l0.4-0.6l1 0.7c0.1-0.1 0.2-0.2 0.3-0.3s0.3-0.1 0.4-0.2l-0.2-1.4h0.8l0 1.3   c0.2 0 0.3 0.1 0.5 0.1s0.3 0.1 0.4 0.2l0.8-0.7l0.5 0.5l-0.9 0.6c0.1 0.1 0.1 0.2 0.1 0.4s0 0.4 0 0.7L78.1 27.8z M76.3 39.8   c0-0.3-0.1-0.6-0.3-0.8s-0.5-0.3-0.8-0.3c-0.3 0-0.5 0.1-0.8 0.3s-0.3 0.5-0.3 0.8s0.1 0.5 0.3 0.8s0.5 0.3 0.8 0.3   c0.3 0 0.6-0.1 0.8-0.3S76.3 40.1 76.3 39.8z M76.3 36.6c0-0.3-0.1-0.5-0.2-0.6s-0.3-0.2-0.6-0.2c-0.3 0-0.5 0.1-0.6 0.2   s-0.2 0.3-0.2 0.6c0 0.3 0.1 0.5 0.2 0.6s0.4 0.2 0.6 0.2c0.3 0 0.5-0.1 0.6-0.2S76.3 36.9 76.3 36.6z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3622"
+                          Data="M92.3 30.2l-0.1 1l-1.4-0.1l-0.1 1l1.4 0.1L92 33.5l-1.5-0.2l0 1l1.4 0.2l-0.1 1.1l-1.5-0.1l-0.1 1.1   l1.4 0.2c-0.3 3.9-1 6.8-2.1 8.7s-2.5 2.9-4.3 2.9c-0.6 0-1.2-0.1-1.8-0.4c-0.6-0.2-1.1-0.6-1.6-1.1c-0.5-0.4-0.9-0.9-1.2-1.5   c-0.3-0.5-0.6-1.1-0.7-1.8l0.8-0.5c0.2 0.4 0.4 0.7 0.7 1.1s0.5 0.6 0.9 0.9c0.4 0.3 0.8 0.5 1.1 0.7s0.8 0.2 1.1 0.2   c0.6 0 1.1-0.2 1.5-0.5s0.8-0.9 1.1-1.5c0.2-0.5 0.4-1 0.5-1.6c0.1-0.6 0.2-1.3 0.3-2c-0.4 0.3-0.8 0.4-1.3 0.6s-0.9 0.2-1.4 0.2   c-1.5 0-2.7-0.5-3.8-1.5c-1.1-1-1.6-2.3-1.6-3.8c0-1.5 0.5-2.7 1.6-3.7c1.1-1 2.3-1.5 3.8-1.5c0.6 0 1.2 0.1 1.7 0.3s1 0.4 1.5 0.8   l0.1-1.8L92.3 30.2z M88.3 35.8c0-0.4 0-0.7-0.1-1.1s-0.2-0.7-0.4-1c-0.2-0.3-0.5-0.6-0.8-0.7s-0.6-0.2-1-0.2   c-0.4 0-0.8 0.1-1.2 0.3c-0.4 0.2-0.7 0.5-1 1c-0.3 0.4-0.5 0.8-0.6 1.2c-0.1 0.4-0.2 0.8-0.2 1.3c0 0.4 0 0.7 0.1 1.1   s0.2 0.7 0.4 0.9c0.2 0.3 0.5 0.6 0.8 0.8s0.6 0.2 1 0.2c0.4 0 0.8-0.1 1.2-0.3c0.4-0.2 0.7-0.5 1-1c0.3-0.4 0.4-0.8 0.6-1.2   C88.2 36.7 88.3 36.2 88.3 35.8z M87.1 36.1c0 0.4-0.1 0.7-0.4 1s-0.6 0.4-1 0.4c-0.4 0-0.7-0.1-1-0.4s-0.4-0.6-0.4-1   s0.1-0.7 0.4-1s0.6-0.4 1-0.4c0.4 0 0.7 0.1 1 0.4S87.1 35.7 87.1 36.1z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3624"
+                          Data="M107.9 38.9c0 0.2 0 0.5 0 0.8s0 0.8 0 1.3l-4.4 0.7c0.3-1.3 0.5-2.6 0.7-3.7s0.2-2.1 0.2-3   c0-0.4 0-0.8-0.1-1.2s-0.1-0.7-0.2-1.1c-0.1-0.5-0.3-0.9-0.5-1.1s-0.4-0.4-0.7-0.4c-0.5 0-0.9 0.1-1.4 0.4s-1 0.6-1.5 1.1l-0.3 8.7   L96.2 42L96 41.1l1.5-0.2l-0.1-1.5l-1.5 0.2l-0.2-0.8l1.7-0.2l-0.1-1.9l-1.5 0.2l-0.1-0.8l1.6-0.2l-0.2-2L95.5 34l-0.2-0.9l1.5-0.2   l-0.1-1.6l-1.4 0.3l-0.2-1l1.5-0.2l-0.2-2.3l-1.3 0.2l-0.2-0.9l1.4-0.3l-0.2-2.3l-1.2 0.3l-0.2-0.9l1.3-0.3L96 22.3l-1.3 0.5   l-0.3-1.1l6-1.5l-0.4 10.6c0.6-0.4 1.2-0.8 1.8-1s1.2-0.3 1.8-0.3c0.9 0 1.7 0.3 2.3 0.9s1.1 1.5 1.4 2.6c0.2 0.7 0.3 1.5 0.4 2.4   S107.9 37.6 107.9 38.9z M103.6 33.5c-0.5 1-0.9 2-1.2 3s-0.6 2.1-0.8 3.1l-1.1-0.4c0.3-1.2 0.7-2.4 1.2-3.4s0.9-2 1.5-2.9   L103.6 33.5z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3626"
+                          Data="M118.4 31.3l-0.2 1.2l-2.3 0.2l-0.2 1.4l2.5 0.1l-0.5 1.7l-2.2-0.1l-0.9 6.5l-1.7 0.3l-0.2-7l-2.1-0.2   l0.4-1.3l1.7 0l-0.1-1.1l-2.2 0.2l-0.5-1.8h2.7l-0.1-4.1l4.3-0.5l-0.6 4.6H118.4z M115.4 29.4c0-0.3-0.1-0.6-0.2-0.7   s-0.4-0.2-0.7-0.2s-0.6 0.1-0.7 0.2s-0.2 0.4-0.2 0.7c0 0.3 0.1 0.6 0.2 0.7s0.4 0.2 0.7 0.2s0.6-0.1 0.7-0.2   S115.4 29.8 115.4 29.4z M115 32.3c0-0.3-0.1-0.4-0.2-0.6s-0.3-0.2-0.6-0.2c-0.3 0-0.4 0.1-0.6 0.2s-0.2 0.3-0.2 0.6   c0 0.3 0.1 0.4 0.2 0.6s0.3 0.2 0.6 0.2c0.3 0 0.4-0.1 0.6-0.2S115 32.6 115 32.3z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3628"
+                          Data="M143.9 29c0 0.2 0 0.5 0 0.7s0 0.5 0 0.8l-0.6 12l-12.8-13l-0.5 11.2l-4.7 0l1.4-3.8l2.3-0.1l1-16.4   l11.3 13.9c0.1-0.7 0.1-1.5 0.2-2.2c0.1-0.7 0.1-1.5 0.2-2.2c0.1-0.9 0.1-1.7 0.2-2.5c0-0.8 0.1-1.4 0.1-2c0-1.3-0.1-2.4-0.4-3.4   s-0.7-1.9-1.3-2.6l0.8-0.5c1 1.1 1.8 2.6 2.4 4.3C143.6 24.8 143.9 26.7 143.9 29z M134 28.7c0-0.3-0.1-0.5-0.2-0.6   s-0.3-0.2-0.6-0.2c-0.3 0-0.5 0.1-0.6 0.2s-0.2 0.4-0.2 0.6s0.1 0.5 0.2 0.6s0.3 0.2 0.6 0.2c0.3 0 0.5-0.1 0.6-0.2   S134 29 134 28.7z M137.2 32.3c0-0.3-0.1-0.6-0.3-0.8s-0.5-0.3-0.8-0.3c-0.3 0-0.6 0.1-0.8 0.3s-0.3 0.5-0.3 0.8s0.1 0.6 0.3 0.8   s0.5 0.3 0.8 0.3c0.3 0 0.5-0.1 0.8-0.3S137.2 32.6 137.2 32.3z M140.2 35.8c0-0.3-0.1-0.5-0.2-0.6s-0.3-0.2-0.6-0.2   c-0.3 0-0.5 0.1-0.6 0.2s-0.2 0.3-0.2 0.6c0 0.3 0.1 0.5 0.2 0.6s0.4 0.2 0.6 0.2c0.3 0 0.5-0.1 0.6-0.2S140.2 36.1 140.2 35.8z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3630"
+                          Data="M160 35l-1.5 0.4c0 0.1 0 0.3 0.1 0.5s0 0.3 0 0.5c0 0.3 0 0.6-0.1 0.8s-0.1 0.5-0.2 0.8l1.2 0.5l-0.6 1   l-0.9-0.7c-0.3 0.6-0.7 1.2-1.2 1.6c-0.5 0.4-1 0.8-1.7 1l0.3 1.4l-1.1 0.3l-0.2-1.4c-0.2 0-0.4 0.1-0.6 0.1c-0.2 0-0.3 0-0.5 0   c-0.5 0-0.9-0.1-1.4-0.2s-0.9-0.3-1.3-0.6l-0.9 1.4l-0.9-0.5l1-1.4c-0.3-0.3-0.6-0.5-0.8-0.9s-0.4-0.7-0.6-1l-1.5 0.5l-0.2-1   L148 38c-0.1-0.3-0.1-0.6-0.2-0.8s0-0.5 0-0.7c0-0.2 0-0.5 0-0.7s0.1-0.5 0.1-0.7l-1.3-0.4l0.3-1l1.3 0.6c0.2-0.5 0.4-0.9 0.7-1.3   c0.3-0.4 0.7-0.7 1.1-1l-0.8-1.2l0.9-0.6l0.8 1.3c0.4-0.2 0.7-0.3 1.1-0.4c0.4-0.1 0.8-0.1 1.2-0.1c0.4 0 0.8 0 1.2 0.1   s0.7 0.2 1 0.4l0.6-1.1l0.9 0.5l-0.6 1.1c0.5 0.3 0.9 0.7 1.2 1.2s0.6 0.9 0.8 1.5l1.4-0.6L160 35z M155.4 36.4   c0-0.5 0-0.9-0.1-1.4c-0.1-0.4-0.2-0.8-0.5-1.1c-0.2-0.4-0.5-0.7-0.9-0.9c-0.3-0.2-0.7-0.3-1.2-0.3c-0.4 0-0.8 0.1-1.2 0.3   c-0.4 0.2-0.6 0.5-0.9 0.9c-0.2 0.3-0.4 0.7-0.5 1.1c-0.1 0.4-0.1 0.9-0.1 1.3c0 0.5 0 1 0.1 1.4c0.1 0.4 0.2 0.8 0.4 1.1   c0.2 0.4 0.5 0.7 0.9 0.9c0.4 0.2 0.8 0.3 1.2 0.3c0.5 0 0.9-0.1 1.2-0.3c0.4-0.2 0.6-0.5 0.9-0.9c0.2-0.3 0.3-0.7 0.4-1.1   C155.3 37.4 155.4 36.9 155.4 36.4z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3632"
+                          Data="M173.5 31.2l-5.7 11.1l-0.4-0.7l-1.2 0.8l-0.5-0.8l1.2-0.8l-0.7-1.3l-1.3 0.8l-0.5-0.8l1.3-0.7l-0.8-1.5   l-1.3 0.8l-0.5-0.8l1.3-0.8l-0.8-1.5l-1.3 0.7l-0.5-0.8l1.3-0.7l-1-1.8l-1.4 0.7l-0.4-0.8l4.6-2.4l3.1 9l3.6-8.6L173.5 31.2z    M169 35.5c0 0.3-0.1 0.4-0.2 0.6s-0.3 0.2-0.6 0.2c-0.2 0-0.4-0.1-0.6-0.2s-0.2-0.3-0.2-0.6c0-0.2 0.1-0.4 0.2-0.6   s0.3-0.2 0.6-0.2c0.3 0 0.4 0.1 0.6 0.2S169 35.3 169 35.5z M170 33c0 0.3-0.1 0.4-0.2 0.6s-0.3 0.2-0.6 0.2   c-0.3 0-0.4-0.1-0.6-0.2s-0.2-0.3-0.2-0.6c0-0.2 0.1-0.4 0.2-0.6s0.3-0.2 0.6-0.2c0.3 0 0.4 0.1 0.6 0.2S170 32.8 170 33z    M171 30.5c0 0.3-0.1 0.4-0.2 0.6s-0.3 0.2-0.5 0.2s-0.4-0.1-0.6-0.2s-0.2-0.3-0.2-0.6s0.1-0.4 0.2-0.6s0.3-0.2 0.6-0.2   s0.4 0.1 0.5 0.2S171 30.3 171 30.5z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3634"
+                          Data="M187.4 40.4c-0.2 0.2-0.4 0.4-0.5 0.5c-0.2 0.2-0.3 0.3-0.4 0.4l0.9 1.3l-0.8 0.5l-0.9-1.1   c-0.3 0.2-0.6 0.3-1 0.5c-0.4 0.1-0.7 0.2-1.1 0.3l0 1.4l-1.1-0.1l0.1-1.3c-0.4 0-0.7 0-1.1-0.1s-0.8-0.2-1.3-0.3l-0.7 1.4   l-1.1-0.6l0.7-1.3c-0.4-0.2-0.7-0.5-1-0.7s-0.6-0.6-0.8-0.9l-1.3 0.8l-0.5-0.8l1.4-0.7c-0.2-0.4-0.3-0.8-0.4-1.2s-0.2-0.8-0.2-1.2   l-1.3 0.3l-0.4-1l1.6-0.4c0-0.4 0.1-0.8 0.2-1.2s0.2-0.7 0.4-0.9l-1.1-0.7l0.5-0.9l1.1 0.8c0.2-0.2 0.4-0.5 0.6-0.7   s0.5-0.4 0.7-0.5l-1-1.4l1.1-0.5l0.8 1.5c0.3-0.1 0.5-0.1 0.7-0.2s0.4-0.1 0.5-0.1l0.3-1.5l0.8 0.3l-0.2 1.2c0.3 0 0.6 0 0.9 0.1   s0.6 0.2 0.8 0.4l1.2-1.1l0.7 0.6l-1.1 1.2c0.2 0.2 0.3 0.4 0.5 0.6c0.1 0.2 0.3 0.5 0.4 0.8l1.4-0.5l0.2 0.9l-1.3 0.5   c0.1 0.2 0.1 0.4 0.2 0.6c0 0.2 0.1 0.4 0.1 0.7l-5.4 0.9v0.1c0 0.6 0.1 1.1 0.2 1.6c0.1 0.5 0.3 1 0.6 1.4   c0.3 0.5 0.7 0.9 1.1 1.2c0.4 0.3 0.9 0.4 1.4 0.4c0.5 0 1.1-0.1 1.7-0.4c0.6-0.3 1.2-0.7 1.9-1.3L187.4 40.4z M182.6 34.7   c0-0.3-0.2-0.6-0.4-0.8s-0.5-0.3-1-0.3c-0.5 0-1 0.2-1.4 0.5s-0.7 0.7-0.9 1.2L182.6 34.7z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                    <Path Name="path3636"
+                          Data="M195.5 21.2l-2.4 20.1l-3.7-0.4l0.2-1.1l1.4 0.2l0.1-2.1l-1.6-0.1l0.1-1l1.6 0l0-2.1l-1.7-0.1l0.1-0.9h1.6   l0-2.3l-1.9-0.1l0.1-1.2l1.8 0.3v-1.9l-1.8-0.2l0.1-1l1.7 0l0-2l-1.9-0.1l0.2-1.1l1.7 0.2l0.1-1.9l-2-0.2l0.2-1.2H195.5z"
+                          Fill="{ThemeResource AppBackgroundBrush}" />
+                </Canvas>
+            </Canvas>
+        </DataTemplate>
         <DataTemplate x:Key="BookCoverTemplate" d:DataType="{system:Type vm:BookCoverViewModel}">
             <Grid Width="100"
                   Height="180"
@@ -198,11 +256,6 @@
 
     <!--  This grid acts as a root panel for the page.  -->
     <Grid Background="{ThemeResource AppBackgroundBrush}">
-        <!--<Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EdgeUIThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="*" />
@@ -213,32 +266,15 @@
              Grid.Row="0"
              Grid.RowSpan="2"
              Margin="0,0,0,0"
+             HeaderTemplate="{StaticResource LogoWideTemplate}"
              Padding="0,0,0,0"
              ScrollViewer.IsHorizontalScrollChainingEnabled="True"
              SectionHeaderClick="Hub_SectionHeaderClick"
              SectionsInViewChanged="RootHub_SectionsInViewChanged"
              TabIndex="0">
-            <!--<Hub>
-                <TransitionCollection>
-                    <PaneThemeTransition/>
-                </TransitionCollection>
-            </Hub>-->
-            <Hub.HeaderTemplate>
-                <DataTemplate>
-                    <Image Name="LogoImage"
-                           Grid.ColumnSpan="4"
-                           Height="120"
-                           Margin="-30,-30,0,0"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Source="Assets/Logo-310x150.png"
-                           Stretch="Uniform">
-                        <Image.RenderTransform>
-                            <TranslateTransform x:Name="LogoImageTranslate" X="0" />
-                        </Image.RenderTransform>
-                    </Image>
-                </DataTemplate>
-            </Hub.HeaderTemplate>
+            <Hub.Transitions>
+                <TransitionCollection />
+            </Hub.Transitions>
             <HubSection x:Name="LastReadSection"
                         Margin="0,0,0,0"
                         VerticalAlignment="Stretch"
@@ -361,7 +397,7 @@
 
             <HubSection x:Uid="RecentReadingSection"
                         x:Name="RecentReadingItem"
-                        Margin="0,-36,0,0"
+                        Margin="0,-5.5,0,0"
                         DataContext="{Binding RecentSection}"
                         Header="Recent"
                         HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}"
@@ -369,7 +405,7 @@
                         Visibility="{Binding IsEmpty,
                                              Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                 <DataTemplate>
-                    <ListView Margin="0,0,0,0"
+                    <ListView Margin="0,-23,0,0"
                               IsItemClickEnabled="True"
                               ItemClick="RecentItem_Click"
                               ItemTemplate="{StaticResource HistoryItemTemplate}"
@@ -382,6 +418,8 @@
                         <ListView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
+                                <AddDeleteThemeTransition />
+                                <ReorderThemeTransition />
                             </TransitionCollection>
                         </ListView.ItemContainerTransitions>
                     </ListView>
@@ -389,7 +427,7 @@
             </HubSection>
             <HubSection x:Uid="FavoriteSection"
                         Name="FavoriteSection"
-                        Margin="0,-36,0,0"
+                        Margin="0,-5.5,0,0"
                         DataContext="{Binding FavoriteSection}"
                         Header="Favorite"
                         HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}"
@@ -397,7 +435,7 @@
                         Visibility="{Binding IsEmpty,
                                              Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                 <DataTemplate>
-                    <ListView Margin="0,0,0,0"
+                    <ListView Margin="0,-23,0,0"
                               IsItemClickEnabled="True"
                               IsSwipeEnabled="False"
                               ItemClick="RecentItem_Click"
@@ -411,6 +449,8 @@
                         <ListView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
+                                <AddDeleteThemeTransition />
+                                <ReorderThemeTransition />
                             </TransitionCollection>
                         </ListView.ItemContainerTransitions>
                     </ListView>
@@ -418,7 +458,7 @@
             </HubSection>
             <HubSection x:Name="RecommandSection"
                         Width="600"
-                        Margin="0,-67,0,0"
+                        Margin="0,-36.5,0,0"
                         DataContext="{Binding RecommandSection}"
                         Padding="0,0,0,0">
                 <DataTemplate>
@@ -437,6 +477,8 @@
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
+                                <AddDeleteThemeTransition />
+                                <ReorderThemeTransition />
                             </TransitionCollection>
                         </GridView.ItemContainerTransitions>
                         <GridView.GroupStyle>
@@ -483,7 +525,7 @@
 
 
             <HubSection x:Name="AllSection"
-                        Margin="0,-67,0,0"
+                        Margin="0,-36.5,0,0"
                         Padding="0,0,0,0">
                 <DataTemplate>
                     <SemanticZoom Margin="0,0,0,0"
@@ -590,32 +632,70 @@
                 </DataTemplate>
             </HubSection>
             <HubSection x:Uid="AboutSection"
-                        Margin="0,-36,0,0"
-                        Header="About"
-                        HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}">
+                        Margin="0,-5.5,5,0"
+                        Header="Settins and About"
+                        HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}"
+                        Padding="0,0,5,0">
                 <DataTemplate>
-                    <StackPanel>
-                        <!--<TextBlock x:Uid="LiveTileLabel"
-                                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                   FontWeight="SemiBold"
-                                   Foreground="{ThemeResource AppAccentBrush}"
-                                   TextWrapping="WrapWholeWords">
-                            Enable Live Tile
-                        </TextBlock>
-                        <TextBlock x:Uid="LiveTileDescription"
-                                   Style="{ThemeResource AppTextNormalStyle}"
-                                   TextWrapping="WrapWholeWords">
-                            Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
-                        </TextBlock>
-                        <ToggleSwitch Margin="0,-15,0,-5"
-                                      IsOn="True"
-                                      Padding="0" />
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0"
+                    <ScrollViewer Margin="0,-23,0,0" Style="{ThemeResource VerticalScrollViewerStyle}">
+                        <StackPanel Margin="0,0,0,0" DataContext="{Binding Settings}">
+                            <TextBlock x:Uid="LiveTileLabel"
+                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource AppAccentBrush}"
+                                       TextWrapping="WrapWholeWords">
+                                Live Tile
+                            </TextBlock>
+                            <TextBlock x:Uid="LiveTileDescription"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       TextWrapping="WrapWholeWords">
+                                Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
+                            </TextBlock>
+                            <ToggleSwitch x:Name="LiveTileSwitch"
+                                          Margin="0,-15,15,-5"
+                                          IsOn="{Binding EnableLiveTile}"
+                                          Padding="0"
+                                          Toggled="LiveTileSwitch_Toggled" />
+                            <TextBlock x:Uid="AppThemeLabel"
+                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource AppAccentBrush}"
+                                       TextWrapping="WrapWholeWords">
+                                Theme
+                            </TextBlock>
+                            <TextBlock x:Uid="AppThemeDescription"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       TextWrapping="WrapWholeWords">
+                                Change the background them of Application, &quot;Autmatic&quot; may need to restart App to apply the theme change
+                            </TextBlock>
+                            <ComboBox x:Uid="AppThemeComboBox"
+                                      Margin="0,0,15,0"
+                                      Background="{ThemeResource AppBackgroundBrush}"
+                                      BorderBrush="{ThemeResource AppForegroundBrush}"
+                                      Foreground="{ThemeResource AppForegroundBrush}"
+                                      SelectedIndex="{Binding BackgroundThemeIndexBindingProperty,
+                                                              Mode=TwoWay}"
+                                      SelectionChanged="BackgroundThemeComboBox_SelectionChanged">
+                                <ComboBoxItem x:Uid="AppDefaultThemeItem">Automatic</ComboBoxItem>
+                                <ComboBoxItem x:Uid="AppLightThemeItem">Light</ComboBoxItem>
+                                <ComboBoxItem x:Uid="AppDarkThemeItem">Dark</ComboBoxItem>
+                            </ComboBox>
+                            <!--<TextBlock x:Uid="ClearCacheLabel"
+                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource AppAccentBrush}"
+                                       TextWrapping="WrapWholeWords">
+                                Clear Cache
+                            </TextBlock>
+                            <TextBlock x:Uid="ClearCacheDescription"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       TextWrapping="WrapWholeWords">
+                                Clear Cache may help free up spaces and may solve some Bug
+                            </TextBlock>
+                            <Button Grid.Column="1"
+                                    Margin="5,0,20,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     Background="{ThemeResource AppAccentBrush}"
                                     BorderBrush="Transparent"
                                     BorderThickness="0"
@@ -624,61 +704,52 @@
                                     <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Delete" />
                                     <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Cache</TextBlock>
                                 </StackPanel>
-                            </Button>
-                            <Button Grid.Column="1"
-                                    Background="{ThemeResource AppAccentBrush}"
-                                    BorderBrush="Transparent"
-                                    BorderThickness="0"
-                                    Padding="0">
-                                <StackPanel Margin="5,0" Orientation="Horizontal">
-                                    <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Calendar" />
-                                    <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Recent</TextBlock>
-                                </StackPanel>
-                            </Button>
-                        </Grid>
-                        <Rectangle Height="2"
-                                   Margin="0,0,0,10"
-                                   Fill="{ThemeResource AppAccentBrush}" />-->
-                        <TextBlock x:Uid="ReviewLabel"
-                                   Style="{ThemeResource AppTextNormalStyle}"
-                                   TextWrapping="WrapWholeWords">
-                            If you like this App, Please rate us 5 Star and share your feedback!
-                        </TextBlock>
-                        <HyperlinkButton x:Uid="ReviewButton"
-                                         Margin="10,10"
-                                         Content="Rate and review in Store"
-                                         FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                         FontWeight="SemiBold"
-                                         Foreground="{ThemeResource AppAccentBrush}"
-                                         NavigateUri="{StaticResource StoreReviewLink}" />
-                        <TextBlock x:Uid="ProjectLabel"
-                                   Margin="0,20,0,0"
-                                   Style="{ThemeResource AppTextNormalStyle}"
-                                   TextWrapping="WrapWholeWords">
-                            If you want to contribute or have detailed feedback, please visit our project home!
-                        </TextBlock>
-                        <HyperlinkButton x:Uid="ProjectButton"
-                                         Margin="10,10,0,30"
-                                         FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                         FontWeight="SemiBold"
-                                         Foreground="{ThemeResource AppAccentBrush}"
-                                         NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">
-                            Project Home
-                        </HyperlinkButton>
-                        <TextBlock x:Uid="DataCreditLabel"
-                                   Style="{ThemeResource AppTextNormalStyle}"
-                                   Text="Special thanks and Data Credit : " />
-                        <HyperlinkButton Margin="10,10,60,0"
-                                         HorizontalAlignment="Left"
-                                         FontSize="{StaticResource AppFontSizeSmall}"
-                                         Foreground="{StaticResource AppAccentBrush}"
-                                         NavigateUri="http://lknovel.lightnovel.cn/">
-                            <Image HorizontalAlignment="Left"
-                                   Source="/Assets/LK_Logo.png"
-                                   Stretch="None" />
-                        </HyperlinkButton>
+                            </Button>-->
 
-                    </StackPanel>
+                            <Rectangle Height="2"
+                                       Margin="0,10,0,10"
+                                       Fill="{ThemeResource AppAccentBrush}" />
+                            <TextBlock x:Uid="ReviewLabel"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       TextWrapping="WrapWholeWords">
+                                If you like this App, Please rate us 5 Star and share your feedback!
+                            </TextBlock>
+                            <HyperlinkButton x:Uid="ReviewButton"
+                                             Margin="10,10"
+                                             Content="Rate and review in Store"
+                                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                             FontWeight="SemiBold"
+                                             Foreground="{ThemeResource AppAccentBrush}"
+                                             NavigateUri="{StaticResource StoreReviewLink}" />
+                            <TextBlock x:Uid="ProjectLabel"
+                                       Margin="0,5,0,0"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       TextWrapping="WrapWholeWords">
+                                If you want to contribute or have detailed feedback, please visit our project home!
+                            </TextBlock>
+                            <HyperlinkButton x:Uid="ProjectButton"
+                                             Margin="10,10,0,10"
+                                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                             FontWeight="SemiBold"
+                                             Foreground="{ThemeResource AppAccentBrush}"
+                                             NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">
+                                Project Home
+                            </HyperlinkButton>
+                            <TextBlock x:Uid="DataCreditLabel"
+                                       Style="{ThemeResource AppTextNormalStyle}"
+                                       Text="Special thanks and Data Credit : " />
+                            <HyperlinkButton Margin="10,10,60,0"
+                                             HorizontalAlignment="Left"
+                                             FontSize="{StaticResource AppFontSizeSmall}"
+                                             Foreground="{StaticResource AppAccentBrush}"
+                                             NavigateUri="http://lknovel.lightnovel.cn/">
+                                <Image HorizontalAlignment="Left"
+                                       Source="/Assets/LK_Logo.png"
+                                       Stretch="None" />
+                            </HyperlinkButton>
+
+                        </StackPanel>
+                    </ScrollViewer>
                 </DataTemplate>
             </HubSection>
 
@@ -737,7 +808,7 @@
 
         <Popup Name="SigninPopup"
                Grid.RowSpan="2"
-               Margin="0,-350,0,0"
+               Margin="0,-400,0,0"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Center"
                IsLightDismissEnabled="True"
@@ -781,11 +852,9 @@
                 <!--  <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="UserNameLabel">User Name</TextBlock>  -->
                 <TextBox x:Uid="UserNameLabel"
                          Grid.Row="1"
-                         Height="30"
                          Margin="50,20"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Center"
-                         Foreground="{ThemeResource AppForegroundBrush}"
                          IsEnabled="{Binding IsLoading,
                                              Converter={StaticResource BooleanNegationConverter},
                                              ConverterParameter=False}"
@@ -797,7 +866,6 @@
                 <PasswordBox x:Uid="PasswordLabel"
                              Grid.Row="2"
                              Grid.Column="1"
-                             Height="30"
                              Margin="50,20"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
@@ -812,11 +880,11 @@
                         x:Name="LoginButton"
                         Grid.Row="2"
                         Grid.Column="1"
-                        Width="30"
-                        Height="30"
-                        MinWidth="50"
-                        MinHeight="50"
-                        Margin="51,20"
+                        Width="34"
+                        Height="34"
+                        MinWidth="30"
+                        MinHeight="30"
+                        Margin="0,0,52.5,0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Stretch"
@@ -824,13 +892,24 @@
                         AutomationProperties.AutomationId="LoginButton"
                         Background="{StaticResource AppAccentBrush}"
                         BorderBrush="Transparent"
-                        BorderThickness="1"
+                        BorderThickness="0"
                         Click="LoginButton_Click"
                         Foreground="{StaticResource AppBackgroundBrush}"
                         IsEnabled="{Binding IsLoading,
                                             Converter={StaticResource BooleanNegationConverter},
                                             ConverterParameter=False}"
                         Padding="0">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
                     <Viewbox Margin="0"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Top"
@@ -864,5 +943,6 @@
 
             </Grid>
         </Popup>
+
     </Grid>
 </Page>

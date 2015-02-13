@@ -44,6 +44,7 @@ namespace LightNovel.Controls
 
 		public SearchBox() {
 			InitializeComponent();
+			VisualStateManager.GoToState(this, "NonExpandedState", false);
 		}
 
 		static DependencyProperty _IsExpandedProperty =

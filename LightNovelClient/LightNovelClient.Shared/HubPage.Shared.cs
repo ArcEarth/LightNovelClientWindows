@@ -26,9 +26,9 @@ namespace LightNovel
 		public object Convert(object value, Type targetType, object parameter, string language)
 		{
 			var name = value as string;
-			if (name == "Recent" || name.Contains("最近阅读"))
+			if (name.Contains("Recent") || name.Contains("最近阅读"))
 				return Symbol.Clock;
-			if (name == "Favorite" || name.Contains("收藏"))
+			if (name.Contains("Favorite") || name.Contains("收藏"))
 				return Symbol.Favorite;
 			if (name.Contains("新番") || name.Contains("动画"))
 				return Symbol.Play;
@@ -36,7 +36,9 @@ namespace LightNovel
 				return Symbol.Like;
 			if (name.Contains("新"))
 				return Symbol.Calendar;
-			if (name == "About" || name.Contains("关于"))
+			if (name.Contains("Settings") || name.Contains("设置"))
+				return Symbol.Setting;
+			if (name.Contains("About") || name.Contains("关于"))
 				return Symbol.Message;
 			return Symbol.Library;
 		}
@@ -183,13 +185,12 @@ namespace LightNovel
 				Debug.WriteLine(exception.Message);
 			}
 		}
-#if  WINDOWS_APP
-		void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+		void ClearTile()
 		{
-			ScrollViewer viewer = sender as ScrollViewer;
-			LogoImageTranslate.X = -Math.Min(viewer.HorizontalOffset, 660);
+			var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+			updater.Clear();
 		}
-#endif
+
 		private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
 			e.PageState.Add("HubOffset", HubScrollViewer.HorizontalOffset);
@@ -258,6 +259,7 @@ namespace LightNovel
 
 		private async void LoginButton_Click(object sender, RoutedEventArgs e)
 		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			ViewModel.IsLoading = true;
 			try
 			{
@@ -272,7 +274,7 @@ namespace LightNovel
 
 			if (!App.Current.IsSignedIn)
 			{
-				MessageDialog diag = new MessageDialog("请检查用户名和密码,或在检查网络连接后重试", "登陆失败");
+				MessageDialog diag = new MessageDialog(resourceLoader.GetString("LoginFailedMessageDialogDetail"), resourceLoader.GetString("LoginFailedMessageDialogTitle"));
 				var dialogShow = diag.ShowAsync();
 				await dialogShow;
 				ViewModel.IsLoading = false;
@@ -337,14 +339,16 @@ namespace LightNovel
 
 		private async void UserAccount_Click(object sender, RoutedEventArgs e)
 		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			if (ViewModel.IsSignedIn)
 			{
 				var menu = new PopupMenu();
-				menu.Commands.Add(new UICommand("Log out",async (command) =>
+				var logoutLabel = resourceLoader.GetString("LogoutLabel");
+				menu.Commands.Add(new UICommand(logoutLabel, async (command) =>
 				{
-					ViewModel.UserName = "Signing out...";
+					ViewModel.UserName = resourceLoader.GetString("LogoutIndicator");
 					await ViewModel.LogOutAsync();
-					ViewModel.UserName = "Tap to Sign in";
+					ViewModel.UserName = resourceLoader.GetString("LoginLabel");
 				}));
 				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
 			}
@@ -352,16 +356,18 @@ namespace LightNovel
 			{
 				SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				SigninPopup.IsOpen = true;
-				ViewModel.UserName = "";
+				if (ViewModel.UserName == resourceLoader.GetString("LoginLabel"))
+					ViewModel.UserName = "";
 			}
 			//if (chosenCommand == null)
 		}
 
 		private void SigninPopupBackButton_Click(object sender, RoutedEventArgs e)
 		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			if (ViewModel.IsLoading)
 				return;
-			ViewModel.UserName = "Tap to Sign in";
+			ViewModel.UserName = resourceLoader.GetString("LoginLabel");
 			ViewModel.Password = "";
 			SigninPopup.IsOpen = false;
 			SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -382,6 +388,30 @@ namespace LightNovel
 			// by passing required information as a navigation parameter
 			var ser = (Descriptor)e.ClickedItem;
 			this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { SeriesId = ser.Id, VolumeNo = -1, ChapterNo = -1 }.ToString());
+		}
+
+		private void LiveTileSwitch_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+		{
+			var switcher = sender as ToggleSwitch;
+			if (switcher.IsOn)
+			{
+				App.Current.Settings.EnableLiveTile = true;
+				UpdateTile();
+			}
+			else
+			{
+				App.Current.Settings.EnableLiveTile = false;
+				ClearTile();
+			}
+		}
+
+		private void BackgroundThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var combo = sender as ComboBox;
+			if (combo.SelectedIndex != null)
+			{
+				this.RequestedTheme = (Windows.UI.Xaml.ElementTheme)(combo.SelectedIndex);
+			}
 		}
 
 	}

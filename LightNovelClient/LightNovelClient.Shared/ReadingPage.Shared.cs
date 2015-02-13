@@ -30,6 +30,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
+using WinRTXamlToolkit.AwaitableUI;
 
 namespace LightNovel
 {
@@ -71,6 +72,8 @@ namespace LightNovel
 			}
 		}
 
+		string ImageLoadingTextPlaceholder = "Image Loading ...";
+
 		private NavigationHelper navigationHelper;
 		private NovelPositionIdentifier navigationId;
 
@@ -92,6 +95,7 @@ namespace LightNovel
 		public string IndexOpenState = "IndexOpen";
 
 		private bool _indexOpened;
+		private bool _isFisrtTimeOpenIndex = true;
 		public bool IsIndexPanelOpen
 		{
 			get
@@ -104,9 +108,15 @@ namespace LightNovel
 				_indexOpened = value;
 
 				bool userTransition = !ViewModel.IsLoading;
-
 				if (value)
 				{
+					//IndexOpenStoryBoard.Begin();
+					//if (_isFisrtTimeOpenIndex)
+					//{
+					//	ChangeState(IndexOpenState, false);
+					//	IndexOpenStoryBoard.Begin();
+					//	_isFisrtTimeOpenIndex = false;
+					//}
 					ChangeState(IndexOpenState, userTransition);
 				}
 				else
@@ -157,7 +167,7 @@ namespace LightNovel
 			}
 		}
 
-		void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			var vm = sender as ReadingPageViewModel;
 			switch (e.PropertyName)
@@ -207,6 +217,42 @@ namespace LightNovel
 						VisualStateManager.GoToState(this, "Ready", true);
 					}
 					break;
+				case "IsDownloading":
+					{
+#if WINDOWS_PHONE_APP
+						var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+						if (ViewModel.IsDownloading)
+						{
+							//statusBar.ProgressIndicator.Text = "Caching to off-line...";
+							statusBar.ProgressIndicator.ProgressValue = null;
+							//statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
+							//await statusBar.ShowAsync();
+							//await statusBar.ProgressIndicator.ShowAsync();
+						}
+						else
+						{
+							statusBar.ProgressIndicator.Text = " ";
+							statusBar.ProgressIndicator.ProgressValue = 0;
+							//await statusBar.ProgressIndicator.HideAsync();
+						}
+#endif
+					}
+					break;
+				case "IsFavored":
+					FavoriteButton.IsChecked = ViewModel.IsFavored;
+
+					break;
+				case "IsPinned":
+					PinButton.IsChecked = ViewModel.IsPinned;
+					break;
+				case "DownloadingProgress":
+					{
+#if WINDOWS_PHONE_APP
+						var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+						statusBar.ProgressIndicator.ProgressValue = ViewModel.DownloadingProgress;
+#endif
+					}
+					break;
 				default:
 					break;
 			}
@@ -232,36 +278,28 @@ namespace LightNovel
 		{
 			// TODO: Create an appropriate data model for your problem domain to replace the sample data
 			Debug.WriteLine("LoadState");
+			VisualStateManager.GoToState(this, IndexClosedState, false);
 
 #if WINDOWS_PHONE_APP
-			IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-				//this.BottomAppBar = PageBottomCommandBar;
-				//this.BottomAppBar.Visibility = Visibility.Visible;
-				var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
-				await statusBar.HideAsync();
+			//IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+			//this.BottomAppBar = PageBottomCommandBar;
+			//this.BottomAppBar.Visibility = Visibility.Visible;
+			var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+			statusBar.ProgressIndicator.Text = " ";
+			statusBar.ProgressIndicator.ProgressValue = 0;
+			statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
+			await statusBar.ShowAsync();
+			await statusBar.ProgressIndicator.ShowAsync();
 #endif
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
-			if (e.PageState == null)
-			{
-				var nav = navigationId = NovelPositionIdentifier.Parse((string)e.NavigationParameter);
+			if (e.PageState != null && e.PageState.Count > 0)
 
-				if (nav.SeriesId != null && (nav.VolumeNo == -1 || nav.ChapterNo == -1))
-				{
-					IsIndexPanelOpen = true;
-				} else
-				{
-					IsIndexPanelOpen = false;
-				}
-
-				await viewModel.LoadDataAsync(nav);
-			}
-			else
 			{
 				IsIndexPanelOpen = false;
 				if (e.PageState.ContainsKey("LoadingBreak"))
 				{
-					var nav = navigationId = NovelPositionIdentifier.Parse((string)e.PageState["LoadingBreak"]);
-					await viewModel.LoadDataAsync(nav);
+					navigationId = NovelPositionIdentifier.Parse((string)e.PageState["LoadingBreak"]);
+					await viewModel.LoadDataAsync(navigationId);
 				}
 				else
 				{
@@ -277,6 +315,20 @@ namespace LightNovel
 				ContentScrollViewer.ChangeView(horizontalOffset, verticalOffset, null, true);
 #endif
 				//SyncIndexSelectedItem();
+			} else
+			{
+				navigationId = NovelPositionIdentifier.Parse((string)e.NavigationParameter);
+
+				if (navigationId.SeriesId != null && (navigationId.VolumeNo == -1 || navigationId.ChapterNo == -1))
+				{
+					IsIndexPanelOpen = true;
+				}
+				else
+				{
+					IsIndexPanelOpen = false;
+				}
+
+				await viewModel.LoadDataAsync(navigationId);
 			}
 			ViewModel.NotifyPropertyChanged("IsPinned");
 			ViewModel.NotifyPropertyChanged("IsFavored");
@@ -292,7 +344,8 @@ namespace LightNovel
 #endif
 			if (ViewModel.IsLoading || ViewModel.SeriesId <= 0 || !ViewModel.IsDataLoaded)
 			{
-				e.PageState.Add("LoadingBreak", navigationId.ToString());
+				if (navigationId != null)
+					e.PageState.Add("LoadingBreak", navigationId.ToString());
 			}
 			else
 			{
@@ -307,6 +360,8 @@ namespace LightNovel
 				var bookmark = ViewModel.CreateBookmark();
 				await App.Current.UpdateHistoryListAsync(bookmark);
 				await App.UpdateSecondaryTileAsync(bookmark);
+				if (ViewModel.IsDownloading)
+					await ViewModel.CancelCachingRequestAsync();
 			}
 		}
 
@@ -333,12 +388,14 @@ namespace LightNovel
 
 		#endregion
 
-		private void IndexButton_Click(object sender, RoutedEventArgs e)
+		private async void IndexButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (IsIndexPanelOpen == false)
 			{
-				IsIndexPanelOpen = true;
+				//IsIndexPanelOpen = true;
 				SyncIndexSelection();
+				//await IndexOpenStoryBoard.BeginAsync();
+				IsIndexPanelOpen = true;
 			}
 			else
 			{
@@ -486,6 +543,12 @@ namespace LightNovel
 			//ContentColumns.InvalidateMeasure();
 #endif
 		}
+		private void FontStyleButton_Click(object sender, RoutedEventArgs e)
+		{
+			var item = sender as MenuFlyoutItem;
+			ViewModel.FontFamily = item.FontFamily;
+		}
+
 
 		private void ReadingThemButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -537,6 +600,28 @@ namespace LightNovel
 				var container = progressBar;//.Ge.GetVisualParent();
 				if (container != null)
 					container.Visibility = Visibility.Collapsed;
+			}
+		}
+
+		private async void DownloadButton_Click(object sender, RoutedEventArgs e)
+		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			if (ViewModel.IsDownloading)
+			{
+				DownloadButton.IsEnabled = false;
+				await ViewModel.CancelCachingRequestAsync();
+				DownloadButton.IsEnabled = true;
+				DownloadButton.Label = resourceLoader.GetString("DownloadButtonStartLabel");
+			}
+			else
+			{
+				var pauseLabel = resourceLoader.GetString("DownloadButtonPauseLabel");
+				DownloadButton.Label = pauseLabel;
+				MessageDialog dialog = new MessageDialog(resourceLoader.GetString("DownloadingStartDescriptioin"), resourceLoader.GetString("DownloadingStartDescriptioinTtile"));
+				var caching = ViewModel.CachingRestChaptersAsync();
+				await dialog.ShowAsync();
+				await caching;
+				DownloadButton.Label = resourceLoader.GetString("DownloadButtonStartLabel");
 			}
 		}
 	}

@@ -24,6 +24,7 @@ using Windows.UI.Popups;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
@@ -86,6 +87,8 @@ namespace LightNovel
 			RegisterForShare();
 			Flyout.SetAttachedFlyout(this, ImagePreviewFlyout);
 			RefreshThemeColor();
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			ImageLoadingTextPlaceholder = resourceLoader.GetString("ImageLoadingPlaceholderText");
 		}
 
 		private bool CanGoBack()
@@ -130,6 +133,9 @@ namespace LightNovel
 		public static readonly DependencyProperty ContentListViewChangeViewRequestProperty =
 			DependencyProperty.Register("ContentListViewChangeViewRequestProperty", typeof(int),
 			typeof(ListView), new PropertyMetadata(-1, null));
+		public static readonly DependencyProperty VolumeListViewChangeViewRequestProperty =
+			DependencyProperty.Register("VolumeListViewChangeViewRequestProperty", typeof(object),
+			typeof(ListView), new PropertyMetadata(null, null));
 
 
 
@@ -167,8 +173,8 @@ namespace LightNovel
 			//ContentCollapsedToExpandedKeyFrame.Value = -IndexRegion.Width;
 			//IndexExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
 			//ContentExpandedToCollapsedKeyFrame.Value = -IndexRegion.Width;
-			IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-			VisualStateManager.GoToState(this, stateName, useTransitions);
+			//IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+			bool result = VisualStateManager.GoToState(this, stateName, useTransitions);
 			//this.navigationHelper.GoBackCommand.RaiseCanExecuteChanged();
 		}
 
@@ -200,12 +206,45 @@ namespace LightNovel
 		{
 			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
-			VolumeListView.SelectedItem = target;
-			VolumeListView.UpdateLayout();
-			VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+			if (ViewModel.HasNext)
+			{
+				var nextvm = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo + 1];
+				nextvm.NotifyPropertyChanged("IsDownloaded");
+			}
+			if (VolumeListView.ActualHeight > 0 && VolumeListView.Items.Count > 0)
+			{
+				VolumeListView.SelectedItem = target;
+				VolumeListView.UpdateLayout();
+				VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+			}
+			else
+			{
+				if (VolumeListView.GetValue(VolumeListViewChangeViewRequestProperty) == null)
+				{
+					VolumeListView.SetValue(VolumeListViewChangeViewRequestProperty, target);
+					VolumeListView.SizeChanged += VolumeListView_SizeChanged;
+				}
+				else
+				{
+					VolumeListView.SetValue(VolumeListViewChangeViewRequestProperty, target);
+				}
+			}
 			var scrollViewer = VolumeListView.GetScrollViewer();
 			if (scrollViewer != null)
 				scrollViewer.ChangeView(null, scrollViewer.VerticalOffset + 100, null, true);
+		}
+
+		void VolumeListView_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			if (VolumeListView.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && ContentListView.Items.Count > 0)
+			{
+				var target = VolumeListView.GetValue(VolumeListViewChangeViewRequestProperty);
+				VolumeListView.SelectedItem = target;
+				VolumeListView.UpdateLayout();
+				VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+				target = null;
+				VolumeListView.SizeChanged -= VolumeListView_SizeChanged;
+			}
 		}
 
 		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -271,7 +310,7 @@ namespace LightNovel
 				textContent.Opacity = 1;
 				if (line.IsImage)
 				{
-					textContent.Text = "Image Loading...";
+					textContent.Text = ImageLoadingTextPlaceholder;
 					textContent.TextAlignment = TextAlignment.Center;
 				}
 				else
@@ -370,6 +409,27 @@ namespace LightNovel
 		private void JumpToButton_Click(object sender, RoutedEventArgs e)
 		{
 
+		}
+
+		private void FontSizeButtonClick(object sender, RoutedEventArgs e)
+		{
+			MenuFlyout mf = (MenuFlyout)this.Resources["FontSizeFlyout"];
+			mf.Placement = FlyoutPlacementMode.Bottom;
+			mf.ShowAt(this.BottomAppBar);
+		}
+
+		private void FontFamilyButtonClick(object sender, RoutedEventArgs e)
+		{
+			MenuFlyout mf = (MenuFlyout)this.Resources["FontStyleFlyout"];
+			mf.Placement = FlyoutPlacementMode.Bottom;
+			mf.ShowAt(this.BottomAppBar);
+		}
+
+		private void ReadingThemeButtonClick(object sender, RoutedEventArgs e)
+		{
+			MenuFlyout mf = (MenuFlyout)this.Resources["ReadingThemeFlyout"];
+			mf.Placement = FlyoutPlacementMode.Bottom;
+			mf.ShowAt(this.BottomAppBar);		
 		}
 
 	}

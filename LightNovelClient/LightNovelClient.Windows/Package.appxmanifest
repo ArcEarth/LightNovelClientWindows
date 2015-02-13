@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.4.10" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.2.1.1" />
   <Properties>
     <DisplayName>LightNovel</DisplayName>
     <PublisherDisplayName>Arc Earth</PublisherDisplayName>

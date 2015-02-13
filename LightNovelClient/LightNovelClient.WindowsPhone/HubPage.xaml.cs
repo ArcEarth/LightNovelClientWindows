@@ -77,8 +77,24 @@ namespace LightNovel
 				ViewModel.IsSignedIn = true;
 				ViewModel.UserName = App.Current.User.UserName;
 			}
+
+			await ViewModel.RecommandSection.LoadAsync();
+			if (App.Current.Settings.EnableLiveTile)
+				UpdateTile(); 
+			
 			if (App.Current.IsSignedIn)
 				await ViewModel.FavoriteSection.LoadAsync();
+
+			IsLoadingIndex = true;
+			await ViewModel.LoadSeriesIndexDataAsync();
+			if (SeriesIndexViewSource.View == null)
+			{
+				SeriesIndexViewSource.IsSourceGrouped = true;
+				SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
+			}
+			if (SeriesIndexViewSource.View != null)
+				ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
+			IsLoadingIndex = false;
 
 			ViewModel.IsLoading = false;
 

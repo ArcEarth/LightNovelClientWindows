@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Media;
 
 namespace LightNovel.Common
 {
+
 	public class ApplicationSettings : INotifyPropertyChanged
 	{
 		readonly IPropertySet _appSettings;
@@ -29,18 +30,20 @@ namespace LightNovel.Common
 			}
 			if (!_appSettings.ContainsKey(EnableCommentsKey))
 				_appSettings.Add(EnableCommentsKey, true);
-			//if (!_appSettings.ContainsKey(UserNameKey))
-			//	_appSettings.Add(UserNameKey, "");
-			////if (!_appSettings.ContainsKey(PasswordKey))
-			////	_appSettings.Add(PasswordKey, "");
+			if (!_appSettings.ContainsKey(EnableLiveTileKey))
+				_appSettings.Add(EnableLiveTileKey, true);
+			if (!_appSettings.ContainsKey(BackgroundThemeKey))
+				_appSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
 			if (!_appSettings.ContainsKey(CredentialKey))
 				_appSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session{ Expries = DateTime.Now.AddYears(-100),Key=""}));
-			if (!_appSettings.ContainsKey(BackgroundKey))
-				_appSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.White));
-			if (!_appSettings.ContainsKey(ForegroundKey))
-				_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
 			if (!_appSettings.ContainsKey(FontSizeKey))
 				_appSettings.Add(FontSizeKey, 19.0);
+			if (!_appSettings.ContainsKey(FontFamilyKey))
+#if WINDOWS_PHONE_APP
+				_appSettings.Add(FontFamilyKey, "Segoe WP"); 
+#else
+				_appSettings.Add(FontFamilyKey, "Segoe UI"); 
+#endif
 			if (!_appSettings.ContainsKey(SavedAppVersionKey))
 			{
 				_appSettings.Add(SavedAppVersionKey, "00.00.00.00");
@@ -78,11 +81,59 @@ namespace LightNovel.Common
 			}
 		}
 
+		private const string EnableLiveTileKey = "EnableLiveTile";
+
+		public bool EnableLiveTile
+		{
+			get
+			{
+				return (bool)_appSettings[EnableLiveTileKey];
+			}
+			set
+			{
+				_appSettings[EnableLiveTileKey] = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private const string BackgroundThemeKey = "BackgroundTheme";
+
+		public Windows.UI.Xaml.ElementTheme BackgroundTheme
+		{
+			get
+			{
+				return (Windows.UI.Xaml.ElementTheme)_appSettings[BackgroundThemeKey];
+			}
+			set
+			{
+				if ((Windows.UI.Xaml.ElementTheme)_appSettings[BackgroundThemeKey] != value)
+				{
+					_appSettings[BackgroundThemeKey] = (int)value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public int BackgroundThemeIndexBindingProperty
+		{
+			get
+			{ return (int)BackgroundTheme; }
+			set
+			{
+				BackgroundTheme = (Windows.UI.Xaml.ElementTheme)value;
+			}
+		}
+
 		private const string BackgroundKey = "Background";
 		public Brush Background
 		{
 			get
 			{
+				if (!_appSettings.ContainsKey(BackgroundKey))
+					if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light)
+						_appSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.White));
+					else
+						_appSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.Black));
 				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_appSettings[BackgroundKey]));
 			}
 
@@ -99,6 +150,11 @@ namespace LightNovel.Common
 		{
 			get
 			{
+				if (!_appSettings.ContainsKey(ForegroundKey))
+					if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light)
+						_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
+					else
+						_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.White)); 
 				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_appSettings[ForegroundKey]));
 			}
 
@@ -126,6 +182,20 @@ namespace LightNovel.Common
 			}
 		}
 
+		private const string FontFamilyKey = "FontFamily";
+		public FontFamily FontFamily
+		{
+			get
+			{
+				return new FontFamily((string)_appSettings[FontFamilyKey]);
+			}
+
+			set
+			{
+				_appSettings[FontFamilyKey] = value.Source;
+				NotifyPropertyChanged();
+			}
+		}
 		private const string SavedAppVersionKey = "SavedAppVersion";
 		public string SavedAppVersion
 		{

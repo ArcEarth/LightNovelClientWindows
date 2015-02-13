@@ -52,22 +52,18 @@ namespace LightNovel.Common
 		{
 			try
 			{
-
 				var fav = await CachedClient.GetUserFavoriteVolumesAsync(!IsUserFavoriteValiad || forceRefresh);
 				if (FavoriteList == null)
 				{
 					FavoriteList = new ObservableCollection<FavourVolume>(fav);
-					//FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
 				}
 				else
 				{
-					//FavoriteList.CollectionChanged -= FavoriteList_CollectionChanged;
 					FavoriteList.Clear();
 					foreach (var item in fav)
 					{
 						FavoriteList.Add(item);
 					}
-					//FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
 				}
 			}
 			catch (Exception exception)

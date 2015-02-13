@@ -184,7 +184,7 @@
     <value>现在还有没账户?</value>
   </data>
   <data name="AboutSection.Header" xml:space="preserve">
-    <value>关于</value>
+    <value>设置与关于</value>
   </data>
   <data name="ReviewLabel.Text" xml:space="preserve">
     <value>如果您喜欢这个应用，请在商店中给我们五星并提出您的意见 :)</value>
@@ -224,5 +224,86 @@
   </data>
   <data name="DarkGrayThemeItem.Text" xml:space="preserve">
     <value>深灰</value>
+  </data>
+  <data name="DownloadButton.Label" xml:space="preserve">
+    <value>离线缓存</value>
+  </data>
+  <data name="DownloadButtonPauseLabel" xml:space="preserve">
+    <value>停止缓存</value>
+  </data>
+  <data name="DownloadingStartDescriptioin" xml:space="preserve">
+    <value>您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</value>
+  </data>
+  <data name="HugeFontSizeButton.Text" xml:space="preserve">
+    <value>巨大</value>
+  </data>
+  <data name="LargeFontSizeButton.Text" xml:space="preserve">
+    <value>大</value>
+  </data>
+  <data name="NormalFontSizeButton.Text" xml:space="preserve">
+    <value>普通</value>
+  </data>
+  <data name="SmallFontSizeButton.Text" xml:space="preserve">
+    <value>小</value>
+  </data>
+  <data name="SubtleFontSizeButton.Text" xml:space="preserve">
+    <value>微小</value>
+  </data>
+  <data name="DownloadingStartDescriptioinTtile" xml:space="preserve">
+    <value>离线缓存已开始</value>
+  </data>
+  <data name="ImageLoadingPlaceholderText" xml:space="preserve">
+    <value>正在加载图片...</value>
+  </data>
+  <data name="DownloadButtonStartLabel" xml:space="preserve">
+    <value>离线缓存</value>
+  </data>
+  <data name="FontFamilyButton.Label" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="NextChapterButtonLabel.Text" xml:space="preserve">
+    <value>下一章</value>
+  </data>
+  <data name="ClearCacheLabel.Text" xml:space="preserve">
+    <value>清理缓存</value>
+  </data>
+  <data name="LiveTileLabel.Text" xml:space="preserve">
+    <value>动态磁贴</value>
+  </data>
+  <data name="LiveTileDescription.Text" xml:space="preserve">
+    <value>开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</value>
+  </data>
+  <data name="ClearCacheDescription.Text" xml:space="preserve">
+    <value>危险.清理缓存能释放存储空间,并可能解决一些少见的闪退问题.也清除你的离线数据!</value>
+  </data>
+  <data name="AppThemeLabel.Text" xml:space="preserve">
+    <value>背景主题</value>
+  </data>
+  <data name="AppThemeDescription.Text" xml:space="preserve">
+    <value>改变应用的背景色调,"系统主题"选项需要重启应用才会生效</value>
+  </data>
+  <data name="AppDefaultThemeItem.Content" xml:space="preserve">
+    <value>系统主题</value>
+  </data>
+  <data name="AppLightThemeItem.Content" xml:space="preserve">
+    <value>白色</value>
+  </data>
+  <data name="AppDarkThemeItem.Content" xml:space="preserve">
+    <value>黑色</value>
+  </data>
+  <data name="LogoutLabel" xml:space="preserve">
+    <value>登出</value>
+  </data>
+  <data name="LogoutIndicator" xml:space="preserve">
+    <value>正在登出...</value>
+  </data>
+  <data name="LoginLabel" xml:space="preserve">
+    <value>登陆</value>
+  </data>
+  <data name="LoginFailedMessageDialogTitle" xml:space="preserve">
+    <value>登陆失败</value>
+  </data>
+  <data name="LoginFailedMessageDialogDetail" xml:space="preserve">
+    <value>请检查用户名和密码,或在检查网络连接后重试</value>
   </data>
 </root>

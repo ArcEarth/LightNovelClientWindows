@@ -1,19 +1,17 @@
-﻿<Application
-    x:Class="LightNovel.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:LightNovel"
-    RequestedTheme="Light">
+﻿<Application x:Class="LightNovel.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:LightNovel">
     <Application.Resources>
-        <!-- Application-specific resources -->
+        <!--  Application-specific resources  -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- 
+                <!--
                     Styles that define common aspects of the platform look and feel
                     Required by Visual Studio project and item templates
-                 -->
-                <ResourceDictionary Source="Theme/SharedStyles.xaml"/>
-                <ResourceDictionary Source="Common/ApplicationCommonResources.xaml"/>
+                -->
+                <ResourceDictionary Source="Theme/SharedStyles.xaml" />
+                <ResourceDictionary Source="Common/ApplicationCommonResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

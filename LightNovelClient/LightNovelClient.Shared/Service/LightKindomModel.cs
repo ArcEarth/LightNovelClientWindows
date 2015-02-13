@@ -25,6 +25,7 @@ namespace LightNovel.Service
 		public string Id { get; set; }
 		public string Title { get; set; }
 		public string Subtitle { get; set; }
+		public string VolumeNo { get; set; }
 		public string SeriesId { get; set; }
 		public string VolumeId { get; set; }
 		public string HyperLinkUri { get; set; }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml.Media;
 
@@ -175,6 +176,7 @@ namespace LightNovel.ViewModels
 				{
 					_ChapterData = value;
 					NotifyPropertyChanged("Header");
+					NotifyPropertyChanged("ChapterHeader");
 				}
 			}
 		}
@@ -193,6 +195,14 @@ namespace LightNovel.ViewModels
 				else
 					return "Loading...";
 #endif
+			}
+		}
+
+		public string ChapterHeader
+		{
+			get
+			{
+				return ChapterData.Title;
 			}
 		}
 
@@ -445,6 +455,7 @@ namespace LightNovel.ViewModels
 		private Brush _Background;
 		private Brush _Foreground;
 		private double _FontSize;
+		private FontFamily _FontFamily;
 		public double FontSize
 		{
 			get
@@ -459,6 +470,22 @@ namespace LightNovel.ViewModels
 					NotifyPropertyChanged();
 					App.Current.Settings.FontSize = value;
 				}
+			}
+		}
+		public FontFamily FontFamily
+		{
+			get
+			{
+				return _FontFamily;
+			}
+			set
+			{
+				if (value != null && !value.Source.Contains("Segoe"))
+					_FontFamily = value;
+				else
+					_FontFamily = (FontFamily)App.Current.Resources["AppContentFontFamily"];
+				NotifyPropertyChanged();
+				App.Current.Settings.FontFamily = value;
 			}
 		}
 		public Brush Foreground
@@ -561,6 +588,19 @@ namespace LightNovel.ViewModels
 			{
 				if (seriesId > 0 && (SeriesData == null || seriesId != int.Parse(SeriesData.Id)))
 				{
+					if (DownloadingTask != null)
+					{
+						DownloadingTask.Cancel();
+						try
+						{
+							await DownloadingTask;
+						}
+						catch (Exception)
+						{
+						}
+						DownloadingTask = null;
+						NotifyPropertyChanged("IsDownloading");
+					}
 					SeriesData = await CachedClient.GetSeriesAsync(seriesId.ToString());
 					SeriesId = seriesId;
 				}
@@ -665,6 +705,114 @@ namespace LightNovel.ViewModels
 				}
 
 			}
+		}
+
+		public async Task LoadCommentsListAsync()
+		{
+			if (EnableComments && Contents != null)
+			{
+				try
+				{
+					var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
+					foreach (var cln in CommentsList)
+					{
+						((LineViewModel)Contents[cln - 1]).MarkAsCommented();
+					}
+					if (CommentsListLoaded != null)
+						CommentsListLoaded.Invoke(this, CommentsList);
+					//if (!IsFavored && App.Current.User != null && App.Current.User.FavoriteList != null && App.Current.User.FavoriteList.Any(fav=>fav.SeriesTitle == SeriesData.Title))
+					//{
+					//	Debug.WriteLine("Adding Current Volume to User Favorite");
+					//	await AddCurrentVolumeToFavoriteAsync();
+					//}
+				}
+				catch (Exception exception)
+				{
+					Debug.WriteLine(exception);
+				}
+
+			}
+		}
+
+		public bool IsDownloading { get { return DownloadingTask != null; } }
+		public double DownloadingProgress { get; set; }
+
+		IAsyncActionWithProgress<string> DownloadingTask = null;
+
+		public async Task CancelCachingRequestAsync()
+		{
+			if (DownloadingTask != null)
+			{
+				DownloadingTask.Cancel();
+				try
+				{
+					await DownloadingTask;
+				}
+				catch (Exception)
+				{
+				}
+			}
+		}
+
+		public async Task CachingRestChaptersAsync(bool cacheImages = true)
+		{
+
+			if (DownloadingTask != null)
+			{
+				DownloadingTask.Cancel();
+				try
+				{
+					await DownloadingTask;
+				}
+				catch (Exception)
+				{
+				}
+			}
+			else if (IsLoading)
+				return;
+
+			//IsLoading = true; 
+			var chapters = new List<string>();
+			for (int i = ChapterNo + 2; i < VolumeData.Chapters.Count; i++)
+			{
+				chapters.Add(VolumeData.Chapters[i].Id);
+			}
+			for (int i = VolumeNo + 1; i < SeriesData.Volumes.Count; i++)
+			{
+				chapters.AddRange(SeriesData.Volumes[i].Chapters.Select(c => c.Id));
+			}
+
+			DownloadingTask = CachedClient.CacheChaptersAsync(chapters, cacheImages);
+
+			DownloadingProgress = 0;
+			NotifyPropertyChanged("IsDownloading");
+			NotifyPropertyChanged("DownloadingProgress");
+
+			DownloadingTask.Progress = (asyncInfo, progressInfo) =>
+			{
+				foreach (var vvm in Index)
+				{
+					var cvm = vvm.FirstOrDefault(c => c.Id == progressInfo);
+					if (cvm != null)
+					{
+						cvm.NotifyPropertyChanged("IsDownloaded");
+						break;
+					}
+				}
+				DownloadingProgress += 1.0 / chapters.Count;
+				NotifyPropertyChanged("DownloadingProgress");
+			};
+			try
+			{
+				await DownloadingTask;
+			}
+			catch (Exception)
+			{
+
+			}
+			DownloadingTask = null;
+			NotifyPropertyChanged("IsDownloading");
+			//IsLoading = false;
 		}
 
 		void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -1340,14 +1488,14 @@ namespace LightNovel.ViewModels
 			set;
 		}
 
-		public bool IsDownloaded { get; set; }
+		public bool IsDownloaded { get { return Common.CachedClient.IsChapterCached(_id); } }
 		public string NavigateUri
 		{
 			get { return "/ChapterViewPage.xaml?id=" + Id; }
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-		private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+		public void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
 		{
 			if (PropertyChanged != null)
 			{
@@ -1454,7 +1602,10 @@ namespace LightNovel.ViewModels
 				_content = "　" + line.Content; // Indent
 			else
 				_content = line.Content;
+#else
+			_content = line.Content;
 #endif
+
 			ParentChapterId = chapterId;
 			No = line.No;
 		}
@@ -1465,7 +1616,7 @@ namespace LightNovel.ViewModels
 			{
 				if (!_content.StartsWith("http://"))
 					return null;
-				return new Uri(_content, UriKind.Absolute);
+				return CachedClient.GetIllustrationCachedUri(_content);
 			}
 		}
 
@@ -1492,16 +1643,35 @@ namespace LightNovel.ViewModels
 				return;
 			Comments = new ObservableCollection<Comment>();
 			Comments.CollectionChanged += Comments_CollectionChanged;
+			NotifyPropertyChanged("HasNoComment");
+			NotifyPropertyChanged("HasComment");
 		}
 
 		public async Task<bool> AddCommentAsync(string commentText)
 		{
-			if (!string.IsNullOrEmpty(commentText) && commentText.Length < 300 && !String.IsNullOrEmpty(ParentChapterId))
+			if (!string.IsNullOrEmpty(commentText) && commentText.Length < 300 && !String.IsNullOrEmpty(ParentChapterId) && App.Current.IsSignedIn)
 			{
 				if (HasNoComment)
 					MarkAsCommented();
 				Comments.Add(new Comment(commentText));
-				return await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
+				try
+				{
+					var result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
+					if (!result)
+					{
+						// Re-signin
+						result = await App.Current.SignInAutomaticllyAsync();
+						if (!result)
+							return false;
+						// And retry
+						result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
+					}
+					return result;
+				}
+				catch
+				{
+					return false;
+				}
 			}
 			return false;
 		}

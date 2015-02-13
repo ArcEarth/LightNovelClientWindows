@@ -40,6 +40,10 @@ namespace LightNovel.Service
 			}
 		}
 	}
+	public class NotSignedInException : Exception
+	{ }
+
+
 	public static class LightKindomHtmlClient
 	{
 		//private static readonly Dictionary<string, Volume> VolumeDictionary = new Dictionary<string, Volume>();
@@ -171,7 +175,7 @@ namespace LightNovel.Service
 			if (_ci_session != null && !_ci_session.Expired)
 			{
 				var filter = new HttpBaseProtocolFilter();
-				filter.CookieManager.SetCookie(_CiSessionCookie);
+				//filter.CookieManager.SetCookie(_CiSessionCookie);
 				client = new HttpClient(filter);
 			}
 			else
@@ -202,6 +206,14 @@ namespace LightNovel.Service
 
 		public static async Task<Session> LoginAsync(string userName, string passWord, string questionId = "0", string answer = "")
 		{
+			{
+				var filter = new HttpBaseProtocolFilter();
+				var cookies = filter.CookieManager.GetCookies(SeverBaseUri);
+				if (cookies.Count > 0)
+				{
+					await LogoutAsync();
+				}
+			}
 			using (var client = NewUserHttpClient(UserAgentType.IE11))
 			{
 
@@ -224,7 +236,7 @@ namespace LightNovel.Service
 				}
 
 				// This behavier is different for Phone and PC!!!
-				//var raw = resp.Headers["Set-cookie"];
+				var raw = resp.Headers["Set-cookie"];
 				//string validCookie;
 				////string[] sperator = {"ci_session="};
 				////raw.Split(sperator,5,StringSplitOptions.RemoveEmptyEntries);
@@ -240,9 +252,9 @@ namespace LightNovel.Service
 
 				var filter = new HttpBaseProtocolFilter();
 				var cookies = filter.CookieManager.GetCookies(SeverBaseUri);
-				if (cookies.Count < 1)
-					throw new Exception("Didn't get proper login token!"); 
-				var cookie = cookies[0];
+				var cookie = cookies.FirstOrDefault(c => c.Name == "ci_session");
+				if (cookie == null)
+					throw new Exception("Didn't get proper login token!");
 				Credential = new Session { Key = cookie.Value, Expries = cookie.Expires.Value.DateTime };
 				//var doc = await client.GetStringAsync(UserRecentPath);
 
@@ -334,7 +346,6 @@ namespace LightNovel.Service
 			}
 		}
 
-
 		public static async Task<IEnumerable<FavourVolume>> GetUserFavoriteVolumesAsync()
 		{
 			//var header = _cookieContainer.GetCookieHeader(new Uri(SeverBaseUri + UserRecentPath));
@@ -351,7 +362,7 @@ namespace LightNovel.Service
 					var htmlDoc = new HtmlDocument();
 					htmlDoc.Load(stream.AsStreamForRead());
 					if (htmlDoc.DocumentNode.InnerHtml == "")
-						throw new Exception("Credential has expired!");
+						throw new NotSignedInException();
 					var volNodes = htmlDoc.DocumentNode.Elements("tr").Where(node => node.HasClass("ft-12"));
 					var vols = volNodes.Select(node =>
 					{
@@ -551,6 +562,77 @@ namespace LightNovel.Service
 			}
 			return volume;
 		}
+
+		public static Chapter ParseChapterAlter(string id ,Stream source)
+		{
+
+			var chapter = new Chapter(); 
+			var doc = new HtmlDocument();
+
+			doc.Load(source);
+
+			var nodes = doc.DocumentNode.Descendants();
+			chapter.Id = id;
+			// Navigation Properties
+			{
+				var navi = nodes.First(
+					node => node.Attributes["class"] != null && node.Attributes["class"].Value.StartsWith("lk-m-view-pager"));
+				var naviNodes = navi.Descendants("a");
+
+				var prev = naviNodes.FirstOrDefault(node => node.InnerText.Contains("上一章"));
+				if (prev != null)
+					chapter.PrevChapterId = RetriveId(prev.Attributes["href"].Value);
+				var content = naviNodes.FirstOrDefault(node => node.Attributes["href"].Value.Contains("book/"));
+				if (content != null)
+					chapter.ParentVolumeId = RetriveId(content.Attributes["href"].Value);
+				var next = naviNodes.FirstOrDefault(node => node.InnerText.Contains("下一章"));
+				if (next != null)
+					chapter.NextChapterId = RetriveId(next.Attributes["href"].Value);
+			}
+
+			var canvas = nodes.First(
+				node => node.Attributes["class"] != null && node.Attributes["class"].Value.StartsWith("lk-m-view-can"));
+			var contents = canvas.ChildNodes;
+			var chapterTitleNode = contents.First(node => node.Name == "h3");
+			if (chapterTitleNode != null)
+				chapter.Title = RemoveLabel(chapterTitleNode.InnerText);
+
+			var lines = from line in contents
+						where line.Name == "div"
+						&& line.Attributes["class"] != null
+						&& line.Attributes["class"].Value.StartsWith("lk-view-line")
+						select line;
+
+			chapter.Lines = (lines.Select<HtmlNode, Line>(node =>
+			{
+				Line line = new Line(int.Parse(node.Id), LineContentType.TextContent, null);
+				if (!node.HasChildNodes)
+				{
+					line.Content = String.Empty;
+					return line;
+				}
+				if (node.ChildNodes.Any(elem => elem.Name == "div"))
+				{
+					line.ContentType = LineContentType.ImageContent;
+					var img_url = (from elem in node.Descendants()
+								   where elem.Name == "img"
+										 && elem.Attributes["data-ks-lazyload"] != null
+								   select elem.Attributes["data-ks-lazyload"].Value).FirstOrDefault();
+					if (img_url != null)
+					{
+						line.Content = AbsoluteUrl(img_url);
+					}
+				}
+				else
+				{
+					var text = node.InnerText;
+					line.Content = WebUtility.HtmlDecode(text.Trim());
+				}
+				return line;
+			})).ToList();
+			return chapter;
+		}
+
 		//public static Volume GetVolume(string id);
 		public async static Task<Chapter> GetChapterAsync(string id)
 		{
@@ -641,77 +723,12 @@ namespace LightNovel.Service
 		public async static Task<Chapter> GetChapterAlterAsync(string id)
 		{
 
-			var chapter = new Chapter();
-			chapter.Id = id;
 			var novelUrl = new Uri(ChapterSource1 + id + ".html");
 			using (var client = NewUserHttpClient(UserAgentType.IE11))
 			{
 				var stream = await client.GetInputStreamAsync(novelUrl);
-				var doc = new HtmlDocument();
-
-				doc.Load(stream.AsStreamForRead());
-
-				var nodes = doc.DocumentNode.Descendants();
-
-				// Naviagtion Proporties
-				{
-					var navi = nodes.First(
-						node => node.Attributes["class"] != null && node.Attributes["class"].Value.StartsWith("lk-m-view-pager"));
-					var naviNodes = navi.Descendants("a");
-
-					var prev = naviNodes.FirstOrDefault(node => node.InnerText.Contains("上一章"));
-					if (prev != null)
-						chapter.PrevChapterId = RetriveId(prev.Attributes["href"].Value);
-					var content = naviNodes.FirstOrDefault(node => node.Attributes["href"].Value.Contains("book/"));
-					if (content != null)
-						chapter.ParentVolumeId = RetriveId(content.Attributes["href"].Value);
-					var next = naviNodes.FirstOrDefault(node => node.InnerText.Contains("下一章"));
-					if (next != null)
-						chapter.NextChapterId = RetriveId(next.Attributes["href"].Value);
-				}
-
-				var canvas = nodes.First(
-					node => node.Attributes["class"] != null && node.Attributes["class"].Value.StartsWith("lk-m-view-can"));
-				var contents = canvas.ChildNodes;
-				var chapterTitleNode = contents.First(node => node.Name == "h3");
-				if (chapterTitleNode != null)
-					chapter.Title = RemoveLabel(chapterTitleNode.InnerText);
-
-				var lines = from line in contents
-							where line.Name == "div"
-							&& line.Attributes["class"] != null
-							&& line.Attributes["class"].Value.StartsWith("lk-view-line")
-							select line;
-
-				chapter.Lines = (lines.Select<HtmlNode, Line>(node =>
-				{
-					Line line = new Line(int.Parse(node.Id), LineContentType.TextContent, null);
-					if (!node.HasChildNodes)
-					{
-						line.Content = String.Empty;
-						return line;
-					}
-					if (node.ChildNodes.Any(elem => elem.Name == "div"))
-					{
-						line.ContentType = LineContentType.ImageContent;
-						var img_url = (from elem in node.Descendants()
-									   where elem.Name == "img"
-											 && elem.Attributes["data-ks-lazyload"] != null
-									   select elem.Attributes["data-ks-lazyload"].Value).FirstOrDefault();
-						if (img_url != null)
-						{
-							line.Content = AbsoluteUrl(img_url);
-						}
-					}
-					else
-					{
-						var text = node.InnerText;
-						line.Content = WebUtility.HtmlDecode(text.Trim());
-					}
-					return line;
-				})).ToList();
+				return ParseChapterAlter(id, stream.AsStreamForRead());
 			}
-			return chapter;
 		}
 		//public static Series GetSeries(string id);
 		public async static Task<Series> GetSeriesAsync(string id, bool forceRefresh = false)
@@ -779,7 +796,7 @@ namespace LightNovel.Service
 						   {
 							   Id = RetriveId(volNode.Descendants("a").First().Attributes["href"].Value),
 							   Title = RemoveLabel(WebUtility.HtmlDecode(volNode.InnerText)),
-							   Label = ExtractLabel(volNode.InnerText),
+							   Label = ExtractLabel(WebUtility.HtmlDecode(volNode.InnerText)),
 							   Author = series.Author,
 							   Illustrator = series.Illustrator,
 							   Publisher = series.Publisher,
@@ -867,7 +884,10 @@ namespace LightNovel.Service
 			p = p.Replace("\t", "");
 			p = p.Trim();
 			var s = p.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
-			return s.Substring(1, s.Length - 2);
+			if (s.StartsWith("第"))
+				return s.Substring(1, s.Length - 2);
+			else
+				return s;
 		}
 
 		private static string AbsoluteUrl(string url)
@@ -904,6 +924,9 @@ namespace LightNovel.Service
 									 CoverImageUri = AbsoluteUrl(
 										 bookNode.Element("a").Element("img").GetAttributeValue("data-cover", null)),
 									 Title = bookNode.Element("a").Element("img").GetAttributeValue("alt", null),
+									 SeriesId = RetriveId(bookNode.NextSublingElement("p").ChildNodes.FindFirst("a").GetAttributeValue("href", null)),
+									 VolumeId = RetriveId(bookNode.NextSublingElement("p").NextSublingElement("p").ChildNodes.FindFirst("a").GetAttributeValue("href", null)),
+									 VolumeNo = CleanText(bookNode.NextSublingElement("p").NextSublingElement("p").InnerText)
 								 }).ToList();
 					foreach (var book in books)
 					{

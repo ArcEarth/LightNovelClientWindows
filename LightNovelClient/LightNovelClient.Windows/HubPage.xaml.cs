@@ -163,6 +163,11 @@ namespace LightNovel
 			await statusBar.ProgressIndicator.HideAsync();
 #endif
 		}
-
+		void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+		{
+			double maxX = (double)App.Current.Resources["PosterWidth"];
+			ScrollViewer viewer = sender as ScrollViewer;
+			LogoImageTranslate.X = -Math.Min(viewer.HorizontalOffset, maxX);
+		}
 	}
 }

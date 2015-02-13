@@ -184,7 +184,7 @@
     <value>Don't have an account yet?</value>
   </data>
   <data name="AboutSection.Header" xml:space="preserve">
-    <value>About</value>
+    <value>Settings &amp; About</value>
   </data>
   <data name="ReviewLabel.Text" xml:space="preserve">
     <value>If you like this App, Please rate us 5 Star and share your feedback :)</value>
@@ -224,5 +224,86 @@
   </data>
   <data name="DarkGrayThemeItem.Text" xml:space="preserve">
     <value>Dark Gray</value>
+  </data>
+  <data name="DownloadButton.Label" xml:space="preserve">
+    <value>Cache offline</value>
+  </data>
+  <data name="DownloadButtonPauseLabel" xml:space="preserve">
+    <value>Stop caching</value>
+  </data>
+  <data name="DownloadingStartDescriptioin" xml:space="preserve">
+    <value>You are now caching the rest part of the novel, please note this function is in "Beta". You can keep reading while we caching the novel for you.</value>
+  </data>
+  <data name="HugeFontSizeButton.Text" xml:space="preserve">
+    <value>Huge</value>
+  </data>
+  <data name="LargeFontSizeButton.Text" xml:space="preserve">
+    <value>Large</value>
+  </data>
+  <data name="NormalFontSizeButton.Text" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="SmallFontSizeButton.Text" xml:space="preserve">
+    <value>Small</value>
+  </data>
+  <data name="SubtleFontSizeButton.Text" xml:space="preserve">
+    <value>Subtle</value>
+  </data>
+  <data name="DownloadingStartDescriptioinTtile" xml:space="preserve">
+    <value>Caching started...</value>
+  </data>
+  <data name="ImageLoadingPlaceholderText" xml:space="preserve">
+    <value>Image Loading ...</value>
+  </data>
+  <data name="DownloadButtonStartLabel" xml:space="preserve">
+    <value>Cache offline</value>
+  </data>
+  <data name="FontFamilyButton.Label" xml:space="preserve">
+    <value>Font Style</value>
+  </data>
+  <data name="NextChapterButtonLabel.Text" xml:space="preserve">
+    <value>Next Chapter</value>
+  </data>
+  <data name="ClearCacheLabel.Text" xml:space="preserve">
+    <value>Clear Cache</value>
+  </data>
+  <data name="LiveTileLabel.Text" xml:space="preserve">
+    <value>Live Tile</value>
+  </data>
+  <data name="LiveTileDescription.Text" xml:space="preserve">
+    <value>Enable Live Tile will make the tile have dynamic changed image and not "Transparent"</value>
+  </data>
+  <data name="ClearCacheDescription.Text" xml:space="preserve">
+    <value>Danger. Clear Cache may help free up spaces and may solve some Bug</value>
+  </data>
+  <data name="AppThemeLabel.Text" xml:space="preserve">
+    <value>Background Theme</value>
+  </data>
+  <data name="AppThemeDescription.Text" xml:space="preserve">
+    <value>Change the background them of Application, "Follow System Setting" may need restart App to take effect</value>
+  </data>
+  <data name="AppDefaultThemeItem.Content" xml:space="preserve">
+    <value>Follow System Setting</value>
+  </data>
+  <data name="AppLightThemeItem.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="AppDarkThemeItem.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="LogoutLabel" xml:space="preserve">
+    <value>Signout</value>
+  </data>
+  <data name="LogoutIndicator" xml:space="preserve">
+    <value>Signing out...</value>
+  </data>
+  <data name="LoginLabel" xml:space="preserve">
+    <value>Tap to Sign in</value>
+  </data>
+  <data name="LoginFailedMessageDialogTitle" xml:space="preserve">
+    <value>Failed to Sin in</value>
+  </data>
+  <data name="LoginFailedMessageDialogDetail" xml:space="preserve">
+    <value>Please check your user name and password, or try again after check your connection.</value>
   </data>
 </root>

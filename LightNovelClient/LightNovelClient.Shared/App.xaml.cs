@@ -44,6 +44,15 @@ namespace LightNovel
 		{
 			try
 			{
+				if (Settings.BackgroundTheme == ElementTheme.Light)
+				{
+					this.RequestedTheme = ApplicationTheme.Light;
+				}
+				else if (Settings.BackgroundTheme == ElementTheme.Dark)
+				{
+					this.RequestedTheme = ApplicationTheme.Dark;
+				}
+				//Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = Windows.Globalization.ApplicationLanguages.Languages[0];
 				this.InitializeComponent();
 				this.Suspending += this.OnSuspending;
 				this.Resuming += this.OnResuming;
@@ -85,10 +94,9 @@ namespace LightNovel
 			{
 				this.DebugSettings.EnableFrameRateCounter = true;
 			}
+			Debug.WriteLine("AppOnLaunched");
 #endif
 			//CurrentState = new ApplicationState();
-			Debug.WriteLine("AppOnLaunched");
-			Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";
 
 #if WINDOWS_PHONE_APP
 			Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
@@ -99,8 +107,9 @@ namespace LightNovel
 
 			Frame rootFrame = Window.Current.Content as Frame;
 
-			#region
+			#region Preloading
 			loadHistoryDataTask = App.Current.LoadHistoryDataAsync();
+			await CachedClient.InitializeCachedSetAsync();
 			#endregion
 
 			// Do not repeat app initialization when the Window already has content,
@@ -140,13 +149,12 @@ namespace LightNovel
 				// Removes the turnstile navigation for startup.
 				if (rootFrame.ContentTransitions != null)
 				{
-					this.transitions = new TransitionCollection();
-					foreach (var c in rootFrame.ContentTransitions)
-					{
-						this.transitions.Add(c);
-					}
+					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
+					//foreach (var c in rootFrame.ContentTransitions)
+					//{
+					//	this.transitions.Add(c);
+					//}
 				}
-
 				rootFrame.ContentTransitions = null;
 				rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
@@ -197,7 +205,7 @@ namespace LightNovel
 		private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
 		{
 			var rootFrame = sender as Frame;
-			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new SlideNavigationTransitionInfo() } };
+			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
 			rootFrame.Navigated -= this.RootFrame_FirstNavigated;
 		}
 #endif
@@ -736,7 +744,7 @@ namespace LightNovel
 			return User;
 		}
 
-		public async Task<bool> SignInAutomaticllyAsync()
+		public async Task<bool> SignInAutomaticllyAsync(bool forecRefresh = false)
 		{
 			var userName = App.Current.Settings.UserName;
 			var session = App.Current.Settings.Credential;
@@ -745,7 +753,7 @@ namespace LightNovel
 				return false;
 			try
 			{
-				if (!session.Expired)
+				if (!forecRefresh && !session.Expired)
 				{
 					LightKindomHtmlClient.Credential = session;
 					User = new UserInfo { UserName = userName, Password = password, Credential = session };

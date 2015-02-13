@@ -51,9 +51,11 @@
                            Margin="12,1"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
+                           FontFamily="{Binding FontFamily,
+                                                ElementName=ContentListView}"
                            FontSize="{Binding FontSize,
                                               ElementName=ContentListView}"
-                           FontWeight="Normal"
+                           FontWeight="SemiLight"
                            Foreground="{Binding Foreground,
                                                 ElementName=ContentListView}"
                            TextAlignment="Left"
@@ -215,41 +217,41 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
-                <TextBox x:Uid="CommentInputBox"
-                         x:Name="CommentInputBox"
-                         Grid.Row="1"
-                         HorizontalAlignment="Stretch"
-                         VerticalAlignment="Stretch"
-                         VerticalContentAlignment="Center"
-                         Background="{ThemeResource AppBackgroundDimBrush}"
-                         BorderBrush="{ThemeResource TransparentBrush}"
-                         BorderThickness="1"
-                         FontSize="{ThemeResource AppFontSizeMedium}"
-                         FontWeight="Light"
-                         Foreground="{ThemeResource AppForegroundBrush}"
-                         KeyDown="CommentInputBox_KeyDown"
-                         MaxLength="300"
-                         PlaceholderText="Input comment here"
-                         TabIndex="2" />
-                <Button x:Uid="SubmmitButton"
-                        Grid.Row="1"
-                        Margin="0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Background="{ThemeResource AppAccentBrush}"
-                        BorderBrush="{ThemeResource TransparentBrush}"
-                        BorderThickness="1"
-                        Click="CommentSubmitButton_Click"
-                        Foreground="{ThemeResource AppBackgroundBrush}"
-                        Padding="0"
-                        TabIndex="1">
-                    <Viewbox Width="40"
-                             Height="40"
-                             HorizontalAlignment="Center"
-                             VerticalAlignment="Center">
-                        <SymbolIcon Margin="10" Symbol="PostUpdate" />
-                    </Viewbox>
-                </Button>
+                <Grid Grid.Row="1">
+                    <TextBox x:Uid="CommentInputBox"
+                             x:Name="CommentInputBox"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Center"
+                             Background="{ThemeResource AppBackgroundDimBrush}"
+                             BorderBrush="{ThemeResource TransparentBrush}"
+                             BorderThickness="1"
+                             FontSize="{ThemeResource AppFontSizeMedium}"
+                             FontWeight="Light"
+                             KeyDown="CommentInputBox_KeyDown"
+                             MaxLength="300"
+                             PlaceholderText="Input comment here"
+                             TabIndex="2" />
+                    <Button x:Uid="SubmmitButton"
+                            Margin="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="1"
+                            Click="CommentSubmitButton_Click"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Padding="0"
+                            TabIndex="1">
+                        <Viewbox Width="40"
+                                 Height="40"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center">
+                            <SymbolIcon Margin="10" Symbol="PostUpdate" />
+                        </Viewbox>
+                    </Button>
+                </Grid>
+
                 <!--  Image Tools  -->
                 <Grid Grid.Row="2"
                       Height="50"
@@ -375,6 +377,118 @@
                 </Style>
             </Flyout.FlyoutPresenterStyle>
         </Flyout>
+        <MenuFlyout x:Key="FontSizeFlyout">
+            <MenuFlyoutItem x:Uid="SubtleFontSizeButton"
+                            Click="FontSizeButton_Click"
+                            FontSize="{ThemeResource AppFontSizeSmall}"
+                            FontWeight="SemiLight"
+                            Text="Subtle" />
+            <MenuFlyoutItem x:Uid="SmallFontSizeButton"
+                            Click="FontSizeButton_Click"
+                            FontSize="{ThemeResource AppFontSizeNormal}"
+                            FontWeight="SemiLight"
+                            Text="Small" />
+            <MenuFlyoutItem x:Uid="NormalFontSizeButton"
+                            Click="FontSizeButton_Click"
+                            FontSize="{ThemeResource AppFontSizeMedium}"
+                            FontWeight="Light"
+                            Text="Normal" />
+            <MenuFlyoutItem x:Uid="LargeFontSizeButton"
+                            Click="FontSizeButton_Click"
+                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                            FontWeight="Light"
+                            Text="Large" />
+            <MenuFlyoutItem x:Uid="HugeFontSizeButton"
+                            Click="FontSizeButton_Click"
+                            FontSize="{ThemeResource AppFontSizeLarge}"
+                            FontWeight="Light"
+                            Text="Huge" />
+        </MenuFlyout>
+        <MenuFlyout x:Key="FontStyleFlyout">
+            <!--<MenuFlyoutItem x:Uid="SegoeFontButton"
+                                            Click="FontSizeButton_Click"
+                                            FontFamily="Segoe WP SemiLight"
+                                            Text="MV Boli" />
+                            <MenuFlyoutItem x:Uid="BoliFontButton"
+                                            Click="FontSizeButton_Click"
+                                            FontFamily="MV Boli"
+                                            Text="MV Boli" />
+                            <MenuFlyoutItem x:Uid="LucidaFontButton"
+                                            Click="FontSizeButton_Click"
+                                            FontFamily="Lucida Handwriting"
+                                            Text="Lucida" />-->
+            <MenuFlyoutItem x:Uid="SegoeFontButton"
+                            Click="FontStyleButton_Click"
+                            FontFamily="SimSun"
+                            Language="zh-CN"
+                            Text="宋体" />
+            <MenuFlyoutItem x:Uid="LucidaFontButton"
+                            Click="FontStyleButton_Click"
+                            Language="zh-CN"
+                            Text="默认" />
+        </MenuFlyout>
+        <MenuFlyout x:Key="ReadingThemeFlyout">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Bottom" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+            <MenuFlyoutItem x:Uid="DarkThemeItem"
+                            Height="60"
+                            Margin="-20,-15,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="Black"
+                            Click="ReadingThemButton_Click"
+                            Foreground="White"
+                            Padding="0"
+                            Text="Dark" />
+            <MenuFlyoutItem x:Uid="DarkGrayThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="DarkGray"
+                            Click="ReadingThemButton_Click"
+                            Foreground="Black"
+                            Padding="0"
+                            Text="Dark Gray" />
+            <MenuFlyoutItem x:Uid="LightGrayThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="LightGray"
+                            Click="ReadingThemButton_Click"
+                            Foreground="Black"
+                            Padding="0"
+                            Text="Light Gray" />
+            <MenuFlyoutItem x:Uid="GreenThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="#FFD1E6B1"
+                            Click="ReadingThemButton_Click"
+                            Foreground="Black"
+                            Padding="0"
+                            Text="Mild Green" />
+            <MenuFlyoutItem x:Uid="SepiaThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="#FFFCF5E8"
+                            Click="ReadingThemButton_Click"
+                            Foreground="Black"
+                            Padding="0"
+                            Text="Sepia" />
+            <MenuFlyoutItem x:Uid="LightThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,-15"
+                            HorizontalContentAlignment="Center"
+                            Background="White"
+                            Click="ReadingThemButton_Click"
+                            Foreground="Black"
+                            Padding="0"
+                            Text="Light" />
+        </MenuFlyout>
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar x:Name="PageBottomCommandBar"
@@ -392,86 +506,18 @@
                               x:Name="ReadingStyleButton"
                               Margin="0,0,0,0"
                               VerticalAlignment="Center"
-                              Background="{ThemeResource SemiTransparentBlackBrush10}"
                               BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="ReadingThemeButtonClick"
                               Foreground="{ThemeResource AppBackgroundBrush}"
                               Icon="FontColor"
                               IsCompact="False"
                               Label="Theme"
-                              Padding="0">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyout.MenuFlyoutPresenterStyle>
-                                <Style TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                    <Setter Property="VerticalAlignment" Value="Bottom" />
-                                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}" />
-                                    <Setter Property="BorderThickness" Value="1" />
-                                </Style>
-                            </MenuFlyout.MenuFlyoutPresenterStyle>
-                            <MenuFlyoutItem x:Uid="DarkThemeItem"
-                                            Height="60"
-                                            Margin="-20,-11,0,0"
-                                            HorizontalContentAlignment="Center"
-                                            Background="Black"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="White"
-                                            Padding="0"
-                                            Text="Dark" />
-                            <MenuFlyoutItem x:Uid="DarkGrayThemeItem"
-                                            Height="60"
-                                            Margin="-20,0,0,0"
-                                            HorizontalContentAlignment="Center"
-                                            Background="DarkGray"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="Black"
-                                            Padding="0"
-                                            Text="Dark Gray" />
-                            <MenuFlyoutItem x:Uid="LightGrayThemeItem"
-                                            Height="60"
-                                            Margin="-20,0,0,0"
-                                            HorizontalContentAlignment="Center"
-                                            Background="LightGray"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="Black"
-                                            Padding="0"
-                                            Text="Light Gray" />
-                            <MenuFlyoutItem x:Uid="GreenThemeItem"
-                                            Height="60"
-                                            Margin="-20,0,0,0"
-                                            HorizontalContentAlignment="Center"
-                                            Background="#FFD1E6B1"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="Black"
-                                            Padding="0"
-                                            Text="Mild Green" />
-                            <MenuFlyoutItem x:Uid="SepiaThemeItem"
-                                            Height="60"
-                                            Margin="-20,0,0,0"
-                                            HorizontalContentAlignment="Center"
-                                            Background="#FFFCF5E8"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="Black"
-                                            Padding="0"
-                                            Text="Sepia" />
-                            <MenuFlyoutItem x:Uid="LightThemeItem"
-                                            Height="60"
-                                            Margin="-20,0,0,28"
-                                            HorizontalContentAlignment="Center"
-                                            Background="White"
-                                            Click="ReadingThemButton_Click"
-                                            Foreground="Black"
-                                            Padding="0"
-                                            Text="Light" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
+                              Padding="0" />
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Uid="CommentEnableButton"
                                     x:Name="CommentEnableButton"
                                     Margin="0,0"
                                     VerticalAlignment="Center"
-                                    Background="{ThemeResource SemiTransparentBlackBrush10}"
                                     BorderBrush="Transparent"
                                     Foreground="{ThemeResource AppBackgroundBrush}"
                                     IsChecked="{Binding EnableComments,
@@ -486,9 +532,9 @@
                 </AppBarToggleButton>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Uid="FavoriteButton"
+                                    x:Name="FavoriteButton"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Background="{StaticResource SemiTransparentBlackBrush10}"
                                     BorderBrush="Transparent"
                                     Click="BookmarkButton_Click"
                                     Foreground="{StaticResource AppBackgroundBrush}"
@@ -505,7 +551,6 @@
                                     x:Name="PinButton"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Background="{StaticResource SemiTransparentBlackBrush10}"
                                     BorderBrush="Transparent"
                                     Click="PinButton_Click"
                                     Foreground="{StaticResource AppBackgroundBrush}"
@@ -525,7 +570,6 @@
                               Grid.Column="1"
                               Margin="0,0,0,0"
                               VerticalAlignment="Center"
-                              Background="{ThemeResource SemiTransparentBlackBrush10}"
                               BorderBrush="{ThemeResource TransparentBrush}"
                               Click="ShareButton_Click"
                               Foreground="{ThemeResource AppBackgroundBrush}"
@@ -547,41 +591,39 @@
                         </Canvas>
                     </Viewbox>
                 </AppBarButton>
+                <AppBarButton x:Uid="DownloadButton"
+                              x:Name="DownloadButton"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="DownloadButton_Click"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              IsCompact="False"
+                              Label="Make aviable offline"
+                              Padding="0">
+                    <Viewbox Margin="8">
+                        <SymbolIcon Symbol="Download" />
+                    </Viewbox>
+                </AppBarButton>
                 <AppBarButton x:Uid="FontSizeButton"
                               x:Name="FontSizeButton"
                               VerticalAlignment="Center"
-                              Background="{ThemeResource SemiTransparentBlackBrush10}"
                               BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="FontSizeButtonClick"
                               Foreground="{ThemeResource AppBackgroundBrush}"
                               Icon="FontSize"
                               IsCompact="False"
                               Label="Font Size"
-                              Padding="0">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout>
-                            <MenuFlyoutItem Click="FontSizeButton_Click"
-                                            FontSize="{ThemeResource AppFontSizeSmall}"
-                                            FontWeight="SemiLight"
-                                            Text="Subtle" />
-                            <MenuFlyoutItem Click="FontSizeButton_Click"
-                                            FontSize="{ThemeResource AppFontSizeNormal}"
-                                            FontWeight="SemiLight"
-                                            Text="Small" />
-                            <MenuFlyoutItem Click="FontSizeButton_Click"
-                                            FontSize="{ThemeResource AppFontSizeMedium}"
-                                            FontWeight="Light"
-                                            Text="Normal" />
-                            <MenuFlyoutItem Click="FontSizeButton_Click"
-                                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                            FontWeight="Light"
-                                            Text="Large" />
-                            <MenuFlyoutItem Click="FontSizeButton_Click"
-                                            FontSize="{ThemeResource AppFontSizeLarge}"
-                                            FontWeight="Light"
-                                            Text="Huge" />
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
+                              Padding="0" />
+                <AppBarButton x:Uid="FontFamilyButton"
+                              x:Name="FontFamilyButton"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="FontFamilyButtonClick"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="Font"
+                              IsCompact="False"
+                              Label="Font Style"
+                              Padding="0" />
                 <!--<AppBarButton Icon="Go" Label="Jump To ">
                     <AppBarButton.Flyout>
                         <Flyout Placement="Bottom">
@@ -625,26 +667,13 @@
                         </Flyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>-->
-                <!--<AppBarButton x:Name="DownloadButton"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
-                          Label="Download"
-                          Padding="0">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="Download" />
-                    </Viewbox>
-                </AppBarButton>
-                <AppBarButton x:Name="PageLayoutButton"
-                          VerticalAlignment="Center"
-                          Background="{ThemeResource SemiTransparentBlackBrush10}"
-                          BorderBrush="{ThemeResource TransparentBrush}"
-                          Foreground="{ThemeResource AppBackgroundBrush}"
-                          IsCompact="False"
-                          Label="Layout"
-                          Padding="0">
+                <!--<AppBarButton x:Name="PageLayoutButton"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              IsCompact="False"
+                              Label="Layout"
+                              Padding="0">
                     <Viewbox Margin="8">
                         <SymbolIcon Symbol="TwoPage" />
                     </Viewbox>
@@ -655,11 +684,6 @@
     </Page.BottomAppBar>
 
     <Grid Background="{Binding Background}">
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition x:Name="ContentRow" Height="*" />
@@ -743,24 +767,28 @@
             </VisualStateGroup>
             <VisualStateGroup x:Name="IndexPanelStates">
                 <VisualState x:Name="IndexClosed">
-                    <Storyboard>
+                    <!--<Storyboard>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
+                    -->
+                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
-                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
+                    -->
+                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
                             <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="False" />
                         </ObjectAnimationUsingKeyFrames>-->
+                    <!--
 
                         <DoubleAnimation Duration="0"
                                          Storyboard.TargetName="IndexPanel"
                                          Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                         To="-330" />
-                        <!--<DoubleAnimation Duration="0"
+                                         To="-330" />-->
+                    <!--<DoubleAnimation Duration="0"
                                          Storyboard.TargetName="IndexPanel"
                                          Storyboard.TargetProperty="(UIElement.Opacity)"
                                          To="0.0" />-->
-                    </Storyboard>
+                    <!--
+                    </Storyboard>-->
                 </VisualState>
                 <VisualState x:Name="IndexOpen">
                     <Storyboard>
@@ -786,9 +814,9 @@
                 </VisualState>
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="IndexClosed"
-                                      GeneratedDuration="0:0:0"
+                                      GeneratedDuration="0:0:25"
                                       To="IndexOpen">
-                        <Storyboard>
+                        <Storyboard x:Name="IndexOpenStoryBoard">
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
@@ -822,7 +850,7 @@
                     <VisualTransition From="IndexOpen"
                                       GeneratedDuration="0:0:0.25"
                                       To="IndexClosed">
-                        <Storyboard>
+                        <Storyboard x:Name="IndexCloseStoryBoard">
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
@@ -861,7 +889,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="15" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0" />
@@ -878,8 +906,15 @@
                        Language="zh-CN"
                        Style="{ThemeResource AppTextTitle1Style}"
                        Text="{Binding Header}"
-                       TextTrimming="None"
+                       TextTrimming="WordEllipsis"
                        TextWrapping="NoWrap" />
+            <!--<Path Grid.Row="0" Height="40" Width="40"
+                                              Grid.Column="1"
+                                              Margin="0,0,10,0"
+                                              HorizontalAlignment="Right"
+                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
+                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
+
             <ToggleButton x:Uid="IndexButton"
                           x:Name="IndexButton"
                           Grid.Row="1"
@@ -932,9 +967,11 @@
                       Grid.ColumnSpan="2"
                       Height="{Binding ActualHeight,
                                        ElementName=ContentRow}"
+                      Margin="0,0,0,0"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
                       ContainerContentChanging="ContentListView_ContainerContentChanging"
+                      FontFamily="{Binding FontFamily}"
                       FontSize="{Binding FontSize}"
                       Foreground="{Binding Foreground}"
                       IsDoubleTapEnabled="False"
@@ -945,6 +982,7 @@
                       ItemClick="ContentListView_ItemClick"
                       ItemTemplate="{StaticResource LineViewCCGTemplate}"
                       ItemsSource="{Binding Contents}"
+                      Language="zh-CN"
                       Padding="0,0,0,20"
                       SelectionMode="None">
                 <!--<ListView.ItemContainerTransitions>
@@ -953,35 +991,97 @@
                     </TransitionCollection>
                 </ListView.ItemContainerTransitions>-->
                 <ListView.Header>
+
                     <Button x:Name="VerticalPrevButton"
-                            Width="100"
-                            Height="30"
-                            MinHeight="30"
-                            HorizontalAlignment="Stretch"
+                            Height="60"
+                            MinHeight="50"
+                            HorizontalAlignment="Left"
+                            HorizontalContentAlignment="Stretch"
                             Background="{ThemeResource AppAccentBrush}"
                             BorderBrush="Transparent"
                             BorderThickness="0"
                             Click="PrevChapterButton_Click"
-                            Foreground="{Binding Foreground}"
-                            Opacity="0.5"
-                            Template="{ThemeResource VerticalPreviousTemplate}">
-                        Prev Chapter
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Opacity="1"
+                            Padding="0"
+                            Visibility="{Binding IsLoading,
+                                                 Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Path x:Name="Arc"
+                                          Width="120"
+                                          Height="60"
+                                          HorizontalAlignment="Left"
+                                          Data="M0,0 V60 H60 L120,0 Z"
+                                          Fill="{TemplateBinding Background}" />
+                                    <Path x:Name="Arrow"
+                                          Width="30"
+                                          Height="20"
+                                          Margin="25,0,0,0"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Center"
+                                          Data="M5.63,0 L11.11,5.55 L11.05,9.67 L5.64,4.12 L0.23,9.67 L0.17,5.55 z"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Stretch="Fill"
+                                          UseLayoutRounding="False" />
+                                    <TextBlock Margin="100,0,20,0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               FontSize="{ThemeResource AppFontSizeLarge}"
+                                               Foreground="{ThemeResource AppAccentBrush}"
+                                               Text="{Binding ChapterHeader}"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextWrapping="NoWrap" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
                     </Button>
                 </ListView.Header>
                 <ListView.Footer>
                     <Button x:Name="VerticalNextButton"
-                            Width="100"
-                            Height="30"
+                            Height="60"
                             MinHeight="30"
-                            HorizontalAlignment="Stretch"
+                            HorizontalAlignment="Right"
                             Background="{ThemeResource AppAccentBrush}"
                             BorderBrush="Transparent"
                             BorderThickness="0"
                             Click="NextChapterButton_Click"
-                            Foreground="{Binding Foreground}"
-                            Opacity="0.5"
-                            Template="{ThemeResource VerticalNextTemplate}">
-                        Next Chapter
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Opacity="1"
+                            Visibility="{Binding IsLoading,
+                                                 Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Path x:Name="Arc"
+                                          Width="120"
+                                          Height="60"
+                                          HorizontalAlignment="Right"
+                                          Data="M0,60 H120 V0 H60 Z"
+                                          Fill="{TemplateBinding Background}" />
+                                    <Path x:Name="Arrow"
+                                          Width="30"
+                                          Height="20"
+                                          Margin="0,0,25,0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Data="M0.06,0 L5.47,5.56 L10.88,0 L10.94,4.12 L5.48,9.67 L0,4.12 z"
+                                          Fill="{TemplateBinding Foreground}"
+                                          Stretch="Fill"
+                                          UseLayoutRounding="False" />
+                                    <TextBlock x:Uid="NextChapterButtonLabel"
+                                               Margin="20,0,100,10"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"
+                                               FontSize="{ThemeResource AppFontSizeLarge}"
+                                               Foreground="{ThemeResource AppAccentBrush}"
+                                               Text="Next Chapter"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextWrapping="NoWrap" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
                     </Button>
                 </ListView.Footer>
                 <!--<ListView.ItemTemplate>
@@ -1044,11 +1144,17 @@
               HorizontalAlignment="Left"
               VerticalAlignment="Stretch"
               Background="{ThemeResource AppAccentBrushSemiLight}"
-              Visibility="{Binding IsLoading,
-                                   Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+              Visibility="Collapsed">
             <Grid.RenderTransform>
                 <TranslateTransform X="-330" />
             </Grid.RenderTransform>
+
+            <!--<Grid.Transitions>
+                <TransitionCollection>
+                    <EdgeUIThemeTransition Edge="Left" />
+                </TransitionCollection>
+            </Grid.Transitions>-->
+
             <ListView x:Name="VolumeListView"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
@@ -1057,7 +1163,7 @@
                       IsItemClickEnabled="True"
                       ItemClick="ChapterListView_ItemClick"
                       ItemsSource="{Binding Source={StaticResource VolumesViewSource}}"
-                      Padding="10,0,0,0"
+                      Padding="10,0,0,20"
                       ScrollViewer.IsVerticalScrollChainingEnabled="False"
                       SelectionMode="Single"
                       TabIndex="1">
@@ -1068,18 +1174,26 @@
                                 <Grid Width="300"
                                       Height="100"
                                       MaxWidth="300"
-                                      Margin="6"
+                                      Margin="0,6,6,0"
                                       Tapped="VolumeIndexItem_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="20" />
-                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="40" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
+                                    <!--<Rectangle Grid.RowSpan="2"
+                                               Width="20"
+                                               Margin="-20,0"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Stretch"
+                                               Fill="{ThemeResource AppAccentBrush}"
+                                               StrokeThickness="0" />-->
+
                                     <Border Grid.RowSpan="2"
                                             Width="80"
                                             Margin="0,0,0,0"
@@ -1092,18 +1206,32 @@
                                              Grid.Column="2"
                                              Width="40"
                                              Height="40"
-                                             HorizontalAlignment="Center"
+                                             HorizontalAlignment="Left"
                                              Fill="{ThemeResource AppAccentBrush}" />
+                                    <Ellipse Grid.Row="0"
+                                             Grid.Column="2"
+                                             Width="40"
+                                             Height="40"
+                                             HorizontalAlignment="Right"
+                                             Fill="{ThemeResource AppAccentBrush}" />
+                                    <Rectangle Grid.Column="2"
+                                               Height="40"
+                                               Margin="20,0"
+                                               HorizontalAlignment="Stretch"
+                                               Fill="{ThemeResource AppAccentBrush}" />
                                     <TextBlock Grid.Row="0"
                                                Grid.Column="2"
-                                               Margin="0,8,0,0"
+                                               MinWidth="20"
+                                               Margin="10,0"
                                                HorizontalAlignment="Center"
-                                               VerticalAlignment="Top"
+                                               VerticalAlignment="Center"
                                                Foreground="{ThemeResource AppBackgroundBrush}"
                                                Language="zh-CN"
                                                Style="{ThemeResource AppTextTitle3Style}"
                                                Text="{Binding Label}"
+                                               TextAlignment="Center"
                                                TextWrapping="NoWrap" />
+
                                     <TextBlock Grid.Row="1"
                                                Grid.Column="2"
                                                Grid.ColumnSpan="2"
@@ -1119,18 +1247,29 @@
                 </ListView.GroupStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Width="260"
-                                   Margin="20,0"
-                                   HorizontalAlignment="Left"
-                                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                   Foreground="{ThemeResource ContentForegroundBrush}"
-                                   Text="{Binding Title}"
-                                   TextTrimming="WordEllipsis" />
+                        <Grid Width="300">
+                            <Rectangle Width="5"
+                                       Margin="0"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Stretch"
+                                       Fill="{ThemeResource AppAccentBrush}"
+                                       StrokeThickness="0"
+                                       Visibility="{Binding IsDownloaded,
+                                                            Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <TextBlock Width="260"
+                                       Margin="20,4,0,4"
+                                       HorizontalAlignment="Left"
+                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                       Foreground="{ThemeResource ContentForegroundBrush}"
+                                       Text="{Binding Title}"
+                                       TextTrimming="WordEllipsis" />
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <Setter Property="Margin" Value="0,0,0,0" />
+                        <Setter Property="Margin" Value="0,2,0,2" />
+                        <Setter Property="Padding" Value="0,0" />
                         <Setter Property="Template" Value="{StaticResource ListViewItemTemplate}">
                             <!--<Setter.Value>
 
@@ -1165,19 +1304,14 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <StackPanel x:Name="LoadingIndicator"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="0,0,0,0"
-                    VerticalAlignment="Top"
-                    Visibility="Collapsed">
-            <ProgressBar HorizontalAlignment="Stretch" IsIndeterminate="True" />
-            <TextBlock HorizontalAlignment="Center"
-                       FontSize="{ThemeResource AppFontSizeSmall}"
-                       FontWeight="SemiBold"
-                       Text="Loading..." />
-        </StackPanel>
-
+        <ProgressBar x:Name="LoadingIndicator"
+                     Grid.Row="1"
+                     Grid.Column="0"
+                     Grid.ColumnSpan="2"
+                     Margin="0,0,0,0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Top"
+                     IsIndeterminate="True"
+                     Visibility="Collapsed" />
     </Grid>
 </Page>

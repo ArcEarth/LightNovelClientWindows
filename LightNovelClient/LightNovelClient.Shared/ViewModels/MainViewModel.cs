@@ -60,6 +60,8 @@ namespace LightNovel.ViewModels
 				{
 					await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
 
+					App.Current.User.FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
+
 					var favList = from fav in App.Current.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
 
 					foreach (var series in favList)
@@ -87,6 +89,71 @@ namespace LightNovel.ViewModels
 
 			}
 			return null;
+		}
+
+		private async void FavoriteList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+		{
+			var FavoriteList = sender as ObservableCollection<FavourVolume>;
+			switch (e.Action)
+			{
+				case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+					foreach (FavourVolume vol in e.NewItems)
+					{
+						var serp = this.FirstOrDefault(ser => ser.SeriesTitle == vol.SeriesTitle);
+						if (serp == null)
+						{
+							var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime };
+							var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+							item.CoverImageUri = volume.CoverImageUri;
+							item.Description = volume.Description;
+							item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+							this.Add(item);
+							NotifyPropertyChanged("IsEmpty");
+						}
+						else if (int.Parse(serp.Position.VolumeId) < int.Parse(vol.VolumeId))
+						{
+							serp.SeriesTitle = vol.SeriesTitle;
+							serp.VolumeTitle = vol.VolumeTitle;
+							serp.UpdateTime = vol.FavTime;
+							var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+							serp.CoverImageUri = volume.CoverImageUri;
+							serp.Description = volume.Description;
+							serp.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+						}
+					}
+					break;
+				case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+					foreach (FavourVolume vol in e.OldItems)
+					{
+						var serp = this.FirstOrDefault(ser => ser.SeriesTitle == vol.SeriesTitle);
+						if (serp == null)
+							continue;
+						if (!FavoriteList.Any(f => f.SeriesTitle == serp.SeriesTitle))
+						{
+							this.Remove(serp);
+						}
+					}
+					break;
+				case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+					IsLoading = true;
+					var favList = from fav in FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle;
+					this.Clear();
+					foreach (var series in favList)
+					{
+						var vol = series.LastOrDefault();
+						var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime };
+						var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+						item.CoverImageUri = volume.CoverImageUri;
+						item.Description = volume.Description;
+						item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+						this.Add(item);
+						NotifyPropertyChanged("IsEmpty");
+					}
+					break;
+					IsLoading = false;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -262,7 +329,7 @@ namespace LightNovel.ViewModels
 
 		public async Task<IList<KeyValuePair<string, IList<BookItem>>>> LoadAsync(int maxVolumeCount = 9)
 		{
-			if (!IsLoading)
+			if (!IsLoading && !IsLoaded)
 			{
 				IsLoading = true;
 				try

@@ -615,6 +615,7 @@ namespace LightNovel.LightNovelClient_Windows_XamlTypeInfo
                 userType.AddMemberName("Id");
                 userType.AddMemberName("Title");
                 userType.AddMemberName("Subtitle");
+                userType.AddMemberName("VolumeNo");
                 userType.AddMemberName("SeriesId");
                 userType.AddMemberName("VolumeId");
                 userType.AddMemberName("HyperLinkUri");
@@ -1120,207 +1121,217 @@ namespace LightNovel.LightNovelClient_Windows_XamlTypeInfo
             var that = (global::LightNovel.Service.BookItem)instance;
             that.Subtitle = (global::System.String)Value;
         }
-        private object get_42_BookItem_SeriesId(object instance)
+        private object get_42_BookItem_VolumeNo(object instance)
+        {
+            var that = (global::LightNovel.Service.BookItem)instance;
+            return that.VolumeNo;
+        }
+        private void set_42_BookItem_VolumeNo(object instance, object Value)
+        {
+            var that = (global::LightNovel.Service.BookItem)instance;
+            that.VolumeNo = (global::System.String)Value;
+        }
+        private object get_43_BookItem_SeriesId(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.SeriesId;
         }
-        private void set_42_BookItem_SeriesId(object instance, object Value)
+        private void set_43_BookItem_SeriesId(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.SeriesId = (global::System.String)Value;
         }
-        private object get_43_BookItem_VolumeId(object instance)
+        private object get_44_BookItem_VolumeId(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.VolumeId;
         }
-        private void set_43_BookItem_VolumeId(object instance, object Value)
+        private void set_44_BookItem_VolumeId(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.VolumeId = (global::System.String)Value;
         }
-        private object get_44_BookItem_HyperLinkUri(object instance)
+        private object get_45_BookItem_HyperLinkUri(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.HyperLinkUri;
         }
-        private void set_44_BookItem_HyperLinkUri(object instance, object Value)
+        private void set_45_BookItem_HyperLinkUri(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.HyperLinkUri = (global::System.String)Value;
         }
-        private object get_45_BookItem_CoverImageUri(object instance)
+        private object get_46_BookItem_CoverImageUri(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.CoverImageUri;
         }
-        private void set_45_BookItem_CoverImageUri(object instance, object Value)
+        private void set_46_BookItem_CoverImageUri(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.CoverImageUri = (global::System.String)Value;
         }
-        private object get_46_BookItem_ItemType(object instance)
+        private object get_47_BookItem_ItemType(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.ItemType;
         }
-        private object get_47_SearchResultsPage_QueryTask(object instance)
+        private object get_48_SearchResultsPage_QueryTask(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.QueryTask;
         }
-        private void set_47_SearchResultsPage_QueryTask(object instance, object Value)
+        private void set_48_SearchResultsPage_QueryTask(object instance, object Value)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             that.QueryTask = (global::System.Threading.Tasks.Task)Value;
         }
-        private object get_48_SearchResultsPage_DefaultViewModel(object instance)
+        private object get_49_SearchResultsPage_DefaultViewModel(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.DefaultViewModel;
         }
-        private object get_49_SearchResultsPage_NavigationHelper(object instance)
+        private object get_50_SearchResultsPage_NavigationHelper(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.NavigationHelper;
         }
-        private object get_50_BooleanToVisibilityConverter_VisiableValue(object instance)
+        private object get_51_BooleanToVisibilityConverter_VisiableValue(object instance)
         {
             var that = (global::LightNovel.Controls.BooleanToVisibilityConverter)instance;
             return that.VisiableValue;
         }
-        private void set_50_BooleanToVisibilityConverter_VisiableValue(object instance, object Value)
+        private void set_51_BooleanToVisibilityConverter_VisiableValue(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.BooleanToVisibilityConverter)instance;
             that.VisiableValue = (global::System.Boolean)Value;
         }
-        private object get_51_OrientationToVisibilityConverter_VisibleOrientation(object instance)
+        private object get_52_OrientationToVisibilityConverter_VisibleOrientation(object instance)
         {
             var that = (global::LightNovel.Common.OrientationToVisibilityConverter)instance;
             return that.VisibleOrientation;
         }
-        private void set_51_OrientationToVisibilityConverter_VisibleOrientation(object instance, object Value)
+        private void set_52_OrientationToVisibilityConverter_VisibleOrientation(object instance, object Value)
         {
             var that = (global::LightNovel.Common.OrientationToVisibilityConverter)instance;
             that.VisibleOrientation = (global::Windows.UI.Xaml.Controls.Orientation)Value;
         }
-        private object get_52_RichTextView_PageWidth(object instance)
+        private object get_53_RichTextView_PageWidth(object instance)
         {
             var that = (global::LightNovel.Controls.RichTextView)instance;
             return that.PageWidth;
         }
-        private void set_52_RichTextView_PageWidth(object instance, object Value)
+        private void set_53_RichTextView_PageWidth(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.RichTextView)instance;
             that.PageWidth = (global::System.Double)Value;
         }
-        private object get_53_RichTextView_PageHeight(object instance)
+        private object get_54_RichTextView_PageHeight(object instance)
         {
             var that = (global::LightNovel.Controls.RichTextView)instance;
             return that.PageHeight;
         }
-        private void set_53_RichTextView_PageHeight(object instance, object Value)
+        private void set_54_RichTextView_PageHeight(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.RichTextView)instance;
             that.PageHeight = (global::System.Double)Value;
         }
-        private object get_54_ExpanderView_Expander(object instance)
+        private object get_55_ExpanderView_Expander(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.Expander;
         }
-        private void set_54_ExpanderView_Expander(object instance, object Value)
+        private void set_55_ExpanderView_Expander(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.Expander = (global::System.Object)Value;
         }
-        private object get_55_ExpanderView_ExpanderTemplate(object instance)
+        private object get_56_ExpanderView_ExpanderTemplate(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.ExpanderTemplate;
         }
-        private void set_55_ExpanderView_ExpanderTemplate(object instance, object Value)
+        private void set_56_ExpanderView_ExpanderTemplate(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.ExpanderTemplate = (global::Windows.UI.Xaml.DataTemplate)Value;
         }
-        private object get_56_ExpanderView_NonExpandableHeader(object instance)
+        private object get_57_ExpanderView_NonExpandableHeader(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.NonExpandableHeader;
         }
-        private void set_56_ExpanderView_NonExpandableHeader(object instance, object Value)
+        private void set_57_ExpanderView_NonExpandableHeader(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.NonExpandableHeader = (global::System.Object)Value;
         }
-        private object get_57_ExpanderView_NonExpandableHeaderTemplate(object instance)
+        private object get_58_ExpanderView_NonExpandableHeaderTemplate(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.NonExpandableHeaderTemplate;
         }
-        private void set_57_ExpanderView_NonExpandableHeaderTemplate(object instance, object Value)
+        private void set_58_ExpanderView_NonExpandableHeaderTemplate(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.NonExpandableHeaderTemplate = (global::Windows.UI.Xaml.DataTemplate)Value;
         }
-        private object get_58_ExpanderView_IsExpanded(object instance)
+        private object get_59_ExpanderView_IsExpanded(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.IsExpanded;
         }
-        private void set_58_ExpanderView_IsExpanded(object instance, object Value)
+        private void set_59_ExpanderView_IsExpanded(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.IsExpanded = (global::System.Boolean)Value;
         }
-        private object get_59_ExpanderView_HasItems(object instance)
+        private object get_60_ExpanderView_HasItems(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.HasItems;
         }
-        private void set_59_ExpanderView_HasItems(object instance, object Value)
+        private void set_60_ExpanderView_HasItems(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.HasItems = (global::System.Boolean)Value;
         }
-        private object get_60_ExpanderView_IsNonExpandable(object instance)
+        private object get_61_ExpanderView_IsNonExpandable(object instance)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             return that.IsNonExpandable;
         }
-        private void set_60_ExpanderView_IsNonExpandable(object instance, object Value)
+        private void set_61_ExpanderView_IsNonExpandable(object instance, object Value)
         {
             var that = (global::LightNovel.Controls.ExpanderView)instance;
             that.IsNonExpandable = (global::System.Boolean)Value;
         }
-        private object get_61_HeaderedItemsControl_Header(object instance)
+        private object get_62_HeaderedItemsControl_Header(object instance)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             return that.Header;
         }
-        private void set_61_HeaderedItemsControl_Header(object instance, object Value)
+        private void set_62_HeaderedItemsControl_Header(object instance, object Value)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             that.Header = (global::System.Object)Value;
         }
-        private object get_62_HeaderedItemsControl_HeaderTemplate(object instance)
+        private object get_63_HeaderedItemsControl_HeaderTemplate(object instance)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             return that.HeaderTemplate;
         }
-        private void set_62_HeaderedItemsControl_HeaderTemplate(object instance, object Value)
+        private void set_63_HeaderedItemsControl_HeaderTemplate(object instance, object Value)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             that.HeaderTemplate = (global::Windows.UI.Xaml.DataTemplate)Value;
         }
-        private object get_63_HeaderedItemsControl_ItemContainerStyle(object instance)
+        private object get_64_HeaderedItemsControl_ItemContainerStyle(object instance)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             return that.ItemContainerStyle;
         }
-        private void set_63_HeaderedItemsControl_ItemContainerStyle(object instance, object Value)
+        private void set_64_HeaderedItemsControl_ItemContainerStyle(object instance, object Value)
         {
             var that = (global::WinRTXamlToolkit.Controls.HeaderedItemsControl)instance;
             that.ItemContainerStyle = (global::Windows.UI.Xaml.Style)Value;
@@ -1600,149 +1611,155 @@ namespace LightNovel.LightNovelClient_Windows_XamlTypeInfo
                 xamlMember.Getter = get_41_BookItem_Subtitle;
                 xamlMember.Setter = set_41_BookItem_Subtitle;
                 break;
+            case "LightNovel.Service.BookItem.VolumeNo":
+                userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
+                xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "VolumeNo", "String");
+                xamlMember.Getter = get_42_BookItem_VolumeNo;
+                xamlMember.Setter = set_42_BookItem_VolumeNo;
+                break;
             case "LightNovel.Service.BookItem.SeriesId":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "SeriesId", "String");
-                xamlMember.Getter = get_42_BookItem_SeriesId;
-                xamlMember.Setter = set_42_BookItem_SeriesId;
+                xamlMember.Getter = get_43_BookItem_SeriesId;
+                xamlMember.Setter = set_43_BookItem_SeriesId;
                 break;
             case "LightNovel.Service.BookItem.VolumeId":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "VolumeId", "String");
-                xamlMember.Getter = get_43_BookItem_VolumeId;
-                xamlMember.Setter = set_43_BookItem_VolumeId;
+                xamlMember.Getter = get_44_BookItem_VolumeId;
+                xamlMember.Setter = set_44_BookItem_VolumeId;
                 break;
             case "LightNovel.Service.BookItem.HyperLinkUri":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "HyperLinkUri", "String");
-                xamlMember.Getter = get_44_BookItem_HyperLinkUri;
-                xamlMember.Setter = set_44_BookItem_HyperLinkUri;
+                xamlMember.Getter = get_45_BookItem_HyperLinkUri;
+                xamlMember.Setter = set_45_BookItem_HyperLinkUri;
                 break;
             case "LightNovel.Service.BookItem.CoverImageUri":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "CoverImageUri", "String");
-                xamlMember.Getter = get_45_BookItem_CoverImageUri;
-                xamlMember.Setter = set_45_BookItem_CoverImageUri;
+                xamlMember.Getter = get_46_BookItem_CoverImageUri;
+                xamlMember.Setter = set_46_BookItem_CoverImageUri;
                 break;
             case "LightNovel.Service.BookItem.ItemType":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "ItemType", "LightNovel.Service.BookItemType");
-                xamlMember.Getter = get_46_BookItem_ItemType;
+                xamlMember.Getter = get_47_BookItem_ItemType;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.SearchResultsPage.QueryTask":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "QueryTask", "System.Threading.Tasks.Task");
-                xamlMember.Getter = get_47_SearchResultsPage_QueryTask;
-                xamlMember.Setter = set_47_SearchResultsPage_QueryTask;
+                xamlMember.Getter = get_48_SearchResultsPage_QueryTask;
+                xamlMember.Setter = set_48_SearchResultsPage_QueryTask;
                 break;
             case "LightNovel.SearchResultsPage.DefaultViewModel":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "DefaultViewModel", "LightNovel.Common.ObservableDictionary");
-                xamlMember.Getter = get_48_SearchResultsPage_DefaultViewModel;
+                xamlMember.Getter = get_49_SearchResultsPage_DefaultViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.SearchResultsPage.NavigationHelper":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
-                xamlMember.Getter = get_49_SearchResultsPage_NavigationHelper;
+                xamlMember.Getter = get_50_SearchResultsPage_NavigationHelper;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.Controls.BooleanToVisibilityConverter.VisiableValue":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.BooleanToVisibilityConverter");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "VisiableValue", "Boolean");
-                xamlMember.Getter = get_50_BooleanToVisibilityConverter_VisiableValue;
-                xamlMember.Setter = set_50_BooleanToVisibilityConverter_VisiableValue;
+                xamlMember.Getter = get_51_BooleanToVisibilityConverter_VisiableValue;
+                xamlMember.Setter = set_51_BooleanToVisibilityConverter_VisiableValue;
                 break;
             case "LightNovel.Common.OrientationToVisibilityConverter.VisibleOrientation":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Common.OrientationToVisibilityConverter");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "VisibleOrientation", "Windows.UI.Xaml.Controls.Orientation");
-                xamlMember.Getter = get_51_OrientationToVisibilityConverter_VisibleOrientation;
-                xamlMember.Setter = set_51_OrientationToVisibilityConverter_VisibleOrientation;
+                xamlMember.Getter = get_52_OrientationToVisibilityConverter_VisibleOrientation;
+                xamlMember.Setter = set_52_OrientationToVisibilityConverter_VisibleOrientation;
                 break;
             case "LightNovel.Controls.RichTextView.PageWidth":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.RichTextView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "PageWidth", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_52_RichTextView_PageWidth;
-                xamlMember.Setter = set_52_RichTextView_PageWidth;
+                xamlMember.Getter = get_53_RichTextView_PageWidth;
+                xamlMember.Setter = set_53_RichTextView_PageWidth;
                 break;
             case "LightNovel.Controls.RichTextView.PageHeight":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.RichTextView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "PageHeight", "Double");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_53_RichTextView_PageHeight;
-                xamlMember.Setter = set_53_RichTextView_PageHeight;
+                xamlMember.Getter = get_54_RichTextView_PageHeight;
+                xamlMember.Setter = set_54_RichTextView_PageHeight;
                 break;
             case "LightNovel.Controls.ExpanderView.Expander":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "Expander", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_54_ExpanderView_Expander;
-                xamlMember.Setter = set_54_ExpanderView_Expander;
+                xamlMember.Getter = get_55_ExpanderView_Expander;
+                xamlMember.Setter = set_55_ExpanderView_Expander;
                 break;
             case "LightNovel.Controls.ExpanderView.ExpanderTemplate":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "ExpanderTemplate", "Windows.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_55_ExpanderView_ExpanderTemplate;
-                xamlMember.Setter = set_55_ExpanderView_ExpanderTemplate;
+                xamlMember.Getter = get_56_ExpanderView_ExpanderTemplate;
+                xamlMember.Setter = set_56_ExpanderView_ExpanderTemplate;
                 break;
             case "LightNovel.Controls.ExpanderView.NonExpandableHeader":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "NonExpandableHeader", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_56_ExpanderView_NonExpandableHeader;
-                xamlMember.Setter = set_56_ExpanderView_NonExpandableHeader;
+                xamlMember.Getter = get_57_ExpanderView_NonExpandableHeader;
+                xamlMember.Setter = set_57_ExpanderView_NonExpandableHeader;
                 break;
             case "LightNovel.Controls.ExpanderView.NonExpandableHeaderTemplate":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "NonExpandableHeaderTemplate", "Windows.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_57_ExpanderView_NonExpandableHeaderTemplate;
-                xamlMember.Setter = set_57_ExpanderView_NonExpandableHeaderTemplate;
+                xamlMember.Getter = get_58_ExpanderView_NonExpandableHeaderTemplate;
+                xamlMember.Setter = set_58_ExpanderView_NonExpandableHeaderTemplate;
                 break;
             case "LightNovel.Controls.ExpanderView.IsExpanded":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "IsExpanded", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_58_ExpanderView_IsExpanded;
-                xamlMember.Setter = set_58_ExpanderView_IsExpanded;
+                xamlMember.Getter = get_59_ExpanderView_IsExpanded;
+                xamlMember.Setter = set_59_ExpanderView_IsExpanded;
                 break;
             case "LightNovel.Controls.ExpanderView.HasItems":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "HasItems", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_59_ExpanderView_HasItems;
-                xamlMember.Setter = set_59_ExpanderView_HasItems;
+                xamlMember.Getter = get_60_ExpanderView_HasItems;
+                xamlMember.Setter = set_60_ExpanderView_HasItems;
                 break;
             case "LightNovel.Controls.ExpanderView.IsNonExpandable":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Controls.ExpanderView");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "IsNonExpandable", "Boolean");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_60_ExpanderView_IsNonExpandable;
-                xamlMember.Setter = set_60_ExpanderView_IsNonExpandable;
+                xamlMember.Getter = get_61_ExpanderView_IsNonExpandable;
+                xamlMember.Setter = set_61_ExpanderView_IsNonExpandable;
                 break;
             case "WinRTXamlToolkit.Controls.HeaderedItemsControl.Header":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinRTXamlToolkit.Controls.HeaderedItemsControl");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "Header", "Object");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_61_HeaderedItemsControl_Header;
-                xamlMember.Setter = set_61_HeaderedItemsControl_Header;
+                xamlMember.Getter = get_62_HeaderedItemsControl_Header;
+                xamlMember.Setter = set_62_HeaderedItemsControl_Header;
                 break;
             case "WinRTXamlToolkit.Controls.HeaderedItemsControl.HeaderTemplate":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinRTXamlToolkit.Controls.HeaderedItemsControl");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "HeaderTemplate", "Windows.UI.Xaml.DataTemplate");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_62_HeaderedItemsControl_HeaderTemplate;
-                xamlMember.Setter = set_62_HeaderedItemsControl_HeaderTemplate;
+                xamlMember.Getter = get_63_HeaderedItemsControl_HeaderTemplate;
+                xamlMember.Setter = set_63_HeaderedItemsControl_HeaderTemplate;
                 break;
             case "WinRTXamlToolkit.Controls.HeaderedItemsControl.ItemContainerStyle":
                 userType = (global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlUserType)GetXamlTypeByName("WinRTXamlToolkit.Controls.HeaderedItemsControl");
                 xamlMember = new global::LightNovel.LightNovelClient_Windows_XamlTypeInfo.XamlMember(this, "ItemContainerStyle", "Windows.UI.Xaml.Style");
                 xamlMember.SetIsDependencyProperty();
-                xamlMember.Getter = get_63_HeaderedItemsControl_ItemContainerStyle;
-                xamlMember.Setter = set_63_HeaderedItemsControl_ItemContainerStyle;
+                xamlMember.Getter = get_64_HeaderedItemsControl_ItemContainerStyle;
+                xamlMember.Setter = set_64_HeaderedItemsControl_ItemContainerStyle;
                 break;
             }
             return xamlMember;
