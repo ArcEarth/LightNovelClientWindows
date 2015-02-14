@@ -139,6 +139,12 @@ namespace LightNovel.ViewModels
 								 }).ToList()
 							 }).ToList();
 
+#if WINDOWS_APP
+					if (VolumeNo >= 0 && ChapterNo >= 0 && Index.Count > VolumeNo && Index[VolumeNo].Chapters.Count > ChapterNo)
+					{
+						SeconderyIndex = Index[VolumeNo].Chapters;
+					}
+#endif
 					NotifyPropertyChanged("Header");
 				}
 			}
@@ -267,6 +273,10 @@ namespace LightNovel.ViewModels
 						throw new NotImplementedException("Set VolumeData before set series ID");
 					}
 					NotifyPropertyChanged();
+#if WINDOWS_APP
+					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
+						SeconderyIndex = Index[_VolumeNo].Chapters;
+#endif
 				}
 			}
 		}
@@ -279,14 +289,15 @@ namespace LightNovel.ViewModels
 				if (_ChapterNo != value)
 				{
 					_ChapterNo = value;
-#if WINDOWS_APP
-					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
-					SeconderyIndex = Index[_VolumeNo].Chapters;
-#endif
+
 					if (_ChapterNo > 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[ChapterNo].Id))
 					{
 						throw new NotImplementedException("Set ChapterData before set series ID");
 					}
+#if WINDOWS_APP
+					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
+						SeconderyIndex = Index[_VolumeNo].Chapters;
+#endif
 
 					NotifyPropertyChanged();
 					NotifyPropertyChanged("HasPrev");
@@ -413,38 +424,61 @@ namespace LightNovel.ViewModels
 				return SecondaryTile.Exists(SeriesId.ToString());
 			}
 		}
+		public bool IsCached
+		{
+			get
+			{
+				return false;
+			}
+		}
 
 		public bool IsFavored
 		{
 			get
 			{
-				if (Index == null || !App.Current.IsSignedIn || App.Current.User == null || App.Current.User.FavoriteList == null)
+				//if (Index == null || !App.Current.IsSignedIn || App.Current.User == null || App.Current.User.FavoriteList == null)
+				//	return false;
+				//return App.Current.User.FavoriteList.Any(vol => vol.VolumeId == VolumeData.Id);
+				if (Index == null || App.Current.BookmarkList == null)
 					return false;
-				return App.Current.User.FavoriteList.Any(vol => vol.VolumeId == VolumeData.Id);
+				return App.Current.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
 			}
 		}
 
 		public async Task<bool> AddCurrentVolumeToFavoriteAsync()
 		{
-			if (!App.Current.IsSignedIn)
-				return false;
-			var result = await App.Current.User.AddUserFavriteAsync(VolumeData, SeriesData.Title);
-			if (result)
-				NotifyPropertyChanged("IsFavored");
-			return result;
+			var bookmark = CreateBookmark();
+			App.Current.BookmarkList.RemoveAll(bk => bk.Position.SeriesId == bookmark.Position.SeriesId || bookmark.SeriesTitle == bk.SeriesTitle);
+			App.Current.BookmarkList.Add(bookmark);
+			await App.Current.SaveBookmarkDataAsync();
+			NotifyPropertyChanged("IsFavored");
+			if (App.Current.IsSignedIn)
+			{
+				var result = await App.Current.User.AddUserFavriteAsync(VolumeData,_SeriesData.Title);
+				return result;
+			}
+			return true;
 		}
 
 		public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
 		{
-			if (!App.Current.IsSignedIn)
-				return false;
-			var favol = App.Current.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
-			if (favol == null)
-				return true;
-			var result = await App.Current.User.RemoveUserFavriteAsync(favol.FavId);
-			if (result)
-				NotifyPropertyChanged("IsFavored");
-			return result;
+			App.Current.BookmarkList.RemoveAll(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+			await App.Current.SaveBookmarkDataAsync(); 
+			NotifyPropertyChanged("IsFavored");
+			if (App.Current.IsSignedIn)
+			{
+				var favol = App.Current.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
+				if (favol == null)
+					return true;
+				var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
+				if (favDeSer.Any(id => id == null))
+				{
+					await App.Current.User.SyncFavoriteListAsync(true);
+					(from fav in App.Current.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
+				}
+				await App.Current.User.RemoveUserFavriteAsync(favDeSer);
+			}
+			return true;
 		}
 
 		public Task<IEnumerable<string>> GetComentsAsync(int LineNo)
@@ -815,6 +849,11 @@ namespace LightNovel.ViewModels
 			//IsLoading = false;
 		}
 
+		public async Task ClearCacheAsync()
+		{
+
+		}
+
 		void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			Debug.WriteLine(String.Format("Contents Collection size changed, Count = {0}", Contents.Count));
@@ -860,13 +899,13 @@ namespace LightNovel.ViewModels
 				}
 				else
 				{
-					var imageLine = Contents.Cast<LineViewModel>().FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
+					var imageLine = Contents.Cast<LineViewModel>().FirstOrDefault(line => line.IsImage);
 					if (imageLine != null)
 						bookmark.DescriptionImageUri = imageLine.Content;
 				}
 
 				var textLines = from line in Contents.Cast<LineViewModel>()
-								where line.ContentType == LineContentType.TextContent && line.No >= LineNo && line.No <= LineNo + 5
+								where !line.IsImage && line.No >= LineNo && line.No <= LineNo + 5
 								select line.Content;
 				var builder = new StringBuilder();
 				bookmark.ContentDescription = textLines.Aggregate(builder, (b, s) => { b.AppendLine(s); return b; }).ToString();
@@ -917,6 +956,7 @@ namespace LightNovel.ViewModels
 			Id = item.Id;
 			CoverImageUri = item.CoverImageUri;
 			ItemType = item.ItemType;
+			SubtileLabel = item.VolumeNo;
 		}
 
 		string _title;
@@ -936,6 +976,16 @@ namespace LightNovel.ViewModels
 			set
 			{
 				_subtitle = value;
+				NotifyPropertyChanged();
+			}
+		}
+		string _subtileLabel;
+		public string SubtileLabel
+		{
+			get { return _subtileLabel; }
+			set
+			{
+				_subtileLabel = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -1577,7 +1627,7 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
-				if (Uri.IsWellFormedUriString(_content, UriKind.Absolute))
+				if (IsImage)
 					return LineContentType.ImageContent;
 				return LineContentType.TextContent;
 			}

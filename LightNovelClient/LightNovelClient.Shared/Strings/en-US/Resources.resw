@@ -280,7 +280,7 @@
     <value>Background Theme</value>
   </data>
   <data name="AppThemeDescription.Text" xml:space="preserve">
-    <value>Change the background them of Application, "Follow System Setting" may need restart App to take effect</value>
+    <value>Change the background them of Application, *need restart App to take effect</value>
   </data>
   <data name="AppDefaultThemeItem.Content" xml:space="preserve">
     <value>Follow System Setting</value>

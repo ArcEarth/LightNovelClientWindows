@@ -5,7 +5,9 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using WinRTXamlToolkit.Controls.Extensions;
@@ -78,12 +80,11 @@ namespace LightNovel
 				ViewModel.UserName = App.Current.User.UserName;
 			}
 
-			await ViewModel.RecommandSection.LoadAsync();
+			await ViewModel.RecommandSection.LoadAsync(10);
 			if (App.Current.Settings.EnableLiveTile)
 				UpdateTile(); 
 			
-			if (App.Current.IsSignedIn)
-				await ViewModel.FavoriteSection.LoadAsync();
+			await ViewModel.FavoriteSection.LoadAsync();
 
 			IsLoadingIndex = true;
 			await ViewModel.LoadSeriesIndexDataAsync();

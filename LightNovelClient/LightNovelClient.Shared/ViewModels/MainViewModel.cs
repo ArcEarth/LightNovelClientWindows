@@ -51,44 +51,79 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task<IEnumerable<FavourVolume>> LoadAsync(bool foreceRefresh = false, int maxItemCount = 9)
+		public async Task LoadAsync(bool foreceRefresh = false, int maxItemCount = 9)
 		{
-			if (!IsLoading && !IsLoaded && LightKindomHtmlClient.IsSignedIn)
+			if (IsLoading) return;
+			IsLoading = true;
+			try
 			{
-				IsLoading = true;
-				try
-				{
-					await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
-
-					App.Current.User.FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
-
-					var favList = from fav in App.Current.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
-
-					foreach (var series in favList)
-					{
-						var vol = series.LastOrDefault();
-						var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime};
-						var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
-						item.CoverImageUri = volume.CoverImageUri;
-						item.Description = volume.Description;
-						item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
-						this.Add(item);
-						NotifyPropertyChanged("IsEmpty");
-					}
-
-					IsLoading = false;
-					IsLoaded = true;
-					return App.Current.User.FavoriteList;
-				}
-				catch (Exception exception)
-				{
-					Debug.WriteLine(exception.Message);
-					IsLoading = false;
-					IsLoaded = false;
-				}
-
+				await App.Current.PullBookmarkFromUserFavoriteAsync(foreceRefresh);
 			}
-			return null;
+			catch (Exception exception)
+			{
+				Debug.WriteLine(exception.Message);
+				IsLoading = false;
+				IsLoaded = false;
+				return;
+			}
+
+			this.Clear();
+			foreach (var bk in App.Current.BookmarkList)
+			{
+				var hvm = new HistoryItemViewModel
+				{
+					Position = bk.Position,
+					ProgressPercentage = bk.Progress,
+					CoverImageUri = bk.DescriptionImageUri,
+					Description = bk.ContentDescription,
+					ChapterTitle = bk.ChapterTitle,
+					VolumeTitle = bk.VolumeTitle,
+					SeriesTitle = bk.SeriesTitle,
+					UpdateTime = bk.ViewDate
+				};
+
+				if (!String.IsNullOrEmpty(bk.DescriptionThumbnailUri))
+					hvm.CoverImageUri = bk.DescriptionThumbnailUri;
+				this.Add(hvm);
+				NotifyPropertyChanged("IsEmpty");
+				if (String.IsNullOrEmpty(bk.Position.SeriesId))
+				{
+					var volume = await CachedClient.GetVolumeAsync(bk.Position.VolumeId);
+					hvm.CoverImageUri = volume.CoverImageUri;
+					hvm.Description = volume.Description;
+					bk.Position.SeriesId = volume.ParentSeriesId;
+					bk.ContentDescription = volume.Description;
+					bk.DescriptionThumbnailUri = volume.CoverImageUri;
+				}
+			}
+			NotifyPropertyChanged("IsEmpty");
+			await App.Current.SaveBookmarkDataAsync();
+
+			IsLoaded = true;
+			IsLoading = false;
+
+			//await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
+
+			//App.Current.User.FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
+
+			//var favList = from fav in App.Current.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
+
+			//foreach (var series in favList)
+			//{
+			//	var vol = series.LastOrDefault();
+			//	var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime};
+			//	var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+			//	item.CoverImageUri = volume.CoverImageUri;
+			//	item.Description = volume.Description;
+			//	item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+			//	this.Add(item);
+			//	NotifyPropertyChanged("IsEmpty");
+			//}
+
+			//IsLoading = false;
+			//IsLoaded = true;
+			//return App.Current.User.FavoriteList;
+
 		}
 
 		private async void FavoriteList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -355,7 +390,7 @@ namespace LightNovel.ViewModels
 				catch (Exception exception)
 				{
 					IsLoading = false;
-					IsLoaded = false; 
+					IsLoaded = false;
 					Debug.WriteLine(exception.Message);
 					return null;
 				}
@@ -413,7 +448,7 @@ namespace LightNovel.ViewModels
 		private bool _isRecentDataLoaded;
 		private string _loadingText;
 		private string _userName;
-		private string _password; 
+		private string _password;
 		private HistoryItemViewModel _lastReadSection;
 		private Uri _coverBackgroundImageUri;
 
@@ -578,10 +613,11 @@ namespace LightNovel.ViewModels
 				var serIndex = await CachedClient.GetSeriesIndexAsync();
 				//var serVmList = serIndex.Select(series => new SeriesPreviewModel { ID = series.Id, Title = series.Title });
 				var cgs = new Windows.Globalization.Collation.CharacterGroupings();
-				SeriesIndex = (from series in serIndex 
-							group series 
-							by cgs.Lookup(series.Title) into g 
-							orderby g.Key select g).ToList();
+				SeriesIndex = (from series in serIndex
+							   group series
+							   by cgs.Lookup(series.Title) into g
+							   orderby g.Key
+							   select g).ToList();
 
 				//SeriesIndex = AlphaKeyGroup<SeriesPreviewModel>.CreateGroups(
 				//	serVmList,
@@ -693,7 +729,14 @@ namespace LightNovel.ViewModels
 			if (!IsSignedIn)
 				return;
 			IsLoading = true;
-			await App.Current.SignOutAsync();
+			try
+			{
+				await App.Current.SignOutAsync();
+			}
+			catch
+			{
+
+			}
 			UserName = null;
 			Password = null;
 			IsSignedIn = false;

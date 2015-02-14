@@ -280,7 +280,7 @@
     <value>背景主题</value>
   </data>
   <data name="AppThemeDescription.Text" xml:space="preserve">
-    <value>改变应用的背景色调,"系统主题"选项需要重启应用才会生效</value>
+    <value>改变应用的背景色调,*需要重启应用才会生效</value>
   </data>
   <data name="AppDefaultThemeItem.Content" xml:space="preserve">
     <value>系统主题</value>

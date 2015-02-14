@@ -90,7 +90,12 @@ namespace LightNovel
 			{
 				var para = ContentTextBlock.Blocks[idx-1];
 				//var fcolor = (ViewModel.Foreground as SolidColorBrush).Color;
-				para.Foreground = CommentedTextBrush; //(SolidColorBrush)App.Current.Resources["AppAccentBrushLight"];
+				if (ViewModel.ChapterData.Lines[idx-1].ContentType == LineContentType.TextContent)
+				{
+					var par = para as Paragraph;
+					par.Inlines[0].Foreground = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+				}
+				//para.Foreground = CommentedTextBrush; //(SolidColorBrush)App.Current.Resources["AppAccentBrushLight"];
 			}
 			//await RequestCommentsInViewAsync();
 		}
@@ -289,6 +294,10 @@ namespace LightNovel
 
 		}
 
+		private FontFamily SegoeUISymbolFontFamily = new FontFamily("Segoe UI Symbol");
+		private SolidColorBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+		private string CommentIndicator = WebUtility.HtmlDecode("&#xE134;");
+
 		private void UpdateContentsView(IEnumerable<LineViewModel> lines)
 		{
 			Uri severBaseUri = new Uri("http://lknovel.lightnovel.cn");
@@ -298,17 +307,18 @@ namespace LightNovel
 			{
 				var para = new Paragraph();
 				para.SetValue(ParagrahViewModelProperty, line);
-				if (line.ContentType == LineContentType.TextContent || line.Content == null)
+				if (!line.IsImage || line.Content == null)
 				{
-					if (line.HasComments)
-						para.Inlines.Add(new InlineUIContainer
-						{
-							Child = new SymbolIcon { Symbol = Symbol.Message },
-							Foreground = (SolidColorBrush)App.Current.Resources["AppAcentBrush"]
-						});
+					//if (line.HasComments)
+					//	para.Inlines.Add(new InlineUIContainer
+					//	{
+					//		Child = new SymbolIcon { Symbol = Symbol.Message },
+					//		Foreground = (SolidColorBrush)App.Current.Resources["AppAcentBrush"]
+					//	});
 					var run = new Run { Text = line.Content };
+					para.Inlines.Add(new Run { Text = CommentIndicator, FontFamily = SegoeUISymbolFontFamily, Foreground = TransparentBrush });
 					para.Inlines.Add(run);
-					para.TextIndent = ContentTextBlock.FontSize * 2;
+					para.TextIndent = ContentTextBlock.FontSize * 1;
 					prevLineBreakFlag = true;
 					para.Margin = new Thickness(0, 0, 0, 10);
 				}
@@ -682,28 +692,103 @@ namespace LightNovel
 
 			if (line.HasNoComment)
 			{
-				ContentTextBlock.Select(element.ContentStart, element.ContentEnd);
+				//ContentTextBlock.Select(element.ContentStart, element.ContentEnd);
+				if (this.RequestedTheme == ElementTheme.Light)
+					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Light;
+				else
+					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Dark;
 				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
 			}
 			else
 			{
+				if (this.RequestedTheme == ElementTheme.Light)
+					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Light;
+				else
+					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Dark;
 				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
 				await line.LoadCommentsAsync();
 			}
 		}
 
+		//private void SyncIndexSelection()
+		//{
+		//	if (!ViewModel.IsLoading)
+		//	{
+		//		if (VolumeListView.SelectedIndex != ViewModel.VolumeNo)
+		//			VolumeListView.SelectedIndex = ViewModel.VolumeNo;
+		//		if (ChapterListView.SelectedIndex != ViewModel.ChapterNo)
+		//			ChapterListView.SelectedIndex = ViewModel.ChapterNo;
+		//		VolumeListView.ScrollIntoView(VolumeListView.SelectedItem, ScrollIntoViewAlignment.Leading);
+		//		ChapterListView.ScrollIntoView(ChapterListView.SelectedItem, ScrollIntoViewAlignment.Leading);
+		//	}
+		//}
 		private void SyncIndexSelection()
 		{
-			if (!ViewModel.IsLoading)
+			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo || ViewModel.IsLoading) return;
+			var target = ViewModel.Index[ViewModel.VolumeNo];
+			var chpTarget = target[ViewModel.ChapterNo];
+			if (ViewModel.HasNext)
 			{
-				if (VolumeListView.SelectedIndex != ViewModel.VolumeNo)
-					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
-				if (ChapterListView.SelectedIndex != ViewModel.ChapterNo)
-					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
-				VolumeListView.ScrollIntoView(VolumeListView.SelectedItem, ScrollIntoViewAlignment.Leading);
-				ChapterListView.ScrollIntoView(ChapterListView.SelectedItem, ScrollIntoViewAlignment.Leading);
+				var nextvm = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo + 1];
+				nextvm.NotifyPropertyChanged("IsDownloaded");
+			}
+			if (VolumeListView.ActualHeight > 0 && VolumeListView.Items.Count > 0)
+			{
+				VolumeListView.SelectedItem = target;
+				VolumeListView.UpdateLayout();
+				VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+			}
+			else
+			{
+				if (VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
+				{
+					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
+					VolumeListView.SizeChanged += ListView_SizeChanged;
+				}
+				else
+				{
+					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
+				}
+			}
+
+			if (ChapterListView.ActualHeight > 0 && ChapterListView.Items.Count > 0)
+			{
+				ChapterListView.SelectedItem = chpTarget;
+				ChapterListView.UpdateLayout();
+				ChapterListView.ScrollIntoView(chpTarget, ScrollIntoViewAlignment.Leading);
+			}
+			else
+			{
+				if (ChapterListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
+				{
+					ChapterListView.SetValue(ListViewBaseScrollToItemRequestProperty, chpTarget);
+					ChapterListView.SizeChanged += ListView_SizeChanged;
+				}
+				else
+				{
+					ChapterListView.SetValue(ListViewBaseScrollToItemRequestProperty, chpTarget);
+				}
+			}
+		}
+
+		void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			var list = sender as ListViewBase;
+			if (list.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && list.Items.Count > 0)
+			{
+				var target = list.GetValue(ListViewBaseScrollToItemRequestProperty);
+				if (target == null)
+				{
+					list.SizeChanged -= ListView_SizeChanged;
+					return;
+				}
+				list.SelectedItem = target;
+				list.UpdateLayout();
+				list.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+				list.ClearValue(ListViewBaseScrollToItemRequestProperty);
+				list.SizeChanged -= ListView_SizeChanged;
 			}
 		}
 

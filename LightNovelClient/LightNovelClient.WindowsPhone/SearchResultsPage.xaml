@@ -129,45 +129,40 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Width="100"
-                                          Height="180"
+                                          Height="170"
                                           Margin="10,5"
                                           VerticalAlignment="Top">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="140" />
-                                            <RowDefinition Height="60" />
+                                            <RowDefinition Height="30" />
+                                            <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
                                         <Image Grid.Row="0"
                                                HorizontalAlignment="Center"
                                                Source="{Binding CoverImageUri}"
                                                Stretch="None" />
                                         <TextBlock Grid.Row="1"
+                                                   Margin="0,5,0,0"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="{ThemeResource AppFontSizeMedium}"
+                                                   Foreground="{StaticResource AppAccentBrush}"
+                                                   Language="zh-CN"
+                                                   Text="{Binding SubtileLabel}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   TextWrapping="Wrap" />
+                                        <!--<TextBlock Grid.Row="2"
                                                    HorizontalAlignment="Center"
                                                    FontSize="{ThemeResource AppFontSizeNormal}"
                                                    Foreground="{StaticResource AppAccentBrush}"
                                                    Language="zh-CN"
-                                                   Text="{Binding Title}"
+                                                   Text="{Binding SubtileLabel}"
                                                    TextTrimming="CharacterEllipsis"
-                                                   TextWrapping="Wrap" />
+                                                   TextWrapping="NoWrap" />-->
                                     </Grid>
-                                    <!--<Grid Width="300">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Border Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="66.7" Height="100">
-                                            <Image Source="{Binding CoverImageUri}" Stretch="UniformToFill"/>
-                                        </Border>
-                                        <StackPanel Grid.Column="1" Margin="10,5,10,0">
-                                            <TextBlock Text="{Binding Title}" TextWrapping="Wrap" Foreground="{StaticResource AppAccentBrush}" Language="zh-CN" FontSize="{ThemeResource AppFontSizeMedium}"/>
-                                            <TextBlock Text="{Binding Subtitle}" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Language="zh-CN" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
-                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"/>
-                                        </StackPanel>
-                                    </Grid>-->
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                             <GridView.ItemContainerStyle>
                                 <Style TargetType="Control">
-                                    <!--<Setter Property="Background" Value="{ThemeResource AppAccentBrushLight}"/>-->
                                     <Setter Property="Margin" Value="0" />
                                 </Style>
                             </GridView.ItemContainerStyle>
@@ -229,6 +224,16 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Button x:Name="TitleButton"
+                    Grid.ColumnSpan="2"
+                    MinHeight="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="Title_Click"
+                    Opacity="0"
+                    TabIndex="0" />
             <TextBlock x:Uid="SearchResultLabel"
                        x:Name="resultText"
                        Grid.Column="0"
@@ -239,41 +244,80 @@
                        Style="{StaticResource SubheaderTextBlockStyle}"
                        Text="Results for &#x00a0;"
                        TextWrapping="NoWrap" />
-            <StackPanel Grid.Column="1"
-                        Margin="10,0,0,12"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom"
-                        Orientation="Horizontal">
-                <TextBlock FontSize="26.667"
+            <Grid Grid.Column="1"
+                  Margin="10,0,0,12"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           FontSize="26.667"
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
                            Language="zh-CN">
                     &#x201c;
                 </TextBlock>
-                <TextBlock x:Name="queryText"
+                <TextBox x:Name="queryText"
+                         Grid.Column="1"
+                         MinWidth="5"
+                         MaxWidth="200"
+                         Margin="0"
+                         VerticalContentAlignment="Bottom"
+                         Background="Transparent"
+                         BorderBrush="Transparent"
+                         BorderThickness="0"
+                         FontSize="26.667"
+                         FontWeight="Light"
+                         Foreground="{ThemeResource AppAccentBrushLight}"
+                         InputScope="Search"
+                         IsEnabled="False"
+                         KeyDown="QueryTextBox_KeyDown"
+                         Language="zh-CN"
+                         LostFocus="QuertTextBox_lostFocus"
+                         Padding="0"
+                         TabIndex="1"
+                         Text="{Binding QueryText,
+                                        Mode=OneTime}"
+                         TextWrapping="NoWrap" />
+                <Line Grid.Column="1"
+                      Margin="0,0"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Bottom"
+                      Stretch="Fill"
+                      Stroke="{ThemeResource AppAccentBrushLight}"
+                      StrokeThickness="1"
+                      X1="0"
+                      X2="20"
+                      Y1="0"
+                      Y2="0" />
+                <TextBlock Grid.Column="2"
                            FontSize="26.667"
-                           FontWeight="Light"
-                           Foreground="{ThemeResource AppAccentBrushLight}"
-                           IsHitTestVisible="false"
-                           Language="zh-CN"
-                           Text="{Binding QueryText}"
-                           TextWrapping="NoWrap" />
-                <TextBlock FontSize="26.667"
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
                            Language="zh-CN">
                     &#x201d;
                 </TextBlock>
-            </StackPanel>
+            </Grid>
         </Grid>
 
-        <TextBlock x:Name="noResultsTextBlock"
+        <TextBlock x:Uid="NoResultLabel"
+                   x:Name="noResultsTextBlock"
                    Grid.Row="1"
                    Margin="50,50,0,0"
                    Style="{StaticResource SubheaderTextBlockStyle}"
                    Text="No results match your search."
+                   Visibility="Collapsed" />
+        <TextBlock x:Uid="SearchErrorLabel"
+                   x:Name="SearchErrorLabel"
+                   Grid.Row="1"
+                   Margin="50,50,0,0"
+                   Style="{StaticResource SubheaderTextBlockStyle}"
+                   Text="Exception happed in search, please check your connectivity."
                    Visibility="Collapsed" />
         <ProgressBar x:Name="progressBar"
                      Grid.Row="1"
@@ -286,6 +330,9 @@
                 <VisualState x:Name="Searching" />
                 <VisualState x:Name="ResultsFound">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="IsEnabled">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="progressBar" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
@@ -300,6 +347,9 @@
                 <!--  When there are no results, the results panel is replaced with an informational TextBlock  -->
                 <VisualState x:Name="NoResultsFound">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="IsEnabled">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="progressBar" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
@@ -307,6 +357,22 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="noResultsTextBlock" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="ErrorInSearch">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="queryText" Storyboard.TargetProperty="IsEnabled">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="progressBar" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="resultsView" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SearchErrorLabel" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                         </ObjectAnimationUsingKeyFrames>
                     </Storyboard>

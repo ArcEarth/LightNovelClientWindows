@@ -13,11 +13,6 @@
         <ResourceDictionary x:Key="Default">
             <x:String x:Key="BackButtonGlyph"></x:String>
             <x:String x:Key="BackButtonSnappedGlyph"></x:String>
-        </ResourceDictionary>
-
-        <ResourceDictionary x:Key="Dark">
-            <x:String x:Key="BackButtonGlyph"></x:String>
-            <x:String x:Key="BackButtonSnappedGlyph"></x:String>
             <!--  Lime Green  -->
             <Color x:Key="AppAccentColor">#FFA4C400</Color>
             <!--  Semi Light Lime Green  -->
@@ -34,6 +29,12 @@
             <Color x:Key="AppSemitransparentColor">#AA000000</Color>
             <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
             <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
+
+            <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
+            <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
+
             <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
@@ -52,7 +53,66 @@
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBorderThemeBrush" Color="Transparent" />
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
         </ResourceDictionary>
+
+        <!--<ResourceDictionary x:Key="Dark">
+            <x:String x:Key="BackButtonGlyph"></x:String>
+            <x:String x:Key="BackButtonSnappedGlyph"></x:String>
+        -->
+        <!--  Lime Green  -->
+        <!--
+            <Color x:Key="AppAccentColor">#FFA4C400</Color>
+        -->
+        <!--  Semi Light Lime Green  -->
+        <!--
+            <Color x:Key="AppAccentColorSemiLight">#FF89A100</Color>
+        -->
+        <!--  Light Lime Green  -->
+        <!--
+            <Color x:Key="AppAccentColorLight">#FF6F8400</Color>
+        -->
+        <!--  87 percent White  -->
+        <!--
+            <Color x:Key="AppForegroundColor">#DEFFFFFF</Color>
+            <Color x:Key="AppForegroundDimColor">#DEDADADA</Color>
+        -->
+        <!--  100 percent White  -->
+        <!--
+            <Color x:Key="AppBackgroundColor">#FF000000</Color>
+            <Color x:Key="AppBackgroundDimColor">#FF252525</Color>
+        -->
+        <!--  66 percent transparent  -->
+        <!--
+            <Color x:Key="AppSemitransparentColor">#AA000000</Color>
+            <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
+            <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
+
+            <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
+            <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
+
+            <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxPressedBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="PhoneAccentBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="PhoneHighContrastSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="AppBarItemBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor10}" />
+            <SolidColorBrush x:Key="AppBarItemForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="ToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
+            <SolidColorBrush x:Key="ToggleButtonCheckedPressedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedBorderThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPointerOverBackgroundThemeBrush" Color="{ThemeResource AppAccentColorLight}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPointerOverBorderThemeBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBackgroundThemeBrush" Color="{ThemeResource AppAccentColorSemiLight}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBorderThemeBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
+        </ResourceDictionary>-->
 
 
         <ResourceDictionary x:Key="Light">
@@ -73,6 +133,12 @@
             <Color x:Key="AppSemitransparentColor">#AAFFFFFF</Color>
             <Color x:Key="AppSubtleColor">#66000000</Color>
             <Color x:Key="AppSemitransparentColor10">#1FFFFFFF</Color>
+
+            <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
+            <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
+
             <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
@@ -91,6 +157,7 @@
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBorderThemeBrush" Color="Transparent" />
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">
@@ -112,11 +179,6 @@
     <!--  40 percent Black  -->
 
     <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
-
-    <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
-    <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
-    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
-    <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
 
     <SolidColorBrush x:Key="AppSubtleBrush" Color="{ThemeResource AppSubtleColor}" />
     <SolidColorBrush x:Key="TransparentBrush" Color="Transparent" />

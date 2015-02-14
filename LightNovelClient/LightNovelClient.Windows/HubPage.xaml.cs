@@ -48,6 +48,10 @@ namespace LightNovel
 			//Task LoadingRecentTask = null;
 			Task LoginTask = null;
 
+			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+			{
+				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+			} 
 			ViewModel.IsLoading = true;
 
 			if (App.Current.RecentList == null)
@@ -99,22 +103,12 @@ namespace LightNovel
 
 			if (!App.Current.IsSignedIn)
 			{
-				LoginTask = ViewModel.TryLogInWithStoredCredentialAsync().ContinueWith(async task =>
-				{
-					if (task.Result)
-					{
-						await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-						{
-							await ViewModel.FavoriteSection.LoadAsync();
-						});
-					}
-				});
+				LoginTask = ViewModel.TryLogInWithStoredCredentialAsync();
 			}
 			else
 			{
 				ViewModel.IsSignedIn = true;
 				ViewModel.UserName = App.Current.User.UserName;
-				LoginTask = ViewModel.FavoriteSection.LoadAsync();
 			}
 
 #if WINDOWS_APP
@@ -135,6 +129,7 @@ namespace LightNovel
 				await LoadingIndexTask;
 			if (LoginTask != null)
 				await LoginTask;
+			await ViewModel.FavoriteSection.LoadAsync();
 
 			UpdateTile();
 
@@ -158,7 +153,8 @@ namespace LightNovel
 				}
 			}
 
-			UpdateTile();
+			if (App.Current.Settings.EnableLiveTile)
+				UpdateTile();
 #else
 			await statusBar.ProgressIndicator.HideAsync();
 #endif
@@ -167,7 +163,7 @@ namespace LightNovel
 		{
 			double maxX = (double)App.Current.Resources["PosterWidth"];
 			ScrollViewer viewer = sender as ScrollViewer;
-			LogoImageTranslate.X = -Math.Min(viewer.HorizontalOffset, maxX);
+			LogoImageTranslate.X = Math.Max(maxX - viewer.HorizontalOffset, 0);
 		}
 	}
 }

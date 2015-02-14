@@ -72,6 +72,13 @@ namespace LightNovel
 			}
 		}
 
+		public static readonly DependencyProperty ListViewScrollToIndexRequestProperty =
+			DependencyProperty.Register("ListViewScrollToIndexRequest", typeof(int),
+			typeof(ListViewBase), new PropertyMetadata(-1, null));
+		public static readonly DependencyProperty ListViewBaseScrollToItemRequestProperty =
+			DependencyProperty.Register("ListViewBaseScrollToItemRequest", typeof(object),
+			typeof(ListViewBase), new PropertyMetadata(null, null));
+
 		string ImageLoadingTextPlaceholder = "Image Loading ...";
 
 		private NavigationHelper navigationHelper;
@@ -110,13 +117,6 @@ namespace LightNovel
 				bool userTransition = !ViewModel.IsLoading;
 				if (value)
 				{
-					//IndexOpenStoryBoard.Begin();
-					//if (_isFisrtTimeOpenIndex)
-					//{
-					//	ChangeState(IndexOpenState, false);
-					//	IndexOpenStoryBoard.Begin();
-					//	_isFisrtTimeOpenIndex = false;
-					//}
 					ChangeState(IndexOpenState, userTransition);
 				}
 				else
@@ -182,14 +182,16 @@ namespace LightNovel
 					break;
 				case "VolumeNo":
 #if WINDOWS_APP
-					VolumeListView.SelectedIndex = ViewModel.VolumeNo;
+					if (VolumeListView.Items.Count > 0 && VolumeListView.Items.Count > ViewModel.VolumeNo)
+						VolumeListView.SelectedIndex = ViewModel.VolumeNo;
 #endif
 					SyncIndexSelection();
 					LoadingAheadTask = null;
 					break;
 				case "ChapterNo":
 #if WINDOWS_APP
-					ChapterListView.SelectedIndex = ViewModel.ChapterNo;
+					if (ChapterListView.Items.Count > 0 && ChapterListView.Items.Count > ViewModel.ChapterNo)
+						ChapterListView.SelectedIndex = ViewModel.ChapterNo;
 #endif
 					SyncIndexSelection();
 #if WINDOWS_PHONE_APP
@@ -290,6 +292,11 @@ namespace LightNovel
 			statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
 			await statusBar.ShowAsync();
 			await statusBar.ProgressIndicator.ShowAsync();
+#else
+			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+			{
+				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+			}
 #endif
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
 			if (e.PageState != null && e.PageState.Count > 0)
@@ -360,6 +367,8 @@ namespace LightNovel
 				var bookmark = ViewModel.CreateBookmark();
 				await App.Current.UpdateHistoryListAsync(bookmark);
 				await App.UpdateSecondaryTileAsync(bookmark);
+				if (ViewModel.IsFavored)
+					await ViewModel.AddCurrentVolumeToFavoriteAsync(); // Update Favorite
 				if (ViewModel.IsDownloading)
 					await ViewModel.CancelCachingRequestAsync();
 			}
@@ -442,22 +451,22 @@ namespace LightNovel
 
 			if (!ViewModel.IsFavored)
 			{
-				if (!App.Current.IsSignedIn)
-				{
-					MessageDialog diag = new MessageDialog("登陆后才可以收藏到轻国哦:) 如果您不需要和轻国账号同步，App会自动帮您把看过的书保存在“最近”里的，这个列表会在您的设备之间自动同步！");
-					await diag.ShowAsync();
-					ViewModel.NotifyPropertyChanged("IsFavored");
-					return;
-				}
-				else
-				{
+				//if (!App.Current.IsSignedIn)
+				//{
+				//	MessageDialog diag = new MessageDialog("登陆后才可以收藏到轻国哦:) 如果您不需要和轻国账号同步，App会自动帮您把看过的书保存在“最近”里的，这个列表会在您的设备之间自动同步！");
+				//	await diag.ShowAsync();
+				//	ViewModel.NotifyPropertyChanged("IsFavored");
+				//	return;
+				//}
+				//else
+				//{
 					var result = await ViewModel.AddCurrentVolumeToFavoriteAsync();
 					if (!result)
 					{
 						MessageDialog diag = new MessageDialog("收藏失败:(请检查一下网络连接再重试:)");
 						await diag.ShowAsync();
 					}
-				}
+				//}
 			}
 			else
 			{
@@ -623,6 +632,11 @@ namespace LightNovel
 				await caching;
 				DownloadButton.Label = resourceLoader.GetString("DownloadButtonStartLabel");
 			}
+		}
+
+		private void ClearDownloadButton_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

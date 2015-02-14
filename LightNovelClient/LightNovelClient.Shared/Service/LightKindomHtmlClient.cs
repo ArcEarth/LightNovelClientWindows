@@ -70,6 +70,7 @@ namespace LightNovel.Service
 		private const string UserFavourPath = SeverBasePath + "/user/favour.html";
 		private const string UserGetFavourPath = SeverBasePath + "/user/get_user_favourite.html?page=1";
 		private const string UserDeleteFavoritePath = SeverBasePath + "/user/delete_user_favourite.html"; // Post {fav_id[] : ids}
+		private const string UserDeleteFavoriteBatchPath = SeverBasePath + "/user/delete_user_favourite_batch.html";
 		private const string UserAddFavoritePath = SeverBasePath + "/main/add_favourite.html"; // Post {vol_id : id}
 		private const string UserAddFavoriteSeriesPath = SeverBasePath + "/main/add_batch_favourite.html"; // Post { series_id : id}
 		private const string UserSetBookmarkPath = SeverBasePath + "/main/set_bookmark.html";
@@ -98,6 +99,7 @@ namespace LightNovel.Service
 		public readonly static Uri UserFavourUri = new Uri(UserFavourPath);
 		public readonly static Uri UserGetFavourUri = new Uri(UserGetFavourPath);
 		public readonly static Uri UserDeleteFavoriteUri = new Uri(UserDeleteFavoritePath); // Post {fav_id[] : ids}
+		public readonly static Uri UserDeleteFavoriteBatchUri = new Uri(UserDeleteFavoriteBatchPath); // Post {fav_id[] : ids}
 		public readonly static Uri UserAddFavoriteUri = new Uri(UserAddFavoritePath); // Post {vol_id : id}
 		public readonly static Uri UserAddFavoriteSeriesUri = new Uri(UserAddFavoriteSeriesPath); // Post { series_id : id}
 		public readonly static Uri UserSetBookmarkUri = new Uri(UserSetBookmarkPath);
@@ -291,7 +293,7 @@ namespace LightNovel.Service
 			}
 		}
 
-		public static async Task<string> AddUserFavoriteVolume(string volId)
+		public static async Task<bool> AddUserFavoriteVolume(string volId)
 		{
 			//var b = "/main/add_favourite.html", a = $(this).attr("vol_id");
 			//$.post(b, { vol_id: a }, function (c) {
@@ -306,9 +308,11 @@ namespace LightNovel.Service
 				resp.EnsureSuccessStatusCode();
 				var obj = JObject.Parse(await resp.Content.ReadAsStringAsync());
 				if (obj.Value<int>("code") == 0)
-					return obj.Value<string>("fav_id");
+					return true;
+				else if (obj.Value<int>("code") == 1)
+					return true;
 				else
-					throw new HtmlWebException(obj.Value<string>("message"));
+					return false;
 			}
 		}
 
@@ -322,6 +326,7 @@ namespace LightNovel.Service
 				{
 					var resp = await client.PostAsync(builder.Uri, new HttpStringContent(""));
 					resp.EnsureSuccessStatusCode();
+					var obj = JObject.Parse(await resp.Content.ReadAsStringAsync());
 				}
 				catch (Exception)
 				{
@@ -336,8 +341,9 @@ namespace LightNovel.Service
 				var content = new HttpFormUrlEncodedContent(favIds.Select(id => new KeyValuePair<string, string>("fav_id[]", id)));
 				try
 				{
-					var resp = await client.PostAsync(new Uri(UserDeleteFavoritePath), content);
+					var resp = await client.PostAsync(UserDeleteFavoriteBatchUri, content);
 					resp.EnsureSuccessStatusCode();
+					var obj = JObject.Parse(await resp.Content.ReadAsStringAsync());
 				}
 				catch (Exception)
 				{
@@ -435,7 +441,7 @@ namespace LightNovel.Service
 				response.EnsureSuccessStatusCode();
 				var respStr = await response.Content.ReadAsStringAsync();
 				var resp = JArray.Parse(respStr);
-				return resp.Select(obj => obj.ToString());
+				return resp.Select(obj => obj.ToString()).Reverse();
 			}
 		}
 

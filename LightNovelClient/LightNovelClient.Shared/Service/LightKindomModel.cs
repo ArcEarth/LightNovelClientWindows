@@ -202,6 +202,7 @@ namespace LightNovel.Service
 		public string VolumeTitle { get; set; }
 		public string SeriesTitle { get; set; }
 		public string DescriptionThumbnailUri { get; set; }
+		public bool IsDeleted { get; set; }
 	}
 
 }

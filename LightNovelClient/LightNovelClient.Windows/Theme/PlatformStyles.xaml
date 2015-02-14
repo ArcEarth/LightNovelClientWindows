@@ -5,13 +5,20 @@
     <x:String x:Key="StoreReviewLink">ms-windows-store:Review?PFN=10039ArcEarth.LightNovel_9cwd8qnzd32wr</x:String>
     <x:Double x:Key="PosterWidth">620</x:Double>
     <!--  Accent colors  -->
-    <!--  Lime Green  --><!--
+    <!--  Lime Green  -->
+    <!--
     <Color x:Key="AppAccentColor">#FFA4C400</Color>
-    --><!--  Semi Light Lime Green  --><!--
+    -->
+    <!--  Semi Light Lime Green  -->
+    <!--
     <Color x:Key="AppAccentColorSemiLight">#FFCAE05A</Color>
-    --><!--  Light Lime Green  --><!--
+    -->
+    <!--  Light Lime Green  -->
+    <!--
     <Color x:Key="AppAccentColorLight">#FFE5FA78</Color>
-    --><!--  10 percent Black  --><!--
+    -->
+    <!--  10 percent Black  -->
+    <!--
     <Color x:Key="SemiTransparentBlack10Color">#19000000</Color>-->
 
     <!--  Font sizes  -->
@@ -35,9 +42,9 @@
     <FontFamily x:Key="AppContentFontFamily">Segoe UI</FontFamily>
 
     <Style TargetType="AppBarToggleButton">
-        <!--<Setter Property="Foreground" Value="{ThemeResource AppBarItemForegroundThemeBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppBarItemForegroundThemeBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}" />
-        <Setter Property="BorderBrush" Value="Transparent" />-->
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
@@ -46,6 +53,7 @@
         <Setter Property="Margin" Value="10,0" />
         <Setter Property="Width" Value="50" />
         <Setter Property="Height" Value="65" />
+        <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="IsCompact" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
@@ -236,9 +244,9 @@
     </Style>
 
     <Style TargetType="AppBarButton">
-        <!--<Setter Property="Foreground" Value="{ThemeResource AppBarItemForegroundThemeBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppBarItemForegroundThemeBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}" />
-        <Setter Property="BorderBrush" Value="Transparent" />-->
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="FontWeight" Value="SemiBold" />
@@ -247,6 +255,7 @@
         <Setter Property="Width" Value="50" />
         <Setter Property="Height" Value="65" />
         <Setter Property="IsCompact" Value="False" />
+        <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="AppBarButton">

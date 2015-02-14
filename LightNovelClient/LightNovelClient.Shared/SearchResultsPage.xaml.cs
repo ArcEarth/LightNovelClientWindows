@@ -27,7 +27,8 @@ namespace LightNovel
 		private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
 		string _QueryText;
-		public string QueryText { 
+		public string QueryText
+		{
 			get
 			{ return _QueryText; }
 			set
@@ -37,7 +38,7 @@ namespace LightNovel
 			}
 		}
 		public List<BookItem> Results { get; set; }
-		public Task QueryTask { get; set; }
+		public Task<List<BookItem>> QueryTask { get; set; }
 		//private bool IsPageActive = true;
 		/// <summary>
 		/// This can be changed to a strongly typed view model.
@@ -65,15 +66,37 @@ namespace LightNovel
 
 		void LoadResultIntoView()
 		{
-			var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
-			this.DefaultViewModel["Results"] = bvms;
-			resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
-			if (Results == null || Results.Count == 0)
+			if (Results == null)
+				VisualStateManager.GoToState(this, "ErrorInSearch", true);
+			else if (Results.Count == 0)
 				VisualStateManager.GoToState(this, "NoResultsFound", true);
 			else
 			{
+				var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
+				this.DefaultViewModel["Results"] = bvms;
+				resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
 				VisualStateManager.GoToState(this, "ResultsFound", true);
 			}
+		}
+
+		private async Task SearchForResultAsync()
+		{
+			if (QueryTask != null)
+			{
+				QueryTask.AsAsyncAction().Cancel();
+			}
+			VisualStateManager.GoToState(this, "Searching", false);
+			QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText);
+			try
+			{
+				Results = await QueryTask;
+			}
+			catch (Exception)
+			{
+				Results = null;
+			}
+			QueryTask = null;
+			LoadResultIntoView();
 		}
 		/// <summary>
 		/// Populates the page with content passed during navigation.  Any saved state is also
@@ -95,7 +118,8 @@ namespace LightNovel
 					QueryTask = null;
 					Results = JsonConvert.DeserializeObject<List<BookItem>>(results);
 					LoadResultIntoView();
-				} else
+				}
+				else
 				{
 					Results = null;
 					QueryTask = null;
@@ -108,22 +132,8 @@ namespace LightNovel
 
 			if (Results == null && QueryTask == null)
 			{
-				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText).ContinueWith(async result =>
-				{
-					Results = result.Result;
-					var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
-					this.DefaultViewModel["Results"] = bvms;
-					await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-					{
-						resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
-						if (Results == null || Results.Count == 0)
-							VisualStateManager.GoToState(this, "NoResultsFound", true);
-						else
-						{
-							VisualStateManager.GoToState(this, "ResultsFound", true);
-						}
-					});
-				});
+				VisualStateManager.GoToState(this, "Searching", false);
+				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText);
 			}
 
 			// TODO: Application-specific searching logic.  The search process is responsible for
@@ -143,7 +153,17 @@ namespace LightNovel
 			this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
 
 			if (QueryTask != null)
-				await QueryTask;
+			{
+				try
+				{
+					Results = await QueryTask;
+				}
+				catch (Exception)
+				{
+					Results = null;
+				}
+				LoadResultIntoView();
+			}
 		}
 		private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
@@ -324,9 +344,33 @@ namespace LightNovel
 
 		}
 
-		private void queryText_TextChanged(object sender, TextChangedEventArgs e)
+		private async void QueryTextBox_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
 		{
+			if ((e.Key == Windows.System.VirtualKey.Accept || e.Key == Windows.System.VirtualKey.Search || e.Key == Windows.System.VirtualKey.Enter))
+				if (!String.IsNullOrEmpty(queryText.Text) && queryText.Text != QueryText)
+				{
+					QueryText = queryText.Text;
+					await SearchForResultAsync();
+				}
+				else
+				{
+					queryText.Text = QueryText;
+					var res = queryText.Focus(FocusState.Unfocused);
+#if WINDOWS_PHONE_APP
+					TitleButton.Focus(FocusState.Keyboard);
+#endif
+				}
+		}
 
+		private void Title_Click(object sender, RoutedEventArgs e)
+		{
+			var res = queryText.Focus(FocusState.Keyboard);
+			queryText.SelectAll();
+		}
+
+		private void QuertTextBox_lostFocus(object sender, RoutedEventArgs e)
+		{
+			queryText.Text = QueryText;
 		}
 	}
 }

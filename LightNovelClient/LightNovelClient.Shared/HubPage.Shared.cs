@@ -413,6 +413,25 @@ namespace LightNovel
 				this.RequestedTheme = (Windows.UI.Xaml.ElementTheme)(combo.SelectedIndex);
 			}
 		}
-
+		private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteBookLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				//ViewModel.IsLoading
+				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+				ViewModel.RecentSection.Remove(hvm);
+				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+				if (recentItem != null)
+				{
+					App.Current.RecentList.Remove(recentItem);
+					await App.Current.SaveHistoryDataAsync();
+				}
+			}));
+			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
 	}
 }

@@ -109,6 +109,7 @@ namespace LightNovel
 
 			#region Preloading
 			loadHistoryDataTask = App.Current.LoadHistoryDataAsync();
+			await App.Current.LoadBookmarkDataAsync();
 			await CachedClient.InitializeCachedSetAsync();
 			#endregion
 
@@ -235,7 +236,7 @@ namespace LightNovel
 		private ApplicationSettings _settings = new ApplicationSettings();
 		public UserInfo User { get; set; }
 		public ApplicationSettings Settings { get { return _settings; } }
-		public bool IsSignedIn { get { return User != null; } }
+		public bool IsSignedIn { get { return User != null && !User.Credential.Expired; } }
 
 		public bool _isHistoryListChanged = true;
 		public bool IsHistoryListChanged
@@ -675,55 +676,52 @@ namespace LightNovel
 		{
 			if (BookmarkList != null)
 				return;
-			if (loadBookmarkDataTask != null)
-			{
-				try
-				{
-					await loadBookmarkDataTask;
-				}
-				catch
-				{
-				}
+			BookmarkList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalBookmarkFilePath);
 
-				return;
-			}
+			if (BookmarkList == null)
+				BookmarkList = new List<BookmarkInfo>();
 
-			try
-			{
-				BookmarkList = await GetFromRoamingFolderAsAsync<List<BookmarkInfo>>(LocalBookmarkFilePath);
-
-				if (RecentList == null)
-				{
-					RecentList = await GetFromLocalFolderAsAsync<List<BookmarkInfo>>(LocalBookmarkFilePath);
-				}
-			}
-			catch
-			{
-			}
-
-			if (RecentList == null)
-				RecentList = new List<BookmarkInfo>();
-
-			loadHistoryDataTask = null;
 		}
 		public async Task SaveBookmarkDataAsync()
 		{
-			if (RecentList.Count > 30)
-				RecentList.RemoveRange(0, RecentList.Count - 30);
-			if (RecentList != null)
+			if (BookmarkList.Count > 100)
+				BookmarkList.RemoveRange(0, BookmarkList.Count - 100);
+			if (BookmarkList != null)
 			{
-				await SaveToRoamingFolderAsync(RecentList, LocalBookmarkFilePath);
-				IsHistoryListChanged = false;
+				await SaveToRoamingFolderAsync(BookmarkList, LocalBookmarkFilePath);
 			}
 		}
 
-		public async Task SynchronizeBookmarkWithUserFavorite()
+		public async Task PullBookmarkFromUserFavoriteAsync(bool forectRefresh = false)
 		{
 			if (BookmarkList == null)
 				await LoadBookmarkDataAsync();
-			if (User != null && User.FavoriteList == null)
-				await User.SyncFavoriteListAsync();
-			throw new NotImplementedException("SynchronizeBookmarkWithUserFavorite");
+			if (User != null)
+			{
+				await User.SyncFavoriteListAsync(false);
+				var favList = from fav in User.FavoriteList orderby fav.VolumeId group fav by fav.SeriesTitle;
+
+				foreach (var series in favList)
+				{
+					var vol = series.LastOrDefault();
+					if (BookmarkList.Any(bk => bk.SeriesTitle == vol.SeriesTitle))
+						continue;
+					var item = new BookmarkInfo { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, ViewDate = vol.FavTime };
+					item.Position = new NovelPositionIdentifier { /*SeriesId = volume.ParentSeriesId,*/ VolumeId = vol.VolumeId, VolumeNo = -1 };
+					BookmarkList.Add(item);
+				}
+			}
+		}
+
+		public async Task PushBookmarkToUserFavortiteAsync()
+		{
+			foreach (var bk in BookmarkList)
+			{
+				if (!User.FavoriteList.Any(fav => bk.Position.VolumeId == fav.VolumeId))
+				{
+					var result = await LightKindomHtmlClient.AddUserFavoriteVolume(bk.Position.VolumeId);
+				}
+			}
 		}
 
 		public async Task<UserInfo> SignInAsync(string userName, string password)

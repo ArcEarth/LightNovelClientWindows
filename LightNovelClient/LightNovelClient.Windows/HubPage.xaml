@@ -301,9 +301,10 @@
                 Canvas.Top="0"
                 Width="200"
                 Height="60"
-                Margin="140,0,0,0">
+                Margin="40,0,0,0"
+                HorizontalAlignment="Left">
             <Canvas.RenderTransform>
-                <TranslateTransform x:Name="LogoImageTranslate" X="0" />
+                <TranslateTransform x:Name="LogoImageTranslate" X="{StaticResource PosterWidth}" />
             </Canvas.RenderTransform>
             <Canvas.Resources />
             <!--  Unknown tag: metadata  -->
@@ -594,6 +595,7 @@
                                 Live Tile
                             </TextBlock>
                             <TextBlock x:Uid="LiveTileDescription"
+                                       Foreground="{ThemeResource AppForegroundBrush}"
                                        Style="{ThemeResource AppTextNormalStyle}"
                                        TextWrapping="WrapWholeWords">
                                 Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
@@ -611,15 +613,13 @@
                                 Theme
                             </TextBlock>
                             <TextBlock x:Uid="AppThemeDescription"
+                                       Foreground="{ThemeResource AppForegroundBrush}"
                                        Style="{ThemeResource AppTextNormalStyle}"
                                        TextWrapping="WrapWholeWords">
                                 Change the background them of Application, &quot;Autmatic&quot; may need to restart App to apply the theme change
                             </TextBlock>
                             <ComboBox x:Uid="AppThemeComboBox"
                                       Margin="0,10,15,0"
-                                      Background="{ThemeResource AppBackgroundBrush}"
-                                      BorderBrush="{ThemeResource AppForegroundBrush}"
-                                      Foreground="{ThemeResource AppForegroundBrush}"
                                       SelectedIndex="{Binding BackgroundThemeIndexBindingProperty,
                                                               Mode=TwoWay}"
                                       SelectionChanged="BackgroundThemeComboBox_SelectionChanged">
@@ -657,6 +657,7 @@
                                        Margin="0,10,0,10"
                                        Fill="{ThemeResource AppAccentBrush}" />
                             <TextBlock x:Uid="ReviewLabel"
+                                       Foreground="{ThemeResource AppForegroundBrush}"
                                        Style="{ThemeResource AppTextNormalStyle}"
                                        TextWrapping="WrapWholeWords">
                                 If you like this App, Please rate us 5 Star and share your feedback!
@@ -670,6 +671,7 @@
                                              NavigateUri="{StaticResource StoreReviewLink}" />
                             <TextBlock x:Uid="ProjectLabel"
                                        Margin="0,5,0,0"
+                                       Foreground="{ThemeResource AppForegroundBrush}"
                                        Style="{ThemeResource AppTextNormalStyle}"
                                        TextWrapping="WrapWholeWords">
                                 If you want to contribute or have detailed feedback, please visit our project home!
@@ -683,6 +685,7 @@
                                 Project Home
                             </HyperlinkButton>
                             <TextBlock x:Uid="DataCreditLabel"
+                                       Foreground="{ThemeResource AppForegroundBrush}"
                                        Style="{ThemeResource AppTextNormalStyle}"
                                        Text="Special thanks and Data Credit : " />
                             <HyperlinkButton Margin="10,10,10,0"

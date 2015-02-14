@@ -248,7 +248,26 @@ namespace LightNovel.Common
 		{
 			return DataCache.GetAsync("popular_series", LightKindomHtmlClient.GetRecommandedBookLists, DateTime.Now.AddDays(1));
 		}
-
+		public async static Task<bool> ClearSerialCache(string serId)
+		{
+			if (!CachedSeriesSet.Contains(serId))
+				return false;
+			var ser = await GetSeriesAsync(serId);
+			foreach (var vol in ser.Volumes)
+			{
+				foreach (var cpt in vol.Chapters)
+				{
+					if (CachedChapterSet.Contains(cpt.Id))
+					{
+						await DataCache.Delete("chapter-" + cpt.Id);
+						CachedSeriesSet.Remove(cpt.Id);
+					}
+				}
+			}
+			await DataCache.Delete("series-" + serId);
+			CachedSeriesSet.Remove(serId);
+			return true;
+		}
 		public static Task ClearCache()
 		{
 			return DataCache.ClearAll();

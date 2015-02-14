@@ -540,10 +540,9 @@
                                     Foreground="{StaticResource AppBackgroundBrush}"
                                     IsChecked="{Binding IsFavored}"
                                     IsCompact="False"
-                                    IsEnabled="{Binding IsSignedIn}"
                                     Label="Favrite"
                                     ToolTipService.ToolTip="Bookmark current page">
-                    <Viewbox Margin="10">
+                    <Viewbox Margin="5">
                         <SymbolIcon Symbol="Favorite" />
                     </Viewbox>
                 </AppBarToggleButton>
@@ -558,7 +557,7 @@
                                     IsCompact="False"
                                     Label="Pin"
                                     ToolTipService.ToolTip="Pin this page to Start">
-                    <Viewbox Margin="10">
+                    <Viewbox Margin="8">
                         <SymbolIcon Symbol="{Binding IsChecked, ElementName=PinButton, Converter={StaticResource IsPinnedToSymbolConverter}}" />
                     </Viewbox>
                 </AppBarToggleButton>
@@ -604,6 +603,19 @@
                         <SymbolIcon Symbol="Download" />
                     </Viewbox>
                 </AppBarButton>
+                <!--<AppBarButton x:Uid="ClearDownloadButton"
+                              x:Name="ClearDownloadButton"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="ClearDownloadButton_Click"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              IsCompact="False"
+                              Label="Clear Cache"
+                              Padding="0">
+                    <Viewbox Margin="8">
+                        <SymbolIcon Symbol="Delete" />
+                    </Viewbox>
+                </AppBarButton>-->
                 <AppBarButton x:Uid="FontSizeButton"
                               x:Name="FontSizeButton"
                               VerticalAlignment="Center"
@@ -889,43 +901,22 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0" />
                 <RowDefinition Height="40" />
             </Grid.RowDefinitions>
-            <TextBlock x:Name="pageTitle"
-                       Grid.Row="1"
-                       Grid.Column="1"
-                       Margin="10,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Foreground="{StaticResource AppBackgroundBrush}"
-                       IsHitTestVisible="false"
-                       Language="zh-CN"
-                       Style="{ThemeResource AppTextTitle1Style}"
-                       Text="{Binding Header}"
-                       TextTrimming="WordEllipsis"
-                       TextWrapping="NoWrap" />
-            <!--<Path Grid.Row="0" Height="40" Width="40"
-                                              Grid.Column="1"
-                                              Margin="0,0,10,0"
-                                              HorizontalAlignment="Right"
-                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
-                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
-
             <ToggleButton x:Uid="IndexButton"
                           x:Name="IndexButton"
                           Grid.Row="1"
                           Grid.Column="0"
-                          Width="40"
+                          Grid.ColumnSpan="3"
                           Height="60"
-                          MinWidth="40"
                           MinHeight="40"
-                          HorizontalAlignment="Center"
+                          HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
-                          HorizontalContentAlignment="Center"
+                          HorizontalContentAlignment="Left"
                           VerticalContentAlignment="Center"
                           Background="Transparent"
                           BorderBrush="Transparent"
@@ -944,9 +935,30 @@
                          Margin="0"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center">
-                    <SymbolIcon Symbol="List" />
+                    <SymbolIcon Margin="3" Symbol="List" />
                 </Viewbox>
             </ToggleButton>
+            <TextBlock x:Name="pageTitle"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       Margin="10,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="30"
+                       Foreground="{StaticResource AppBackgroundBrush}"
+                       IsHitTestVisible="false"
+                       Language="zh-CN"
+                       Style="{ThemeResource AppTextTitle1Style}"
+                       Text="{Binding Header}"
+                       TextTrimming="WordEllipsis"
+                       TextWrapping="NoWrap" />
+            <!--<Path Grid.Row="0" Height="40" Width="40"
+                                              Grid.Column="1"
+                                              Margin="0,0,10,0"
+                                              HorizontalAlignment="Right"
+                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
+                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
+
 
 
         </Grid>

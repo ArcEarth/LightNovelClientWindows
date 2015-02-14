@@ -148,7 +148,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[46];
+            _typeNameTable = new string[47];
             _typeNameTable[0] = "LightNovel.Controls.SearchBox";
             _typeNameTable[1] = "Windows.UI.Xaml.Controls.UserControl";
             _typeNameTable[2] = "Boolean";
@@ -178,25 +178,26 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
             _typeNameTable[26] = "LightNovel.Service.BookItem";
             _typeNameTable[27] = "LightNovel.Service.BookItemType";
             _typeNameTable[28] = "System.Enum";
-            _typeNameTable[29] = "LightNovel.Common.ObservableDictionary";
-            _typeNameTable[30] = "LightNovel.Controls.BooleanToVisibilityConverter";
-            _typeNameTable[31] = "LightNovel.Common.BooleanNegationConverter";
-            _typeNameTable[32] = "LightNovel.Controls.PlusConverter";
-            _typeNameTable[33] = "LightNovel.Common.OrientationToVisibilityConverter";
-            _typeNameTable[34] = "Windows.UI.Xaml.Controls.Orientation";
-            _typeNameTable[35] = "LightNovel.Controls.RichTextColumns";
-            _typeNameTable[36] = "Windows.UI.Xaml.Controls.Panel";
-            _typeNameTable[37] = "Windows.UI.Xaml.Controls.RichTextBlock";
-            _typeNameTable[38] = "Double";
-            _typeNameTable[39] = "Int32";
-            _typeNameTable[40] = "LightNovel.Controls.RichTextView";
-            _typeNameTable[41] = "Windows.UI.Text.FontWeight";
-            _typeNameTable[42] = "LightNovel.Controls.ExpanderView";
-            _typeNameTable[43] = "WinRTXamlToolkit.Controls.HeaderedItemsControl";
-            _typeNameTable[44] = "Windows.UI.Xaml.Controls.ItemsControl";
-            _typeNameTable[45] = "Windows.UI.Xaml.Style";
+            _typeNameTable[29] = "System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>";
+            _typeNameTable[30] = "LightNovel.Common.ObservableDictionary";
+            _typeNameTable[31] = "LightNovel.Controls.BooleanToVisibilityConverter";
+            _typeNameTable[32] = "LightNovel.Common.BooleanNegationConverter";
+            _typeNameTable[33] = "LightNovel.Controls.PlusConverter";
+            _typeNameTable[34] = "LightNovel.Common.OrientationToVisibilityConverter";
+            _typeNameTable[35] = "Windows.UI.Xaml.Controls.Orientation";
+            _typeNameTable[36] = "LightNovel.Controls.RichTextColumns";
+            _typeNameTable[37] = "Windows.UI.Xaml.Controls.Panel";
+            _typeNameTable[38] = "Windows.UI.Xaml.Controls.RichTextBlock";
+            _typeNameTable[39] = "Double";
+            _typeNameTable[40] = "Int32";
+            _typeNameTable[41] = "LightNovel.Controls.RichTextView";
+            _typeNameTable[42] = "Windows.UI.Text.FontWeight";
+            _typeNameTable[43] = "LightNovel.Controls.ExpanderView";
+            _typeNameTable[44] = "WinRTXamlToolkit.Controls.HeaderedItemsControl";
+            _typeNameTable[45] = "Windows.UI.Xaml.Controls.ItemsControl";
+            _typeNameTable[46] = "Windows.UI.Xaml.Style";
 
-            _typeTable = new global::System.Type[46];
+            _typeTable = new global::System.Type[47];
             _typeTable[0] = typeof(global::LightNovel.Controls.SearchBox);
             _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
             _typeTable[2] = typeof(global::System.Boolean);
@@ -226,23 +227,24 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
             _typeTable[26] = typeof(global::LightNovel.Service.BookItem);
             _typeTable[27] = typeof(global::LightNovel.Service.BookItemType);
             _typeTable[28] = typeof(global::System.Enum);
-            _typeTable[29] = typeof(global::LightNovel.Common.ObservableDictionary);
-            _typeTable[30] = typeof(global::LightNovel.Controls.BooleanToVisibilityConverter);
-            _typeTable[31] = typeof(global::LightNovel.Common.BooleanNegationConverter);
-            _typeTable[32] = typeof(global::LightNovel.Controls.PlusConverter);
-            _typeTable[33] = typeof(global::LightNovel.Common.OrientationToVisibilityConverter);
-            _typeTable[34] = typeof(global::Windows.UI.Xaml.Controls.Orientation);
-            _typeTable[35] = typeof(global::LightNovel.Controls.RichTextColumns);
-            _typeTable[36] = typeof(global::Windows.UI.Xaml.Controls.Panel);
-            _typeTable[37] = typeof(global::Windows.UI.Xaml.Controls.RichTextBlock);
-            _typeTable[38] = typeof(global::System.Double);
-            _typeTable[39] = typeof(global::System.Int32);
-            _typeTable[40] = typeof(global::LightNovel.Controls.RichTextView);
-            _typeTable[41] = typeof(global::Windows.UI.Text.FontWeight);
-            _typeTable[42] = typeof(global::LightNovel.Controls.ExpanderView);
-            _typeTable[43] = typeof(global::WinRTXamlToolkit.Controls.HeaderedItemsControl);
-            _typeTable[44] = typeof(global::Windows.UI.Xaml.Controls.ItemsControl);
-            _typeTable[45] = typeof(global::Windows.UI.Xaml.Style);
+            _typeTable[29] = typeof(global::System.Threading.Tasks.Task<System.Collections.Generic.List<global::LightNovel.Service.BookItem>>);
+            _typeTable[30] = typeof(global::LightNovel.Common.ObservableDictionary);
+            _typeTable[31] = typeof(global::LightNovel.Controls.BooleanToVisibilityConverter);
+            _typeTable[32] = typeof(global::LightNovel.Common.BooleanNegationConverter);
+            _typeTable[33] = typeof(global::LightNovel.Controls.PlusConverter);
+            _typeTable[34] = typeof(global::LightNovel.Common.OrientationToVisibilityConverter);
+            _typeTable[35] = typeof(global::Windows.UI.Xaml.Controls.Orientation);
+            _typeTable[36] = typeof(global::LightNovel.Controls.RichTextColumns);
+            _typeTable[37] = typeof(global::Windows.UI.Xaml.Controls.Panel);
+            _typeTable[38] = typeof(global::Windows.UI.Xaml.Controls.RichTextBlock);
+            _typeTable[39] = typeof(global::System.Double);
+            _typeTable[40] = typeof(global::System.Int32);
+            _typeTable[41] = typeof(global::LightNovel.Controls.RichTextView);
+            _typeTable[42] = typeof(global::Windows.UI.Text.FontWeight);
+            _typeTable[43] = typeof(global::LightNovel.Controls.ExpanderView);
+            _typeTable[44] = typeof(global::WinRTXamlToolkit.Controls.HeaderedItemsControl);
+            _typeTable[45] = typeof(global::Windows.UI.Xaml.Controls.ItemsControl);
+            _typeTable[46] = typeof(global::Windows.UI.Xaml.Style);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -288,22 +290,22 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
         private object Activate_24_SearchResultsPage() { return new global::LightNovel.SearchResultsPage(); }
         private object Activate_25_List() { return new global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>(); }
         private object Activate_26_BookItem() { return new global::LightNovel.Service.BookItem(); }
-        private object Activate_29_ObservableDictionary() { return new global::LightNovel.Common.ObservableDictionary(); }
-        private object Activate_30_BooleanToVisibilityConverter() { return new global::LightNovel.Controls.BooleanToVisibilityConverter(); }
-        private object Activate_31_BooleanNegationConverter() { return new global::LightNovel.Common.BooleanNegationConverter(); }
-        private object Activate_32_PlusConverter() { return new global::LightNovel.Controls.PlusConverter(); }
-        private object Activate_33_OrientationToVisibilityConverter() { return new global::LightNovel.Common.OrientationToVisibilityConverter(); }
-        private object Activate_35_RichTextColumns() { return new global::LightNovel.Controls.RichTextColumns(); }
-        private object Activate_40_RichTextView() { return new global::LightNovel.Controls.RichTextView(); }
-        private object Activate_42_ExpanderView() { return new global::LightNovel.Controls.ExpanderView(); }
-        private object Activate_43_HeaderedItemsControl() { return new global::WinRTXamlToolkit.Controls.HeaderedItemsControl(); }
+        private object Activate_30_ObservableDictionary() { return new global::LightNovel.Common.ObservableDictionary(); }
+        private object Activate_31_BooleanToVisibilityConverter() { return new global::LightNovel.Controls.BooleanToVisibilityConverter(); }
+        private object Activate_32_BooleanNegationConverter() { return new global::LightNovel.Common.BooleanNegationConverter(); }
+        private object Activate_33_PlusConverter() { return new global::LightNovel.Controls.PlusConverter(); }
+        private object Activate_34_OrientationToVisibilityConverter() { return new global::LightNovel.Common.OrientationToVisibilityConverter(); }
+        private object Activate_36_RichTextColumns() { return new global::LightNovel.Controls.RichTextColumns(); }
+        private object Activate_41_RichTextView() { return new global::LightNovel.Controls.RichTextView(); }
+        private object Activate_43_ExpanderView() { return new global::LightNovel.Controls.ExpanderView(); }
+        private object Activate_44_HeaderedItemsControl() { return new global::WinRTXamlToolkit.Controls.HeaderedItemsControl(); }
         private void VectorAdd_25_List(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::LightNovel.Service.BookItem>)instance;
             var newItem = (global::LightNovel.Service.BookItem)item;
             collection.Add(newItem);
         }
-        private void MapAdd_29_ObservableDictionary(object instance, object key, object item)
+        private void MapAdd_30_ObservableDictionary(object instance, object key, object item)
         {
             var collection = (global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>)instance;
             var newKey = (global::System.String)key;
@@ -524,51 +526,57 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 29:   //  LightNovel.Common.ObservableDictionary
+            case 29:   //  System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>
+                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Threading.Tasks.Task"));
+                userType.SetIsReturnTypeStub();
+                xamlType = userType;
+                break;
+
+            case 30:   //  LightNovel.Common.ObservableDictionary
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.DictionaryAdd = MapAdd_29_ObservableDictionary;
+                userType.DictionaryAdd = MapAdd_30_ObservableDictionary;
                 userType.SetIsReturnTypeStub();
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 30:   //  LightNovel.Controls.BooleanToVisibilityConverter
+            case 31:   //  LightNovel.Controls.BooleanToVisibilityConverter
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_30_BooleanToVisibilityConverter;
+                userType.Activator = Activate_31_BooleanToVisibilityConverter;
                 userType.AddMemberName("VisiableValue");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 31:   //  LightNovel.Common.BooleanNegationConverter
+            case 32:   //  LightNovel.Common.BooleanNegationConverter
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_31_BooleanNegationConverter;
+                userType.Activator = Activate_32_BooleanNegationConverter;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 32:   //  LightNovel.Controls.PlusConverter
+            case 33:   //  LightNovel.Controls.PlusConverter
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_32_PlusConverter;
+                userType.Activator = Activate_33_PlusConverter;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 33:   //  LightNovel.Common.OrientationToVisibilityConverter
+            case 34:   //  LightNovel.Common.OrientationToVisibilityConverter
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_33_OrientationToVisibilityConverter;
+                userType.Activator = Activate_34_OrientationToVisibilityConverter;
                 userType.AddMemberName("VisibleOrientation");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 34:   //  Windows.UI.Xaml.Controls.Orientation
+            case 35:   //  Windows.UI.Xaml.Controls.Orientation
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 35:   //  LightNovel.Controls.RichTextColumns
+            case 36:   //  LightNovel.Controls.RichTextColumns
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Panel"));
-                userType.Activator = Activate_35_RichTextColumns;
+                userType.Activator = Activate_36_RichTextColumns;
                 userType.SetContentPropertyName("LightNovel.Controls.RichTextColumns.RichTextContent");
                 userType.AddMemberName("RichTextContent");
                 userType.AddMemberName("ColumnWidth");
@@ -583,39 +591,39 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 36:   //  Windows.UI.Xaml.Controls.Panel
+            case 37:   //  Windows.UI.Xaml.Controls.Panel
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 37:   //  Windows.UI.Xaml.Controls.RichTextBlock
+            case 38:   //  Windows.UI.Xaml.Controls.RichTextBlock
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 38:   //  Double
+            case 39:   //  Double
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 39:   //  Int32
+            case 40:   //  Int32
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 40:   //  LightNovel.Controls.RichTextView
+            case 41:   //  LightNovel.Controls.RichTextView
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.UserControl"));
-                userType.Activator = Activate_40_RichTextView;
+                userType.Activator = Activate_41_RichTextView;
                 userType.AddMemberName("PageWidth");
                 userType.AddMemberName("PageHeight");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 41:   //  Windows.UI.Text.FontWeight
+            case 42:   //  Windows.UI.Text.FontWeight
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.ValueType"));
                 xamlType = userType;
                 break;
 
-            case 42:   //  LightNovel.Controls.ExpanderView
+            case 43:   //  LightNovel.Controls.ExpanderView
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("WinRTXamlToolkit.Controls.HeaderedItemsControl"));
-                userType.Activator = Activate_42_ExpanderView;
+                userType.Activator = Activate_43_ExpanderView;
                 userType.AddMemberName("Expander");
                 userType.AddMemberName("ExpanderTemplate");
                 userType.AddMemberName("NonExpandableHeader");
@@ -627,20 +635,20 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 43:   //  WinRTXamlToolkit.Controls.HeaderedItemsControl
+            case 44:   //  WinRTXamlToolkit.Controls.HeaderedItemsControl
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.ItemsControl"));
-                userType.Activator = Activate_43_HeaderedItemsControl;
+                userType.Activator = Activate_44_HeaderedItemsControl;
                 userType.AddMemberName("Header");
                 userType.AddMemberName("HeaderTemplate");
                 userType.AddMemberName("ItemContainerStyle");
                 xamlType = userType;
                 break;
 
-            case 44:   //  Windows.UI.Xaml.Controls.ItemsControl
+            case 45:   //  Windows.UI.Xaml.Controls.ItemsControl
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 45:   //  Windows.UI.Xaml.Style
+            case 46:   //  Windows.UI.Xaml.Style
                 xamlType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
             }
@@ -1024,7 +1032,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
         private void set_35_SearchResultsPage_QueryTask(object instance, object Value)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
-            that.QueryTask = (global::System.Threading.Tasks.Task)Value;
+            that.QueryTask = (global::System.Threading.Tasks.Task<System.Collections.Generic.List<global::LightNovel.Service.BookItem>>)Value;
         }
         private object get_36_SearchResultsPage_DefaultViewModel(object instance)
         {
@@ -1478,7 +1486,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 break;
             case "LightNovel.SearchResultsPage.QueryTask":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "QueryTask", "System.Threading.Tasks.Task");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "QueryTask", "System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>");
                 xamlMember.Getter = get_35_SearchResultsPage_QueryTask;
                 xamlMember.Setter = set_35_SearchResultsPage_QueryTask;
                 break;

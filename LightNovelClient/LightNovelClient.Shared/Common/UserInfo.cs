@@ -30,39 +30,42 @@ namespace LightNovel.Common
 			private set;
 		}
 
-		public void AddFavorite(string volumeId)
+		class FavItemEqualityComparer : IEqualityComparer<FavourVolume>
 		{
-			FavoriteList.Add(new FavourVolume
+			public bool Equals(FavourVolume f1, FavourVolume f2)
 			{
-				VolumeId = volumeId,
-			});
-		}
-		public void RemoveFavorite(string volId)
-		{
-			var volume = FavoriteList.FirstOrDefault(vol => vol.VolumeId == volId);
-			if (volume != null)
-				FavoriteList.Remove(volume);
-		}
-		public void AddRecent(BookmarkInfo bookmark)
-		{
+				return f1.VolumeId == f2.VolumeId;
+			}
 
+
+			public int GetHashCode(FavourVolume fx)
+			{
+				return fx.VolumeId.GetHashCode();
+			}
 		}
 
 		public async Task SyncFavoriteListAsync(bool forceRefresh = false)
 		{
 			try
 			{
-				var fav = await CachedClient.GetUserFavoriteVolumesAsync(!IsUserFavoriteValiad || forceRefresh);
+				var fav = await CachedClient.GetUserFavoriteVolumesAsync(FavoriteList==null || !IsUserFavoriteValiad || forceRefresh);
 				if (FavoriteList == null)
 				{
 					FavoriteList = new ObservableCollection<FavourVolume>(fav);
 				}
 				else
 				{
-					FavoriteList.Clear();
+					//FavoriteList.Clear();
+					var olds = FavoriteList.Except(fav, new FavItemEqualityComparer()).ToArray();
+					foreach (var item in olds)
+					{
+						FavoriteList.Remove(item);
+					}
+					var news = fav.Except(FavoriteList, new FavItemEqualityComparer()).ToArray();
 					foreach (var item in fav)
 					{
-						FavoriteList.Add(item);
+						if (!FavoriteList.Any(f=>f.VolumeId == item.VolumeId))
+							FavoriteList.Add(item);
 					}
 				}
 			}
@@ -82,33 +85,73 @@ namespace LightNovel.Common
 			await CachedClient.ClearUserFavoriteCacheAsync();
 		}
 
-		public async Task<bool> AddUserFavriteAsync(Volume vol , string seriesTitle = "Untitled")
+		public async Task<bool> AddUserFavriteAsync(string volId)
+		{
+
+			if (FavoriteList.Any(fav => fav.VolumeId == volId))
+				return true;
+			try
+			{
+				var result = await LightKindomHtmlClient.AddUserFavoriteVolume(volId);
+				if (!result)
+					return false;
+				await SyncFavoriteListAsync(true);
+				return true;
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine("Error : Failed to Add User Favorite : " + exception.Message);
+			}
+			return false;
+		}
+		public async Task<bool> AddUserFavriteAsync(Volume vol, string seriesTitle = null)
 		{
 
 			if (FavoriteList.Any(fav => fav.VolumeId == vol.Id))
 				return true;
 			try
 			{
-				var favId = await LightKindomHtmlClient.AddUserFavoriteVolume(vol.Id);
-				await SyncFavoriteListAsync(true);
-				//FavourVolume favol = new FavourVolume
-				//{
-				//	VolumeId = vol.Id,
-				//	FavId = favId,
-				//	VolumeNo = vol.VolumeNo.ToString(),
-				//	CoverImageUri = vol.CoverImageUri,
-				//	Description = vol.Description,
-				//	VolumeTitle = vol.Title,
-				//	SeriesTitle = seriesTitle,
-				//	FavTime = DateTime.Now.AddSeconds(-5)
-				//};
-				//FavoriteList.Add(favol);
-				//CachedClient.UpdateCachedUserFavoriteVolumes(FavoriteList);
+				var result = await LightKindomHtmlClient.AddUserFavoriteVolume(vol.Id);
+				if (!result)
+					return false;
+				FavourVolume favol = new FavourVolume
+				{
+					VolumeId = vol.Id,
+					FavId = null,
+					VolumeNo = vol.VolumeNo.ToString(),
+					CoverImageUri = vol.CoverImageUri,
+					Description = vol.Description,
+					VolumeTitle = vol.Title,
+					SeriesTitle = seriesTitle,
+					FavTime = DateTime.Now.AddSeconds(-5)
+				};
+				FavoriteList.Add(favol);
+				CachedClient.UpdateCachedUserFavoriteVolumes(FavoriteList);
 				return true;
 			}
 			catch (Exception exception)
 			{
 				Debug.WriteLine("Error : Failed to Add User Favorite : " + exception.Message);
+			}
+			return false;
+		}
+		public async Task<bool> RemoveUserFavriteAsync(string[] favIds)
+		{
+			try
+			{
+				await LightKindomHtmlClient.DeleteUserFavorite(favIds);
+				foreach (var favId in favIds)
+				{
+					var f = FavoriteList.FirstOrDefault(fa => fa.FavId == favId);
+					if (f != null)
+						FavoriteList.Remove(f);
+				}
+				CachedClient.UpdateCachedUserFavoriteVolumes(FavoriteList);
+				return true;
+			}
+			catch (Exception exception)
+			{
+				Debug.WriteLine("Error : Failed to Remove User Favorite : " + exception.Message);
 			}
 			return false;
 		}
@@ -130,33 +173,6 @@ namespace LightNovel.Common
 				Debug.WriteLine("Error : Failed to Remove User Favorite : " + exception.Message);
 			}
 			return false;
-		}
-
-		[Deprecated("This should not be use", DeprecationType.Deprecate, 100859904)]
-		async void FavoriteList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-		{
-			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Move)
-				return;
-			try
-			{
-				CachedClient.UpdateCachedUserFavoriteVolumes(FavoriteList);
-				if (e.NewItems != null)
-					foreach (FavourVolume vol in e.NewItems)
-					{
-						if (String.IsNullOrEmpty(vol.FavId))
-							await LightKindomHtmlClient.AddUserFavoriteVolume(vol.VolumeId);
-					}
-				if (e.OldItems != null)
-					foreach (FavourVolume vol in e.OldItems)
-					{
-						if (!String.IsNullOrEmpty(vol.FavId))
-							await LightKindomHtmlClient.DeleteUserFavorite(vol.FavId);
-					}
-			}
-			catch (Exception exception)
-			{
-				Debug.WriteLine("Error : Failed to Sync User Favorite : " + exception.Message);
-			}
 		}
 
 		public async Task SyncRecentListAsync()

@@ -120,7 +120,7 @@ namespace LightNovel
 
 		void ContentListView_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
-			int index = (int)ContentListView.GetValue(ContentListViewChangeViewRequestProperty);
+			int index = (int)ContentListView.GetValue(ListViewScrollToIndexRequestProperty);
 			if (index >= 0 && e.NewSize.Height > 10 && ContentListView.Items.Count > 0 && index < ContentListView.Items.Count)
 			{
 				ContentListView.UpdateLayout();
@@ -129,14 +129,6 @@ namespace LightNovel
 				ContentListView.SizeChanged -= ContentListView_SizeChanged;
 			}
 		}
-
-		public static readonly DependencyProperty ContentListViewChangeViewRequestProperty =
-			DependencyProperty.Register("ContentListViewChangeViewRequestProperty", typeof(int),
-			typeof(ListView), new PropertyMetadata(-1, null));
-		public static readonly DependencyProperty VolumeListViewChangeViewRequestProperty =
-			DependencyProperty.Register("VolumeListViewChangeViewRequestProperty", typeof(object),
-			typeof(ListView), new PropertyMetadata(null, null));
-
 
 
 		int GetCurrentLineNo()
@@ -152,7 +144,7 @@ namespace LightNovel
 				ContentListView.UpdateLayout();
 				if (ContentListView.Items.Count == 0)				
 				{
-					ContentListView.SetValue(ContentListViewChangeViewRequestProperty, line);
+					ContentListView.SetValue(ListViewScrollToIndexRequestProperty, line);
 					ContentListView.SizeChanged += ContentListView_SizeChanged;
 				} else if (line < ContentListView.Items.Count)
 				{
@@ -204,7 +196,7 @@ namespace LightNovel
 
 		private void SyncIndexSelection()
 		{
-			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0) return;
+			if ( ViewModel.IsLoading || ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
 			if (ViewModel.HasNext)
 			{
@@ -219,14 +211,14 @@ namespace LightNovel
 			}
 			else
 			{
-				if (VolumeListView.GetValue(VolumeListViewChangeViewRequestProperty) == null)
+				if (VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
 				{
-					VolumeListView.SetValue(VolumeListViewChangeViewRequestProperty, target);
+					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
 					VolumeListView.SizeChanged += VolumeListView_SizeChanged;
 				}
 				else
 				{
-					VolumeListView.SetValue(VolumeListViewChangeViewRequestProperty, target);
+					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
 				}
 			}
 			var scrollViewer = VolumeListView.GetScrollViewer();
@@ -238,7 +230,7 @@ namespace LightNovel
 		{
 			if (VolumeListView.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && ContentListView.Items.Count > 0)
 			{
-				var target = VolumeListView.GetValue(VolumeListViewChangeViewRequestProperty);
+				var target = VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty);
 				VolumeListView.SelectedItem = target;
 				VolumeListView.UpdateLayout();
 				VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
@@ -301,23 +293,34 @@ namespace LightNovel
 				var textContent = iv.FindName("TextContent") as TextBlock;
 				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
 				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+
 				var line = (LineViewModel)args.Item;
+
 				iv.Height = double.NaN;
 				imageContent.Opacity = 0;
 				imageContent.Height = double.NaN;
 				commentIndicator.Opacity = 0;
 				progressIndicator.Opacity = 0;
 				textContent.Opacity = 1;
+
 				if (line.IsImage)
 				{
 					textContent.Text = ImageLoadingTextPlaceholder;
+					textContent.Height = 250;
 					textContent.TextAlignment = TextAlignment.Center;
 				}
 				else
 				{
 					textContent.Text = line.Content;
+					textContent.Height = double.NaN;
 					textContent.TextAlignment = TextAlignment.Left;
-					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+					//imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+					if (imageContent.Source != null)
+					{
+						var bitmap = imageContent.Source as BitmapImage;
+						bitmap.DownloadProgress -= Image_DownloadProgress;
+						imageContent.ClearValue(Image.SourceProperty);
+					}
 				}
 				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
 			//} else if (args.Phase == 1)
