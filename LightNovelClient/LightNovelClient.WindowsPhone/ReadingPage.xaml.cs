@@ -33,6 +33,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using WinRTXamlToolkit.Controls.Extensions;
+using WinRTXamlToolkit.AwaitableUI;
 //using PostSharp.Patterns.Model;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
@@ -196,8 +197,10 @@ namespace LightNovel
 
 		private void SyncIndexSelection()
 		{
-			if ( ViewModel.IsLoading || ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo) return;
+			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
+			if (target != null) 
+				target.NotifyPropertyChanged("IsDownloaded");
 			if (ViewModel.HasNext)
 			{
 				var nextvm = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo + 1];
@@ -214,7 +217,7 @@ namespace LightNovel
 				if (VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
 				{
 					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
-					VolumeListView.SizeChanged += VolumeListView_SizeChanged;
+					VolumeListView.SizeChanged += ListView_SizeChanged_ScrollToItem;
 				}
 				else
 				{
@@ -226,18 +229,18 @@ namespace LightNovel
 				scrollViewer.ChangeView(null, scrollViewer.VerticalOffset + 100, null, true);
 		}
 
-		void VolumeListView_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			if (VolumeListView.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && ContentListView.Items.Count > 0)
-			{
-				var target = VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty);
-				VolumeListView.SelectedItem = target;
-				VolumeListView.UpdateLayout();
-				VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
-				target = null;
-				VolumeListView.SizeChanged -= VolumeListView_SizeChanged;
-			}
-		}
+		//void VolumeListView_SizeChanged(object sender, SizeChangedEventArgs e)
+		//{
+		//	if (VolumeListView.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && ContentListView.Items.Count > 0)
+		//	{
+		//		var target = VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty);
+		//		VolumeListView.SelectedItem = target;
+		//		VolumeListView.UpdateLayout();
+		//		VolumeListView.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+		//		VolumeListView.ClearValue(ListViewBaseScrollToItemRequestProperty);
+		//		VolumeListView.SizeChanged -= VolumeListView_SizeChanged;
+		//	}
+		//}
 
 		private async void ContentListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
@@ -303,24 +306,27 @@ namespace LightNovel
 				progressIndicator.Opacity = 0;
 				textContent.Opacity = 1;
 
+				if (imageContent.Source != null)
+				{
+					var bitmap = imageContent.Source as BitmapImage;
+					bitmap.DownloadProgress -= Image_DownloadProgress;
+					imageContent.ClearValue(Image.SourceProperty);
+				}
+
 				if (line.IsImage)
 				{
 					textContent.Text = ImageLoadingTextPlaceholder;
-					textContent.Height = 250;
+					imageContent.MinHeight = 440;
+					imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 					textContent.TextAlignment = TextAlignment.Center;
 				}
 				else
 				{
 					textContent.Text = line.Content;
-					textContent.Height = double.NaN;
+					//textContent.Height = double.NaN;
 					textContent.TextAlignment = TextAlignment.Left;
-					//imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-					if (imageContent.Source != null)
-					{
-						var bitmap = imageContent.Source as BitmapImage;
-						bitmap.DownloadProgress -= Image_DownloadProgress;
-						imageContent.ClearValue(Image.SourceProperty);
-					}
+					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
 				}
 				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
 			//} else if (args.Phase == 1)
@@ -352,7 +358,7 @@ namespace LightNovel
 				bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
 				bitMap.DownloadProgress += Image_DownloadProgress;
 				imageContent.Source = bitMap;
-				imageContent.Height = double.NaN;
+				//imageContent.Height = double.NaN;
 				imageContent.Opacity = 1;
 				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
@@ -433,6 +439,24 @@ namespace LightNovel
 			MenuFlyout mf = (MenuFlyout)this.Resources["ReadingThemeFlyout"];
 			mf.Placement = FlyoutPlacementMode.Bottom;
 			mf.ShowAt(this.BottomAppBar);		
+		}
+
+		private void SlideHandle_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		{
+			if (e.Cumulative.Translation.X >= 25)
+			{
+				e.Complete();
+				IsIndexPanelOpen = !IsIndexPanelOpen;
+			}
+		}
+
+		private void IndexPanel_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		{
+			if (e.Cumulative.Translation.X <= -25)
+			{
+				e.Complete();
+				IsIndexPanelOpen = false;
+			}
 		}
 
 	}

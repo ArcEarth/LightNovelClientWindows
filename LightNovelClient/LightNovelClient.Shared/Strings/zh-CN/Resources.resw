@@ -306,4 +306,46 @@
   <data name="LoginFailedMessageDialogDetail" xml:space="preserve">
     <value>请检查用户名和密码,或在检查网络连接后重试</value>
   </data>
+  <data name="DownloadSuccessLabel" xml:space="preserve">
+    <value>缓存成功</value>
+  </data>
+  <data name="DownloadSuccessDescription" xml:space="preserve">
+    <value>缓存成功！现在你可以离线阅读这部小说的剩余章节了</value>
+  </data>
+  <data name="DownloadFailedLabel" xml:space="preserve">
+    <value>缓存出现错误啦 :(</value>
+  </data>
+  <data name="DownloadFailedDescription" xml:space="preserve">
+    <value>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</value>
+  </data>
+  <data name="DownloadButtonCompletedLabel" xml:space="preserve">
+    <value>缓存已完成</value>
+  </data>
+  <data name="SeriesIndexLabel.Text" xml:space="preserve">
+    <value>系列索引</value>
+  </data>
+  <data name="DeleteRecentLabel" xml:space="preserve">
+    <value>删除记录与缓存</value>
+  </data>
+  <data name="DeleteBookmarkLabel" xml:space="preserve">
+    <value>取消收藏</value>
+  </data>
+  <data name="RefreshFavortite_Merge_Label" xml:space="preserve">
+    <value>同步收藏 (合并)</value>
+  </data>
+  <data name="RefreshFavortite_Pull_Label" xml:space="preserve">
+    <value>下载收藏 (允许云端删除)</value>
+  </data>
+  <data name="RefreshFavortite_Push_Label" xml:space="preserve">
+    <value>强制上传收藏(抛弃云端)</value>
+  </data>
+  <data name="ImageSaveSuccessMessage" xml:space="preserve">
+    <value>下载成功！插画已保存到"Saved Picture" 文件夹。</value>
+  </data>
+  <data name="ImageSaveFailedMessage" xml:space="preserve">
+    <value>下载失败了 :( 请尝试在图片加载完成再试.</value>
+  </data>
+  <data name="ImageSaveMessageTitle" xml:space="preserve">
+    <value>插画下载</value>
+  </data>
 </root>

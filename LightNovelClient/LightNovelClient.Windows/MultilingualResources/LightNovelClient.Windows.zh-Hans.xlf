@@ -6,6 +6,62 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\ImageSaveMessageTitle" translate="yes" xml:space="preserve">
+          <source>插画下载</source>
+          <target state="new">插画下载</target>
+        </trans-unit>
+        <trans-unit id="Resources\ImageSaveSuccessMessage" translate="yes" xml:space="preserve">
+          <source>下载成功！插画已保存到"Saved Picture" 文件夹。</source>
+          <target state="new">下载成功！插画已保存到"Saved Picture" 文件夹。</target>
+        </trans-unit>
+        <trans-unit id="Resources\ImageSaveFailedMessage" translate="yes" xml:space="preserve">
+          <source>下载失败了 :( 请尝试在图片加载完成再试.</source>
+          <target state="new">下载失败了 :( 请尝试在图片加载完成再试.</target>
+        </trans-unit>
+        <trans-unit id="Resources\RefreshFavortite_Push_Label" translate="yes" xml:space="preserve">
+          <source>强制上传收藏(抛弃云端)</source>
+          <target state="new">强制上传收藏(抛弃云端)</target>
+        </trans-unit>
+        <trans-unit id="Resources\RefreshFavortite_Merge_Label" translate="yes" xml:space="preserve">
+          <source>同步收藏 (合并)</source>
+          <target state="new">同步收藏 (合并)</target>
+        </trans-unit>
+        <trans-unit id="Resources\RefreshFavortite_Pull_Label" translate="yes" xml:space="preserve">
+          <source>下载收藏 (允许云端删除)</source>
+          <target state="new">下载收藏 (允许云端删除)</target>
+        </trans-unit>
+        <trans-unit id="Resources\DeleteBookmarkLabel" translate="yes" xml:space="preserve">
+          <source>取消收藏</source>
+          <target state="new">取消收藏</target>
+        </trans-unit>
+        <trans-unit id="Resources\DeleteRecentLabel" translate="yes" xml:space="preserve">
+          <source>删除记录与缓存</source>
+          <target state="new">删除记录与缓存</target>
+        </trans-unit>
+        <trans-unit id="Resources\SeriesIndexLabel\Text" translate="yes" xml:space="preserve">
+          <source>系列索引</source>
+          <target state="new">系列索引</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadButtonCompletedLabel" translate="yes" xml:space="preserve">
+          <source>缓存已完成</source>
+          <target state="new">缓存已完成</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadSuccessLabel" translate="yes" xml:space="preserve">
+          <source>缓存成功</source>
+          <target state="new">缓存成功</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadSuccessDescription" translate="yes" xml:space="preserve">
+          <source>缓存成功！现在你可以离线阅读这部小说的剩余章节了</source>
+          <target state="new">缓存成功！现在你可以离线阅读这部小说的剩余章节了</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadFailedLabel" translate="yes" xml:space="preserve">
+          <source>缓存出现错误啦 :(</source>
+          <target state="new">缓存出现错误啦 :(</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadFailedDescription" translate="yes" xml:space="preserve">
+          <source>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</source>
+          <target state="new">怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</target>
+        </trans-unit>
         <trans-unit id="Resources\LoginFailedMessageDialogDetail" translate="yes" xml:space="preserve">
           <source>请检查用户名和密码,或在检查网络连接后重试</source>
           <target state="new">请检查用户名和密码,或在检查网络连接后重试</target>

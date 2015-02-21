@@ -48,7 +48,7 @@ namespace LightNovel.Common
 		{
 			try
 			{
-				var fav = await CachedClient.GetUserFavoriteVolumesAsync(FavoriteList==null || !IsUserFavoriteValiad || forceRefresh);
+				var fav = await CachedClient.GetUserFavoriteVolumesAsync(!IsUserFavoriteValiad || forceRefresh);
 				if (FavoriteList == null)
 				{
 					FavoriteList = new ObservableCollection<FavourVolume>(fav);
@@ -107,6 +107,8 @@ namespace LightNovel.Common
 		public async Task<bool> AddUserFavriteAsync(Volume vol, string seriesTitle = null)
 		{
 
+			if (FavoriteList == null)
+				return false;
 			if (FavoriteList.Any(fav => fav.VolumeId == vol.Id))
 				return true;
 			try

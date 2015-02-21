@@ -51,13 +51,13 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task LoadAsync(bool foreceRefresh = false, int maxItemCount = 9)
+		public async Task LoadAsync(bool foreceRefresh = false, int maxItemCount = 9, bool forcePull = false)
 		{
 			if (IsLoading) return;
 			IsLoading = true;
 			try
 			{
-				await App.Current.PullBookmarkFromUserFavoriteAsync(foreceRefresh);
+				await App.Current.PullBookmarkFromUserFavoriteAsync(foreceRefresh, forcePull);
 			}
 			catch (Exception exception)
 			{
@@ -67,21 +67,23 @@ namespace LightNovel.ViewModels
 				return;
 			}
 
-			this.Clear();
+			for (int i = 0; i < this.Count; ++i)
+			{
+				var hvm = this[i];
+				var bookmark = App.Current.BookmarkList.FirstOrDefault(bk => bk.SeriesTitle == hvm.SeriesTitle);
+				if (bookmark == null) //Thus we should remove this item from our collection
+				{
+					this.RemoveAt(i);
+					--i;
+				}
+			} 
+			
 			foreach (var bk in App.Current.BookmarkList)
 			{
-				var hvm = new HistoryItemViewModel
+				var hvm = this.FirstOrDefault(vm => vm.Position.SeriesId == bk.Position.SeriesId);
+				if (hvm == null)
 				{
-					Position = bk.Position,
-					ProgressPercentage = bk.Progress,
-					CoverImageUri = bk.DescriptionImageUri,
-					Description = bk.ContentDescription,
-					ChapterTitle = bk.ChapterTitle,
-					VolumeTitle = bk.VolumeTitle,
-					SeriesTitle = bk.SeriesTitle,
-					UpdateTime = bk.ViewDate
-				};
-
+				hvm = new HistoryItemViewModel(bk);
 				if (!String.IsNullOrEmpty(bk.DescriptionThumbnailUri))
 					hvm.CoverImageUri = bk.DescriptionThumbnailUri;
 				this.Add(hvm);
@@ -95,10 +97,20 @@ namespace LightNovel.ViewModels
 					bk.ContentDescription = volume.Description;
 					bk.DescriptionThumbnailUri = volume.CoverImageUri;
 				}
+				} else{
+					hvm.Position = bk.Position;
+					hvm.ProgressPercentage = bk.Progress;
+					hvm.CoverImageUri = bk.DescriptionImageUri;
+					hvm.Description = bk.ContentDescription;
+					hvm.ChapterTitle = bk.ChapterTitle;
+					hvm.VolumeTitle = bk.VolumeTitle;
+					hvm.SeriesTitle = bk.SeriesTitle;
+					hvm.UpdateTime = bk.ViewDate;
+					if (!String.IsNullOrEmpty(bk.DescriptionThumbnailUri))
+						hvm.CoverImageUri = bk.DescriptionThumbnailUri;
+				}
 			}
 			NotifyPropertyChanged("IsEmpty");
-			await App.Current.SaveBookmarkDataAsync();
-
 			IsLoaded = true;
 			IsLoading = false;
 
@@ -267,7 +279,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task LoadLocalAsync(bool SkipLatest = false)
+		public async Task LoadLocalAsync(bool SkipLatest = false, int maxItemCount = 10)
 		{
 			if (IsLoading)
 				return;
@@ -276,31 +288,51 @@ namespace LightNovel.ViewModels
 				await App.Current.LoadHistoryDataAsync();
 			var historyList = App.Current.RecentList;
 
-			this.Clear();
+			for (int i = 0; i < this.Count;++i)
+			{
+				var hvm = this[i];
+				var bookmark = historyList.FirstOrDefault(bk=>bk.Position.SeriesId == hvm.Position.SeriesId);
+				if (bookmark == null || (SkipLatest && bookmark == historyList[historyList.Count - 1])) //Thus we should remove this item from our collection
+				{
+					this.RemoveAt(i);
+					--i;
+				}
+			}
 
 			int begin = historyList.Count - 1;
 			if (SkipLatest)
 				--begin;
-			for (int idx = begin; idx >= 0; idx--)
+
+			for (int idx = 0; idx <= begin; idx++)
 			{
-				var item = historyList[idx];
-				var hvm = new HistoryItemViewModel
+				var item = historyList[begin - idx];
+				var hvm = this.FirstOrDefault(vm => vm.Position.SeriesId == item.Position.SeriesId);
+				if (hvm == null)
 				{
-					Position = item.Position,
-					ProgressPercentage = item.Progress,
-					CoverImageUri = item.DescriptionImageUri,
-					Description = item.ContentDescription,
-					ChapterTitle = item.ChapterTitle,
-					VolumeTitle = item.VolumeTitle,
-					SeriesTitle = item.SeriesTitle,
-					UpdateTime = item.ViewDate
-				};
-				if (!String.IsNullOrEmpty(item.DescriptionThumbnailUri))
-					hvm.CoverImageUri = item.DescriptionThumbnailUri;
-				this.Add(hvm);
-				if (this.Count >= 10) // Load the first 10th to show
+					hvm = new HistoryItemViewModel(item);
+					if (!String.IsNullOrEmpty(item.DescriptionThumbnailUri))
+						hvm.CoverImageUri = item.DescriptionThumbnailUri;
+					this.Insert(idx, hvm);
+				} else
+				{
+					hvm.Position = item.Position;
+					hvm.ProgressPercentage = item.Progress;
+					hvm.CoverImageUri = item.DescriptionImageUri;
+					if (!String.IsNullOrEmpty(item.DescriptionThumbnailUri))
+						hvm.CoverImageUri = item.DescriptionThumbnailUri;
+					hvm.Description = item.ContentDescription;
+					hvm.ChapterTitle = item.ChapterTitle;
+					hvm.VolumeTitle = item.VolumeTitle;
+					hvm.SeriesTitle = item.SeriesTitle;
+					hvm.UpdateTime = item.ViewDate;
+					var oldIdx = this.IndexOf(hvm); // should be greater or equal than idx
+					if (oldIdx != idx)
+						this.Move(oldIdx, idx);
+				}
+				if (this.Count >= maxItemCount) // Load the first 10th to show
 					break;
 			}
+
 			App.Current.IsHistoryListChanged = false;
 			NotifyPropertyChanged("IsEmpty");
 			IsLoading = false;

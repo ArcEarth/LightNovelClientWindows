@@ -306,4 +306,46 @@
   <data name="LoginFailedMessageDialogDetail" xml:space="preserve">
     <value>Please check your user name and password, or try again after check your connection.</value>
   </data>
+  <data name="DownloadSuccessLabel" xml:space="preserve">
+    <value>Cache Succeed</value>
+  </data>
+  <data name="DownloadSuccessDescription" xml:space="preserve">
+    <value>Caching is succeed! Now you can read the following chapters offline!</value>
+  </data>
+  <data name="DownloadFailedLabel" xml:space="preserve">
+    <value>Error happened in caching :(</value>
+  </data>
+  <data name="DownloadFailedDescription" xml:space="preserve">
+    <value>This is some error happened in caching the novel, please check your network and maybe you can try it again.</value>
+  </data>
+  <data name="DownloadButtonCompletedLabel" xml:space="preserve">
+    <value>Caching Finished</value>
+  </data>
+  <data name="SeriesIndexLabel.Text" xml:space="preserve">
+    <value>Series Index</value>
+  </data>
+  <data name="DeleteRecentLabel" xml:space="preserve">
+    <value>Delete record and cache</value>
+  </data>
+  <data name="DeleteBookmarkLabel" xml:space="preserve">
+    <value>Remove from Favorite</value>
+  </data>
+  <data name="RefreshFavortite_Merge_Label" xml:space="preserve">
+    <value>Synchronize Favorite (Merge)</value>
+  </data>
+  <data name="RefreshFavortite_Pull_Label" xml:space="preserve">
+    <value>Pull Favorite (Discard Local)</value>
+  </data>
+  <data name="RefreshFavortite_Push_Label" xml:space="preserve">
+    <value>Push Favorite (Discard Cloud Changes)</value>
+  </data>
+  <data name="ImageSaveSuccessMessage" xml:space="preserve">
+    <value>Save Succeed. Image is saved into "Saved Pictures" Folder.</value>
+  </data>
+  <data name="ImageSaveFailedMessage" xml:space="preserve">
+    <value>Saving Image Failed :(</value>
+  </data>
+  <data name="ImageSaveMessageTitle" xml:space="preserve">
+    <value>Illustration Downloading</value>
+  </data>
 </root>

@@ -150,7 +150,7 @@ namespace LightNovel
 				// Removes the turnstile navigation for startup.
 				if (rootFrame.ContentTransitions != null)
 				{
-					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
+					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new SlideNavigationTransitionInfo() } };
 					//foreach (var c in rootFrame.ContentTransitions)
 					//{
 					//	this.transitions.Add(c);
@@ -176,14 +176,29 @@ namespace LightNovel
 
 			if (string.IsNullOrEmpty(e.Arguments))
 			{
-				if (rootFrame.Content == null || rootFrame.CurrentSourcePageType != typeof(HubPage))
-				{
+				var entity = rootFrame.BackStack.FirstOrDefault(pse => pse.SourcePageType == typeof(HubPage));
+				if (rootFrame.CurrentSourcePageType != typeof(HubPage) && entity == null)
 					navResult = rootFrame.Navigate(typeof(HubPage), e.Arguments);
+				else
+				{
+					while (rootFrame.CurrentSourcePageType != typeof(HubPage) && rootFrame.CanGoBack)
+						rootFrame.GoBack();
 				}
 			}
 			else
 			{
+				var entity = rootFrame.BackStack.FirstOrDefault(pse => pse.SourcePageType == typeof(ReadingPage));
+				if (entity == null && rootFrame.CurrentSourcePageType != typeof(ReadingPage))
 					navResult = rootFrame.Navigate(typeof(ReadingPage), e.Arguments);
+				else
+				{
+					while (rootFrame.CurrentSourcePageType != typeof(ReadingPage) && rootFrame.CanGoBack)
+						rootFrame.GoBack();
+					var page = rootFrame.Content as ReadingPage;
+					var navigationId = NovelPositionIdentifier.Parse((string)e.Arguments);
+					if (navigationId.SeriesId != page.ViewModel.SeriesId.ToString())
+						navResult = rootFrame.Navigate(typeof(ReadingPage), e.Arguments);
+				}
 			}
 			if (!navResult)
 			{
@@ -206,7 +221,7 @@ namespace LightNovel
 		private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
 		{
 			var rootFrame = sender as Frame;
-			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
+			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new SlideNavigationTransitionInfo() } };
 			rootFrame.Navigated -= this.RootFrame_FirstNavigated;
 		}
 #endif
@@ -594,10 +609,11 @@ namespace LightNovel
 				var file = await Windows.Storage.ApplicationData.Current.LocalFolder.GetFileAsync(filePath);
 				var content = await Windows.Storage.FileIO.ReadTextAsync(file);
 				return JsonConvert.DeserializeObject<T>(content);
-			} catch
+			}
+			catch
 			{
 				return null;
-			}		
+			}
 		}
 		private async static Task<T> GetFromRoamingFolderAsAsync<T>(string filePath) where T : class
 		{
@@ -606,7 +622,8 @@ namespace LightNovel
 				var file = await Windows.Storage.ApplicationData.Current.RoamingFolder.GetFileAsync(filePath);
 				var content = await Windows.Storage.FileIO.ReadTextAsync(file);
 				return JsonConvert.DeserializeObject<T>(content);
-			} catch
+			}
+			catch
 			{
 				return null;
 			}
@@ -617,11 +634,19 @@ namespace LightNovel
 			var content = JsonConvert.SerializeObject(obj);
 			await Windows.Storage.FileIO.WriteTextAsync(file, content);
 		}
-		private async Task SaveToRoamingFolderAsync(object obj, string path)
+		private async Task<bool> SaveToRoamingFolderAsync(object obj, string path)
 		{
-			var file = await Windows.Storage.ApplicationData.Current.RoamingFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.OpenIfExists);
-			var content = JsonConvert.SerializeObject(obj);
-			await Windows.Storage.FileIO.WriteTextAsync(file, content);
+			try
+			{
+				var file = await Windows.Storage.ApplicationData.Current.RoamingFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.OpenIfExists);
+				var content = JsonConvert.SerializeObject(obj);
+				await Windows.Storage.FileIO.WriteTextAsync(file, content);
+				return true;
+			}
+			catch (Exception)
+			{
+				return false;
+			}
 		}
 		public Task loadHistoryDataTask = null;
 		public Task loadBookmarkDataTask = null;
@@ -692,14 +717,28 @@ namespace LightNovel
 			}
 		}
 
-		public async Task PullBookmarkFromUserFavoriteAsync(bool forectRefresh = false)
+		public async Task PullBookmarkFromUserFavoriteAsync(bool forectRefresh = false, bool forceSyncFromCloud = false)
 		{
 			if (BookmarkList == null)
 				await LoadBookmarkDataAsync();
 			if (User != null)
 			{
-				await User.SyncFavoriteListAsync(false);
+				await User.SyncFavoriteListAsync(forectRefresh);
 				var favList = from fav in User.FavoriteList orderby fav.VolumeId group fav by fav.SeriesTitle;
+				bool Changed = false;
+
+				if (forceSyncFromCloud)
+				{
+					for(int i=0; i< BookmarkList.Count; i++)
+					{
+						var bk = BookmarkList[i];
+						if (!favList.Any(g=>g.First().SeriesTitle == bk.SeriesTitle))
+						{
+							BookmarkList.RemoveAt(i--);
+							Changed = true;
+						}
+					}
+				}
 
 				foreach (var series in favList)
 				{
@@ -709,12 +748,27 @@ namespace LightNovel
 					var item = new BookmarkInfo { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, ViewDate = vol.FavTime };
 					item.Position = new NovelPositionIdentifier { /*SeriesId = volume.ParentSeriesId,*/ VolumeId = vol.VolumeId, VolumeNo = -1 };
 					BookmarkList.Add(item);
+					Changed = true;
 				}
+				if (Changed)
+					await App.Current.SaveBookmarkDataAsync();
 			}
 		}
 
-		public async Task PushBookmarkToUserFavortiteAsync()
+		public async Task PushBookmarkToUserFavortiteAsync(bool forceSyncFromCloud = false)
 		{
+			//if (forceSyncFromCloud)
+			//{
+			//	var favList = from fav in User.FavoriteList orderby fav.VolumeId group fav by fav.SeriesTitle;
+			//	List<string> 
+			//	foreach (var series in favList)
+			//	{
+			//		var vol = series.LastOrDefault();
+			//		if (BookmarkList.Any(bk => bk.SeriesTitle == vol.SeriesTitle))
+			//			continue;
+
+			//	}
+			//}
 			foreach (var bk in BookmarkList)
 			{
 				if (!User.FavoriteList.Any(fav => bk.Position.VolumeId == fav.VolumeId))

@@ -35,7 +35,7 @@
         <DataTemplate x:Key="LineViewCCGTemplate" x:Name="LineViewCCGTemplate">
             <Grid HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgressBar"
-                             Margin="10,0,10,20"
+                             Margin="10,0,0,20"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              Background="{ThemeResource AppSemitransparentBrush}"
@@ -44,11 +44,12 @@
                              Minimum="0"
                              Value="0" />
                 <Image x:Name="ImageContent"
+                       Margin="0,5"
                        HorizontalAlignment="Stretch"
                        VerticalAlignment="Center"
                        Stretch="Uniform" />
                 <TextBlock x:Name="TextContent"
-                           Margin="12,1"
+                           Margin="12,2"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
                            FontFamily="{Binding FontFamily,
@@ -734,13 +735,6 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="IsActive">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <DoubleAnimation Duration="0:0:0.25"
-                                             Storyboard.TargetName="LoadingIndicator"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1.0" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
@@ -763,15 +757,8 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="IsActive">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <DoubleAnimation Duration="0:0:0.25"
-                                             Storyboard.TargetName="LoadingIndicator"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="0.0" />
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualTransition>
@@ -870,7 +857,8 @@
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False" />
                             </ObjectAnimationUsingKeyFrames>-->
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedStartKeyFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
                                                       KeyTime="0:0:0.00"
                                                       Value="0" />
                                 <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedKeyFrame"
@@ -911,7 +899,7 @@
                           x:Name="IndexButton"
                           Grid.Row="1"
                           Grid.Column="0"
-                          Grid.ColumnSpan="3"
+                          Grid.ColumnSpan="1"
                           Height="60"
                           MinHeight="40"
                           HorizontalAlignment="Stretch"
@@ -968,11 +956,11 @@
         <!--  Back button and page title  -->
         <Grid x:Name="ContentRegion"
               Grid.Row="1"
-              Grid.Column="1"
+              Grid.Column="0"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
             <Grid.RenderTransform>
-                <TranslateTransform X="0" Y="0" />
+                <TranslateTransform x:Name="ContentPanelTranslation" X="0" Y="0" />
             </Grid.RenderTransform>
 
             <ListView x:Name="ContentListView"
@@ -1035,8 +1023,7 @@
                                           VerticalAlignment="Center"
                                           Data="M5.63,0 L11.11,5.55 L11.05,9.67 L5.64,4.12 L0.23,9.67 L0.17,5.55 z"
                                           Fill="{TemplateBinding Foreground}"
-                                          Stretch="Fill"
-                                          UseLayoutRounding="False" />
+                                          Stretch="Fill" />
                                     <TextBlock Margin="100,0,20,0"
                                                HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
@@ -1054,7 +1041,7 @@
                     <Button x:Name="VerticalNextButton"
                             Height="60"
                             MinHeight="30"
-                            HorizontalAlignment="Right"
+                            HorizontalAlignment="Left"
                             Background="{ThemeResource AppAccentBrush}"
                             BorderBrush="Transparent"
                             BorderThickness="0"
@@ -1066,29 +1053,33 @@
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
-                                    <Path x:Name="Arc"
+                                    <!--<Path x:Name="Arc"
                                           Width="120"
                                           Height="60"
                                           HorizontalAlignment="Right"
                                           Data="M0,60 H120 V0 H60 Z"
+                                          Fill="{TemplateBinding Background}" />-->
+                                    <Path x:Name="Arc"
+                                          Width="120"
+                                          Height="60"
+                                          HorizontalAlignment="Left"
+                                          Data="M0,0 V60 H120 L60,0 Z"
                                           Fill="{TemplateBinding Background}" />
                                     <Path x:Name="Arrow"
                                           Width="30"
                                           Height="20"
-                                          Margin="0,0,25,0"
-                                          HorizontalAlignment="Right"
+                                          Margin="25,0,25,0"
+                                          HorizontalAlignment="Left"
                                           VerticalAlignment="Center"
                                           Data="M0.06,0 L5.47,5.56 L10.88,0 L10.94,4.12 L5.48,9.67 L0,4.12 z"
                                           Fill="{TemplateBinding Foreground}"
-                                          Stretch="Fill"
-                                          UseLayoutRounding="False" />
-                                    <TextBlock x:Uid="NextChapterButtonLabel"
-                                               Margin="20,0,100,10"
-                                               HorizontalAlignment="Right"
+                                          Stretch="Fill" />
+                                    <TextBlock Margin="100,0,20,10"
+                                               HorizontalAlignment="Left"
                                                VerticalAlignment="Center"
                                                FontSize="{ThemeResource AppFontSizeLarge}"
                                                Foreground="{ThemeResource AppAccentBrush}"
-                                               Text="Next Chapter"
+                                               Text="{Binding NextChapterHeader}"
                                                TextTrimming="CharacterEllipsis"
                                                TextWrapping="NoWrap" />
                                 </Grid>
@@ -1147,6 +1138,7 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
+
         <Grid x:Name="IndexPanel"
               Grid.Row="1"
               Grid.Column="0"
@@ -1158,7 +1150,7 @@
               Background="{ThemeResource AppAccentBrushSemiLight}"
               Visibility="Collapsed">
             <Grid.RenderTransform>
-                <TranslateTransform X="-330" />
+                <TranslateTransform x:Name="IndexPanelTranslation" X="-330" />
             </Grid.RenderTransform>
 
             <!--<Grid.Transitions>
@@ -1175,6 +1167,8 @@
                       IsItemClickEnabled="True"
                       ItemClick="ChapterListView_ItemClick"
                       ItemsSource="{Binding Source={StaticResource VolumesViewSource}}"
+                      ManipulationDelta="IndexPanel_ManipulationDelta"
+                      ManipulationMode="TranslateX,System"
                       Padding="10,0,0,20"
                       ScrollViewer.IsVerticalScrollChainingEnabled="False"
                       SelectionMode="Single"
@@ -1282,40 +1276,24 @@
                     <Style TargetType="ListViewItem">
                         <Setter Property="Margin" Value="0,2,0,2" />
                         <Setter Property="Padding" Value="0,0" />
-                        <Setter Property="Template" Value="{StaticResource ListViewItemTemplate}">
-                            <!--<Setter.Value>
-
-                                <ControlTemplate TargetType="ListViewItem">
-                                    <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                           CheckBrush="{ThemeResource ListViewItemCheckThemeBrush}"
-                                                           CheckHintBrush="{ThemeResource ListViewItemCheckHintThemeBrush}"
-                                                           CheckSelectingBrush="{ThemeResource ListViewItemCheckSelectingThemeBrush}"
-                                                           ContentMargin="0"
-                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                           DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                                           DragBackground="{ThemeResource ListViewItemDragBackgroundThemeBrush}"
-                                                           DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
-                                                           DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
-                                                           FocusBorderBrush="{ThemeResource ListViewItemFocusBorderThemeBrush}"
-                                                           Padding="{TemplateBinding Padding}"
-                                                           PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
-                                                           PointerOverBackground="{ThemeResource AppAccentBrushSemiLight}"
-                                                           PointerOverBackgroundMargin="0"
-                                                           ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
-                                                           SelectedBackground="{ThemeResource AppAccentBrushSemiLight}"
-                                                           SelectedBorderThickness="1"
-                                                           SelectedForeground="{ThemeResource ListViewItemSelectedForegroundThemeBrush}"
-                                                           SelectedPointerOverBackground="{ThemeResource AppAccentBrushSemiLight}"
-                                                           SelectedPointerOverBorderBrush="{ThemeResource AppAccentBrush}"
-                                                           SelectionCheckMarkVisualEnabled="False" />
-                                </ControlTemplate>
-                            </Setter.Value>-->
-                        </Setter>
+                        <Setter Property="Template" Value="{StaticResource ListViewItemTemplate}" />
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
+        <Rectangle x:Name="SlideHandle"
+                   Grid.Row="1"
+                   MinWidth="25"
+                   Margin="0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Stretch"
+                   Fill="{ThemeResource AppAccentBrush}"
+                   ManipulationDelta="SlideHandle_ManipulationDelta"
+                   ManipulationMode="TranslateX"
+                   Opacity="0"
+                   Stroke="Transparent"
+                   StrokeThickness="0"
+                   Tapped="IndexButton_Click" />
         <ProgressBar x:Name="LoadingIndicator"
                      Grid.Row="1"
                      Grid.Column="0"
@@ -1323,7 +1301,10 @@
                      Margin="0,0,0,0"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Top"
+                     Foreground="{ThemeResource AppAccentBrush}"
                      IsIndeterminate="True"
+                     Maximum="1"
+                     Minimum="0"
                      Visibility="Collapsed" />
     </Grid>
 </Page>

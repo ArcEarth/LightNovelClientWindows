@@ -343,6 +343,24 @@ namespace LightNovel
 			if (ViewModel.IsSignedIn)
 			{
 				var menu = new PopupMenu();
+				var syncLabel = resourceLoader.GetString("RefreshFavortite_Merge_Label");
+				menu.Commands.Add(new UICommand(syncLabel, async (command) =>
+				{
+					ViewModel.IsLoading = true;
+					await ViewModel.FavoriteSection.LoadAsync(true);
+					ViewModel.IsLoading = false;
+				}));
+
+				var pullLabel = resourceLoader.GetString("RefreshFavortite_Pull_Label");
+				menu.Commands.Add(new UICommand(pullLabel, async (command) =>
+				{
+					ViewModel.IsLoading = true;
+					await ViewModel.FavoriteSection.LoadAsync(true,9,true);
+					ViewModel.IsLoading = false;
+				}));
+
+				menu.Commands.Add(new UICommandSeparator());
+
 				var logoutLabel = resourceLoader.GetString("LogoutLabel");
 				menu.Commands.Add(new UICommand(logoutLabel, async (command) =>
 				{
@@ -350,6 +368,7 @@ namespace LightNovel
 					await ViewModel.LogOutAsync();
 					ViewModel.UserName = resourceLoader.GetString("LoginLabel");
 				}));
+
 				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
 			}
 			else
@@ -408,20 +427,20 @@ namespace LightNovel
 		private void BackgroundThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			var combo = sender as ComboBox;
-			if (combo.SelectedIndex != null)
+			if (combo.SelectedIndex >= 0)
 			{
 				this.RequestedTheme = (Windows.UI.Xaml.ElementTheme)(combo.SelectedIndex);
 			}
 		}
-		private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+		private async void RecentItem_RightTapped(object sender, RoutedEventArgs e)
 		{
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
 			var menu = new PopupMenu();
-			var label = resourceLoader.GetString("DeleteBookLabel");
+			var label = resourceLoader.GetString("DeleteRecentLabel");
 			menu.Commands.Add(new UICommand(label, async (command) =>
 			{
-				//ViewModel.IsLoading
+				ViewModel.IsLoading = true;
 				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
 				ViewModel.RecentSection.Remove(hvm);
 				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
@@ -430,6 +449,7 @@ namespace LightNovel
 					App.Current.RecentList.Remove(recentItem);
 					await App.Current.SaveHistoryDataAsync();
 				}
+				ViewModel.IsLoading = false;
 			}));
 			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
 		}

@@ -78,6 +78,24 @@ namespace LightNovel
 		public static readonly DependencyProperty ListViewBaseScrollToItemRequestProperty =
 			DependencyProperty.Register("ListViewBaseScrollToItemRequest", typeof(object),
 			typeof(ListViewBase), new PropertyMetadata(null, null));
+		void ListView_SizeChanged_ScrollToItem(object sender, SizeChangedEventArgs e)
+		{
+			var list = sender as ListViewBase;
+			if (list.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 0 && list.Items.Count > 0)
+			{
+				var target = list.GetValue(ListViewBaseScrollToItemRequestProperty);
+				if (target == null)
+				{
+					list.SizeChanged -= ListView_SizeChanged_ScrollToItem;
+					return;
+				}
+				list.SelectedItem = target;
+				list.UpdateLayout();
+				list.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
+				list.ClearValue(ListViewBaseScrollToItemRequestProperty);
+				list.SizeChanged -= ListView_SizeChanged_ScrollToItem;
+			}
+		}
 
 		string ImageLoadingTextPlaceholder = "Image Loading ...";
 
@@ -222,19 +240,22 @@ namespace LightNovel
 				case "IsDownloading":
 					{
 #if WINDOWS_PHONE_APP
-						var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+						//var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
 						if (ViewModel.IsDownloading)
 						{
+							LoadingIndicator.IsIndeterminate = true;
+							LoadingIndicator.Visibility = Windows.UI.Xaml.Visibility.Visible;
 							//statusBar.ProgressIndicator.Text = "Caching to off-line...";
-							statusBar.ProgressIndicator.ProgressValue = null;
+							//statusBar.ProgressIndicator.ProgressValue = null;
 							//statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
 							//await statusBar.ShowAsync();
 							//await statusBar.ProgressIndicator.ShowAsync();
 						}
 						else
 						{
-							statusBar.ProgressIndicator.Text = " ";
-							statusBar.ProgressIndicator.ProgressValue = 0;
+							//statusBar.ProgressIndicator.Text = " ";
+							LoadingIndicator.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+							//statusBar.ProgressIndicator.ProgressValue = 0;
 							//await statusBar.ProgressIndicator.HideAsync();
 						}
 #endif
@@ -245,18 +266,51 @@ namespace LightNovel
 
 					break;
 				case "IsPinned":
-					PinButton.IsChecked = ViewModel.IsPinned;
+					SyncPinButtonView();
 					break;
 				case "DownloadingProgress":
 					{
 #if WINDOWS_PHONE_APP
-						var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
-						statusBar.ProgressIndicator.ProgressValue = ViewModel.DownloadingProgress;
+						//var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+						//statusBar.ProgressIndicator.ProgressValue = ViewModel.DownloadingProgress;
+						LoadingIndicator.IsIndeterminate = false;
+						LoadingIndicator.Value = ViewModel.DownloadingProgress;
 #endif
 					}
 					break;
+				case "IsDownloaded":
+					{
+						var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+						if (ViewModel.IsDownloaded)
+						{
+							DownloadButton.IsEnabled = false;
+							DownloadButton.Label = resourceLoader.GetString("DownloadButtonCompletedLabel");
+						}
+						else if (!ViewModel.IsDownloading)
+						{
+							DownloadButton.IsEnabled = true;
+							DownloadButton.Label = resourceLoader.GetString("DownloadButtonStartLabel");
+						}
+					}
+
+					break;
 				default:
 					break;
+			}
+		}
+
+		private void SyncPinButtonView()
+		{
+			PinButton.IsChecked = ViewModel.IsPinned;
+			if (ViewModel.IsPinned)
+			{
+				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
+				icon.Symbol = Symbol.UnPin;
+			}
+			else
+			{
+				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
+				icon.Symbol = Symbol.Pin;
 			}
 		}
 
@@ -300,7 +354,6 @@ namespace LightNovel
 #endif
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
 			if (e.PageState != null && e.PageState.Count > 0)
-
 			{
 				IsIndexPanelOpen = false;
 				if (e.PageState.ContainsKey("LoadingBreak"))
@@ -322,7 +375,8 @@ namespace LightNovel
 				ContentScrollViewer.ChangeView(horizontalOffset, verticalOffset, null, true);
 #endif
 				//SyncIndexSelectedItem();
-			} else
+			}
+			else
 			{
 				navigationId = NovelPositionIdentifier.Parse((string)e.NavigationParameter);
 
@@ -338,6 +392,7 @@ namespace LightNovel
 				await viewModel.LoadDataAsync(navigationId);
 			}
 			ViewModel.NotifyPropertyChanged("IsPinned");
+			SyncPinButtonView();
 			ViewModel.NotifyPropertyChanged("IsFavored");
 		}
 		async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
@@ -460,12 +515,12 @@ namespace LightNovel
 				//}
 				//else
 				//{
-					var result = await ViewModel.AddCurrentVolumeToFavoriteAsync();
-					if (!result)
-					{
-						MessageDialog diag = new MessageDialog("收藏失败:(请检查一下网络连接再重试:)");
-						await diag.ShowAsync();
-					}
+				var result = await ViewModel.AddCurrentVolumeToFavoriteAsync();
+				if (!result)
+				{
+					MessageDialog diag = new MessageDialog("收藏失败:(请检查一下网络连接再重试:)");
+					await diag.ShowAsync();
+				}
 				//}
 			}
 			else
@@ -507,7 +562,9 @@ namespace LightNovel
 
 		private async void IllustrationSaveButton_Click(object sender, RoutedEventArgs e)
 		{
-			MessageDialog diag = new MessageDialog("Your image have saved successfully");
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+
+			MessageDialog diag = new MessageDialog(resourceLoader.GetString("ImageSaveSuccessMessage"), resourceLoader.GetString("ImageSaveMessageTitle"));
 
 			try
 			{
@@ -535,7 +592,7 @@ namespace LightNovel
 			}
 			catch (Exception)
 			{
-				diag.Content = "Saving file failed";
+				diag.Content = resourceLoader.GetString("ImageSaveFailedMessage");
 			}
 			await diag.ShowAsync();
 		}
@@ -629,8 +686,21 @@ namespace LightNovel
 				MessageDialog dialog = new MessageDialog(resourceLoader.GetString("DownloadingStartDescriptioin"), resourceLoader.GetString("DownloadingStartDescriptioinTtile"));
 				var caching = ViewModel.CachingRestChaptersAsync();
 				await dialog.ShowAsync();
-				await caching;
-				DownloadButton.Label = resourceLoader.GetString("DownloadButtonStartLabel");
+				var result = await caching;
+				if (result)
+				{
+					dialog.Title = resourceLoader.GetString("DownloadSuccessLabel");
+					dialog.Content = resourceLoader.GetString("DownloadSuccessDescription");
+					DownloadButton.IsEnabled = false;
+					await dialog.ShowAsync();
+				}
+				else
+				{
+					dialog.Title = resourceLoader.GetString("DownloadFailedLabel");
+					dialog.Content = resourceLoader.GetString("DownloadFailedDescription");
+					DownloadButton.Label = resourceLoader.GetString("DownloadButtonCompletedLabel");
+					await dialog.ShowAsync();
+				}
 			}
 		}
 

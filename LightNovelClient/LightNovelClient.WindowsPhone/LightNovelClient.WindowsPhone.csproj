@@ -103,6 +103,9 @@
     <Compile Include="ReadingPage.xaml.cs">
       <DependentUpon>ReadingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SeriesIndexPage.xaml.cs">
+      <DependentUpon>SeriesIndexPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -128,6 +131,10 @@
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
     <Page Include="ReadingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SeriesIndexPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

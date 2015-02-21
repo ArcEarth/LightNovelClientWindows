@@ -31,6 +31,7 @@ namespace LightNovel.Service
 		public string HyperLinkUri { get; set; }
 		public string CoverImageUri { get; set; }
 
+		[JsonIgnore]
 		public BookItemType ItemType
 		{
 			get
@@ -203,6 +204,26 @@ namespace LightNovel.Service
 		public string SeriesTitle { get; set; }
 		public string DescriptionThumbnailUri { get; set; }
 		public bool IsDeleted { get; set; }
+
+		[JsonIgnore]
+		public Uri CoverImageUri
+		{
+			get
+			{
+				if (!String.IsNullOrEmpty(DescriptionThumbnailUri))
+					return new Uri(DescriptionThumbnailUri);
+				else 
+					return new Uri(DescriptionImageUri);
+			}
+		}
+		[JsonIgnore]
+		public string Description
+		{
+			get
+			{
+				return ContentDescription;
+			}
+		}
 	}
 
 }

@@ -41,6 +41,7 @@ namespace LightNovel
 			ViewModel.IsLoading = true;
 			var statusBar = StatusBar.GetForCurrentView();
 			await statusBar.HideAsync();
+
 			//statusBar.ProgressIndicator.Text = "Synchronizing...";
 			//statusBar.ProgressIndicator.ProgressValue = null;
 			//statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
@@ -51,7 +52,8 @@ namespace LightNovel
 			{
 				ViewModel.LastReadSection = new HistoryItemViewModel(App.Current.RecentList[App.Current.RecentList.Count - 1]);
 				await ViewModel.RecentSection.LoadLocalAsync(true);
-			} else
+			}
+			else
 			{
 				ViewModel.LastReadSection = new HistoryItemViewModel
 				{
@@ -82,20 +84,20 @@ namespace LightNovel
 
 			await ViewModel.RecommandSection.LoadAsync(10);
 			if (App.Current.Settings.EnableLiveTile)
-				UpdateTile(); 
-			
+				UpdateTile();
+
 			await ViewModel.FavoriteSection.LoadAsync();
 
-			IsLoadingIndex = true;
-			await ViewModel.LoadSeriesIndexDataAsync();
-			if (SeriesIndexViewSource.View == null)
-			{
-				SeriesIndexViewSource.IsSourceGrouped = true;
-				SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
-			}
-			if (SeriesIndexViewSource.View != null)
-				ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
-			IsLoadingIndex = false;
+			//IsLoadingIndex = true;
+			//await ViewModel.LoadSeriesIndexDataAsync();
+			//if (SeriesIndexViewSource.View == null)
+			//{
+			//	SeriesIndexViewSource.IsSourceGrouped = true;
+			//	SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
+			//}
+			//if (SeriesIndexViewSource.View != null)
+			//	ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
+			//IsLoadingIndex = false;
 
 			ViewModel.IsLoading = false;
 
@@ -106,19 +108,20 @@ namespace LightNovel
 
 		private async void RootHub_SectionsInViewChanged(object sender, SectionsInViewChangedEventArgs e)
 		{
-			if (e.AddedSections.Contains(AllSection) && !ViewModel.IsIndexDataLoaded && !IsLoadingIndex)
-			{
-				IsLoadingIndex = true;
-				await ViewModel.LoadSeriesIndexDataAsync();
-				if (SeriesIndexViewSource.View == null)
-				{
-					SeriesIndexViewSource.IsSourceGrouped = true;
-					SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
-				}
-				if (SeriesIndexViewSource.View != null)
-					ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
-				IsLoadingIndex = false;
-			} else if (e.AddedSections.Contains(RecommandSection) && !ViewModel.RecommandSection.IsLoading && !ViewModel.RecommandSection.IsLoaded)
+			//if (e.AddedSections.Contains(AllSection) && !ViewModel.IsIndexDataLoaded && !IsLoadingIndex)
+			//{
+			//	IsLoadingIndex = true;
+			//	await ViewModel.LoadSeriesIndexDataAsync();
+			//	if (SeriesIndexViewSource.View == null)
+			//	{
+			//		SeriesIndexViewSource.IsSourceGrouped = true;
+			//		SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
+			//	}
+			//	if (SeriesIndexViewSource.View != null)
+			//		ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
+			//	IsLoadingIndex = false;
+			//} else 
+			if (e.AddedSections.Contains(RecommandSection) && !ViewModel.RecommandSection.IsLoading && !ViewModel.RecommandSection.IsLoaded)
 			{
 				ViewModel.IsLoading = true;
 				await ViewModel.RecommandSection.LoadAsync();
@@ -128,6 +131,80 @@ namespace LightNovel
 		}
 
 		public bool IsLoadingIndex { get; set; }
+
+		private void SeriesIndexButton_Click(object sender, RoutedEventArgs e)
+		{
+			this.Frame.Navigate(typeof(SeriesIndexPage));
+		}
+
+		private async void RecentItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteRecentLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				ViewModel.IsLoading = true;
+				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+				ViewModel.RecentSection.Remove(hvm);
+				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+				if (recentItem != null)
+				{
+					App.Current.RecentList.Remove(recentItem);
+					await App.Current.SaveHistoryDataAsync();
+				}
+				ViewModel.IsLoading = false;
+			}));
+			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
+		private async void BookmarkItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteBookmarkLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				ViewModel.IsLoading = true;
+
+				ViewModel.FavoriteSection.Remove(hvm);
+				ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
+
+				try
+				{
+					var idx = App.Current.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
+					if (idx >= 0)
+					{
+						App.Current.BookmarkList.RemoveAt(idx);
+						await App.Current.SaveBookmarkDataAsync();
+					}
+
+					if (App.Current.IsSignedIn)
+					{
+						var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						if (favDeSer.Any(id => id == null))
+						{
+							await App.Current.User.SyncFavoriteListAsync(true);
+							(from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						}
+
+						await App.Current.User.RemoveUserFavriteAsync(favDeSer);
+					}
+				}
+				catch (Exception)
+				{
+					Debug.WriteLine("Exception happens when deleting favorite");
+				}
+
+				ViewModel.IsLoading = false;
+			}));
+			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
 
 	}
 }

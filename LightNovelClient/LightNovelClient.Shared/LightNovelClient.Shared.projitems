@@ -26,6 +26,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Converters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\CachedClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ICollectionViewEx.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\ListCollectionView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\UserInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ExpanderView.cs" />

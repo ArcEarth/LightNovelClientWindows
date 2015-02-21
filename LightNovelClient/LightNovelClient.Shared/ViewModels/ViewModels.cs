@@ -183,6 +183,7 @@ namespace LightNovel.ViewModels
 					_ChapterData = value;
 					NotifyPropertyChanged("Header");
 					NotifyPropertyChanged("ChapterHeader");
+					NotifyPropertyChanged("NextChapterHeader");
 				}
 			}
 		}
@@ -209,6 +210,20 @@ namespace LightNovel.ViewModels
 			get
 			{
 				return ChapterData.Title;
+			}
+		}
+
+		public string NextChapterHeader
+		{
+			get
+			{
+				if (HasNext)
+				{
+					return Index[VolumeNo][ChapterNo + 1].Title;
+				} else
+				{
+					return String.Empty;
+				}
 			}
 		}
 
@@ -273,6 +288,7 @@ namespace LightNovel.ViewModels
 						throw new NotImplementedException("Set VolumeData before set series ID");
 					}
 					NotifyPropertyChanged();
+					NotifyPropertyChanged("NextChapterHeader");
 #if WINDOWS_APP
 					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
 						SeconderyIndex = Index[_VolumeNo].Chapters;
@@ -298,10 +314,13 @@ namespace LightNovel.ViewModels
 					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
 						SeconderyIndex = Index[_VolumeNo].Chapters;
 #endif
-
+					var cvm = Index[VolumeNo][ChapterNo];
+					cvm.NotifyPropertyChanged("IsDownloaded");
 					NotifyPropertyChanged();
 					NotifyPropertyChanged("HasPrev");
 					NotifyPropertyChanged("HasNext");
+					NotifyPropertyChanged("NextChapterHeader");
+					NotifyPropertyChanged("IsDownloaded");
 				}
 			}
 		}
@@ -424,13 +443,13 @@ namespace LightNovel.ViewModels
 				return SecondaryTile.Exists(SeriesId.ToString());
 			}
 		}
-		public bool IsCached
-		{
-			get
-			{
-				return false;
-			}
-		}
+		//public bool IsCached
+		//{
+		//	get
+		//	{
+		//		return false;
+		//	}
+		//}
 
 		public bool IsFavored
 		{
@@ -442,6 +461,24 @@ namespace LightNovel.ViewModels
 				if (Index == null || App.Current.BookmarkList == null)
 					return false;
 				return App.Current.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+			}
+		}
+
+		public bool IsDownloaded
+		{
+			get
+			{
+				for (int i = ChapterNo + 2; i < VolumeData.Chapters.Count; i++)
+				{
+					if (!CachedClient.IsChapterCached( VolumeData.Chapters[i].Id))
+						return false;
+				}
+				for (int i = VolumeNo + 1; i < SeriesData.Volumes.Count; i++)
+				{
+					if (!SeriesData.Volumes[i].Chapters.All(c => CachedClient.IsChapterCached(c.Id)))
+						return false;
+				}
+				return true;
 			}
 		}
 
@@ -551,8 +588,11 @@ namespace LightNovel.ViewModels
 
 		public async Task LoadDataAsync(NovelPositionIdentifier nav)
 		{
-			if (IsLoading)
+			if (nav.VolumeNo >= 0 && nav.ChapterNo >=0 && !String.IsNullOrEmpty(nav.SeriesId))
+			{
+				await LoadDataAsync(int.Parse(nav.SeriesId), nav.VolumeNo, nav.ChapterNo, nav.LineNo);
 				return;
+			}
 			IsLoading = true;
 			if (nav.ChapterNo < 0) nav.ChapterNo = 0;
 			if (nav.VolumeNo < 0) nav.VolumeNo = 0;
@@ -785,10 +825,12 @@ namespace LightNovel.ViewModels
 				catch (Exception)
 				{
 				}
+				DownloadingTask = null;
+				NotifyPropertyChanged("IsDownloading");
 			}
 		}
 
-		public async Task CachingRestChaptersAsync(bool cacheImages = true)
+		public async Task<bool> CachingRestChaptersAsync(bool cacheImages = true)
 		{
 
 			if (DownloadingTask != null)
@@ -803,7 +845,7 @@ namespace LightNovel.ViewModels
 				}
 			}
 			else if (IsLoading)
-				return;
+				return false;
 
 			//IsLoading = true; 
 			var chapters = new List<string>();
@@ -836,9 +878,11 @@ namespace LightNovel.ViewModels
 				DownloadingProgress += 1.0 / chapters.Count;
 				NotifyPropertyChanged("DownloadingProgress");
 			};
+			bool result = false;
 			try
 			{
 				await DownloadingTask;
+				result = DownloadingProgress > 0.99;
 			}
 			catch (Exception)
 			{
@@ -846,6 +890,8 @@ namespace LightNovel.ViewModels
 			}
 			DownloadingTask = null;
 			NotifyPropertyChanged("IsDownloading");
+			NotifyPropertyChanged("IsDownloaded");
+			return result;
 			//IsLoading = false;
 		}
 

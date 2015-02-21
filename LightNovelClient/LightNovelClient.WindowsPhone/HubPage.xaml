@@ -1,6 +1,7 @@
 ﻿<Page x:Class="LightNovel.HubPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:common="using:LightNovel.Common"
       xmlns:controls="using:LightNovel.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:data="using:LightNovel.Service"
@@ -110,7 +111,9 @@
             <Grid Height="140"
                   Margin="0,0,0,10"
                   VerticalAlignment="Top"
-                  Background="{ThemeResource VolumeTileBackgroundBrush}">
+                  Background="{ThemeResource VolumeTileBackgroundBrush}"
+                  Holding="RecentItem_Holding"
+                  IsHoldingEnabled="True">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="200" />
@@ -120,16 +123,11 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <!--  <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>  -->
                 <Image Grid.RowSpan="3"
                        Grid.Column="0"
                        HorizontalAlignment="Left"
                        Source="{Binding CoverImageUri}"
                        Stretch="UniformToFill" />
-                <!--
-                    <Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
-                    </Rectangle>
-                -->
                 <TextBlock Grid.Column="1"
                            Margin="20,5,10,0"
                            HorizontalAlignment="Left"
@@ -160,7 +158,58 @@
                 <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="FavourItemTemplate" d:DataType="{system:Type data:FavourVolume}">
+        <DataTemplate x:Key="BookmarkItemTemplate" d:DataType="{system:Type vm:HistoryItemViewModel}">
+            <Grid Height="140"
+                  Margin="0,0,0,10"
+                  VerticalAlignment="Top"
+                  Background="{ThemeResource VolumeTileBackgroundBrush}"
+                  Holding="BookmarkItem_Holding"
+                  IsHoldingEnabled="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Image Grid.RowSpan="3"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       Source="{Binding CoverImageUri}"
+                       Stretch="UniformToFill" />
+                <TextBlock Grid.Column="1"
+                           Margin="20,5,10,0"
+                           HorizontalAlignment="Left"
+                           FontSize="{ThemeResource AppFontSizeLarge}"
+                           Foreground="{StaticResource AppAccentBrush}"
+                           Language="zh-CN"
+                           Text="{Binding SeriesTitle}"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="Wrap" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Margin="20,5,10,0"
+                           FontSize="{ThemeResource AppFontSizeSmall}"
+                           Language="zh-CN"
+                           Style="{ThemeResource AppTextSubtleStyle}"
+                           Text="{Binding Description}"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="Wrap" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Margin="20,0,5,5"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Stretch"
+                           Foreground="{StaticResource AppAccentBrush}"
+                           Language="zh-CN"
+                           Style="{StaticResource AppTextSmallStyle}"
+                           Text="{Binding UpdateTime}" />
+                <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
+            </Grid>
+        </DataTemplate>
+        <!--<DataTemplate x:Key="FavourItemTemplate" d:DataType="{system:Type data:FavourVolume}">
             <Grid Height="140"
                   Margin="0,0,0,10"
                   VerticalAlignment="Top"
@@ -175,16 +224,20 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <!--  <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>  -->
+        -->
+        <!--  <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>  -->
+        <!--
                 <Image Grid.RowSpan="3"
                        Grid.Column="0"
                        HorizontalAlignment="Left"
                        Source="{Binding CoverImageUri}"
                        Stretch="UniformToFill" />
-                <!--
+        -->
+        <!--
                     <Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
                     </Rectangle>
-                -->
+        -->
+        <!--
                 <TextBlock Grid.Column="1"
                            Margin="20,5,10,0"
                            Foreground="{ThemeResource AppAccentBrush}"
@@ -204,10 +257,12 @@
                                Language="zh-CN"
                                Text="{Binding VolumeTitle}" />
                 </StackPanel>
-                <!--
+        -->
+        <!--
                     <TextBlock Language="zh-CN" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
                     Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
-                -->
+        -->
+        <!--
                 <TextBlock Grid.Row="2"
                            Grid.Column="1"
                            Margin="20,5,10,0"
@@ -218,7 +273,7 @@
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="Wrap" />
             </Grid>
-        </DataTemplate>
+        </DataTemplate>-->
         <DataTemplate x:Key="HubPageHubSectionHeaderTemplate">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -252,6 +307,7 @@
         <CollectionViewSource x:Name="SeriesIndexViewSource"
                               IsSourceGrouped="true"
                               Source="{Binding SeriesIndex}" />
+        <!--<common:ListCollectionView x:Name="RecentCollectionViewSource" Source="{Binding RecentSection}" />-->
     </Page.Resources>
 
     <!--  This grid acts as a root panel for the page.  -->
@@ -438,7 +494,7 @@
                               IsItemClickEnabled="True"
                               IsSwipeEnabled="False"
                               ItemClick="RecentItem_Click"
-                              ItemTemplate="{StaticResource HistoryItemTemplate}"
+                              ItemTemplate="{StaticResource BookmarkItemTemplate}"
                               ItemsSource="{Binding}"
                               ScrollViewer.HorizontalScrollMode="Disabled"
                               ScrollViewer.IsHorizontalRailEnabled="False"
@@ -523,113 +579,12 @@
             </HubSection>
 
 
-            <HubSection x:Name="AllSection"
+            <!--<HubSection x:Name="AllSection"
                         Margin="0,-36.5,0,0"
                         Padding="0,0,0,0">
                 <DataTemplate>
-                    <SemanticZoom Margin="0,0,0,0"
-                                  HorizontalAlignment="Stretch"
-                                  HorizontalContentAlignment="Stretch"
-                                  Padding="0"
-                                  ScrollViewer.HorizontalScrollMode="Disabled">
-                        <SemanticZoom.ZoomedInView>
-                            <ListView Width="340"
-                                      Margin="0"
-                                      HorizontalAlignment="Stretch"
-                                      IsItemClickEnabled="True"
-                                      IsSwipeEnabled="False"
-                                      ItemClick="IndexListView_ItemClick"
-                                      ItemsSource="{Binding Source={StaticResource SeriesIndexViewSource}}"
-                                      Padding="0"
-                                      ScrollViewer.HorizontalScrollMode="Disabled"
-                                      ScrollViewer.IsVerticalScrollChainingEnabled="False"
-                                      SelectionMode="None">
-                                <ListView.GroupStyle>
-                                    <GroupStyle HidesIfEmpty="True">
-                                        <GroupStyle.HeaderTemplate>
-                                            <DataTemplate>
-                                                <Border Grid.Column="0"
-                                                        Width="50"
-                                                        Height="50"
-                                                        Margin="2,0,2,2"
-                                                        Background="{ThemeResource AppAccentBrush}"
-                                                        BorderThickness="0">
-                                                    <FontIcon HorizontalAlignment="Stretch"
-                                                              VerticalAlignment="Stretch"
-                                                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                              Foreground="{ThemeResource AppBackgroundBrush}"
-                                                              Glyph="{Binding Key}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </GroupStyle.HeaderTemplate>
-                                    </GroupStyle>
-                                </ListView.GroupStyle>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Width="320"
-                                                   HorizontalAlignment="Left"
-                                                   VerticalAlignment="Center"
-                                                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                                   Foreground="{ThemeResource AppAccentBrush}"
-                                                   Text="{Binding Title}"
-                                                   TextTrimming="WordEllipsis" />
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                                <!--<ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ListViewItem">
-                                                    <ContentPresenter x:Name="contentPresenter"
-                                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          Content="{TemplateBinding Content}"
-                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          Margin="{TemplateBinding Padding}" />
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-
-                                    </Style>
-                                </ListView.ItemContainerStyle>-->
-                                <!--<GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>-->
-                            </ListView>
-                        </SemanticZoom.ZoomedInView>
-                        <SemanticZoom.ZoomedOutView>
-                            <GridView x:Uid="IndexZoomedOutView"
-                                      x:Name="IndexZoomedOutView"
-                                      Margin="0,140,0,40"
-                                      HorizontalAlignment="Stretch"
-                                      VerticalAlignment="Stretch"
-                                      Background="{ThemeResource AppSemitransparentBrush}"
-                                      ItemsSource="{Binding SeriesIndexGroupView}">
-                                <GridView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Grid.Column="0"
-                                                Width="50"
-                                                Height="50"
-                                                Margin="10"
-                                                Background="{ThemeResource AppAccentBrush}"
-                                                BorderBrush="Transparent">
-                                            <FontIcon HorizontalAlignment="Stretch"
-                                                      VerticalAlignment="Stretch"
-                                                      FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                      Foreground="{ThemeResource AppBackgroundBrush}"
-                                                      Glyph="{Binding Group.Key}" />
-                                        </Border>
-                                    </DataTemplate>
-                                </GridView.ItemTemplate>
-                            </GridView>
-                        </SemanticZoom.ZoomedOutView>
-                    </SemanticZoom>
                 </DataTemplate>
-            </HubSection>
+            </HubSection>-->
             <HubSection x:Uid="AboutSection"
                         Margin="0,-5.5,5,0"
                         Header="Settins and About"
@@ -756,22 +711,6 @@
                     </ScrollViewer>
                 </DataTemplate>
             </HubSection>
-
-            <!--  Double line list with image placeholder and text wrapping using a floating header that scrolls with the content  -->
-            <!--  </HubSection>  -->
-            <!--
-                <HubSection Header="Settings">
-                <DataTemplate>
-                <StackPanel>
-                <Button Click="ClearCacheButton_Click">Clear Cache</Button>
-                <Button Click="ClearHistoryButtonBase_Click">Clear History</Button>
-                <Button Click="ClearBookmarkButtonBase_Click">Clear Bookmark</Button>
-                <ToggleSwitch IsOn="{Binding Settings.EnableComments,Mode=TwoWay}" Foreground="{StaticResource AppAccentBrush}">Show Comments</ToggleSwitch>
-                <TextBlock Style="{StaticResource AppTextAccentStyle}" FontWeight="Light" TextWrapping="Wrap" Visibility="{Binding Settings.EnableComments,Converter={StaticResource BooleanToVisibilityConverter}}">*Warning : Comments is still in testing, enable it may bring accidential crush when reading!</TextBlock>
-                </StackPanel>
-                </DataTemplate>
-                </HubSection>
-            -->
         </Hub>
 
         <ProgressBar x:Name="progressBar"
@@ -781,10 +720,10 @@
                      Visibility="{Binding IsLoading,
                                           Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Button Width="50"
-                Height="50"
+                Height="60"
                 MinWidth="40"
                 MinHeight="40"
-                Margin="60,0"
+                Margin="90,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Click="UserAccount_Click"
@@ -796,11 +735,26 @@
                             Symbol="Contact" />
             </Viewbox>
         </Button>
-
+        <Button Width="50"
+                Height="60"
+                MinWidth="40"
+                MinHeight="40"
+                Margin="0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Click="SeriesIndexButton_Click"
+                Padding="0"
+                Style="{ThemeResource PureButtonStyle}">
+            <Viewbox>
+                <SymbolIcon Margin="9,8,8,6"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Symbol="AllApps" />
+            </Viewbox>
+        </Button>
         <controls:SearchBox x:Uid="HubSearchBox"
-                            Width="330"
+                            Width="285"
                             Height="40"
-                            Margin="20,0"
+                            Margin="47,0"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             BorderBrush="{ThemeResource AppAccentBrushSemiLight}"

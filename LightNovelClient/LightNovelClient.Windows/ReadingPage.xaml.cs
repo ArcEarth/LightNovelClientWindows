@@ -726,7 +726,7 @@ namespace LightNovel
 		//}
 		private void SyncIndexSelection()
 		{
-			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo || ViewModel.IsLoading) return;
+			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo];
 			var chpTarget = target[ViewModel.ChapterNo];
 			if (ViewModel.HasNext)
@@ -745,7 +745,7 @@ namespace LightNovel
 				if (VolumeListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
 				{
 					VolumeListView.SetValue(ListViewBaseScrollToItemRequestProperty, target);
-					VolumeListView.SizeChanged += ListView_SizeChanged;
+					VolumeListView.SizeChanged += ListView_SizeChanged_ScrollToItem;
 				}
 				else
 				{
@@ -764,31 +764,12 @@ namespace LightNovel
 				if (ChapterListView.GetValue(ListViewBaseScrollToItemRequestProperty) == null)
 				{
 					ChapterListView.SetValue(ListViewBaseScrollToItemRequestProperty, chpTarget);
-					ChapterListView.SizeChanged += ListView_SizeChanged;
+					ChapterListView.SizeChanged += ListView_SizeChanged_ScrollToItem;
 				}
 				else
 				{
 					ChapterListView.SetValue(ListViewBaseScrollToItemRequestProperty, chpTarget);
 				}
-			}
-		}
-
-		void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			var list = sender as ListViewBase;
-			if (list.Visibility == Windows.UI.Xaml.Visibility.Visible && e.NewSize.Height > 10 && list.Items.Count > 0)
-			{
-				var target = list.GetValue(ListViewBaseScrollToItemRequestProperty);
-				if (target == null)
-				{
-					list.SizeChanged -= ListView_SizeChanged;
-					return;
-				}
-				list.SelectedItem = target;
-				list.UpdateLayout();
-				list.ScrollIntoView(target, ScrollIntoViewAlignment.Leading);
-				list.ClearValue(ListViewBaseScrollToItemRequestProperty);
-				list.SizeChanged -= ListView_SizeChanged;
 			}
 		}
 
