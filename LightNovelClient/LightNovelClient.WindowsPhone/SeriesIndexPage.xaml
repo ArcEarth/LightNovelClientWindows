@@ -28,106 +28,105 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid x:Name="resultsPanel" Grid.Row="1">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition IsStaggeringEnabled="True" />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <!--
                 The body of the page in most view states uses an items controls to create multiple radio buttons
                 for filtering above a horizontal scrolling grid of search results
             -->
-            <Grid x:Name="typicalPanel">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <SemanticZoom x:Name="resultsView"
-                              Grid.Row="1"
-                              Margin="0,-1,0,0"
+            <SemanticZoom x:Name="resultsView"
+                          Margin="0,-1,0,0"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          Padding="0,0,0,0"
+                          ScrollViewer.HorizontalScrollMode="Disabled"
+                          TabIndex="1">
+                <SemanticZoom.ZoomedInView>
+                    <ListView Margin="0"
+                              HorizontalAlignment="Stretch"
+                              IsItemClickEnabled="True"
+                              IsSwipeEnabled="False"
+                              ItemClick="IndexListView_ItemClick"
+                              ItemsSource="{Binding Source={StaticResource SeriesIndexViewSource}}"
+                              Padding="15,0,0,0"
+                              SelectionMode="None"
+                              Style="{StaticResource SeriesIndexListViewStyle}">
+                        <ListView.GroupStyle>
+                            <GroupStyle HidesIfEmpty="True">
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Border Grid.Column="0"
+                                                Width="50"
+                                                Height="50"
+                                                Margin="2,0,2,2"
+                                                Background="{ThemeResource AppAccentBrush}"
+                                                BorderThickness="0">
+                                            <FontIcon HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="Stretch"
+                                                      FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                      Foreground="{ThemeResource AppBackgroundBrush}"
+                                                      Glyph="{Binding Key}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Width="380"
+                                           Margin="5,0,0,0"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Center"
+                                           FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                                           Foreground="{ThemeResource AppAccentBrush}"
+                                           Text="{Binding Title}"
+                                           TextTrimming="WordEllipsis"
+                                           TextWrapping="NoWrap" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <GridView x:Uid="IndexZoomedOutView"
+                              x:Name="IndexZoomedOutView"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
-                              HorizontalContentAlignment="Stretch"
-                              Padding="0,0,0,0"
-                              ScrollViewer.HorizontalScrollMode="Disabled"
-                              TabIndex="1">
-                    <SemanticZoom.ZoomedInView>
-                        <ListView Margin="0"
-                                  HorizontalAlignment="Stretch"
-                                  IsItemClickEnabled="True"
-                                  IsSwipeEnabled="False"
-                                  ItemClick="IndexListView_ItemClick"
-                                  ItemsSource="{Binding Source={StaticResource SeriesIndexViewSource}}"
-                                  Padding="15,0,0,0"
-                                  SelectionMode="None">
-                            <ListView.GroupStyle>
-                                <GroupStyle HidesIfEmpty="True">
-                                    <GroupStyle.HeaderTemplate>
-                                        <DataTemplate>
-                                            <Border Grid.Column="0"
-                                                    Width="50"
-                                                    Height="50"
-                                                    Margin="2,0,2,2"
-                                                    Background="{ThemeResource AppAccentBrush}"
-                                                    BorderThickness="0">
-                                                <FontIcon HorizontalAlignment="Stretch"
-                                                          VerticalAlignment="Stretch"
-                                                          FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                          Foreground="{ThemeResource AppBackgroundBrush}"
-                                                          Glyph="{Binding Key}" />
-                                            </Border>
-                                        </DataTemplate>
-                                    </GroupStyle.HeaderTemplate>
-                                </GroupStyle>
-                            </ListView.GroupStyle>
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Width="380"
-                                               Margin="5,0,0,0"
-                                               HorizontalAlignment="Stretch"
-                                               VerticalAlignment="Center"
-                                               FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                               Foreground="{ThemeResource AppAccentBrush}"
-                                               Text="{Binding Title}"
-                                               TextTrimming="WordEllipsis"
-                                               TextWrapping="NoWrap" />
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </SemanticZoom.ZoomedInView>
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView x:Uid="IndexZoomedOutView"
-                                  x:Name="IndexZoomedOutView"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  Background="{ThemeResource AppSemitransparentBrush}"
-                                  ItemsSource="{Binding SeriesIndexGroupView}"
-                                  Padding="0,60,0,0">
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Grid.Column="0"
-                                            Width="50"
-                                            Height="50"
-                                            Margin="10"
-                                            Background="{ThemeResource AppAccentBrush}"
-                                            BorderBrush="Transparent">
-                                        <FontIcon HorizontalAlignment="Stretch"
-                                                  VerticalAlignment="Stretch"
-                                                  FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                                  Foreground="{ThemeResource AppBackgroundBrush}"
-                                                  Glyph="{Binding Group.Key}" />
-                                    </Border>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
-                    </SemanticZoom.ZoomedOutView>
-                </SemanticZoom>
-            </Grid>
+                              Background="{ThemeResource AppSemitransparentBrush}"
+                              ItemsSource="{Binding SeriesIndexGroupView}"
+                              Padding="0,60,0,0">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Grid.Column="0"
+                                        Width="50"
+                                        Height="50"
+                                        Margin="10"
+                                        Background="{ThemeResource AppAccentBrush}"
+                                        BorderBrush="Transparent">
+                                    <FontIcon HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"
+                                              FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                              Foreground="{ThemeResource AppBackgroundBrush}"
+                                              Glyph="{Binding Group.Key}" />
+                                </Border>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
+
         </Grid>
 
         <!--  Back button and page title  -->
-        <Grid Background="{ThemeResource AppAccentBrush}">
+        <Grid Background="{ThemeResource AppAccentBrush}" Style="{StaticResource TitlePanelStyle}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -138,7 +137,7 @@
             <TextBlock x:Uid="SeriesIndexLabel"
                        x:Name="SeriesIndexLabel"
                        Grid.Column="1"
-                       Margin="5,0,0,12"
+                       Margin="5,0,0,3"
                        VerticalAlignment="Bottom"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"

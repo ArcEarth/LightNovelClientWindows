@@ -296,7 +296,7 @@ namespace LightNovel
 
 		private FontFamily SegoeUISymbolFontFamily = new FontFamily("Segoe UI Symbol");
 		private SolidColorBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
-		private string CommentIndicator = WebUtility.HtmlDecode("&#xE134;");
+		private string CommentIndicator = WebUtility.HtmlDecode("&#xE134;　");
 
 		private void UpdateContentsView(IEnumerable<LineViewModel> lines)
 		{
@@ -318,7 +318,7 @@ namespace LightNovel
 					var run = new Run { Text = line.Content };
 					para.Inlines.Add(new Run { Text = CommentIndicator, FontFamily = SegoeUISymbolFontFamily, Foreground = TransparentBrush });
 					para.Inlines.Add(run);
-					para.TextIndent = ContentTextBlock.FontSize * 1;
+					//para.TextIndent = ContentTextBlock.FontSize * 1;
 					prevLineBreakFlag = true;
 					para.Margin = new Thickness(0, 0, 0, 10);
 				}

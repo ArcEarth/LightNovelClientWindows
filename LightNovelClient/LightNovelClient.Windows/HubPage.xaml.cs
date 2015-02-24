@@ -59,7 +59,7 @@ namespace LightNovel
 			if (App.Current.RecentList.Count > 0)
 			{
 				ViewModel.LastReadSection = new HistoryItemViewModel(App.Current.RecentList[App.Current.RecentList.Count - 1]);
-				await ViewModel.RecentSection.LoadLocalAsync(true);
+				await ViewModel.RecentSection.LoadLocalAsync(true,9);
 			}
 			else
 			{
@@ -84,6 +84,7 @@ namespace LightNovel
 			{
 				LoadingRecommandTask = ViewModel.RecommandSection.LoadAsync();
 			}
+
 			if (ViewModel.SeriesIndex == null)
 			{
 				LoadingIndexTask = ViewModel.LoadSeriesIndexDataAsync().ContinueWith(async task =>
@@ -103,12 +104,15 @@ namespace LightNovel
 
 			if (!App.Current.IsSignedIn)
 			{
-				LoginTask = ViewModel.TryLogInWithStoredCredentialAsync();
+				LoginTask = ViewModel.TryLogInWithStoredCredentialAsync().ContinueWith(async task => {
+					await ViewModel.FavoriteSection.LoadAsync(false, 9);
+				});
 			}
 			else
 			{
 				ViewModel.IsSignedIn = true;
 				ViewModel.UserName = App.Current.User.UserName;
+				LoginTask = ViewModel.FavoriteSection.LoadAsync(false, 9);
 			}
 
 #if WINDOWS_APP
@@ -125,11 +129,10 @@ namespace LightNovel
 
 			if (LoadingRecommandTask != null)
 				await LoadingRecommandTask;
-			if (LoadingIndexTask != null)
-				await LoadingIndexTask;
 			if (LoginTask != null)
 				await LoginTask;
-			await ViewModel.FavoriteSection.LoadAsync();
+			if (LoadingIndexTask != null)
+				await LoadingIndexTask;
 
 			UpdateTile();
 
@@ -163,7 +166,17 @@ namespace LightNovel
 		{
 			double maxX = (double)App.Current.Resources["PosterWidth"];
 			ScrollViewer viewer = sender as ScrollViewer;
-			LogoImageTranslate.X = Math.Max(maxX - viewer.HorizontalOffset, 0);
+			LogoImageTranslate.X = Math.Max(-viewer.HorizontalOffset, -maxX);
+		}
+
+		private void SeriesIndexButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void SettingsButton_Click(object sender, RoutedEventArgs e)
+		{
+			Windows.UI.ApplicationSettings.SettingsPane.Show();
 		}
 	}
 }

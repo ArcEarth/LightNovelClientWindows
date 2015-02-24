@@ -198,7 +198,7 @@ namespace LightNovel.ViewModels
 					return "Loading...";
 #else // WINDOWS_PHONE_APP
 				if (SeriesData != null && VolumeData != null && ChapterData != null)
-					return VolumeData.Title;
+					return SeriesData.Title;
 				else
 					return "Loading...";
 #endif
@@ -893,11 +893,6 @@ namespace LightNovel.ViewModels
 			NotifyPropertyChanged("IsDownloaded");
 			return result;
 			//IsLoading = false;
-		}
-
-		public async Task ClearCacheAsync()
-		{
-
 		}
 
 		void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

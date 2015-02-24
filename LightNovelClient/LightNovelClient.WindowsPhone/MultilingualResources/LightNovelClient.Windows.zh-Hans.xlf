@@ -6,29 +6,69 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\SettingButton\Label" translate="yes" xml:space="preserve">
+          <source>设置</source>
+          <target state="new">设置</target>
+        </trans-unit>
+        <trans-unit id="Resources\CurrentVersionLabel\Text" translate="yes" xml:space="preserve">
+          <source>当前应用版本</source>
+          <target state="new">当前应用版本</target>
+        </trans-unit>
+        <trans-unit id="Resources\FeedbackEmailButton\Content" translate="yes" xml:space="preserve">
+          <source>发邮件给开发者</source>
+          <target state="new">发邮件给开发者</target>
+        </trans-unit>
+        <trans-unit id="Resources\Help2TextBlock\Text" translate="yes" xml:space="preserve">
+          <source>在阅读时，你可以在屏幕”左边缘“右划来唤出目录栏哦.</source>
+          <target state="new">在阅读时，你可以在屏幕”左边缘“右划来唤出目录栏哦.</target>
+        </trans-unit>
+        <trans-unit id="Resources\Help1TextBlock\Text" translate="yes" xml:space="preserve">
+          <source>你可以通过在"最近"与“收藏”的卡片上"长按"来删除它们哦.</source>
+          <target state="new">你可以通过在"最近"与“收藏”的卡片上"长按"来删除它们哦.</target>
+        </trans-unit>
+        <trans-unit id="Resources\HelpHeaderTextBlock\Text" translate="yes" xml:space="preserve">
+          <source>你知道吗？</source>
+          <target state="new">你知道吗？</target>
+        </trans-unit>
+        <trans-unit id="Resources\HelpButton\Label" translate="yes" xml:space="preserve">
+          <source>小技巧</source>
+          <target state="new">小技巧</target>
+        </trans-unit>
+        <trans-unit id="Resources\RefreshButton\Label" translate="yes" xml:space="preserve">
+          <source>刷新</source>
+          <target state="new">刷新</target>
+        </trans-unit>
+        <trans-unit id="Resources\SeriesIndexButton\Label" translate="yes" xml:space="preserve">
+          <source>全部小说</source>
+          <target state="new">全部小说</target>
+        </trans-unit>
+        <trans-unit id="Resources\SettingsLabel\Text" translate="yes" xml:space="preserve">
+          <source>设置与关于</source>
+          <target state="new">设置与关于</target>
+        </trans-unit>
         <trans-unit id="Resources\ImageSaveMessageTitle" translate="yes" xml:space="preserve">
           <source>插画下载</source>
           <target state="new">插画下载</target>
-        </trans-unit>
-        <trans-unit id="Resources\ImageSaveSuccessMessage" translate="yes" xml:space="preserve">
-          <source>下载成功！插画已保存到"Saved Picture" 文件夹。</source>
-          <target state="new">下载成功！插画已保存到"Saved Picture" 文件夹。</target>
         </trans-unit>
         <trans-unit id="Resources\ImageSaveFailedMessage" translate="yes" xml:space="preserve">
           <source>下载失败了 :( 请尝试在图片加载完成再试.</source>
           <target state="new">下载失败了 :( 请尝试在图片加载完成再试.</target>
         </trans-unit>
+        <trans-unit id="Resources\ImageSaveSuccessMessage" translate="yes" xml:space="preserve">
+          <source>下载成功！插画已保存到"Saved Picture" 文件夹。</source>
+          <target state="new">下载成功！插画已保存到"Saved Picture" 文件夹。</target>
+        </trans-unit>
         <trans-unit id="Resources\RefreshFavortite_Push_Label" translate="yes" xml:space="preserve">
           <source>强制上传收藏(抛弃云端)</source>
           <target state="new">强制上传收藏(抛弃云端)</target>
         </trans-unit>
-        <trans-unit id="Resources\RefreshFavortite_Merge_Label" translate="yes" xml:space="preserve">
-          <source>同步收藏 (合并)</source>
-          <target state="new">同步收藏 (合并)</target>
-        </trans-unit>
         <trans-unit id="Resources\RefreshFavortite_Pull_Label" translate="yes" xml:space="preserve">
           <source>下载收藏 (允许云端删除)</source>
           <target state="new">下载收藏 (允许云端删除)</target>
+        </trans-unit>
+        <trans-unit id="Resources\RefreshFavortite_Merge_Label" translate="yes" xml:space="preserve">
+          <source>同步收藏 (合并)</source>
+          <target state="new">同步收藏 (合并)</target>
         </trans-unit>
         <trans-unit id="Resources\DeleteBookmarkLabel" translate="yes" xml:space="preserve">
           <source>取消收藏</source>
@@ -46,65 +86,69 @@
           <source>缓存已完成</source>
           <target state="new">缓存已完成</target>
         </trans-unit>
-        <trans-unit id="Resources\DownloadSuccessLabel" translate="yes" xml:space="preserve">
-          <source>缓存成功</source>
-          <target state="new">缓存成功</target>
-        </trans-unit>
-        <trans-unit id="Resources\DownloadSuccessDescription" translate="yes" xml:space="preserve">
-          <source>缓存成功！现在你可以离线阅读这部小说的剩余章节了</source>
-          <target state="new">缓存成功！现在你可以离线阅读这部小说的剩余章节了</target>
+        <trans-unit id="Resources\DownloadFailedDescription" translate="yes" xml:space="preserve">
+          <source>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</source>
+          <target state="new">怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadFailedLabel" translate="yes" xml:space="preserve">
           <source>缓存出现错误啦 :(</source>
           <target state="new">缓存出现错误啦 :(</target>
         </trans-unit>
-        <trans-unit id="Resources\DownloadFailedDescription" translate="yes" xml:space="preserve">
-          <source>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</source>
-          <target state="new">怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</target>
+        <trans-unit id="Resources\DownloadSuccessDescription" translate="yes" xml:space="preserve">
+          <source>缓存成功！现在你可以离线阅读这部小说的剩余章节了</source>
+          <target state="new">缓存成功！现在你可以离线阅读这部小说的剩余章节了</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadSuccessLabel" translate="yes" xml:space="preserve">
+          <source>缓存成功</source>
+          <target state="new">缓存成功</target>
         </trans-unit>
         <trans-unit id="Resources\LoginFailedMessageDialogDetail" translate="yes" xml:space="preserve">
           <source>请检查用户名和密码,或在检查网络连接后重试</source>
           <target state="new">请检查用户名和密码,或在检查网络连接后重试</target>
         </trans-unit>
-        <trans-unit id="Resources\LogoutLabel" translate="yes" xml:space="preserve">
-          <source>登出</source>
-          <target state="new">登出</target>
-        </trans-unit>
-        <trans-unit id="Resources\LogoutIndicator" translate="yes" xml:space="preserve">
-          <source>正在登出...</source>
-          <target state="new">正在登出...</target>
+        <trans-unit id="Resources\LoginFailedMessageDialogTitle" translate="yes" xml:space="preserve">
+          <source>登陆失败</source>
+          <target state="new">登陆失败</target>
         </trans-unit>
         <trans-unit id="Resources\LoginLabel" translate="yes" xml:space="preserve">
           <source>登陆</source>
           <target state="new">登陆</target>
         </trans-unit>
-        <trans-unit id="Resources\LoginFailedMessageDialogTitle" translate="yes" xml:space="preserve">
-          <source>登陆失败</source>
-          <target state="new">登陆失败</target>
+        <trans-unit id="Resources\LogoutIndicator" translate="yes" xml:space="preserve">
+          <source>正在登出...</source>
+          <target state="new">正在登出...</target>
+        </trans-unit>
+        <trans-unit id="Resources\LogoutLabel" translate="yes" xml:space="preserve">
+          <source>登出</source>
+          <target state="new">登出</target>
         </trans-unit>
         <trans-unit id="Resources\AppDarkThemeItem\Content" translate="yes" xml:space="preserve">
           <source>黑色</source>
           <target state="new">黑色</target>
         </trans-unit>
+        <trans-unit id="Resources\AppLightThemeItem\Content" translate="yes" xml:space="preserve">
+          <source>白色</source>
+          <target state="new">白色</target>
+        </trans-unit>
         <trans-unit id="Resources\AppDefaultThemeItem\Content" translate="yes" xml:space="preserve">
           <source>系统主题</source>
           <target state="new">系统主题</target>
         </trans-unit>
-        <trans-unit id="Resources\AppLightThemeItem\Content" translate="yes" xml:space="preserve">
-          <source>白色</source>
-          <target state="new">白色</target>
+        <trans-unit id="Resources\AppThemeDescription\Text" translate="yes" xml:space="preserve">
+          <source>改变应用的背景色调 *需要重启应用才会生效（请长按后退键，然后干掉这个应用卡片）</source>
+          <target state="new">改变应用的背景色调 *需要重启应用才会生效（请长按后退键，然后干掉这个应用卡片）</target>
         </trans-unit>
         <trans-unit id="Resources\AppThemeLabel\Text" translate="yes" xml:space="preserve">
           <source>背景主题</source>
           <target state="new">背景主题</target>
         </trans-unit>
-        <trans-unit id="Resources\AppThemeDescription\Text" translate="yes" xml:space="preserve">
-          <source>改变应用的背景色调,*需要重启应用才会生效</source>
-          <target state="new">改变应用的背景色调,*需要重启应用才会生效</target>
-        </trans-unit>
         <trans-unit id="Resources\ClearCacheDescription\Text" translate="yes" xml:space="preserve">
           <source>危险.清理缓存能释放存储空间,并可能解决一些少见的闪退问题.也清除你的离线数据!</source>
           <target state="new">危险.清理缓存能释放存储空间,并可能解决一些少见的闪退问题.也清除你的离线数据!</target>
+        </trans-unit>
+        <trans-unit id="Resources\LiveTileDescription\Text" translate="yes" xml:space="preserve">
+          <source>开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</source>
+          <target state="new">开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</target>
         </trans-unit>
         <trans-unit id="Resources\LiveTileLabel\Text" translate="yes" xml:space="preserve">
           <source>动态磁贴</source>
@@ -113,10 +157,6 @@
         <trans-unit id="Resources\ClearCacheLabel\Text" translate="yes" xml:space="preserve">
           <source>清理缓存</source>
           <target state="new">清理缓存</target>
-        </trans-unit>
-        <trans-unit id="Resources\LiveTileDescription\Text" translate="yes" xml:space="preserve">
-          <source>开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</source>
-          <target state="new">开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</target>
         </trans-unit>
         <trans-unit id="Resources\NextChapterButtonLabel\Text" translate="yes" xml:space="preserve">
           <source>下一章</source>
@@ -142,33 +182,33 @@
           <source>微小</source>
           <target state="new">微小</target>
         </trans-unit>
-        <trans-unit id="Resources\HugeFontSizeButton\Text" translate="yes" xml:space="preserve">
-          <source>巨大</source>
-          <target state="new">巨大</target>
-        </trans-unit>
-        <trans-unit id="Resources\LargeFontSizeButton\Text" translate="yes" xml:space="preserve">
-          <source>大</source>
-          <target state="new">大</target>
+        <trans-unit id="Resources\SmallFontSizeButton\Text" translate="yes" xml:space="preserve">
+          <source>小</source>
+          <target state="new">小</target>
         </trans-unit>
         <trans-unit id="Resources\NormalFontSizeButton\Text" translate="yes" xml:space="preserve">
           <source>普通</source>
           <target state="new">普通</target>
         </trans-unit>
-        <trans-unit id="Resources\SmallFontSizeButton\Text" translate="yes" xml:space="preserve">
-          <source>小</source>
-          <target state="new">小</target>
+        <trans-unit id="Resources\LargeFontSizeButton\Text" translate="yes" xml:space="preserve">
+          <source>大</source>
+          <target state="new">大</target>
+        </trans-unit>
+        <trans-unit id="Resources\HugeFontSizeButton\Text" translate="yes" xml:space="preserve">
+          <source>巨大</source>
+          <target state="new">巨大</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadingStartDescriptioin" translate="yes" xml:space="preserve">
           <source>您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</source>
           <target state="new">您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</target>
         </trans-unit>
-        <trans-unit id="Resources\DownloadButton\Label" translate="yes" xml:space="preserve">
-          <source>离线缓存</source>
-          <target state="new">离线缓存</target>
-        </trans-unit>
         <trans-unit id="Resources\DownloadButtonPauseLabel" translate="yes" xml:space="preserve">
           <source>停止缓存</source>
           <target state="new">停止缓存</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadButton\Label" translate="yes" xml:space="preserve">
+          <source>离线缓存</source>
+          <target state="new">离线缓存</target>
         </trans-unit>
         <trans-unit id="Resources\DarkGrayThemeItem\Text" translate="yes" xml:space="preserve">
           <source>深灰</source>
@@ -211,8 +251,8 @@
           <target state="new">项目主页</target>
         </trans-unit>
         <trans-unit id="Resources\ProjectLabel\Text" translate="yes" xml:space="preserve">
-          <source>如果您希望参与与改善这个项目，请访问我们的项目主页:</source>
-          <target state="new">如果您希望参与与改善这个项目，请访问我们的项目主页:</target>
+          <source>如果您有反馈的意见或者希望参与与改善这个项目，请联系开发者或者访问我们的项目主页 :)</source>
+          <target state="new">如果您有反馈的意见或者希望参与与改善这个项目，请联系开发者或者访问我们的项目主页 :)</target>
         </trans-unit>
         <trans-unit id="Resources\ReviewButton\Content" translate="yes" xml:space="preserve">
           <source>评分与反馈</source>

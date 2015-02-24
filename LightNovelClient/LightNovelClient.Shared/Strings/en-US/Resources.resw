@@ -280,7 +280,7 @@
     <value>Background Theme</value>
   </data>
   <data name="AppThemeDescription.Text" xml:space="preserve">
-    <value>Change the background them of Application, *need restart App to take effect</value>
+    <value>Change the background them of Application *need restart App to take effect (Please hold "Back button" and drag down this App-Card)</value>
   </data>
   <data name="AppDefaultThemeItem.Content" xml:space="preserve">
     <value>Follow System Setting</value>
@@ -347,5 +347,35 @@
   </data>
   <data name="ImageSaveMessageTitle" xml:space="preserve">
     <value>Illustration Downloading</value>
+  </data>
+  <data name="SettingsLabel.Text" xml:space="preserve">
+    <value>Settings &amp; About</value>
+  </data>
+  <data name="SeriesIndexButton.Label" xml:space="preserve">
+    <value>All Novel</value>
+  </data>
+  <data name="RefreshButton.Label" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="HelpButton.Label" xml:space="preserve">
+    <value>Tips</value>
+  </data>
+  <data name="HelpHeaderTextBlock.Text" xml:space="preserve">
+    <value>Do you know this?</value>
+  </data>
+  <data name="Help1TextBlock.Text" xml:space="preserve">
+    <value>"Tap and Hold" your finger among a "Recent" or "Favorite" Item to Delete them.</value>
+  </data>
+  <data name="Help2TextBlock.Text" xml:space="preserve">
+    <value>While in Reading, you can perform an Edge Swipe from Left to open Index Panel</value>
+  </data>
+  <data name="FeedbackEmailButton.Content" xml:space="preserve">
+    <value>Send e-mail App developer</value>
+  </data>
+  <data name="CurrentVersionLabel.Text" xml:space="preserve">
+    <value>Current Version</value>
+  </data>
+  <data name="SettingButton.Label" xml:space="preserve">
+    <value>Settings</value>
   </data>
 </root>

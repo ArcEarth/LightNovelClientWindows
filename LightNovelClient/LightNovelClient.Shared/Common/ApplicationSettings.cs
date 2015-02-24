@@ -13,6 +13,12 @@ using Windows.UI.Xaml.Media;
 
 namespace LightNovel.Common
 {
+	public enum ImageLoadingPolicy
+	{
+		Manual = 0,
+		Adaptive = 1,
+		Automatic = 2,
+	}
 
 	public class ApplicationSettings : INotifyPropertyChanged
 	{
@@ -34,6 +40,8 @@ namespace LightNovel.Common
 				_appSettings.Add(EnableLiveTileKey, true);
 			if (!_appSettings.ContainsKey(BackgroundThemeKey))
 				_appSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
+			if (!_appSettings.ContainsKey(ImageLoadingPolicyKey))
+				_appSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
 			if (!_appSettings.ContainsKey(CredentialKey))
 				_appSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session{ Expries = DateTime.Now.AddYears(-100),Key=""}));
 			if (!_appSettings.ContainsKey(FontSizeKey))
@@ -92,6 +100,31 @@ namespace LightNovel.Common
 			set
 			{
 				_appSettings[EnableLiveTileKey] = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private const string ImageLoadingPolicyKey = "ImageLoadingPolicy";
+
+		public ImageLoadingPolicy ImageLoadingPolicy
+		{
+			get
+			{
+				return (ImageLoadingPolicy)_appSettings[ImageLoadingPolicyKey];
+			}
+			set
+			{
+				_appSettings[ImageLoadingPolicyKey] = (int)value;
+				NotifyPropertyChanged();
+			}
+		}
+		public int ImageLoadingPolicyBindingProperty
+		{
+			get
+			{ return (int)ImageLoadingPolicy; }
+			set
+			{
+				ImageLoadingPolicy = (ImageLoadingPolicy)value;
 				NotifyPropertyChanged();
 			}
 		}

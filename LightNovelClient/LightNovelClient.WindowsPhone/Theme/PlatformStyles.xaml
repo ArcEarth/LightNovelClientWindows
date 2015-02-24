@@ -311,4 +311,22 @@
         </Border>
     </ControlTemplate>
 
+    <Style x:Key="TitlePanelStyle" TargetType="Grid">
+        <Setter Property="CommonNavigationTransitionInfo.IsStaggerElement" Value="True" />
+        <Setter Property="ContinuumNavigationTransitionInfo.IsEntranceElement" Value="False" />
+        <Setter Property="ContinuumNavigationTransitionInfo.IsExitElement" Value="False" />
+        <Setter Property="Background" Value="{ThemeResource AppAccentBrush}" />
+    </Style>
+
+    <Style x:Key="SeriesIndexListViewStyle" TargetType="ListView">
+        <Setter Property="ContinuumNavigationTransitionInfo.ExitElementContainer" Value="True" />
+        <!--<Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>-->
+    </Style>
+
 </ResourceDictionary>

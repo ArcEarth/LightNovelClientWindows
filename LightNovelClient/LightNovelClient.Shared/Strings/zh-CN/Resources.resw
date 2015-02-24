@@ -193,7 +193,7 @@
     <value>评分与反馈</value>
   </data>
   <data name="ProjectLabel.Text" xml:space="preserve">
-    <value>如果您希望参与与改善这个项目，请访问我们的项目主页:</value>
+    <value>如果您有反馈的意见或者希望参与与改善这个项目，请联系开发者或者访问我们的项目主页 :)</value>
   </data>
   <data name="ProjectButton.Content" xml:space="preserve">
     <value>项目主页</value>
@@ -280,7 +280,7 @@
     <value>背景主题</value>
   </data>
   <data name="AppThemeDescription.Text" xml:space="preserve">
-    <value>改变应用的背景色调,*需要重启应用才会生效</value>
+    <value>改变应用的背景色调 *需要重启应用才会生效（请长按后退键，然后干掉这个应用卡片）</value>
   </data>
   <data name="AppDefaultThemeItem.Content" xml:space="preserve">
     <value>系统主题</value>
@@ -347,5 +347,35 @@
   </data>
   <data name="ImageSaveMessageTitle" xml:space="preserve">
     <value>插画下载</value>
+  </data>
+  <data name="SettingsLabel.Text" xml:space="preserve">
+    <value>设置与关于</value>
+  </data>
+  <data name="SeriesIndexButton.Label" xml:space="preserve">
+    <value>全部小说</value>
+  </data>
+  <data name="RefreshButton.Label" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="HelpButton.Label" xml:space="preserve">
+    <value>小技巧</value>
+  </data>
+  <data name="HelpHeaderTextBlock.Text" xml:space="preserve">
+    <value>你知道吗？</value>
+  </data>
+  <data name="Help1TextBlock.Text" xml:space="preserve">
+    <value>你可以通过在"最近"与“收藏”的卡片上"长按"来删除它们哦.</value>
+  </data>
+  <data name="Help2TextBlock.Text" xml:space="preserve">
+    <value>在阅读时，你可以在屏幕”左边缘“右划来唤出目录栏哦.</value>
+  </data>
+  <data name="FeedbackEmailButton.Content" xml:space="preserve">
+    <value>发邮件给开发者</value>
+  </data>
+  <data name="CurrentVersionLabel.Text" xml:space="preserve">
+    <value>当前应用版本</value>
+  </data>
+  <data name="SettingButton.Label" xml:space="preserve">
+    <value>设置</value>
   </data>
 </root>

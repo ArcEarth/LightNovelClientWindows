@@ -196,8 +196,8 @@ namespace LightNovel.ViewModels
 						this.Add(item);
 						NotifyPropertyChanged("IsEmpty");
 					}
-					break;
 					IsLoading = false;
+					break;
 				default:
 					break;
 			}
@@ -394,14 +394,15 @@ namespace LightNovel.ViewModels
 			IsLoading = false;
 		}
 
-		public async Task<IList<KeyValuePair<string, IList<BookItem>>>> LoadAsync(int maxVolumeCount = 9)
+		public async Task<IList<KeyValuePair<string, IList<BookItem>>>> LoadAsync(bool forceRefresh = false ,int maxVolumeCount = 9)
 		{
-			if (!IsLoading && !IsLoaded)
+			if (!IsLoading && (!IsLoaded || forceRefresh))
 			{
 				IsLoading = true;
 				try
 				{
-					var recommandBookGroups = await CachedClient.GetRecommandedBookLists();
+					var recommandBookGroups = await CachedClient.GetRecommandedBookLists(forceRefresh);
+					this.Clear();
 					foreach (var bookGroup in recommandBookGroups)
 					{
 						var group = new KeyGroup<string, BookCoverViewModel>

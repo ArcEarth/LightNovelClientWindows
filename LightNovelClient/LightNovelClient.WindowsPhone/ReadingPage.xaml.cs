@@ -34,6 +34,9 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using WinRTXamlToolkit.Controls.Extensions;
 using WinRTXamlToolkit.AwaitableUI;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml.Media.Animation;
 //using PostSharp.Patterns.Model;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
@@ -79,7 +82,9 @@ namespace LightNovel
 	{
 		public ReadingPage()
 		{
+			//DisplayInformation.GetForCurrentView().OrientationChanged += DisplayProperties_OrientationChanged;
 			this.InitializeComponent();
+			this.SizeChanged += ReadingPage_SizeChanged;
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
@@ -90,6 +95,37 @@ namespace LightNovel
 			RefreshThemeColor();
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			ImageLoadingTextPlaceholder = resourceLoader.GetString("ImageLoadingPlaceholderText");
+		}
+
+		async void ReadingPage_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			await UpdateSizeOrientationDependentResourcesAsync();
+		}
+
+		private async Task UpdateSizeOrientationDependentResourcesAsync()
+		{
+			//ReadyToLoadingEndingFrame.Value = -ContentRegion.ActualHeight;
+			//LoadingToReadyIntialFrame.Value = ContentRegion.ActualHeight;
+
+			var appView = ApplicationView.GetForCurrentView();
+			var statusBar = StatusBar.GetForCurrentView();
+			if (appView.Orientation == Windows.UI.ViewManagement.ApplicationViewOrientation.Portrait)
+			{
+				appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
+				statusBar.ProgressIndicator.Text = " ";
+				statusBar.ProgressIndicator.ProgressValue = 0;
+				statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
+				//statusBar.BackgroundColor = (Color)App.Current.Resources["AppAccentColor"];
+				LayoutRoot.Margin = new Thickness(0, 0, 0, 20);
+				await statusBar.ShowAsync();
+				await statusBar.ProgressIndicator.ShowAsync();
+			}
+			else
+			{
+				appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
+				LayoutRoot.Margin = new Thickness(0);
+				await statusBar.HideAsync();
+			}
 		}
 
 		private bool CanGoBack()
@@ -143,11 +179,12 @@ namespace LightNovel
 			if (line >= 0)
 			{
 				ContentListView.UpdateLayout();
-				if (ContentListView.Items.Count == 0)				
+				if (ContentListView.Items.Count == 0)
 				{
 					ContentListView.SetValue(ListViewScrollToIndexRequestProperty, line);
 					ContentListView.SizeChanged += ContentListView_SizeChanged;
-				} else if (line < ContentListView.Items.Count)
+				}
+				else if (line < ContentListView.Items.Count)
 				{
 					ContentListView.ScrollIntoView(ViewModel.Contents[line], ScrollIntoViewAlignment.Leading);
 				}
@@ -155,7 +192,7 @@ namespace LightNovel
 		}
 
 		void UpdateContentsView(IEnumerable<LineViewModel> lines)
-		{ 
+		{
 		}
 
 		public bool UsingLogicalIndexPage { get { return true; } }
@@ -182,7 +219,8 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
 			{
-				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1, PreCachePolicy.CachePrev );
+				TranslationType = -1;
+				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1, PreCachePolicy.CachePrev);
 				//ChangeView(-1, ViewModel.ChapterData.Lines.Count - 2);
 			}
 		}
@@ -191,6 +229,7 @@ namespace LightNovel
 		{
 			if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
 			{
+				TranslationType = 1;
 				await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0, PreCachePolicy.CacheNext);
 			}
 		}
@@ -199,7 +238,7 @@ namespace LightNovel
 		{
 			if (ViewModel.VolumeNo < 0 || ViewModel.ChapterNo < 0 || ViewModel.Index.Count <= ViewModel.VolumeNo || ViewModel.Index[ViewModel.VolumeNo].Count <= ViewModel.ChapterNo) return;
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
-			if (target != null) 
+			if (target != null)
 				target.NotifyPropertyChanged("IsDownloaded");
 			if (ViewModel.HasNext)
 			{
@@ -257,7 +296,25 @@ namespace LightNovel
 
 			var container = ContentListView.ContainerFromItem(line);
 			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
-			CommentsFlyout.ShowAt((FrameworkElement)container);
+			if (ViewModel.EnableComments)
+			{
+				CommentsTool.Visibility = Visibility.Visible;
+				if (App.Current.IsSignedIn)
+				{
+					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				}
+				else
+				{
+					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				}
+			}
+			else
+			{
+				CommentsTool.Visibility = Visibility.Collapsed;
+			}
+
+			if (line.HasComments || App.Current.IsSignedIn)
+				CommentsFlyout.ShowAt((FrameworkElement)container);
 			//CommentInputBox.Focus(Windows.UI.Xaml.FocusState.Unfocused);
 			if (line.HasComments && !line.IsLoading)
 			{
@@ -279,7 +336,7 @@ namespace LightNovel
 				{
 					var bitmap = imageContent.Source as BitmapImage;
 					bitmap.DownloadProgress -= Image_DownloadProgress;
-				} 
+				}
 				imageContent.ClearValue(Image.SourceProperty);
 				imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 				imageContent.Height = 0;
@@ -328,13 +385,14 @@ namespace LightNovel
 					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
 				}
-				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
-			//} else if (args.Phase == 1)
-			//{
-			//	//var textContent = iv.FindName("TextContent") as TextBlock;
-			//	//textContent.Opacity = 1;
-			//	//args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
-			} else if (args.Phase == 1)
+				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
+				//} else if (args.Phase == 1)
+				//{
+				//	//var textContent = iv.FindName("TextContent") as TextBlock;
+				//	//textContent.Opacity = 1;
+				//	//args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
+			}
+			else if (args.Phase == 1)
 			{
 				var line = (LineViewModel)args.Item;
 				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
@@ -342,28 +400,39 @@ namespace LightNovel
 					commentIndicator.Opacity = 1;
 				if (line.IsImage)
 					args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
-			} else if (args.Phase == 2)
+			}
+			else if (args.Phase == 2)
 			{
 				var line = (LineViewModel)args.Item;
 
 				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
 				progressIndicator.Opacity = 1;
 				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
-			} else if (args.Phase == 3)
+			}
+			else if (args.Phase == 3)
 			{
-				var line = (LineViewModel)args.Item; 
+				var line = (LineViewModel)args.Item;
 				var bitMap = new BitmapImage(line.ImageUri);
 				var imageContent = iv.FindName("ImageContent") as Image;
 				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
 				bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
 				bitMap.DownloadProgress += Image_DownloadProgress;
+				imageContent.ImageOpened += imageContent_ImageOpened;
+				//imageContent.Opacity = 1;
 				imageContent.Source = bitMap;
 				//imageContent.Height = double.NaN;
-				imageContent.Opacity = 1;
 				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
 			args.Handled = true;
 		}
+
+		async void imageContent_ImageOpened(object sender, RoutedEventArgs e)
+		{
+			var image = sender as Image;
+			await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
+			image.ImageOpened -= imageContent_ImageOpened;
+		}
+
 		private void Image_DownloadProgress(object sender, DownloadProgressEventArgs e)
 		{
 			var bitmap = sender as BitmapImage;
@@ -378,19 +447,25 @@ namespace LightNovel
 				var imageContent = iv.FindName("ImageContent") as Image;
 				textContent.Opacity = 0;
 				progressBar.Opacity = 0;
-				imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
 		}
 
 		private async void ChapterListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
+			if (ViewModel.IsLoading)
+				return;
 			var list = (ListView)sender;
-			if (e.ClickedItem != list.SelectedItem && !ViewModel.IsLoading)
+			if (e.ClickedItem != list.SelectedItem)
 			{
 				list.SelectedItem = e.ClickedItem;
 				var cpvm = e.ClickedItem as ChapterPreviewModel;
 				if (UsingLogicalIndexPage)
 					IsIndexPanelOpen = false;
+				if (cpvm.VolumeNo < ViewModel.VolumeNo || (cpvm.VolumeNo == ViewModel.VolumeNo && cpvm.No < ViewModel.ChapterNo))
+					TranslationType = -1;
+				else
+					TranslationType = 1;
 				await ViewModel.LoadDataAsync(-1, cpvm.VolumeNo, cpvm.No, 0);
 			}
 			else if (UsingLogicalIndexPage || e.ClickedItem == list.SelectedItem)
@@ -405,19 +480,66 @@ namespace LightNovel
 				IsIndexPanelOpen = false;
 		}
 
-		private void VolumeIndexItem_Tapped(object sender, TappedRoutedEventArgs e)
+		private async void VolumeIndexItem_Tapped(object sender, TappedRoutedEventArgs e)
 		{
+			if (ViewModel.IsLoading)
+				return;
+			var vvm = (sender as FrameworkElement).DataContext as VolumeViewModel;
 
+			if (!vvm.Chapters.Contains(VolumeListView.SelectedItem))
+			{
+				var cpvm = vvm.Chapters[0];
+				VolumeListView.SelectedItem = cpvm;
+				if (UsingLogicalIndexPage)
+					IsIndexPanelOpen = false;
+				if (cpvm.VolumeNo < ViewModel.VolumeNo || (cpvm.VolumeNo == ViewModel.VolumeNo && cpvm.No < ViewModel.ChapterNo))
+					TranslationType = -1;
+				else
+					TranslationType = 1;
+				await ViewModel.LoadDataAsync(-1, cpvm.VolumeNo, cpvm.No, 0);
+			}
+			else if (UsingLogicalIndexPage)
+			{
+				IsIndexPanelOpen = false;
+			}
 		}
 
 		private void JumpToInputBox_KeyDown(object sender, KeyRoutedEventArgs e)
 		{
-
+			if (e.Key == Windows.System.VirtualKey.Enter || e.Key == VirtualKey.Accept || e.Key == VirtualKey.Search)
+			{
+				
+			}
 		}
 
-		private void JumpToButton_Click(object sender, RoutedEventArgs e)
+		private async void JumpToButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			int lineNo;
+			var keyword = JumpToInputBox.Text.Trim();
+			var succ = int.TryParse(keyword, out lineNo);
+			if (succ)
+			{
+				if (lineNo >= 1 && lineNo <= ViewModel.Contents.Count)
+					ContentListView.ScrollIntoView(ContentListView.Items[lineNo - 1], ScrollIntoViewAlignment.Leading);
+				else
+				{
+					MessageDialog dialog = new MessageDialog("Line No out of range", "Jump Failed");
+					await dialog.ShowAsync();
+				}
+			}
+			else
+			{
+				lineNo = GetCurrentLineNo();
+				var list = ViewModel.ChapterData.Lines as List<Service.Line>;
+				lineNo = list.FindIndex(lineNo, l => (l.ContentType == LineContentType.TextContent && l.Content.Contains(keyword)));
+				if (lineNo >= 0)
+					ContentListView.ScrollIntoView(ContentListView.Items[lineNo], ScrollIntoViewAlignment.Leading);
+				else
+				{
+					MessageDialog dialog = new MessageDialog("Cannot find specified keyword","Jump Failed");
+					await dialog.ShowAsync();
+				}
+			}
 		}
 
 		private void FontSizeButtonClick(object sender, RoutedEventArgs e)
@@ -438,7 +560,13 @@ namespace LightNovel
 		{
 			MenuFlyout mf = (MenuFlyout)this.Resources["ReadingThemeFlyout"];
 			mf.Placement = FlyoutPlacementMode.Bottom;
-			mf.ShowAt(this.BottomAppBar);		
+			mf.ShowAt(this.BottomAppBar);
+		}
+		private void JumpToAppBarButton_Click(object sender, RoutedEventArgs e)
+		{
+			Flyout mf = (Flyout)this.Resources["JumpToFlyout"];
+			mf.Placement = FlyoutPlacementMode.Bottom;
+			mf.ShowAt(this.BottomAppBar);
 		}
 
 		private void SlideHandle_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -458,6 +586,7 @@ namespace LightNovel
 				IsIndexPanelOpen = false;
 			}
 		}
+
 
 	}
 }

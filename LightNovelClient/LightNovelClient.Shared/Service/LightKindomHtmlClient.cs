@@ -376,12 +376,12 @@ namespace LightNovel.Service
 						var td = node.Element("td");
 						vol.FavId = td.Element("input").GetAttributeValue("value", "");
 						td = td.NextSublingElement("td");
-						vol.SeriesTitle = td.InnerText;
+						vol.SeriesTitle = WebUtility.HtmlDecode(CleanText(td.InnerText));
 						vol.VolumeId = RetriveId(td.Element("a").GetAttributeValue("href", ""));
 						td = td.NextSublingElement("td");
-						vol.VolumeNo = td.InnerText;
+						vol.VolumeNo = WebUtility.HtmlDecode(CleanText(td.InnerText));
 						td = td.NextSublingElement("td");
-						vol.VolumeTitle = td.InnerText;
+						vol.VolumeTitle = WebUtility.HtmlDecode(CleanText(td.InnerText));
 						td = td.NextSublingElement("td");
 						vol.FavTime = DateTime.Parse(td.InnerText);
 						return vol;
@@ -569,10 +569,10 @@ namespace LightNovel.Service
 			return volume;
 		}
 
-		public static Chapter ParseChapterAlter(string id ,Stream source)
+		public static Chapter ParseChapterAlter(string id, Stream source)
 		{
 
-			var chapter = new Chapter(); 
+			var chapter = new Chapter();
 			var doc = new HtmlDocument();
 
 			doc.Load(source);
@@ -814,7 +814,19 @@ namespace LightNovel.Service
 										   }).ToList(),
 							   CoverImageUri = AbsoluteUrl(volNode.ParentNode.PreviousSibling.PreviousSibling.Descendants("img").First().Attributes["src"].Value)
 						   };
-				series.Volumes = (vols.OrderBy(vol => vol.Label)).ToList();
+				series.Volumes = (vols.OrderBy(vol =>
+				{
+					double l;
+					if (double.TryParse(vol.Label, out l))
+						return l;
+					else
+					{
+						int d;
+						int.TryParse(vol.Id, out d);
+						return d * 100;
+					}
+				}
+					)).ToList();
 				for (int volIdx = 0; volIdx < series.Volumes.Count; volIdx++)
 				{
 					var vol = series.Volumes[volIdx];

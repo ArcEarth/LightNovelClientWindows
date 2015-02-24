@@ -54,11 +54,11 @@
     <Grid Background="{ThemeResource AppBackgroundBrush}">
         <Grid.ChildrenTransitions>
             <TransitionCollection>
-                <EntranceThemeTransition />
+                <EntranceThemeTransition IsStaggeringEnabled="True" />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -118,6 +118,13 @@
                                   Padding="10,0"
                                   ScrollViewer.IsHorizontalScrollChainingEnabled="False"
                                   SelectionMode="None">
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <EntranceThemeTransition />
+                                    <AddDeleteThemeTransition />
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
                             <GridView.Transitions>
                                 <TransitionCollection>
                                     <EntranceThemeTransition />
@@ -219,7 +226,10 @@
         </Grid>
 
         <!--  Back button and page title  -->
-        <Grid Background="{ThemeResource AppAccentBrush}">
+        <Grid Background="{ThemeResource AppAccentBrush}"
+              CommonNavigationTransitionInfo.IsStaggerElement="True"
+              ContinuumNavigationTransitionInfo.IsEntranceElement="False"
+              ContinuumNavigationTransitionInfo.IsExitElement="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -237,7 +247,7 @@
             <TextBlock x:Uid="SearchResultLabel"
                        x:Name="resultText"
                        Grid.Column="0"
-                       Margin="15,0,0,12"
+                       Margin="15,0,0,3"
                        VerticalAlignment="Bottom"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
@@ -245,7 +255,7 @@
                        Text="Results for &#x00a0;"
                        TextWrapping="NoWrap" />
             <Grid Grid.Column="1"
-                  Margin="10,0,0,12"
+                  Margin="10,0,0,3"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Bottom">
                 <Grid.ColumnDefinitions>

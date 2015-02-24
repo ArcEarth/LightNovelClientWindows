@@ -104,10 +104,52 @@ namespace LightNovel
 		public HubPage()
 		{
 			this.InitializeComponent();
+			this.SizeChanged += HubPage_SizeChanged;
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 			ViewModel.Settings = App.Current.Settings;
+#if WINDOWS_APP
+			Windows.UI.ApplicationSettings.SettingsPane.GetForCurrentView().CommandsRequested += HubPage_CommandsRequested;
+#endif
+
+		}
+
+#if WINDOWS_APP
+		void HubPage_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
+		{
+			var command = new Windows.UI.ApplicationSettings.SettingsCommand("Options", "Options", x =>
+			{
+				var settings = new SettingsPage();
+
+				settings.Show();
+			});
+			args.Request.ApplicationCommands.Add(command);
+		}
+#endif
+		private void SyncViewWithOrientation()
+		{ 
+			var appView = ApplicationView.GetForCurrentView();
+#if WINDOWS_PHONE_APP
+			appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
+#endif
+
+//			if (appView.Orientation == ApplicationViewOrientation.Landscape)
+//			{
+//#if WINDOWS_PHONE_APP
+//				LastReadSection.Margin = new Thickness(0, -60, 0, 0);
+//#else
+//				LastReadSection.Margin = new Thickness(0, -79, 0, 0);
+//#endif
+//			}
+//			else
+//			{
+//				LastReadSection.Margin = new Thickness(0);
+//			}
+		}
+		void HubPage_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			SyncViewWithOrientation();
 		}
 
 		void UpdateTile()
@@ -343,6 +385,8 @@ namespace LightNovel
 			if (ViewModel.IsSignedIn)
 			{
 				var menu = new PopupMenu();
+				menu.Commands.Add(new UICommand(ViewModel.UserName));
+				menu.Commands.Add(new UICommandSeparator());
 				var syncLabel = resourceLoader.GetString("RefreshFavortite_Merge_Label");
 				menu.Commands.Add(new UICommand(syncLabel, async (command) =>
 				{
@@ -434,6 +478,7 @@ namespace LightNovel
 		}
 		private async void RecentItem_RightTapped(object sender, RoutedEventArgs e)
 		{
+			//e.Handled = true;
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
 			var menu = new PopupMenu();
@@ -452,6 +497,89 @@ namespace LightNovel
 				ViewModel.IsLoading = false;
 			}));
 			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
+
+		private async void RecentItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteRecentLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				ViewModel.IsLoading = true;
+				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+				ViewModel.RecentSection.Remove(hvm);
+				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+				if (recentItem != null)
+				{
+					App.Current.RecentList.Remove(recentItem);
+					await App.Current.SaveHistoryDataAsync();
+				}
+				ViewModel.IsLoading = false;
+			}));
+			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
+		private async void BookmarkItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteBookmarkLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				ViewModel.IsLoading = true;
+
+				ViewModel.FavoriteSection.Remove(hvm);
+				ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
+
+				try
+				{
+					var idx = App.Current.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
+					if (idx >= 0)
+					{
+						App.Current.BookmarkList.RemoveAt(idx);
+						await App.Current.SaveBookmarkDataAsync();
+					}
+
+					if (App.Current.IsSignedIn)
+					{
+						var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						if (favDeSer.Any(id => id == null))
+						{
+							await App.Current.User.SyncFavoriteListAsync(true);
+							(from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						}
+
+						await App.Current.User.RemoveUserFavriteAsync(favDeSer);
+					}
+				}
+				catch (Exception)
+				{
+					Debug.WriteLine("Exception happens when deleting favorite");
+				}
+
+				ViewModel.IsLoading = false;
+			}));
+			var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+		}
+
+		private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (ViewModel.IsLoading)
+			{
+
+			}
+			else
+			{
+				ViewModel.IsLoading = true;
+				await ViewModel.RecommandSection.LoadAsync(true, 20);
+				ViewModel.IsLoading = false;
+			}
 		}
 	}
 }

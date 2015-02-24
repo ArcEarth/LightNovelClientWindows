@@ -52,7 +52,7 @@ namespace LightNovel
 				{
 					this.RequestedTheme = ApplicationTheme.Dark;
 				}
-				//Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = Windows.Globalization.ApplicationLanguages.Languages[0];
+				//Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";// Windows.Globalization.ApplicationLanguages.Languages[0];
 				this.InitializeComponent();
 				this.Suspending += this.OnSuspending;
 				this.Resuming += this.OnResuming;
@@ -99,32 +99,43 @@ namespace LightNovel
 			//CurrentState = new ApplicationState();
 
 #if WINDOWS_PHONE_APP
-			Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
-				 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
-			var statusBar = StatusBar.GetForCurrentView();
-			statusBar.BackgroundOpacity = 0;
+			//Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
+			//	 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
+			//var statusBar = StatusBar.GetForCurrentView();
+			//statusBar.BackgroundOpacity = 0;
 #endif
 
 			Frame rootFrame = Window.Current.Content as Frame;
-
-			#region Preloading
-			loadHistoryDataTask = App.Current.LoadHistoryDataAsync();
-			await App.Current.LoadBookmarkDataAsync();
-			await CachedClient.InitializeCachedSetAsync();
-			#endregion
 
 			// Do not repeat app initialization when the Window already has content,
 			// just ensure that the window is active
 			if (rootFrame == null)
 			{
+				ExtendedSplash extendedSplash ;
+				if (Window.Current.Content == null)
+				{
+					extendedSplash = new ExtendedSplash(e.SplashScreen);
+				} else
+				{
+					extendedSplash = Window.Current.Content as ExtendedSplash;
+				}
+				extendedSplash.RegisterFrameArriveDimmsion();
 				// Create a Frame to act as the navigation context and navigate to the first page
-				rootFrame = new Frame();
-
-				//Associate the frame with a SuspensionManager key                                
-				SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
-
+				rootFrame = extendedSplash.RootFrame;
 				// TODO: change this value to a cache size that is appropriate for your application
-				rootFrame.CacheSize = 1;
+				rootFrame.CacheSize = 2;
+
+				//Associate the frame with a SuspensionManager key 
+				try
+				{
+					SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
+				}
+				catch (Exception)
+				{
+				}
+
+				Window.Current.Content = extendedSplash;
+				Window.Current.Activate();
 
 				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
 				{
@@ -139,10 +150,19 @@ namespace LightNovel
 						// Assume there is no state and continue
 					}
 				}
-
 				// Place the frame in the current Window
-				Window.Current.Content = rootFrame;
+				// Window.Current.Content = rootFrame;
 			}
+			else
+			{
+				Window.Current.Activate();
+			}
+
+			#region Preloading
+			await LoadHistoryDataAsync(); ;
+			await LoadBookmarkDataAsync();
+			await CachedClient.InitializeCachedSetAsync();
+			#endregion
 
 			if (rootFrame.Content == null)
 			{
@@ -150,7 +170,7 @@ namespace LightNovel
 				// Removes the turnstile navigation for startup.
 				if (rootFrame.ContentTransitions != null)
 				{
-					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new SlideNavigationTransitionInfo() } };
+					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
 					//foreach (var c in rootFrame.ContentTransitions)
 					//{
 					//	this.transitions.Add(c);
@@ -160,12 +180,6 @@ namespace LightNovel
 				rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
 			}
-
-			try
-			{
-				await loadHistoryDataTask;
-			}
-			catch { }
 
 			// When the navigation stack isn't restored navigate to the first page,
 			// configuring the new page by passing required information as a navigation
@@ -209,7 +223,7 @@ namespace LightNovel
 			Settings.UpdateSavedAppVersion();
 			//App.CurrentState.SignInAutomaticlly();
 			// Ensure the current window is active
-			Window.Current.Activate();
+			//Window.Current.Activate();
 		}
 
 #if WINDOWS_PHONE_APP
@@ -221,7 +235,7 @@ namespace LightNovel
 		private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
 		{
 			var rootFrame = sender as Frame;
-			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new SlideNavigationTransitionInfo() } };
+			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
 			rootFrame.Navigated -= this.RootFrame_FirstNavigated;
 		}
 #endif
@@ -259,6 +273,8 @@ namespace LightNovel
 			get { return _isHistoryListChanged; }
 			set { _isHistoryListChanged = value; }
 		}
+
+		public bool IsBookmarkListChanged { get; set; }
 		public List<BookmarkInfo> RecentList { get; set; }
 		public List<BookmarkInfo> BookmarkList { get; set; }
 		//public List<FavourVolume> FavoriteList { get; set; }
@@ -321,144 +337,12 @@ namespace LightNovel
 
 		struct TileLogoGroup
 		{
-			//
-			// Summary:
-			//     Gets or sets the medium secondary tile image.
-			//
-			// Returns:
-			//     The location of the image. This can be expressed as one of these schemes:
-			//     ms-appx:/// A path within the deployed app package. This path is resolved
-			//     for languages and DPI plateau supported by the app. ms-appdata:///local/
-			//     A file found in the per-user app storage.
-
 			public Uri Square150x150Logo { get; set; }
-			//
-			// Summary:
-			//     Gets or sets the square 30 x 30 secondary tile image.
-			//
-			// Returns:
-			//     The location of the image. This can be expressed as one of these schemes:
-			//     ms-appx:/// A path within the deployed app package. This path is resolved
-			//     for languages and DPI plateau supported by the app. ms-appdata:///local/
-			//     A file found in the per-user app storage.
-
 			public Uri Square30x30Logo { get; set; }
-			//
-			// Summary:
-			//     Gets or sets the large secondary tile image.
-			//
-			// Returns:
-			//     The location of the image. This can be expressed as one of these schemes:
-			//     ms-appx:/// A path within the deployed app package. This path is resolved
-			//     for languages and DPI plateau supported by the app. ms-appdata:///local/
-			//     A file found in the per-user app storage.
-
 			public Uri Square310x310Logo { get; set; }
-			//
-			// Summary:
-			//     Gets or sets the small secondary tile image.
-			//
-			// Returns:
-			//     The location of the image. This can be expressed as one of these schemes:
-			//     ms-appx:/// A path within the deployed app package. This path is resolved
-			//     for languages and DPI plateau supported by the app. ms-appdata:///local/
-			//     A file found in the per-user app storage.
-
 			public Uri Square70x70Logo { get; set; }
-			//
-			// Summary:
-			//     Gets or sets the wide secondary tile image.
-			//
-			// Returns:
-			//     The location of the image. This can be expressed as one of these schemes:
-			//     ms-appx:/// A path within the deployed app package. This path is resolved
-			//     for languages and DPI plateau supported by the app. ms-appdata:///local/
-			//     A file found in the per-user app storage.
 			public Uri Wide310x150Logo { get; set; }
 		}
-		//public static async Task<TileLogoGroup> CreateTileImageGroupAsync(Uri imageUri, string fileName = null)
-		//{
-		//	fileName = imageUri.LocalPath;
-		//	fileName = Path.GetFileName(fileName);
-
-		//	var localUri = new Uri(string.Format("ms-appdata:///local/illustration/{0}", fileName));
-
-		//	if (Current.IllustrationFolder == null)
-		//		Current.IllustrationFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("illustration", CreationCollisionOption.OpenIfExists);
-
-		//	StorageFile file = null;
-
-		//	try
-		//	{
-		//		using (var client = new HttpClient())
-		//		{
-		//			using (var stream = await client.GetInputStreamAsync(imageUri))
-		//			{
-		//				using (var memstream = new InMemoryRandomAccessStream())
-		//				{
-		//					await stream.AsStreamForRead().CopyToAsync(memstream.AsStreamForWrite());
-		//					BitmapDecoder decoder = await BitmapDecoder.CreateAsync(memstream);
-
-		//					for (int ts = 1; ts <= 5; ts++)
-		//					{
-		//						Size imgSize;
-		//						string sizeSuffix = "-150";
-		//						switch ((TileSize)ts)
-		//						{
-		//							default:
-		//							case TileSize.Default:
-		//							case TileSize.Square150x150:
-		//								sizeSuffix = "-150";
-		//								imgSize.Height = 150;
-		//								imgSize.Width = 150;
-		//								break;
-		//							case TileSize.Square30x30:
-		//								sizeSuffix = "-30";
-		//								imgSize.Width = 30;
-		//								imgSize.Height = 30;
-		//								break;
-		//							case TileSize.Square310x310:
-		//								sizeSuffix = "-310";
-		//								imgSize.Width = 310;
-		//								imgSize.Height = 310;
-		//								break;
-		//							case TileSize.Square70x70:
-		//								sizeSuffix = "-70";
-		//								imgSize.Width = 70;
-		//								imgSize.Height = 70;
-		//								break;
-		//							case TileSize.Wide310x150:
-		//								sizeSuffix = "-310x150";
-		//								imgSize.Width = 310;
-		//								imgSize.Height = 150;
-		//								break;
-
-		//						}
-		//						string tileImageName = Path.GetFileNameWithoutExtension(fileName) + sizeSuffix + Path.GetExtension(fileName);
-		//						file = await Current.IllustrationFolder.CreateFileAsync(fileName,CreationCollisionOption.OpenIfExists);
-
-		//						using (var targetStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-		//						{
-		//							BitmapEncoder encoder = await BitmapEncoder.CreateForTranscodingAsync(targetStream, decoder);
-		//							var transform = CreateUniformToFillTransform(new Size(decoder.PixelWidth, decoder.PixelHeight), imgSize, HorizontalAlignment.Left);
-		//							encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Cubic;
-		//							encoder.BitmapTransform.ScaledHeight = transform.ScaledHeight;
-		//							encoder.BitmapTransform.ScaledWidth = transform.ScaledWidth;
-		//							encoder.BitmapTransform.Bounds = transform.Bounds;
-		//							await encoder.FlushAsync();
-		//						}
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//	catch (Exception exception)
-		//	{
-		//		Debug.WriteLine(exception.Message);
-		//		return null;
-		//	}
-		//	return localUri;
-		//}
 		public static async Task<Uri> CreateTileImageAsync(Uri imageUri, string fileName = null, TileSize tileSize = TileSize.Square150x150)
 		{
 			//BitmapImage bitmap = new BitmapImage(imageUri);
@@ -648,24 +532,12 @@ namespace LightNovel
 				return false;
 			}
 		}
-		public Task loadHistoryDataTask = null;
-		public Task loadBookmarkDataTask = null;
+		//public Task loadHistoryDataTask = null;
+		//public Task loadBookmarkDataTask = null;
 		public async Task LoadHistoryDataAsync()
 		{
 			if (RecentList != null)
 				return;
-			if (loadHistoryDataTask != null)
-			{
-				try
-				{
-					await loadHistoryDataTask;
-				}
-				catch
-				{
-				}
-
-				return;
-			}
 
 			try
 			{
@@ -682,9 +554,6 @@ namespace LightNovel
 
 			if (RecentList == null)
 				RecentList = new List<BookmarkInfo>();
-
-			loadHistoryDataTask = null;
-
 		}
 
 		public async Task SaveHistoryDataAsync()

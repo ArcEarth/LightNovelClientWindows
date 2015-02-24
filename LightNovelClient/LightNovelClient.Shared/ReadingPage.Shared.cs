@@ -119,8 +119,9 @@ namespace LightNovel
 		public string IndexClosedState = "IndexClosed";
 		public string IndexOpenState = "IndexOpen";
 
+		private int TranslationType = -1;
+
 		private bool _indexOpened;
-		private bool _isFisrtTimeOpenIndex = true;
 		public bool IsIndexPanelOpen
 		{
 			get
@@ -185,7 +186,7 @@ namespace LightNovel
 			}
 		}
 
-		async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			var vm = sender as ReadingPageViewModel;
 			switch (e.PropertyName)
@@ -230,12 +231,25 @@ namespace LightNovel
 				case "Index":
 					break;
 				case "IsLoading":
+
 					if (ViewModel.IsLoading)
+					{
+#if WINDOWS_PHONE_APP
+						ReadyToLoadingEndingFrame.Value = -ContentRegion.ActualHeight * TranslationType;
+						LoadingToReadyIntialFrame.Value = ContentRegion.ActualHeight * TranslationType;
+#endif
 						VisualStateManager.GoToState(this, "Loading", true);
+
+					}
 					else
 					{
+#if WINDOWS_PHONE_APP
+						ReadyToLoadingEndingFrame.Value = -ContentRegion.ActualHeight * TranslationType;
+						LoadingToReadyIntialFrame.Value = ContentRegion.ActualHeight * TranslationType;
+#endif
 						VisualStateManager.GoToState(this, "Ready", true);
 					}
+
 					break;
 				case "IsDownloading":
 					{
@@ -340,18 +354,15 @@ namespace LightNovel
 			//IndexPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 			//this.BottomAppBar = PageBottomCommandBar;
 			//this.BottomAppBar.Visibility = Visibility.Visible;
-			var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
-			statusBar.ProgressIndicator.Text = " ";
-			statusBar.ProgressIndicator.ProgressValue = 0;
-			statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
-			await statusBar.ShowAsync();
-			await statusBar.ProgressIndicator.ShowAsync();
+			TranslationType = 0;
+			LayoutRootFadeinStory.Begin();
+			await UpdateSizeOrientationDependentResourcesAsync();
 #else
+#endif
 			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
 			{
 				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
 			}
-#endif
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
 			if (e.PageState != null && e.PageState.Count > 0)
 			{
@@ -452,7 +463,7 @@ namespace LightNovel
 
 		#endregion
 
-		private async void IndexButton_Click(object sender, RoutedEventArgs e)
+		private void IndexButton_Click(object sender, RoutedEventArgs e)
 		{
 			if (IsIndexPanelOpen == false)
 			{

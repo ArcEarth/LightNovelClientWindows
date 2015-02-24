@@ -24,7 +24,9 @@
 
         <QuadraticEase x:Key="QuadraticEaseOut" EasingMode="EaseOut" />
         <QuadraticEase x:Key="QuadraticEaseInOut" EasingMode="EaseInOut" />
-
+        <Storyboard x:Key="LayoutRootFadeinStory" x:Name="LayoutRootFadeinStory">
+            <FadeInThemeAnimation Storyboard.TargetName="LayoutRoot" TargetName="LayoutRoot" />
+        </Storyboard>
         <local:BooleanToSymbolConverter x:Key="IsPinnedToSymbolConverter"
                                         FalseSymbol="Pin"
                                         TrueSymbol="UnPin" />
@@ -35,7 +37,9 @@
         <DataTemplate x:Key="LineViewCCGTemplate" x:Name="LineViewCCGTemplate">
             <Grid HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgressBar"
-                             Margin="10,0,0,20"
+                             Height="{Binding FontSize,
+                                              ElementName=ContentListView}"
+                             Margin="10,0,10,0"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              Background="{ThemeResource AppSemitransparentBrush}"
@@ -163,98 +167,105 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <!--  Comment Tools  -->
-                <TextBlock x:Uid="NoCommentLabel"
-                           Grid.Row="0"
-                           Margin="5"
-                           FontSize="{ThemeResource AppFontSizeMedium}"
-                           Foreground="{ThemeResource AppForegroundBrush}"
-                           Style="{ThemeResource AppTextAccentStyle}"
-                           TextWrapping="WrapWholeWords"
-                           Visibility="{Binding HasNoComment,
-                                                Converter={StaticResource BooleanToVisibilityConverter}}">
-                    Send the first comment.
-                </TextBlock>
-                <ProgressBar Grid.Row="0"
-                             Margin="0,0,0,5"
-                             Foreground="{ThemeResource AppAccentBrush}"
-                             IsIndeterminate="True"
-                             Visibility="{Binding IsLoading,
-                                                  Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <ListView Grid.Row="0"
-                          MaxHeight="250"
-                          ItemsSource="{Binding Comments}"
-                          Visibility="{Binding IsLoading,
-                                               Converter={StaticResource BooleanToVisibilityReverseConverter}}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock MaxWidth="350"
-                                       FontSize="{ThemeResource AppFontSizeNormal}"
-                                       FontWeight="SemiBold"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Text="{Binding Content}"
-                                       TextWrapping="WrapWholeWords" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="VerticalContentAlignment" Value="Center" />
-                            <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <ContentPresenter x:Name="contentPresenter"
-                                                          Margin="{TemplateBinding Padding}"
-                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                          Content="{TemplateBinding Content}"
-                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          ContentTransitions="{TemplateBinding ContentTransitions}" />
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
+                <Grid x:Name="CommentsTool">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Uid="NoCommentLabel"
+                               Grid.Row="0"
+                               Margin="5"
+                               FontSize="{ThemeResource AppFontSizeMedium}"
+                               Foreground="{ThemeResource AppForegroundBrush}"
+                               Style="{ThemeResource AppTextAccentStyle}"
+                               TextWrapping="WrapWholeWords"
+                               Visibility="{Binding HasNoComment,
+                                                    Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Send the first comment.
+                    </TextBlock>
+                    <ProgressBar Grid.Row="0"
+                                 Margin="0,0,0,5"
+                                 VerticalAlignment="Top"
+                                 Foreground="{ThemeResource AppAccentBrush}"
+                                 IsIndeterminate="True"
+                                 Visibility="{Binding IsLoading,
+                                                      Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ListView Grid.Row="0"
+                              MaxHeight="250"
+                              ItemsSource="{Binding Comments}"
+                              Visibility="{Binding IsLoading,
+                                                   Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock MaxWidth="350"
+                                           FontSize="{ThemeResource AppFontSizeNormal}"
+                                           FontWeight="SemiBold"
+                                           Foreground="{ThemeResource AppForegroundBrush}"
+                                           Text="{Binding Content}"
+                                           TextWrapping="WrapWholeWords" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <ContentPresenter x:Name="contentPresenter"
+                                                              Margin="{TemplateBinding Padding}"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                              Content="{TemplateBinding Content}"
+                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                              ContentTransitions="{TemplateBinding ContentTransitions}" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
 
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-                <Grid Grid.Row="1">
-                    <TextBox x:Uid="CommentInputBox"
-                             x:Name="CommentInputBox"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Stretch"
-                             VerticalContentAlignment="Center"
-                             Background="{ThemeResource AppBackgroundDimBrush}"
-                             BorderBrush="{ThemeResource TransparentBrush}"
-                             BorderThickness="1"
-                             FontSize="{ThemeResource AppFontSizeMedium}"
-                             FontWeight="Light"
-                             KeyDown="CommentInputBox_KeyDown"
-                             MaxLength="300"
-                             PlaceholderText="Input comment here"
-                             TabIndex="2" />
-                    <Button x:Uid="SubmmitButton"
-                            Margin="0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Background="{ThemeResource AppAccentBrush}"
-                            BorderBrush="{ThemeResource TransparentBrush}"
-                            BorderThickness="1"
-                            Click="CommentSubmitButton_Click"
-                            Foreground="{ThemeResource AppBackgroundBrush}"
-                            Padding="0"
-                            TabIndex="1">
-                        <Viewbox Width="40"
-                                 Height="40"
-                                 HorizontalAlignment="Center"
-                                 VerticalAlignment="Center">
-                            <SymbolIcon Margin="10" Symbol="PostUpdate" />
-                        </Viewbox>
-                    </Button>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <Grid x:Name="CommentsInputTool" Grid.Row="1">
+                        <TextBox x:Uid="CommentInputBox"
+                                 x:Name="CommentInputBox"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 Background="{ThemeResource AppBackgroundDimBrush}"
+                                 BorderBrush="{ThemeResource TransparentBrush}"
+                                 BorderThickness="1"
+                                 FontSize="{ThemeResource AppFontSizeMedium}"
+                                 FontWeight="Light"
+                                 KeyDown="CommentInputBox_KeyDown"
+                                 MaxLength="300"
+                                 PlaceholderText="Input comment here"
+                                 TabIndex="2" />
+                        <Button x:Uid="SubmmitButton"
+                                Margin="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Background="{ThemeResource AppAccentBrush}"
+                                BorderBrush="{ThemeResource TransparentBrush}"
+                                BorderThickness="1"
+                                Click="CommentSubmitButton_Click"
+                                Foreground="{ThemeResource AppBackgroundBrush}"
+                                Padding="0"
+                                TabIndex="1">
+                            <Viewbox Width="40"
+                                     Height="40"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center">
+                                <SymbolIcon Margin="10" Symbol="PostUpdate" />
+                            </Viewbox>
+                        </Button>
+                    </Grid>
                 </Grid>
 
+
                 <!--  Image Tools  -->
-                <Grid Grid.Row="2"
+                <Grid Grid.Row="1"
                       Height="50"
                       Margin="0"
                       Visibility="{Binding IsImage,
@@ -429,15 +440,9 @@
                             Text="默认" />
         </MenuFlyout>
         <MenuFlyout x:Key="ReadingThemeFlyout">
-            <MenuFlyout.MenuFlyoutPresenterStyle>
-                <Style TargetType="MenuFlyoutPresenter">
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                    <Setter Property="VerticalAlignment" Value="Bottom" />
-                </Style>
-            </MenuFlyout.MenuFlyoutPresenterStyle>
             <MenuFlyoutItem x:Uid="DarkThemeItem"
                             Height="60"
-                            Margin="-20,-15,0,0"
+                            Margin="-20,0,0,0"
                             HorizontalContentAlignment="Center"
                             Background="Black"
                             Click="ReadingThemButton_Click"
@@ -482,7 +487,7 @@
                             Text="Sepia" />
             <MenuFlyoutItem x:Uid="LightThemeItem"
                             Height="60"
-                            Margin="-20,0,0,-15"
+                            Margin="-20,0,0,0"
                             HorizontalContentAlignment="Center"
                             Background="White"
                             Click="ReadingThemButton_Click"
@@ -490,6 +495,61 @@
                             Padding="0"
                             Text="Light" />
         </MenuFlyout>
+        <Flyout x:Key="JumpToFlyout" Placement="Bottom">
+            <Grid>
+                <TextBox x:Uid="JumpToInputBox"
+                         x:Name="JumpToInputBox"
+                         Grid.Row="1"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Stretch"
+                         VerticalContentAlignment="Center"
+                         Background="{ThemeResource AppBackgroundDimBrush}"
+                         BorderBrush="{ThemeResource TransparentBrush}"
+                         BorderThickness="1"
+                         FontSize="{ThemeResource AppFontSizeMedium}"
+                         FontWeight="Light"
+                         Foreground="{ThemeResource AppForegroundBrush}"
+                         KeyDown="JumpToInputBox_KeyDown"
+                         MaxLength="300"
+                         PlaceholderText="Line No or Keyword"
+                         TabIndex="2" />
+                <Button x:Uid="JumpToButton"
+                        Grid.Row="1"
+                        Margin="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Background="{ThemeResource AppAccentBrush}"
+                        BorderBrush="{ThemeResource TransparentBrush}"
+                        BorderThickness="1"
+                        Click="JumpToButton_Click"
+                        Foreground="{ThemeResource AppBackgroundBrush}"
+                        Padding="0"
+                        TabIndex="1">
+                    <Viewbox Width="40"
+                             Height="40"
+                             HorizontalAlignment="Center"
+                             VerticalAlignment="Center">
+                        <SymbolIcon Margin="10" Symbol="Forward" />
+                    </Viewbox>
+                </Button>
+            </Grid>
+            <Flyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
+                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                    <Setter Property="ScrollViewer.IsHorizontalScrollChainingEnabled" Value="True" />
+                    <Setter Property="ScrollViewer.IsHorizontalRailEnabled" Value="False" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                    <Setter Property="Background" Value="{StaticResource AppSemitransparentBrush}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Padding" Value="5,5,5,5" />
+                </Style>
+            </Flyout.FlyoutPresenterStyle>
+
+        </Flyout>
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar x:Name="PageBottomCommandBar"
@@ -604,19 +664,6 @@
                         <SymbolIcon Symbol="Download" />
                     </Viewbox>
                 </AppBarButton>
-                <!--<AppBarButton x:Uid="ClearDownloadButton"
-                              x:Name="ClearDownloadButton"
-                              VerticalAlignment="Center"
-                              BorderBrush="{ThemeResource TransparentBrush}"
-                              Click="ClearDownloadButton_Click"
-                              Foreground="{ThemeResource AppBackgroundBrush}"
-                              IsCompact="False"
-                              Label="Clear Cache"
-                              Padding="0">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="Delete" />
-                    </Viewbox>
-                </AppBarButton>-->
                 <AppBarButton x:Uid="FontSizeButton"
                               x:Name="FontSizeButton"
                               VerticalAlignment="Center"
@@ -637,66 +684,18 @@
                               IsCompact="False"
                               Label="Font Style"
                               Padding="0" />
-                <!--<AppBarButton Icon="Go" Label="Jump To ">
-                    <AppBarButton.Flyout>
-                        <Flyout Placement="Bottom">
-                            <Grid>
-                                <TextBox x:Uid="JumpToInputBox"
-                                         x:Name="JumpToInputBox"
-                                         Grid.Row="1"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Stretch"
-                                         VerticalContentAlignment="Center"
-                                         Background="{ThemeResource AppBackgroundDimBrush}"
-                                         BorderBrush="{ThemeResource TransparentBrush}"
-                                         BorderThickness="1"
-                                         FontSize="{ThemeResource AppFontSizeMedium}"
-                                         FontWeight="Light"
-                                         Foreground="{ThemeResource AppForegroundBrush}"
-                                         KeyDown="JumpToInputBox_KeyDown"
-                                         MaxLength="300"
-                                         PlaceholderText="Line No or Keyword"
-                                         TabIndex="2" />
-                                <Button x:Uid="JumpToButton"
-                                        Grid.Row="1"
-                                        Margin="0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Background="{ThemeResource AppAccentBrush}"
-                                        BorderBrush="{ThemeResource TransparentBrush}"
-                                        BorderThickness="1"
-                                        Click="JumpToButton_Click"
-                                        Foreground="{ThemeResource AppBackgroundBrush}"
-                                        Padding="0"
-                                        TabIndex="1">
-                                    <Viewbox Width="40"
-                                             Height="40"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center">
-                                        <SymbolIcon Margin="10" Symbol="Forward" />
-                                    </Viewbox>
-                                </Button>
-                            </Grid>
-                        </Flyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>-->
-                <!--<AppBarButton x:Name="PageLayoutButton"
-                              VerticalAlignment="Center"
-                              BorderBrush="{ThemeResource TransparentBrush}"
-                              Foreground="{ThemeResource AppBackgroundBrush}"
-                              IsCompact="False"
-                              Label="Layout"
-                              Padding="0">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="TwoPage" />
-                    </Viewbox>
-                </AppBarButton>-->
+                <!--<AppBarButton Icon="Go" Label="Jump To ..." Click="JumpToAppBarButton_Click" />-->
 
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{Binding Background}">
+    <Grid x:Name="LayoutRoot" Background="{Binding Background}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition IsStaggeringEnabled="True" />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition x:Name="ContentRow" Height="*" />
@@ -706,15 +705,27 @@
                 <VisualState x:Name="Ready" />
                 <VisualState x:Name="Loading">
                     <Storyboard>
+                        <DoubleAnimation Duration="0:0:0"
+                                         Storyboard.TargetName="VerticalPrevButton"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
+                        <DoubleAnimation Duration="0:0:0"
+                                         Storyboard.TargetName="VerticalNextButton"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                         </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0:0:00"
+                                         Storyboard.TargetName="ContentRegion"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
                         <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="IsActive">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
                         </ObjectAnimationUsingKeyFrames>-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                        </ObjectAnimationUsingKeyFrames>
+                        </ObjectAnimationUsingKeyFrames>-->
                     </Storyboard>
                 </VisualState>
                 <VisualStateGroup.Transitions>
@@ -724,17 +735,26 @@
                                 <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
                                                       KeyTime="0:0:0.00"
                                                       Value="0" />
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
+                                <EasingDoubleKeyFrame x:Name="ReadyToLoadingEndingFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.4"
                                                       Value="-640" />
                             </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation Duration="0:0:0.25"
+                            <DoubleAnimation Duration="0:0:0.0"
+                                             Storyboard.TargetName="VerticalPrevButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />
+                            <DoubleAnimation Duration="0:0:0.0"
+                                             Storyboard.TargetName="VerticalNextButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />
+                            <DoubleAnimation Duration="0:0:0.4"
                                              Storyboard.TargetName="ContentRegion"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
                                              To="0.0" />
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>-->
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
@@ -742,21 +762,33 @@
                     </VisualTransition>
                     <VisualTransition From="Loading" To="Ready">
                         <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
+                                             Storyboard.TargetName="VerticalPrevButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1" />
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
+                                             Storyboard.TargetName="VerticalNextButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1" />
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                <EasingDoubleKeyFrame x:Name="LoadingToReadyIntialFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
                                                       KeyTime="0:0:0.00"
                                                       Value="640" />
                                 <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
+                                                      KeyTime="0:0:0.4"
                                                       Value="0" />
                             </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation Duration="0:0:0.25"
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
                                              Storyboard.TargetName="ContentRegion"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
                                              To="1.0" />
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
-                            </ObjectAnimationUsingKeyFrames>
+                            </ObjectAnimationUsingKeyFrames>-->
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
@@ -805,10 +837,10 @@
                                          Storyboard.TargetName="ContentRegion"
                                          Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
                                          To="330" />
-                        <!--<DoubleAnimation Duration="0"
+                        <DoubleAnimation Duration="0"
                                          Storyboard.TargetName="IndexPanel"
                                          Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="1.0" />-->
+                                         To="1.0" />
                     </Storyboard>
                 </VisualState>
                 <VisualStateGroup.Transitions>
@@ -840,10 +872,11 @@
                                                       KeyTime="0:0:0.25"
                                                       Value="330" />
                             </DoubleAnimationUsingKeyFrames>
-                            <!--<DoubleAnimation Duration="0:0:0.25"
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             From="0"
                                              Storyboard.TargetName="IndexPanel"
                                              Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1.0" />-->
+                                             To="1.0" />
                         </Storyboard>
                     </VisualTransition>
                     <VisualTransition From="IndexOpen"
@@ -885,92 +918,26 @@
 
         </VisualStateManager.VisualStateGroups>
 
-        <Grid x:Name="TitlePanel" Background="{ThemeResource AppAccentBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="20" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0" />
-                <RowDefinition Height="40" />
-            </Grid.RowDefinitions>
-            <ToggleButton x:Uid="IndexButton"
-                          x:Name="IndexButton"
-                          Grid.Row="1"
-                          Grid.Column="0"
-                          Grid.ColumnSpan="1"
-                          Height="60"
-                          MinHeight="40"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Center"
-                          HorizontalContentAlignment="Left"
-                          VerticalContentAlignment="Center"
-                          Background="Transparent"
-                          BorderBrush="Transparent"
-                          BorderThickness="0"
-                          Click="IndexButton_Click"
-                          Foreground="{StaticResource AppBackgroundBrush}"
-                          IsChecked="{Binding IsIndexPanelOpen,
-                                              ElementName=pageRoot,
-                                              Mode=OneWay}"
-                          Padding="0,-10"
-                          TabIndex="1"
-                          ToolTipService.ToolTip="Open/Close the index panel">
-
-                <Viewbox Width="40"
-                         Height="40"
-                         Margin="0"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
-                    <SymbolIcon Margin="3" Symbol="List" />
-                </Viewbox>
-            </ToggleButton>
-            <TextBlock x:Name="pageTitle"
-                       Grid.Row="1"
-                       Grid.Column="1"
-                       Margin="10,0"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontSize="30"
-                       Foreground="{StaticResource AppBackgroundBrush}"
-                       IsHitTestVisible="false"
-                       Language="zh-CN"
-                       Style="{ThemeResource AppTextTitle1Style}"
-                       Text="{Binding Header}"
-                       TextTrimming="WordEllipsis"
-                       TextWrapping="NoWrap" />
-            <!--<Path Grid.Row="0" Height="40" Width="40"
-                                              Grid.Column="1"
-                                              Margin="0,0,10,0"
-                                              HorizontalAlignment="Right"
-                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
-                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
-
-
-
-        </Grid>
-
-
-
         <!--  Back button and page title  -->
         <Grid x:Name="ContentRegion"
               Grid.Row="1"
               Grid.Column="0"
               HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch">
+              VerticalAlignment="Stretch"
+              CommonNavigationTransitionInfo.IsStaggerElement="False"
+              ContinuumNavigationTransitionInfo.IsEntranceElement="True"
+              ContinuumNavigationTransitionInfo.IsExitElement="True">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="ContentPanelTranslation" X="0" Y="0" />
             </Grid.RenderTransform>
 
             <ListView x:Name="ContentListView"
                       Grid.ColumnSpan="2"
-                      Height="{Binding ActualHeight,
-                                       ElementName=ContentRow}"
                       Margin="0,0,0,0"
                       HorizontalAlignment="Stretch"
                       VerticalAlignment="Stretch"
                       ContainerContentChanging="ContentListView_ContainerContentChanging"
+                      ContinuumNavigationTransitionInfo.ExitElementContainer="True"
                       FontFamily="{Binding FontFamily}"
                       FontSize="{Binding FontSize}"
                       Foreground="{Binding Foreground}"
@@ -983,7 +950,7 @@
                       ItemTemplate="{StaticResource LineViewCCGTemplate}"
                       ItemsSource="{Binding Contents}"
                       Language="zh-CN"
-                      Padding="0,0,0,20"
+                      Padding="0,0,0,0"
                       SelectionMode="None">
                 <!--<ListView.ItemContainerTransitions>
                     <TransitionCollection>
@@ -1003,9 +970,7 @@
                             Click="PrevChapterButton_Click"
                             Foreground="{ThemeResource AppBackgroundBrush}"
                             Opacity="1"
-                            Padding="0"
-                            Visibility="{Binding IsLoading,
-                                                 Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                            Padding="0">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
@@ -1047,9 +1012,7 @@
                             BorderThickness="0"
                             Click="NextChapterButton_Click"
                             Foreground="{ThemeResource AppBackgroundBrush}"
-                            Opacity="1"
-                            Visibility="{Binding IsLoading,
-                                                 Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                            Opacity="1">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid>
@@ -1143,8 +1106,6 @@
               Grid.Row="1"
               Grid.Column="0"
               Width="330"
-              Height="{Binding ActualHeight,
-                               ElementName=ContentRow}"
               HorizontalAlignment="Left"
               VerticalAlignment="Stretch"
               Background="{ThemeResource AppAccentBrushSemiLight}"
@@ -1164,11 +1125,10 @@
                       VerticalAlignment="Stretch"
                       AutomationProperties.AutomationId="ItemsListView"
                       AutomationProperties.Name="Items"
+                      ContinuumNavigationTransitionInfo.ExitElementContainer="True"
                       IsItemClickEnabled="True"
                       ItemClick="ChapterListView_ItemClick"
                       ItemsSource="{Binding Source={StaticResource VolumesViewSource}}"
-                      ManipulationDelta="IndexPanel_ManipulationDelta"
-                      ManipulationMode="TranslateX,System"
                       Padding="10,0,0,20"
                       ScrollViewer.IsVerticalScrollChainingEnabled="False"
                       SelectionMode="Single"
@@ -1180,7 +1140,9 @@
                                 <Grid Width="300"
                                       Height="100"
                                       MaxWidth="300"
-                                      Margin="0,6,6,0"
+                                      Margin="0,6,6,6"
+                                      ManipulationDelta="IndexPanel_ManipulationDelta"
+                                      ManipulationMode="TranslateX,System"
                                       Tapped="VolumeIndexItem_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -1189,18 +1151,11 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="40" />
+                                        <RowDefinition Height="5" />
+                                        <RowDefinition Height="36" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <!--<Rectangle Grid.RowSpan="2"
-                                               Width="20"
-                                               Margin="-20,0"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Stretch"
-                                               Fill="{ThemeResource AppAccentBrush}"
-                                               StrokeThickness="0" />-->
-
-                                    <Border Grid.RowSpan="2"
+                                    <Border Grid.RowSpan="3"
                                             Width="80"
                                             Margin="0,0,0,0"
                                             Background="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}">
@@ -1208,27 +1163,31 @@
                                                Source="{Binding CoverImageUri}"
                                                Stretch="UniformToFill" />
                                     </Border>
-                                    <Ellipse Grid.Row="0"
+                                    <Ellipse Grid.Row="1"
                                              Grid.Column="2"
-                                             Width="40"
-                                             Height="40"
+                                             Width="36"
+                                             Height="36"
                                              HorizontalAlignment="Left"
-                                             Fill="{ThemeResource AppAccentBrush}" />
-                                    <Ellipse Grid.Row="0"
+                                             Fill="{ThemeResource AppAccentBrush}"
+                                             StrokeThickness="0" />
+                                    <Ellipse Grid.Row="1"
                                              Grid.Column="2"
-                                             Width="40"
-                                             Height="40"
+                                             Width="36"
+                                             Height="36"
                                              HorizontalAlignment="Right"
-                                             Fill="{ThemeResource AppAccentBrush}" />
-                                    <Rectangle Grid.Column="2"
-                                               Height="40"
-                                               Margin="20,0"
-                                               HorizontalAlignment="Stretch"
-                                               Fill="{ThemeResource AppAccentBrush}" />
-                                    <TextBlock Grid.Row="0"
+                                             Fill="{ThemeResource AppAccentBrush}"
+                                             StrokeThickness="0" />
+                                    <Rectangle Grid.Row="1"
                                                Grid.Column="2"
-                                               MinWidth="20"
-                                               Margin="10,0"
+                                               Height="36"
+                                               Margin="18,0"
+                                               HorizontalAlignment="Stretch"
+                                               Fill="{ThemeResource AppAccentBrush}"
+                                               StrokeThickness="0" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="2"
+                                               MinWidth="18"
+                                               Margin="9,0"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                Foreground="{ThemeResource AppBackgroundBrush}"
@@ -1238,7 +1197,7 @@
                                                TextAlignment="Center"
                                                TextWrapping="NoWrap" />
 
-                                    <TextBlock Grid.Row="1"
+                                    <TextBlock Grid.Row="2"
                                                Grid.Column="2"
                                                Grid.ColumnSpan="2"
                                                VerticalAlignment="Center"
@@ -1253,7 +1212,9 @@
                 </ListView.GroupStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="300">
+                        <Grid Width="300"
+                              ManipulationDelta="IndexPanel_ManipulationDelta"
+                              ManipulationMode="TranslateX,System">
                             <Rectangle Width="5"
                                        Margin="0"
                                        HorizontalAlignment="Left"
@@ -1281,13 +1242,81 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
+
+        <Grid x:Name="TitlePanel" Style="{StaticResource TitlePanelStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="25" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <ToggleButton x:Uid="IndexButton"
+                          x:Name="IndexButton"
+                          Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="1"
+                          Height="60"
+                          MinHeight="40"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          HorizontalContentAlignment="Left"
+                          VerticalContentAlignment="Center"
+                          Background="Transparent"
+                          BorderBrush="Transparent"
+                          BorderThickness="0"
+                          Click="IndexButton_Click"
+                          Foreground="{StaticResource AppBackgroundBrush}"
+                          IsChecked="{Binding IsIndexPanelOpen,
+                                              ElementName=pageRoot,
+                                              Mode=OneWay}"
+                          Padding="0,-10"
+                          TabIndex="1"
+                          ToolTipService.ToolTip="Open/Close the index panel">
+
+                <Viewbox Width="40"
+                         Height="40"
+                         Margin="0"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
+                    <SymbolIcon Margin="3" Symbol="List" />
+                </Viewbox>
+            </ToggleButton>
+            <TextBlock x:Name="pageTitle"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       Margin="10,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="30"
+                       Foreground="{StaticResource AppBackgroundBrush}"
+                       IsHitTestVisible="false"
+                       Language="zh-CN"
+                       Style="{ThemeResource AppTextTitle1Style}"
+                       Text="{Binding Header}"
+                       TextAlignment="Left"
+                       TextTrimming="WordEllipsis"
+                       TextWrapping="NoWrap" />
+            <!--<Path Grid.Row="0" Height="40" Width="40"
+                                              Grid.Column="1"
+                                              Margin="0,0,10,0"
+                                              HorizontalAlignment="Right"
+                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
+                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
+
+
+
+        </Grid>
+
         <Rectangle x:Name="SlideHandle"
                    Grid.Row="1"
-                   MinWidth="25"
+                   MinWidth="30"
                    Margin="0"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Stretch"
-                   Fill="{ThemeResource AppAccentBrush}"
+                   Fill="Transparent"
                    ManipulationDelta="SlideHandle_ManipulationDelta"
                    ManipulationMode="TranslateX"
                    Opacity="0"

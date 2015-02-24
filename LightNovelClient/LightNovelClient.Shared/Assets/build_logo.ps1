@@ -1,6 +1,6 @@
 
 $inkscapeExe = "C:\Program Files\Inkscape\inkscape.exe"
-
+<#
 $scale = 1
 
 24,30,44,50,70,71,150,310 | %{
@@ -39,6 +39,15 @@ $scale = 1.8
     $pngName = "Logo-$($_).scale-$($scale*100).png"
     $size = [math]::round(($_)*$scale)
 	& "$inkscapeExe" --export-png="$($pngName)" -w $size -h $size "Logo.svg"
+}
+#>
+
+0.8,1.0,1.4,1.8,2.4 | %{
+    $scale = $_
+    $pngName = "Logo-150.scale-$($scale*100).png"
+    $wsize = [math]::round(150*$scale)
+    $hsize = [math]::round(150*$scale)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "LogoSquareMedium.svg"
 }
 
 <#

@@ -106,7 +106,6 @@ namespace LightNovel.Common
 								var images = from line in chapter.Lines where line.ContentType == LineContentType.ImageContent select line.Content;
 								//var bitmaps = (from img in images select (new BitmapImage(new Uri(img)))).ToArray();
 								//Task.WaitAll(bitmaps.Select(bitmap => bitmap.WaitForLoadedAsync()).ToArray());
-
 								Parallel.ForEach(images, new ParallelOptions { CancellationToken = c, MaxDegreeOfParallelism = 4 }, async img =>
 									{
 										if (c.IsCancellationRequested)
@@ -244,9 +243,9 @@ namespace LightNovel.Common
 			return index;
 		}
 
-		public static Task<IList<KeyValuePair<string, IList<BookItem>>>> GetRecommandedBookLists()
+		public static Task<IList<KeyValuePair<string, IList<BookItem>>>> GetRecommandedBookLists(bool forceRefresh = false)
 		{
-			return DataCache.GetAsync("popular_series", LightKindomHtmlClient.GetRecommandedBookLists, DateTime.Now.AddDays(1));
+			return DataCache.GetAsync("popular_series", LightKindomHtmlClient.GetRecommandedBookLists, DateTime.Now.AddDays(1), forceRefresh);
 		}
 		public async static Task<bool> ClearSerialCache(string serId)
 		{
