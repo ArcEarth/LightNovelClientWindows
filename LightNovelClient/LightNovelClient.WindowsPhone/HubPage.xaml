@@ -819,13 +819,6 @@
                         Lightnovel.cn Account
                     </TextBlock>
                 </Border>
-                <ProgressBar Grid.ColumnSpan="2"
-                             VerticalAlignment="Bottom"
-                             Foreground="{ThemeResource AppBackgroundBrush}"
-                             IsIndeterminate="True"
-                             Visibility="{Binding IsLoading,
-                                                  Converter={StaticResource BooleanToVisibilityConverter}}" />
-
                 <!--  <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Style="{StaticResource AppTextLargeStyle}" Foreground="{ThemeResource AppBackgroundBrush}" x:Uid="UserNameLabel">User Name</TextBlock>  -->
                 <TextBox x:Uid="UserNameLabel"
                          Grid.Row="1"

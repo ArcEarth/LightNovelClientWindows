@@ -171,12 +171,45 @@ namespace LightNovel
 
 		private void SeriesIndexButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			Frame.Navigate(typeof(SeriesIndexPage));
 		}
 
 		private void SettingsButton_Click(object sender, RoutedEventArgs e)
 		{
 			Windows.UI.ApplicationSettings.SettingsPane.Show();
+		}
+
+		private void AppBarHint_Click(object sender, RoutedEventArgs e)
+		{
+			this.BottomAppBar.IsOpen = true;
+		}
+
+		private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteRecentLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				ViewModel.IsLoading = true;
+				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+				ViewModel.RecentSection.Remove(hvm);
+				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+				if (recentItem != null)
+				{
+					App.Current.RecentList.Remove(recentItem);
+					await App.Current.SaveHistoryDataAsync();
+				}
+				ViewModel.IsLoading = false;
+			}));
+			try
+			{
+				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+			}
+			catch (Exception)
+			{
+			}
 		}
 	}
 }

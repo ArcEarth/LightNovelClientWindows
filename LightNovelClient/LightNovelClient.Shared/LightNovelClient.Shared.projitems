@@ -50,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Notifaction\ToastContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ReadingPage.Shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchResultsPage.xaml.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SeriesIndexPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\HtmlNodeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomHtmlClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomModel.cs" />

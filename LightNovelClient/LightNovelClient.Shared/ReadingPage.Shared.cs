@@ -693,13 +693,25 @@ namespace LightNovel
 			else
 			{
 				var pauseLabel = resourceLoader.GetString("DownloadButtonPauseLabel");
-				DownloadButton.Label = pauseLabel;
+				var cancelLabel = resourceLoader.GetString("CancelLabel");
+				var withImageLabel = resourceLoader.GetString("DownloadWithIllustrationLabel");
+				var noImageLabel = resourceLoader.GetString("DownloadWithoutIllustrationLabel");
+
 				MessageDialog dialog = new MessageDialog(resourceLoader.GetString("DownloadingStartDescriptioin"), resourceLoader.GetString("DownloadingStartDescriptioinTtile"));
-				var caching = ViewModel.CachingRestChaptersAsync();
-				await dialog.ShowAsync();
+				//dialog.CancelCommandIndex = 0;
+				//dialog.DefaultCommandIndex = 1;
+				//dialog.Commands.Add(new UICommand(cancelLabel));
+				dialog.Commands.Add(new UICommand(noImageLabel));
+				dialog.Commands.Add(new UICommand(withImageLabel));
+				var command = await dialog.ShowAsync();
+				if (command == null || command.Label == cancelLabel) return;
+				var cacheImage = command.Label == withImageLabel;
+				var caching = ViewModel.CachingRestChaptersAsync(cacheImage);
+				DownloadButton.Label = pauseLabel;
 				var result = await caching;
 				if (result)
 				{
+					dialog.Commands.Clear();
 					dialog.Title = resourceLoader.GetString("DownloadSuccessLabel");
 					dialog.Content = resourceLoader.GetString("DownloadSuccessDescription");
 					DownloadButton.IsEnabled = false;
@@ -707,6 +719,7 @@ namespace LightNovel
 				}
 				else
 				{
+					dialog.Commands.Clear();
 					dialog.Title = resourceLoader.GetString("DownloadFailedLabel");
 					dialog.Content = resourceLoader.GetString("DownloadFailedDescription");
 					DownloadButton.Label = resourceLoader.GetString("DownloadButtonCompletedLabel");
@@ -714,10 +727,10 @@ namespace LightNovel
 				}
 			}
 		}
-
-		private void ClearDownloadButton_Click(object sender, RoutedEventArgs e)
+		private void AppBarHint_Click(object sender, RoutedEventArgs e)
 		{
-
+			this.BottomAppBar.Opacity = 1;
+			this.BottomAppBar.IsOpen = true;
 		}
 	}
 }

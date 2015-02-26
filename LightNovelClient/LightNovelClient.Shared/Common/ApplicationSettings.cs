@@ -22,39 +22,49 @@ namespace LightNovel.Common
 
 	public class ApplicationSettings : INotifyPropertyChanged
 	{
-		readonly IPropertySet _appSettings;
+		readonly IPropertySet _roamingSettings;
+		readonly IPropertySet _localSettings;
 		PasswordVault _Vault = new PasswordVault();
 		PasswordCredential _Cred;
 		public ApplicationSettings()
 		{
 			if (ApplicationData.Current.RoamingSettings.Containers.ContainsKey("AppSettings"))
 			{
-				_appSettings = ApplicationData.Current.RoamingSettings.Containers["AppSettings"].Values;
+				_roamingSettings = ApplicationData.Current.RoamingSettings.Containers["AppSettings"].Values;
 			} else
 			{
-				_appSettings = ApplicationData.Current.RoamingSettings.CreateContainer("AppSettings",ApplicationDataCreateDisposition.Always).Values;
+				_roamingSettings = ApplicationData.Current.RoamingSettings.CreateContainer("AppSettings",ApplicationDataCreateDisposition.Always).Values;
 			}
-			if (!_appSettings.ContainsKey(EnableCommentsKey))
-				_appSettings.Add(EnableCommentsKey, true);
-			if (!_appSettings.ContainsKey(EnableLiveTileKey))
-				_appSettings.Add(EnableLiveTileKey, true);
-			if (!_appSettings.ContainsKey(BackgroundThemeKey))
-				_appSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
-			if (!_appSettings.ContainsKey(ImageLoadingPolicyKey))
-				_appSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
-			if (!_appSettings.ContainsKey(CredentialKey))
-				_appSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session{ Expries = DateTime.Now.AddYears(-100),Key=""}));
-			if (!_appSettings.ContainsKey(FontSizeKey))
-				_appSettings.Add(FontSizeKey, 19.0);
-			if (!_appSettings.ContainsKey(FontFamilyKey))
-#if WINDOWS_PHONE_APP
-				_appSettings.Add(FontFamilyKey, "Segoe WP"); 
-#else
-				_appSettings.Add(FontFamilyKey, "Segoe UI"); 
-#endif
-			if (!_appSettings.ContainsKey(SavedAppVersionKey))
+			if (ApplicationData.Current.LocalSettings.Containers.ContainsKey("AppSettings"))
 			{
-				_appSettings.Add(SavedAppVersionKey, "00.00.00.00");
+				_localSettings = ApplicationData.Current.LocalSettings.Containers["AppSettings"].Values;
+			}
+			else
+			{
+				_localSettings = ApplicationData.Current.LocalSettings.CreateContainer("AppSettings", ApplicationDataCreateDisposition.Always).Values;
+			} 
+
+			if (!_roamingSettings.ContainsKey(EnableCommentsKey))
+				_roamingSettings.Add(EnableCommentsKey, true);
+			if (!_roamingSettings.ContainsKey(EnableLiveTileKey))
+				_roamingSettings.Add(EnableLiveTileKey, true);
+			if (!_roamingSettings.ContainsKey(BackgroundThemeKey))
+				_roamingSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
+			if (!_roamingSettings.ContainsKey(ImageLoadingPolicyKey))
+				_roamingSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
+			if (!_localSettings.ContainsKey(CredentialKey))
+				_localSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session { Expries = DateTime.Now.AddYears(-100), Key = "" }));
+			if (!_roamingSettings.ContainsKey(FontSizeKey))
+				_roamingSettings.Add(FontSizeKey, 19.0);
+			if (!_localSettings.ContainsKey(FontFamilyKey))
+#if WINDOWS_PHONE_APP
+				_localSettings.Add(FontFamilyKey, "Segoe WP"); 
+#else
+				_localSettings.Add(FontFamilyKey, "Segoe UI"); 
+#endif
+			if (!_localSettings.ContainsKey(SavedAppVersionKey))
+			{
+				_localSettings.Add(SavedAppVersionKey, "00.00.00.00");
 			}
 			try
 			{
@@ -80,11 +90,11 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return (bool)_appSettings[EnableCommentsKey];
+				return (bool)_roamingSettings[EnableCommentsKey];
 			}
 			set
 			{
-				_appSettings[EnableCommentsKey] = value;
+				_roamingSettings[EnableCommentsKey] = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -95,11 +105,11 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return (bool)_appSettings[EnableLiveTileKey];
+				return (bool)_roamingSettings[EnableLiveTileKey];
 			}
 			set
 			{
-				_appSettings[EnableLiveTileKey] = value;
+				_roamingSettings[EnableLiveTileKey] = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -110,11 +120,11 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return (ImageLoadingPolicy)_appSettings[ImageLoadingPolicyKey];
+				return (ImageLoadingPolicy)_roamingSettings[ImageLoadingPolicyKey];
 			}
 			set
 			{
-				_appSettings[ImageLoadingPolicyKey] = (int)value;
+				_roamingSettings[ImageLoadingPolicyKey] = (int)value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -135,13 +145,13 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return (Windows.UI.Xaml.ElementTheme)_appSettings[BackgroundThemeKey];
+				return (Windows.UI.Xaml.ElementTheme)_roamingSettings[BackgroundThemeKey];
 			}
 			set
 			{
-				if ((Windows.UI.Xaml.ElementTheme)_appSettings[BackgroundThemeKey] != value)
+				if ((Windows.UI.Xaml.ElementTheme)_roamingSettings[BackgroundThemeKey] != value)
 				{
-					_appSettings[BackgroundThemeKey] = (int)value;
+					_roamingSettings[BackgroundThemeKey] = (int)value;
 					NotifyPropertyChanged();
 				}
 			}
@@ -162,18 +172,18 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				if (!_appSettings.ContainsKey(BackgroundKey))
+				if (!_roamingSettings.ContainsKey(BackgroundKey))
 					if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light)
-						_appSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.White));
+						_roamingSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.White));
 					else
-						_appSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.Black));
-				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_appSettings[BackgroundKey]));
+						_roamingSettings.Add(BackgroundKey, JsonConvert.SerializeObject(Colors.Black));
+				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_roamingSettings[BackgroundKey]));
 			}
 
 			set
 			{
 				var color_str = JsonConvert.SerializeObject((value as SolidColorBrush).Color);
-				_appSettings[BackgroundKey] = color_str;
+				_roamingSettings[BackgroundKey] = color_str;
 				NotifyPropertyChanged();
 			}
 		}
@@ -183,18 +193,18 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				if (!_appSettings.ContainsKey(ForegroundKey))
+				if (!_roamingSettings.ContainsKey(ForegroundKey))
 					if (App.Current.RequestedTheme == Windows.UI.Xaml.ApplicationTheme.Light)
-						_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
+						_roamingSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.Black));
 					else
-						_appSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.White)); 
-				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_appSettings[ForegroundKey]));
+						_roamingSettings.Add(ForegroundKey, JsonConvert.SerializeObject(Colors.White)); 
+				return new SolidColorBrush(JsonConvert.DeserializeObject<Color>((string)_roamingSettings[ForegroundKey]));
 			}
 
 			set
 			{
 				var color_str = JsonConvert.SerializeObject((value as SolidColorBrush).Color);
-				_appSettings[ForegroundKey] = color_str;
+				_roamingSettings[ForegroundKey] = color_str;
 				NotifyPropertyChanged();
 			}
 		}
@@ -204,13 +214,13 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				var val = (double)_appSettings[FontSizeKey];
+				var val = (double)_roamingSettings[FontSizeKey];
 				return (double)val;
 			}
 
 			set
 			{
-				_appSettings[FontSizeKey] = value;
+				_roamingSettings[FontSizeKey] = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -220,12 +230,12 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return new FontFamily((string)_appSettings[FontFamilyKey]);
+				return new FontFamily((string)_localSettings[FontFamilyKey]);
 			}
 
 			set
 			{
-				_appSettings[FontFamilyKey] = value.Source;
+				_localSettings[FontFamilyKey] = value.Source;
 				NotifyPropertyChanged();
 			}
 		}
@@ -234,13 +244,13 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				var val = (string)_appSettings[SavedAppVersionKey];
+				var val = (string)_localSettings[SavedAppVersionKey];
 				return (string)val;
 			}
 
 			private set
 			{
-				_appSettings[SavedAppVersionKey] = value;
+				_localSettings[SavedAppVersionKey] = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -296,11 +306,11 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return JsonConvert.DeserializeObject<Session>((string)_appSettings[CredentialKey]);
+				return JsonConvert.DeserializeObject<Session>((string)_localSettings[CredentialKey]);
 			}
 			set
 			{
-				_appSettings[CredentialKey] = JsonConvert.SerializeObject(value);
+				_localSettings[CredentialKey] = JsonConvert.SerializeObject(value);
 				NotifyPropertyChanged();
 			}
 		}

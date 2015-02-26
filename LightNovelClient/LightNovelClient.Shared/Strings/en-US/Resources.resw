@@ -232,7 +232,7 @@
     <value>Stop caching</value>
   </data>
   <data name="DownloadingStartDescriptioin" xml:space="preserve">
-    <value>You are now caching the rest part of the novel, please note this function is in "Beta". You can keep reading while we caching the novel for you.</value>
+    <value>You are now caching the rest part of the novel, please note this function is in "Beta". You can keep reading while we caching the novel for you. (Press "Back" Button to cancel the caching task)</value>
   </data>
   <data name="HugeFontSizeButton.Text" xml:space="preserve">
     <value>Huge</value>
@@ -250,7 +250,7 @@
     <value>Subtle</value>
   </data>
   <data name="DownloadingStartDescriptioinTtile" xml:space="preserve">
-    <value>Caching started...</value>
+    <value>Caching Modes</value>
   </data>
   <data name="ImageLoadingPlaceholderText" xml:space="preserve">
     <value>Image Loading ...</value>
@@ -313,10 +313,10 @@
     <value>Caching is succeed! Now you can read the following chapters offline!</value>
   </data>
   <data name="DownloadFailedLabel" xml:space="preserve">
-    <value>Error happened in caching :(</value>
+    <value>Caching is Canceled or Failed</value>
   </data>
   <data name="DownloadFailedDescription" xml:space="preserve">
-    <value>This is some error happened in caching the novel, please check your network and maybe you can try it again.</value>
+    <value>If you didn't manually canceled the caching task, then there are some error happened in caching the novel, please check your network and maybe you can try it again.</value>
   </data>
   <data name="DownloadButtonCompletedLabel" xml:space="preserve">
     <value>Caching Finished</value>
@@ -377,5 +377,17 @@
   </data>
   <data name="SettingButton.Label" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="CancelLabel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DownloadWithIllustrationLabel" xml:space="preserve">
+    <value>Text &amp; Illustrations</value>
+  </data>
+  <data name="DownloadWithoutIllustrationLabel" xml:space="preserve">
+    <value>Pure Text</value>
+  </data>
+  <data name="LoginIndicator" xml:space="preserve">
+    <value>Signing in...</value>
   </data>
 </root>

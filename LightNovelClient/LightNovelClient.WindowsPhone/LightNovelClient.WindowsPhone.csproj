@@ -103,9 +103,6 @@
     <Compile Include="ReadingPage.xaml.cs">
       <DependentUpon>ReadingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SeriesIndexPage.xaml.cs">
-      <DependentUpon>SeriesIndexPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SettingPage.xaml.cs">
       <DependentUpon>SettingPage.xaml</DependentUpon>
     </Compile>

@@ -13,6 +13,7 @@
                     Required by Visual Studio project and item templates
                 -->
                 <ResourceDictionary Source="Theme/SharedStyles.xaml" />
+                <ResourceDictionary Source="Theme/PlatformStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <x:String x:Key="AppName">Light Novel</x:String>

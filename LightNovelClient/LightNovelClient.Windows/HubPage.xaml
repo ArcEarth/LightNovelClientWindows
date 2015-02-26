@@ -65,7 +65,9 @@
                       VerticalAlignment="Top"
                       Background="{ThemeResource VolumeTileBackgroundBrush}"
                       Holding="RecentItem_Holding"
-                      IsHoldingEnabled="True">
+                      IsHoldingEnabled="False"
+                      IsRightTapEnabled="True"
+                      RightTapped="RecentItem_RightTapped">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="300" />
@@ -304,7 +306,7 @@
                                Language="zh-CN"
                                Style="{StaticResource AppTextNormalStyle}"
                                Text="{Binding UpdateTime}" />
-                    <ProgressBar Grid.Row="3"
+                    <!--<ProgressBar Grid.Row="3"
                                  VerticalAlignment="Bottom"
                                  Background="{StaticResource AppAccentBrush}"
                                  Foreground="{StaticResource AppSemitransparentBrush}"
@@ -314,7 +316,7 @@
                                  Minimum="0.0"
                                  Padding="0"
                                  SmallChange="0.01"
-                                 Value="{Binding ProgressPercentage}" />
+                                 Value="{Binding ProgressPercentage}" />-->
                 </Grid>
             </DataTemplate>
             <CollectionViewSource x:Name="RecommandCollectionViewSource"
@@ -352,7 +354,7 @@
                               Label="Help">
                     <AppBarButton.Flyout>
                         <Flyout>
-                            <StackPanel Margin="15,0,10,100">
+                            <StackPanel Width="380" HorizontalAlignment="Stretch">
                                 <TextBlock x:Uid="HelpHeaderTextBlock"
                                            FontWeight="Bold"
                                            Foreground="{ThemeResource AppAccentBrush}"
@@ -371,6 +373,7 @@
                             </StackPanel>
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Width" Value="400" />
                                     <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
                                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
@@ -496,7 +499,7 @@
                               ScrollViewer.IsHorizontalRailEnabled="False"
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"
-                              SelectionMode="Multiple" />
+                              SelectionMode="None" />
                 </DataTemplate>
             </HubSection>
             <HubSection x:Name="RecommandSection"
@@ -829,7 +832,18 @@
                             QuerySubmitted="SearchBox_QuerySubmitted"
                             SearchHistoryEnabled="True"
                             TabIndex="2" />
-
+        <Button Grid.Row="1"
+                Height="15"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Click="AppBarHint_Click"
+                Foreground="{ThemeResource AppAccentBrush}"
+                Style="{StaticResource PureButtonStyle}">
+            <SymbolIcon Margin="20,0"
+                        HorizontalAlignment="Right"
+                        Foreground="{ThemeResource AppAccentBrush}"
+                        Symbol="More" />
+        </Button>
         <Rectangle Name="SigninMask"
                    Grid.RowSpan="2"
                    HorizontalAlignment="Stretch"

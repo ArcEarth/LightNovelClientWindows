@@ -227,7 +227,9 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <Grid x:Name="CommentsInputTool" Grid.Row="1">
+                    <Grid x:Name="CommentsInputTool"
+                          Grid.Row="1"
+                          Margin="5,0">
                         <TextBox x:Uid="CommentInputBox"
                                  x:Name="CommentInputBox"
                                  HorizontalAlignment="Stretch"
@@ -273,12 +275,13 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition x:Name="ImageRefreshColumn" Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--<TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppAccentBrush}">Picture</TextBlock>-->
                     <Button x:Uid="ImageDownloadButton"
                             Grid.Column="0"
                             MinHeight="60"
-                            Margin="0,0,5,0"
+                            Margin="5,0,5,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             HorizontalContentAlignment="Stretch"
@@ -297,10 +300,33 @@
                                         Symbol="Download" />
                         </Viewbox>
                     </Button>
+                    <Button x:Uid="ImageRefreshButton"
+                            x:Name="ImageRefreshButton"
+                            Grid.Column="2"
+                            MinHeight="60"
+                            Margin="5,0,5,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="IllustrationRefreshButton_Click"
+                            Foreground="{ThemeResource AppAccentBrush}"
+                            Padding="0">
+                        <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Stretch="Uniform">
+                            <SymbolIcon Margin="3"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Symbol="Refresh" />
+                        </Viewbox>
+                    </Button>
                     <Button x:Uid="ImageFullScreenButton"
                             Grid.Column="1"
                             MinHeight="60"
-                            Margin="5,0,0,0"
+                            Margin="5,0,5,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             HorizontalContentAlignment="Stretch"

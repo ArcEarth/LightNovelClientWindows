@@ -47,29 +47,46 @@ namespace LightNovel.Common
 		{
 			return CachedChapterSet.Contains(id);
 		}
-
-		public static bool IsIllustrationCached(string localname)
+		public static bool IsIllustrationCached(string img_url)
 		{
-			return CachedIllustrationSet.Contains(localname);
+			var localName = System.IO.Path.GetFileName(img_url);
+			return CachedIllustrationSet.Contains(localName);
 		}
 
-		public static async Task InitializeCachedSetAsync()
+		public static async Task<bool> InitializeCachedSetAsync()
 		{
 			var localFolder = ApplicationData.Current.LocalFolder;
-			CacheFolder = await localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
-			var caches = await CacheFolder.GetFilesAsync();
-			if (caches != null)
+			try
 			{
-				CachedSeriesSet.UnionWith(from item in caches where item.Name.StartsWith("series-") select item.Name.Substring(7, item.Name.Length - 12));
-				CachedChapterSet.UnionWith(from item in caches where item.Name.StartsWith("chapter-") select item.Name.Substring(8, item.Name.Length - 13));
+				CacheFolder = await localFolder.CreateFolderAsync(CacheFolderName, CreationCollisionOption.OpenIfExists);
+				var caches = await CacheFolder.GetFilesAsync();
+				if (caches != null)
+				{
+					CachedSeriesSet.UnionWith(from item in caches where item.Name.StartsWith("series-") select item.Name.Substring(7, item.Name.Length - 12));
+					CachedChapterSet.UnionWith(from item in caches where item.Name.StartsWith("chapter-") select item.Name.Substring(8, item.Name.Length - 13));
+				}
 			}
-			if (App.Current.IllustrationFolder == null)
-				App.Current.IllustrationFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("illustration", CreationCollisionOption.OpenIfExists);
-			var illustrations = await App.Current.IllustrationFolder.GetFilesAsync();
-			if (illustrations != null)
+			catch (Exception)
 			{
-				CachedIllustrationSet.UnionWith(from item in illustrations select item.Name);
+				return false;
 			}
+
+			try
+			{
+				if (App.Current.IllustrationFolder == null)
+					App.Current.IllustrationFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("illustration", CreationCollisionOption.OpenIfExists);
+				var illustrations = await App.Current.IllustrationFolder.GetFilesAsync();
+				if (illustrations != null)
+				{
+					CachedIllustrationSet.UnionWith(from item in illustrations select item.Name);
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		public static Uri GetIllustrationCachedUri(string img_url)

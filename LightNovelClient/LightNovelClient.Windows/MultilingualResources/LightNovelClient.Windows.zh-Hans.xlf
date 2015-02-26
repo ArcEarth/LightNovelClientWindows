@@ -6,6 +6,22 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\LoginIndicator" translate="yes" xml:space="preserve">
+          <source>正在登录...</source>
+          <target state="new">正在登录...</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadWithoutIllustrationLabel" translate="yes" xml:space="preserve">
+          <source>纯文本</source>
+          <target state="new">纯文本</target>
+        </trans-unit>
+        <trans-unit id="Resources\CancelLabel" translate="yes" xml:space="preserve">
+          <source>取消</source>
+          <target state="new">取消</target>
+        </trans-unit>
+        <trans-unit id="Resources\DownloadWithIllustrationLabel" translate="yes" xml:space="preserve">
+          <source>文本及插画</source>
+          <target state="new">文本及插画</target>
+        </trans-unit>
         <trans-unit id="Resources\SettingButton\Label" translate="yes" xml:space="preserve">
           <source>设置</source>
           <target state="new">设置</target>
@@ -87,12 +103,12 @@
           <target state="new">缓存已完成</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadFailedDescription" translate="yes" xml:space="preserve">
-          <source>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</source>
-          <target state="new">怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</target>
+          <source>如果您没有手动取消缓存任务，那么怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</source>
+          <target state="new">如果您没有手动取消缓存任务，那么怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadFailedLabel" translate="yes" xml:space="preserve">
-          <source>缓存出现错误啦 :(</source>
-          <target state="new">缓存出现错误啦 :(</target>
+          <source>缓存取消或失败了 :(</source>
+          <target state="new">缓存取消或失败了 :(</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadSuccessDescription" translate="yes" xml:space="preserve">
           <source>缓存成功！现在你可以离线阅读这部小说的剩余章节了</source>
@@ -175,8 +191,8 @@
           <target state="new">正在加载图片...</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadingStartDescriptioinTtile" translate="yes" xml:space="preserve">
-          <source>离线缓存已开始</source>
-          <target state="new">离线缓存已开始</target>
+          <source>离线缓存模式</source>
+          <target state="new">离线缓存模式</target>
         </trans-unit>
         <trans-unit id="Resources\SubtleFontSizeButton\Text" translate="yes" xml:space="preserve">
           <source>微小</source>
@@ -199,8 +215,8 @@
           <target state="new">巨大</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadingStartDescriptioin" translate="yes" xml:space="preserve">
-          <source>您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</source>
-          <target state="new">您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</target>
+          <source>您正在离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。取消缓存操作请按后退键。 (*缓存插画模式依然不够稳定，有Bug请反馈给开发者）</source>
+          <target state="new">您正在离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。取消缓存操作请按后退键。 (*缓存插画模式依然不够稳定，有Bug请反馈给开发者）</target>
         </trans-unit>
         <trans-unit id="Resources\DownloadButtonPauseLabel" translate="yes" xml:space="preserve">
           <source>停止缓存</source>

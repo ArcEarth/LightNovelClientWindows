@@ -90,11 +90,28 @@ namespace LightNovel
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 			this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
 			ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+			ViewModel.CommentsListLoaded += ViewModel_CommentsListLoaded;
 			RegisterForShare();
 			Flyout.SetAttachedFlyout(this, ImagePreviewFlyout);
 			RefreshThemeColor();
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			ImageLoadingTextPlaceholder = resourceLoader.GetString("ImageLoadingPlaceholderText");
+		}
+
+		void ViewModel_CommentsListLoaded(object sender, IEnumerable<int> e)
+		{
+			foreach (int idx in e)
+			{
+				var container = ContentListView.ContainerFromIndex(idx - 1) as SelectorItem;
+				if (container != null)
+				{
+					var iv = container.ContentTemplateRoot as Grid;
+					if (iv == null)
+						continue;
+					var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+					commentIndicator.Opacity = 1;
+				}
+			}
 		}
 
 		async void ReadingPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -291,10 +308,10 @@ namespace LightNovel
 
 			var line = (LineViewModel)e.ClickedItem;
 
-			if (!line.IsImage && !ViewModel.EnableComments)
+			if (!(line.IsImage || ViewModel.EnableComments))
 				return;
 
-			var container = ContentListView.ContainerFromItem(line);
+			var container = ContentListView.ContainerFromIndex(line.No - 1) as SelectorItem;
 			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 			if (ViewModel.EnableComments)
 			{
@@ -313,13 +330,46 @@ namespace LightNovel
 				CommentsTool.Visibility = Visibility.Collapsed;
 			}
 
-			if (line.HasComments || App.Current.IsSignedIn)
+			if (line.IsImage && line.IsImageCached)
+			{
+				var iv = container.ContentTemplateRoot as Grid;
+				var imageContent = iv.FindName("ImageContent") as Image;
+				var bitmap = imageContent.Source as BitmapImage;
+				if (bitmap.UriSource.AbsoluteUri.StartsWith("ms-appdata"))
+				{
+					ShowImageRefreshButton();
+				}
+				else
+				{
+					HideImageRefreshButton();
+				}
+			}
+			else
+			{
+				HideImageRefreshButton();
+			}
+
+			if (line.IsImage || line.HasComments)
 				CommentsFlyout.ShowAt((FrameworkElement)container);
 			//CommentInputBox.Focus(Windows.UI.Xaml.FocusState.Unfocused);
 			if (line.HasComments && !line.IsLoading)
 			{
 				await line.LoadCommentsAsync();
 			}
+		}
+
+		private void HideImageRefreshButton()
+		{
+			ImageRefreshColumn.Width = new GridLength(0, GridUnitType.Star);
+			ImageRefreshButton.IsEnabled = false;
+			ImageRefreshButton.Visibility = Visibility.Collapsed;
+		}
+
+		private void ShowImageRefreshButton()
+		{
+			ImageRefreshColumn.Width = new GridLength(1, GridUnitType.Star);
+			ImageRefreshButton.IsEnabled = true;
+			ImageRefreshButton.Visibility = Visibility.Visible;
 		}
 
 		private void ContentListView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -508,7 +558,7 @@ namespace LightNovel
 		{
 			if (e.Key == Windows.System.VirtualKey.Enter || e.Key == VirtualKey.Accept || e.Key == VirtualKey.Search)
 			{
-				
+
 			}
 		}
 
@@ -536,7 +586,7 @@ namespace LightNovel
 					ContentListView.ScrollIntoView(ContentListView.Items[lineNo], ScrollIntoViewAlignment.Leading);
 				else
 				{
-					MessageDialog dialog = new MessageDialog("Cannot find specified keyword","Jump Failed");
+					MessageDialog dialog = new MessageDialog("Cannot find specified keyword", "Jump Failed");
 					await dialog.ShowAsync();
 				}
 			}
@@ -584,6 +634,41 @@ namespace LightNovel
 			{
 				e.Complete();
 				IsIndexPanelOpen = false;
+			}
+		}
+
+		private void IllustrationRefreshButton_Click(object sender, RoutedEventArgs e)
+		{
+			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
+			if (lvm.IsImageCached) // LocalUri
+			{
+				var container = ContentListView.ContainerFromIndex(lvm.No - 1) as SelectorItem;
+				if (container != null)
+				{
+					var iv = container.ContentTemplateRoot as Grid;
+					var imageContent = iv.FindName("ImageContent") as Image;
+					var bitmap = imageContent.Source as BitmapImage;
+					if (bitmap.UriSource.AbsoluteUri.StartsWith("ms-appdata"))
+					{
+						var textContent = iv.FindName("TextContent") as TextBlock;
+						var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+						var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+
+						textContent.Text = ImageLoadingTextPlaceholder;
+						imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+						textContent.TextAlignment = TextAlignment.Center;
+						textContent.Opacity = 1;
+						imageContent.Opacity = 0;
+						progressIndicator.Opacity = 1;
+
+						imageContent.ImageOpened -= imageContent_ImageOpened;
+						bitmap.DownloadProgress -= Image_DownloadProgress;
+						bitmap.UriSource = new Uri(lvm.Content);
+						bitmap.DownloadProgress += Image_DownloadProgress;
+						imageContent.ImageOpened += imageContent_ImageOpened;
+						HideImageRefreshButton();
+					}
+				}
 			}
 		}
 

@@ -801,5 +801,6 @@ namespace LightNovel
 				IsIndexPanelOpen = false;
 			}
 		}
+
 	}
 }

@@ -232,7 +232,7 @@
     <value>停止缓存</value>
   </data>
   <data name="DownloadingStartDescriptioin" xml:space="preserve">
-    <value>您已经开始离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。*这项功能还在测试阶段，如有Bug请反馈给开发者:)</value>
+    <value>您正在离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。取消缓存操作请按后退键。 (*缓存插画模式依然不够稳定，有Bug请反馈给开发者）</value>
   </data>
   <data name="HugeFontSizeButton.Text" xml:space="preserve">
     <value>巨大</value>
@@ -250,7 +250,7 @@
     <value>微小</value>
   </data>
   <data name="DownloadingStartDescriptioinTtile" xml:space="preserve">
-    <value>离线缓存已开始</value>
+    <value>离线缓存模式</value>
   </data>
   <data name="ImageLoadingPlaceholderText" xml:space="preserve">
     <value>正在加载图片...</value>
@@ -313,10 +313,10 @@
     <value>缓存成功！现在你可以离线阅读这部小说的剩余章节了</value>
   </data>
   <data name="DownloadFailedLabel" xml:space="preserve">
-    <value>缓存出现错误啦 :(</value>
+    <value>缓存取消或失败了 :(</value>
   </data>
   <data name="DownloadFailedDescription" xml:space="preserve">
-    <value>怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</value>
+    <value>如果您没有手动取消缓存任务，那么怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</value>
   </data>
   <data name="DownloadButtonCompletedLabel" xml:space="preserve">
     <value>缓存已完成</value>
@@ -377,5 +377,17 @@
   </data>
   <data name="SettingButton.Label" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="CancelLabel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DownloadWithIllustrationLabel" xml:space="preserve">
+    <value>文本及插画</value>
+  </data>
+  <data name="DownloadWithoutIllustrationLabel" xml:space="preserve">
+    <value>纯文本</value>
+  </data>
+  <data name="LoginIndicator" xml:space="preserve">
+    <value>正在登录...</value>
   </data>
 </root>

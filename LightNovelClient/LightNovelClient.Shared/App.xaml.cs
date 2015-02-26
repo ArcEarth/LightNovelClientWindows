@@ -136,20 +136,6 @@ namespace LightNovel
 
 				Window.Current.Content = extendedSplash;
 				Window.Current.Activate();
-
-				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-				{
-					// Restore the saved session state only when appropriate
-					try
-					{
-						await SuspensionManager.RestoreAsync();
-					}
-					catch (SuspensionManagerException)
-					{
-						// Something went wrong restoring state.
-						// Assume there is no state and continue
-					}
-				}
 				// Place the frame in the current Window
 				// Window.Current.Content = rootFrame;
 			}
@@ -164,18 +150,31 @@ namespace LightNovel
 			await CachedClient.InitializeCachedSetAsync();
 			#endregion
 
+			if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+			{
+				// Restore the saved session state only when appropriate
+				try
+				{
+#if WINDOWS_PHONE_APP
+					rootFrame.ContentTransitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
+#endif
+					await SuspensionManager.RestoreAsync();
+					if (rootFrame.Content != null && Window.Current.Content != rootFrame)
+					{
+						Window.Current.Content = rootFrame;
+					}
+				}
+				catch (SuspensionManagerException)
+				{
+					// Something went wrong restoring state.
+					// Assume there is no state and continue
+				}
+			}
+
 			if (rootFrame.Content == null)
 			{
 #if WINDOWS_PHONE_APP
 				// Removes the turnstile navigation for startup.
-				if (rootFrame.ContentTransitions != null)
-				{
-					this.transitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
-					//foreach (var c in rootFrame.ContentTransitions)
-					//{
-					//	this.transitions.Add(c);
-					//}
-				}
 				rootFrame.ContentTransitions = null;
 				rootFrame.Navigated += this.RootFrame_FirstNavigated;
 #endif
@@ -235,7 +234,8 @@ namespace LightNovel
 		private void RootFrame_FirstNavigated(object sender, NavigationEventArgs e)
 		{
 			var rootFrame = sender as Frame;
-			rootFrame.ContentTransitions = this.transitions ?? new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
+			if (rootFrame.ContentTransitions == null)
+				rootFrame.ContentTransitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
 			rootFrame.Navigated -= this.RootFrame_FirstNavigated;
 		}
 #endif

@@ -178,17 +178,17 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
             _typeNameTable[26] = "LightNovel.ViewModels.ReadingPageViewModel";
             _typeNameTable[27] = "System.Threading.Tasks.Task`1<LightNovel.Service.Chapter>";
             _typeNameTable[28] = "System.Threading.Tasks.Task";
-            _typeNameTable[29] = "LightNovel.SettingPage";
-            _typeNameTable[30] = "LightNovel.Common.ApplicationSettings";
-            _typeNameTable[31] = "LightNovel.SeriesIndexPage";
-            _typeNameTable[32] = "LightNovel.SeriesIndexViewModel";
-            _typeNameTable[33] = "LightNovel.SearchResultsPage";
-            _typeNameTable[34] = "System.Collections.Generic.List`1<LightNovel.Service.BookItem>";
-            _typeNameTable[35] = "LightNovel.Service.BookItem";
-            _typeNameTable[36] = "LightNovel.Service.BookItemType";
-            _typeNameTable[37] = "System.Enum";
-            _typeNameTable[38] = "System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>";
-            _typeNameTable[39] = "LightNovel.Common.ObservableDictionary";
+            _typeNameTable[29] = "LightNovel.SearchResultsPage";
+            _typeNameTable[30] = "System.Collections.Generic.List`1<LightNovel.Service.BookItem>";
+            _typeNameTable[31] = "LightNovel.Service.BookItem";
+            _typeNameTable[32] = "LightNovel.Service.BookItemType";
+            _typeNameTable[33] = "System.Enum";
+            _typeNameTable[34] = "System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>";
+            _typeNameTable[35] = "LightNovel.Common.ObservableDictionary";
+            _typeNameTable[36] = "LightNovel.SeriesIndexPage";
+            _typeNameTable[37] = "LightNovel.SeriesIndexViewModel";
+            _typeNameTable[38] = "LightNovel.SettingPage";
+            _typeNameTable[39] = "LightNovel.Common.ApplicationSettings";
             _typeNameTable[40] = "LightNovel.Controls.RichTextColumns";
             _typeNameTable[41] = "Windows.UI.Xaml.Controls.Panel";
             _typeNameTable[42] = "Windows.UI.Xaml.Controls.RichTextBlock";
@@ -234,17 +234,17 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
             _typeTable[26] = typeof(global::LightNovel.ViewModels.ReadingPageViewModel);
             _typeTable[27] = typeof(global::System.Threading.Tasks.Task<global::LightNovel.Service.Chapter>);
             _typeTable[28] = typeof(global::System.Threading.Tasks.Task);
-            _typeTable[29] = typeof(global::LightNovel.SettingPage);
-            _typeTable[30] = typeof(global::LightNovel.Common.ApplicationSettings);
-            _typeTable[31] = typeof(global::LightNovel.SeriesIndexPage);
-            _typeTable[32] = typeof(global::LightNovel.SeriesIndexViewModel);
-            _typeTable[33] = typeof(global::LightNovel.SearchResultsPage);
-            _typeTable[34] = typeof(global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>);
-            _typeTable[35] = typeof(global::LightNovel.Service.BookItem);
-            _typeTable[36] = typeof(global::LightNovel.Service.BookItemType);
-            _typeTable[37] = typeof(global::System.Enum);
-            _typeTable[38] = typeof(global::System.Threading.Tasks.Task<System.Collections.Generic.List<global::LightNovel.Service.BookItem>>);
-            _typeTable[39] = typeof(global::LightNovel.Common.ObservableDictionary);
+            _typeTable[29] = typeof(global::LightNovel.SearchResultsPage);
+            _typeTable[30] = typeof(global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>);
+            _typeTable[31] = typeof(global::LightNovel.Service.BookItem);
+            _typeTable[32] = typeof(global::LightNovel.Service.BookItemType);
+            _typeTable[33] = typeof(global::System.Enum);
+            _typeTable[34] = typeof(global::System.Threading.Tasks.Task<System.Collections.Generic.List<global::LightNovel.Service.BookItem>>);
+            _typeTable[35] = typeof(global::LightNovel.Common.ObservableDictionary);
+            _typeTable[36] = typeof(global::LightNovel.SeriesIndexPage);
+            _typeTable[37] = typeof(global::LightNovel.SeriesIndexViewModel);
+            _typeTable[38] = typeof(global::LightNovel.SettingPage);
+            _typeTable[39] = typeof(global::LightNovel.Common.ApplicationSettings);
             _typeTable[40] = typeof(global::LightNovel.Controls.RichTextColumns);
             _typeTable[41] = typeof(global::Windows.UI.Xaml.Controls.Panel);
             _typeTable[42] = typeof(global::Windows.UI.Xaml.Controls.RichTextBlock);
@@ -305,25 +305,25 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
         private object Activate_22_NovelLineDataTemplateSelector() { return new global::LightNovel.NovelLineDataTemplateSelector(); }
         private object Activate_25_ReadingPage() { return new global::LightNovel.ReadingPage(); }
         private object Activate_26_ReadingPageViewModel() { return new global::LightNovel.ViewModels.ReadingPageViewModel(); }
-        private object Activate_29_SettingPage() { return new global::LightNovel.SettingPage(); }
-        private object Activate_30_ApplicationSettings() { return new global::LightNovel.Common.ApplicationSettings(); }
-        private object Activate_31_SeriesIndexPage() { return new global::LightNovel.SeriesIndexPage(); }
-        private object Activate_32_SeriesIndexViewModel() { return new global::LightNovel.SeriesIndexViewModel(); }
-        private object Activate_33_SearchResultsPage() { return new global::LightNovel.SearchResultsPage(); }
-        private object Activate_34_List() { return new global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>(); }
-        private object Activate_35_BookItem() { return new global::LightNovel.Service.BookItem(); }
-        private object Activate_39_ObservableDictionary() { return new global::LightNovel.Common.ObservableDictionary(); }
+        private object Activate_29_SearchResultsPage() { return new global::LightNovel.SearchResultsPage(); }
+        private object Activate_30_List() { return new global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>(); }
+        private object Activate_31_BookItem() { return new global::LightNovel.Service.BookItem(); }
+        private object Activate_35_ObservableDictionary() { return new global::LightNovel.Common.ObservableDictionary(); }
+        private object Activate_36_SeriesIndexPage() { return new global::LightNovel.SeriesIndexPage(); }
+        private object Activate_37_SeriesIndexViewModel() { return new global::LightNovel.SeriesIndexViewModel(); }
+        private object Activate_38_SettingPage() { return new global::LightNovel.SettingPage(); }
+        private object Activate_39_ApplicationSettings() { return new global::LightNovel.Common.ApplicationSettings(); }
         private object Activate_40_RichTextColumns() { return new global::LightNovel.Controls.RichTextColumns(); }
         private object Activate_45_RichTextView() { return new global::LightNovel.Controls.RichTextView(); }
         private object Activate_50_ExpanderView() { return new global::LightNovel.Controls.ExpanderView(); }
         private object Activate_51_HeaderedItemsControl() { return new global::WinRTXamlToolkit.Controls.HeaderedItemsControl(); }
-        private void VectorAdd_34_List(object instance, object item)
+        private void VectorAdd_30_List(object instance, object item)
         {
             var collection = (global::System.Collections.Generic.ICollection<global::LightNovel.Service.BookItem>)instance;
             var newItem = (global::LightNovel.Service.BookItem)item;
             collection.Add(newItem);
         }
-        private void MapAdd_39_ObservableDictionary(object instance, object key, object item)
+        private void MapAdd_35_ObservableDictionary(object instance, object key, object item)
         {
             var collection = (global::System.Collections.Generic.IDictionary<global::System.String, global::System.Object>)instance;
             var newKey = (global::System.String)key;
@@ -529,43 +529,9 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 29:   //  LightNovel.SettingPage
+            case 29:   //  LightNovel.SearchResultsPage
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_29_SettingPage;
-                userType.AddMemberName("ViewModel");
-                userType.AddMemberName("NavigationHelper");
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 30:   //  LightNovel.Common.ApplicationSettings
-                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.SetIsReturnTypeStub();
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 31:   //  LightNovel.SeriesIndexPage
-                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_31_SeriesIndexPage;
-                userType.AddMemberName("ViewModel");
-                userType.AddMemberName("NavigationHelper");
-                userType.AddMemberName("IsLoaded");
-                userType.AddMemberName("IsLoading");
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 32:   //  LightNovel.SeriesIndexViewModel
-                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.SetIsReturnTypeStub();
-                userType.SetIsLocalType();
-                xamlType = userType;
-                break;
-
-            case 33:   //  LightNovel.SearchResultsPage
-                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_33_SearchResultsPage;
+                userType.Activator = Activate_29_SearchResultsPage;
                 userType.AddMemberName("QueryText");
                 userType.AddMemberName("Results");
                 userType.AddMemberName("QueryTask");
@@ -575,16 +541,16 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 34:   //  System.Collections.Generic.List`1<LightNovel.Service.BookItem>
+            case 30:   //  System.Collections.Generic.List`1<LightNovel.Service.BookItem>
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.CollectionAdd = VectorAdd_34_List;
+                userType.CollectionAdd = VectorAdd_30_List;
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 35:   //  LightNovel.Service.BookItem
+            case 31:   //  LightNovel.Service.BookItem
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.Activator = Activate_35_BookItem;
+                userType.Activator = Activate_31_BookItem;
                 userType.AddMemberName("Id");
                 userType.AddMemberName("Title");
                 userType.AddMemberName("Subtitle");
@@ -598,7 +564,7 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 36:   //  LightNovel.Service.BookItemType
+            case 32:   //  LightNovel.Service.BookItemType
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Enum"));
                 userType.AddEnumValue("Series", global::LightNovel.Service.BookItemType.Series);
                 userType.AddEnumValue("Volume", global::LightNovel.Service.BookItemType.Volume);
@@ -607,20 +573,54 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 37:   //  System.Enum
+            case 33:   //  System.Enum
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.ValueType"));
                 xamlType = userType;
                 break;
 
-            case 38:   //  System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>
+            case 34:   //  System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("System.Threading.Tasks.Task"));
                 userType.SetIsReturnTypeStub();
                 xamlType = userType;
                 break;
 
-            case 39:   //  LightNovel.Common.ObservableDictionary
+            case 35:   //  LightNovel.Common.ObservableDictionary
                 userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
-                userType.DictionaryAdd = MapAdd_39_ObservableDictionary;
+                userType.DictionaryAdd = MapAdd_35_ObservableDictionary;
+                userType.SetIsReturnTypeStub();
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 36:   //  LightNovel.SeriesIndexPage
+                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_36_SeriesIndexPage;
+                userType.AddMemberName("ViewModel");
+                userType.AddMemberName("NavigationHelper");
+                userType.AddMemberName("IsLoaded");
+                userType.AddMemberName("IsLoading");
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 37:   //  LightNovel.SeriesIndexViewModel
+                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
+                userType.SetIsReturnTypeStub();
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 38:   //  LightNovel.SettingPage
+                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_38_SettingPage;
+                userType.AddMemberName("ViewModel");
+                userType.AddMemberName("NavigationHelper");
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 39:   //  LightNovel.Common.ApplicationSettings
+                userType = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
                 userType.SetIsReturnTypeStub();
                 userType.SetIsLocalType();
                 xamlType = userType;
@@ -1006,169 +1006,169 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
             var that = (global::LightNovel.ReadingPage)instance;
             that.LoadingAheadTask = (global::System.Threading.Tasks.Task<global::LightNovel.Service.Chapter>)Value;
         }
-        private object get_26_SettingPage_ViewModel(object instance)
-        {
-            var that = (global::LightNovel.SettingPage)instance;
-            return that.ViewModel;
-        }
-        private object get_27_SettingPage_NavigationHelper(object instance)
-        {
-            var that = (global::LightNovel.SettingPage)instance;
-            return that.NavigationHelper;
-        }
-        private object get_28_SeriesIndexPage_ViewModel(object instance)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            return that.ViewModel;
-        }
-        private object get_29_SeriesIndexPage_NavigationHelper(object instance)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            return that.NavigationHelper;
-        }
-        private object get_30_SeriesIndexPage_IsLoaded(object instance)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            return that.IsLoaded;
-        }
-        private void set_30_SeriesIndexPage_IsLoaded(object instance, object Value)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            that.IsLoaded = (global::System.Boolean)Value;
-        }
-        private object get_31_SeriesIndexPage_IsLoading(object instance)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            return that.IsLoading;
-        }
-        private void set_31_SeriesIndexPage_IsLoading(object instance, object Value)
-        {
-            var that = (global::LightNovel.SeriesIndexPage)instance;
-            that.IsLoading = (global::System.Boolean)Value;
-        }
-        private object get_32_SearchResultsPage_QueryText(object instance)
+        private object get_26_SearchResultsPage_QueryText(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.QueryText;
         }
-        private void set_32_SearchResultsPage_QueryText(object instance, object Value)
+        private void set_26_SearchResultsPage_QueryText(object instance, object Value)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             that.QueryText = (global::System.String)Value;
         }
-        private object get_33_SearchResultsPage_Results(object instance)
+        private object get_27_SearchResultsPage_Results(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.Results;
         }
-        private void set_33_SearchResultsPage_Results(object instance, object Value)
+        private void set_27_SearchResultsPage_Results(object instance, object Value)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             that.Results = (global::System.Collections.Generic.List<global::LightNovel.Service.BookItem>)Value;
         }
-        private object get_34_BookItem_Id(object instance)
+        private object get_28_BookItem_Id(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.Id;
         }
-        private void set_34_BookItem_Id(object instance, object Value)
+        private void set_28_BookItem_Id(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.Id = (global::System.String)Value;
         }
-        private object get_35_BookItem_Title(object instance)
+        private object get_29_BookItem_Title(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.Title;
         }
-        private void set_35_BookItem_Title(object instance, object Value)
+        private void set_29_BookItem_Title(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.Title = (global::System.String)Value;
         }
-        private object get_36_BookItem_Subtitle(object instance)
+        private object get_30_BookItem_Subtitle(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.Subtitle;
         }
-        private void set_36_BookItem_Subtitle(object instance, object Value)
+        private void set_30_BookItem_Subtitle(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.Subtitle = (global::System.String)Value;
         }
-        private object get_37_BookItem_VolumeNo(object instance)
+        private object get_31_BookItem_VolumeNo(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.VolumeNo;
         }
-        private void set_37_BookItem_VolumeNo(object instance, object Value)
+        private void set_31_BookItem_VolumeNo(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.VolumeNo = (global::System.String)Value;
         }
-        private object get_38_BookItem_SeriesId(object instance)
+        private object get_32_BookItem_SeriesId(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.SeriesId;
         }
-        private void set_38_BookItem_SeriesId(object instance, object Value)
+        private void set_32_BookItem_SeriesId(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.SeriesId = (global::System.String)Value;
         }
-        private object get_39_BookItem_VolumeId(object instance)
+        private object get_33_BookItem_VolumeId(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.VolumeId;
         }
-        private void set_39_BookItem_VolumeId(object instance, object Value)
+        private void set_33_BookItem_VolumeId(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.VolumeId = (global::System.String)Value;
         }
-        private object get_40_BookItem_HyperLinkUri(object instance)
+        private object get_34_BookItem_HyperLinkUri(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.HyperLinkUri;
         }
-        private void set_40_BookItem_HyperLinkUri(object instance, object Value)
+        private void set_34_BookItem_HyperLinkUri(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.HyperLinkUri = (global::System.String)Value;
         }
-        private object get_41_BookItem_CoverImageUri(object instance)
+        private object get_35_BookItem_CoverImageUri(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.CoverImageUri;
         }
-        private void set_41_BookItem_CoverImageUri(object instance, object Value)
+        private void set_35_BookItem_CoverImageUri(object instance, object Value)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             that.CoverImageUri = (global::System.String)Value;
         }
-        private object get_42_BookItem_ItemType(object instance)
+        private object get_36_BookItem_ItemType(object instance)
         {
             var that = (global::LightNovel.Service.BookItem)instance;
             return that.ItemType;
         }
-        private object get_43_SearchResultsPage_QueryTask(object instance)
+        private object get_37_SearchResultsPage_QueryTask(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.QueryTask;
         }
-        private void set_43_SearchResultsPage_QueryTask(object instance, object Value)
+        private void set_37_SearchResultsPage_QueryTask(object instance, object Value)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             that.QueryTask = (global::System.Threading.Tasks.Task<System.Collections.Generic.List<global::LightNovel.Service.BookItem>>)Value;
         }
-        private object get_44_SearchResultsPage_DefaultViewModel(object instance)
+        private object get_38_SearchResultsPage_DefaultViewModel(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
             return that.DefaultViewModel;
         }
-        private object get_45_SearchResultsPage_NavigationHelper(object instance)
+        private object get_39_SearchResultsPage_NavigationHelper(object instance)
         {
             var that = (global::LightNovel.SearchResultsPage)instance;
+            return that.NavigationHelper;
+        }
+        private object get_40_SeriesIndexPage_ViewModel(object instance)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            return that.ViewModel;
+        }
+        private object get_41_SeriesIndexPage_NavigationHelper(object instance)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            return that.NavigationHelper;
+        }
+        private object get_42_SeriesIndexPage_IsLoaded(object instance)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            return that.IsLoaded;
+        }
+        private void set_42_SeriesIndexPage_IsLoaded(object instance, object Value)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            that.IsLoaded = (global::System.Boolean)Value;
+        }
+        private object get_43_SeriesIndexPage_IsLoading(object instance)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            return that.IsLoading;
+        }
+        private void set_43_SeriesIndexPage_IsLoading(object instance, object Value)
+        {
+            var that = (global::LightNovel.SeriesIndexPage)instance;
+            that.IsLoading = (global::System.Boolean)Value;
+        }
+        private object get_44_SettingPage_ViewModel(object instance)
+        {
+            var that = (global::LightNovel.SettingPage)instance;
+            return that.ViewModel;
+        }
+        private object get_45_SettingPage_NavigationHelper(object instance)
+        {
+            var that = (global::LightNovel.SettingPage)instance;
             return that.NavigationHelper;
         }
         private object get_46_RichTextColumns_RichTextContent(object instance)
@@ -1542,124 +1542,124 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
                 xamlMember.Getter = get_25_ReadingPage_LoadingAheadTask;
                 xamlMember.Setter = set_25_ReadingPage_LoadingAheadTask;
                 break;
-            case "LightNovel.SettingPage.ViewModel":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SettingPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "ViewModel", "LightNovel.Common.ApplicationSettings");
-                xamlMember.Getter = get_26_SettingPage_ViewModel;
-                xamlMember.SetIsReadOnly();
-                break;
-            case "LightNovel.SettingPage.NavigationHelper":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SettingPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
-                xamlMember.Getter = get_27_SettingPage_NavigationHelper;
-                xamlMember.SetIsReadOnly();
-                break;
-            case "LightNovel.SeriesIndexPage.ViewModel":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "ViewModel", "LightNovel.SeriesIndexViewModel");
-                xamlMember.Getter = get_28_SeriesIndexPage_ViewModel;
-                xamlMember.SetIsReadOnly();
-                break;
-            case "LightNovel.SeriesIndexPage.NavigationHelper":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
-                xamlMember.Getter = get_29_SeriesIndexPage_NavigationHelper;
-                xamlMember.SetIsReadOnly();
-                break;
-            case "LightNovel.SeriesIndexPage.IsLoaded":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "IsLoaded", "Boolean");
-                xamlMember.Getter = get_30_SeriesIndexPage_IsLoaded;
-                xamlMember.Setter = set_30_SeriesIndexPage_IsLoaded;
-                break;
-            case "LightNovel.SeriesIndexPage.IsLoading":
-                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
-                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "IsLoading", "Boolean");
-                xamlMember.Getter = get_31_SeriesIndexPage_IsLoading;
-                xamlMember.Setter = set_31_SeriesIndexPage_IsLoading;
-                break;
             case "LightNovel.SearchResultsPage.QueryText":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "QueryText", "String");
-                xamlMember.Getter = get_32_SearchResultsPage_QueryText;
-                xamlMember.Setter = set_32_SearchResultsPage_QueryText;
+                xamlMember.Getter = get_26_SearchResultsPage_QueryText;
+                xamlMember.Setter = set_26_SearchResultsPage_QueryText;
                 break;
             case "LightNovel.SearchResultsPage.Results":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "Results", "System.Collections.Generic.List`1<LightNovel.Service.BookItem>");
-                xamlMember.Getter = get_33_SearchResultsPage_Results;
-                xamlMember.Setter = set_33_SearchResultsPage_Results;
+                xamlMember.Getter = get_27_SearchResultsPage_Results;
+                xamlMember.Setter = set_27_SearchResultsPage_Results;
                 break;
             case "LightNovel.Service.BookItem.Id":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "Id", "String");
-                xamlMember.Getter = get_34_BookItem_Id;
-                xamlMember.Setter = set_34_BookItem_Id;
+                xamlMember.Getter = get_28_BookItem_Id;
+                xamlMember.Setter = set_28_BookItem_Id;
                 break;
             case "LightNovel.Service.BookItem.Title":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "Title", "String");
-                xamlMember.Getter = get_35_BookItem_Title;
-                xamlMember.Setter = set_35_BookItem_Title;
+                xamlMember.Getter = get_29_BookItem_Title;
+                xamlMember.Setter = set_29_BookItem_Title;
                 break;
             case "LightNovel.Service.BookItem.Subtitle":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "Subtitle", "String");
-                xamlMember.Getter = get_36_BookItem_Subtitle;
-                xamlMember.Setter = set_36_BookItem_Subtitle;
+                xamlMember.Getter = get_30_BookItem_Subtitle;
+                xamlMember.Setter = set_30_BookItem_Subtitle;
                 break;
             case "LightNovel.Service.BookItem.VolumeNo":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "VolumeNo", "String");
-                xamlMember.Getter = get_37_BookItem_VolumeNo;
-                xamlMember.Setter = set_37_BookItem_VolumeNo;
+                xamlMember.Getter = get_31_BookItem_VolumeNo;
+                xamlMember.Setter = set_31_BookItem_VolumeNo;
                 break;
             case "LightNovel.Service.BookItem.SeriesId":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "SeriesId", "String");
-                xamlMember.Getter = get_38_BookItem_SeriesId;
-                xamlMember.Setter = set_38_BookItem_SeriesId;
+                xamlMember.Getter = get_32_BookItem_SeriesId;
+                xamlMember.Setter = set_32_BookItem_SeriesId;
                 break;
             case "LightNovel.Service.BookItem.VolumeId":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "VolumeId", "String");
-                xamlMember.Getter = get_39_BookItem_VolumeId;
-                xamlMember.Setter = set_39_BookItem_VolumeId;
+                xamlMember.Getter = get_33_BookItem_VolumeId;
+                xamlMember.Setter = set_33_BookItem_VolumeId;
                 break;
             case "LightNovel.Service.BookItem.HyperLinkUri":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "HyperLinkUri", "String");
-                xamlMember.Getter = get_40_BookItem_HyperLinkUri;
-                xamlMember.Setter = set_40_BookItem_HyperLinkUri;
+                xamlMember.Getter = get_34_BookItem_HyperLinkUri;
+                xamlMember.Setter = set_34_BookItem_HyperLinkUri;
                 break;
             case "LightNovel.Service.BookItem.CoverImageUri":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "CoverImageUri", "String");
-                xamlMember.Getter = get_41_BookItem_CoverImageUri;
-                xamlMember.Setter = set_41_BookItem_CoverImageUri;
+                xamlMember.Getter = get_35_BookItem_CoverImageUri;
+                xamlMember.Setter = set_35_BookItem_CoverImageUri;
                 break;
             case "LightNovel.Service.BookItem.ItemType":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.Service.BookItem");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "ItemType", "LightNovel.Service.BookItemType");
-                xamlMember.Getter = get_42_BookItem_ItemType;
+                xamlMember.Getter = get_36_BookItem_ItemType;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.SearchResultsPage.QueryTask":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "QueryTask", "System.Threading.Tasks.Task`1<System.Collections.Generic.List`1<LightNovel.Service.BookItem>>");
-                xamlMember.Getter = get_43_SearchResultsPage_QueryTask;
-                xamlMember.Setter = set_43_SearchResultsPage_QueryTask;
+                xamlMember.Getter = get_37_SearchResultsPage_QueryTask;
+                xamlMember.Setter = set_37_SearchResultsPage_QueryTask;
                 break;
             case "LightNovel.SearchResultsPage.DefaultViewModel":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "DefaultViewModel", "LightNovel.Common.ObservableDictionary");
-                xamlMember.Getter = get_44_SearchResultsPage_DefaultViewModel;
+                xamlMember.Getter = get_38_SearchResultsPage_DefaultViewModel;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.SearchResultsPage.NavigationHelper":
                 userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SearchResultsPage");
                 xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
-                xamlMember.Getter = get_45_SearchResultsPage_NavigationHelper;
+                xamlMember.Getter = get_39_SearchResultsPage_NavigationHelper;
+                xamlMember.SetIsReadOnly();
+                break;
+            case "LightNovel.SeriesIndexPage.ViewModel":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "ViewModel", "LightNovel.SeriesIndexViewModel");
+                xamlMember.Getter = get_40_SeriesIndexPage_ViewModel;
+                xamlMember.SetIsReadOnly();
+                break;
+            case "LightNovel.SeriesIndexPage.NavigationHelper":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
+                xamlMember.Getter = get_41_SeriesIndexPage_NavigationHelper;
+                xamlMember.SetIsReadOnly();
+                break;
+            case "LightNovel.SeriesIndexPage.IsLoaded":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "IsLoaded", "Boolean");
+                xamlMember.Getter = get_42_SeriesIndexPage_IsLoaded;
+                xamlMember.Setter = set_42_SeriesIndexPage_IsLoaded;
+                break;
+            case "LightNovel.SeriesIndexPage.IsLoading":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SeriesIndexPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "IsLoading", "Boolean");
+                xamlMember.Getter = get_43_SeriesIndexPage_IsLoading;
+                xamlMember.Setter = set_43_SeriesIndexPage_IsLoading;
+                break;
+            case "LightNovel.SettingPage.ViewModel":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SettingPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "ViewModel", "LightNovel.Common.ApplicationSettings");
+                xamlMember.Getter = get_44_SettingPage_ViewModel;
+                xamlMember.SetIsReadOnly();
+                break;
+            case "LightNovel.SettingPage.NavigationHelper":
+                userType = (global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlUserType)GetXamlTypeByName("LightNovel.SettingPage");
+                xamlMember = new global::LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo.XamlMember(this, "NavigationHelper", "LightNovel.Common.NavigationHelper");
+                xamlMember.Getter = get_45_SettingPage_NavigationHelper;
                 xamlMember.SetIsReadOnly();
                 break;
             case "LightNovel.Controls.RichTextColumns.RichTextContent":
@@ -2137,5 +2137,6 @@ namespace LightNovel.LightNovelClient_WindowsPhone_XamlTypeInfo
         }
     }
 }
+
 
 

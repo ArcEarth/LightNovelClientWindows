@@ -783,6 +783,7 @@ namespace LightNovel.ViewModels
 		{
 			if (!IsOnline)
 				return false;
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			if (App.Current.IsSignedIn)
 			{
 				IsSignedIn = true;
@@ -790,12 +791,12 @@ namespace LightNovel.ViewModels
 			}
 			else
 			{
-				UserName = "Signing in...";
+				UserName = resourceLoader.GetString("LoginIndicator");
 				IsSignedIn = await App.Current.SignInAutomaticllyAsync();
 				if (IsSignedIn)
 					UserName = App.Current.User.UserName;
 				else
-					UserName = "Tap to Sign in";
+					UserName = resourceLoader.GetString("LoginLabel");
 			}
 			return IsSignedIn;
 		}

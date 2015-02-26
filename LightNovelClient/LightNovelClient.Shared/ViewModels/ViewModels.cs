@@ -209,7 +209,10 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
-				return ChapterData.Title;
+				if (ChapterData != null)
+					return ChapterData.Title;
+				else
+					return "Loading...";
 			}
 		}
 
@@ -1699,6 +1702,11 @@ namespace LightNovel.ViewModels
 
 			ParentChapterId = chapterId;
 			No = line.No;
+		}
+
+		public bool IsImageCached
+		{
+			get { return _content.StartsWith("http://") && CachedClient.IsIllustrationCached(_content); }
 		}
 
 		public Uri ImageUri
