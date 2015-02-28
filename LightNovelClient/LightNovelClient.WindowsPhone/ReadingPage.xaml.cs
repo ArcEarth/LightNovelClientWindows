@@ -126,9 +126,9 @@ namespace LightNovel
 
 			var appView = ApplicationView.GetForCurrentView();
 			var statusBar = StatusBar.GetForCurrentView();
-			if (appView.Orientation == Windows.UI.ViewManagement.ApplicationViewOrientation.Portrait)
+			if (appView.Orientation == ApplicationViewOrientation.Portrait)
 			{
-				appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
+				appView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
 				statusBar.ProgressIndicator.Text = " ";
 				statusBar.ProgressIndicator.ProgressValue = 0;
 				statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
@@ -139,7 +139,7 @@ namespace LightNovel
 			}
 			else
 			{
-				appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
+				appView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseVisible);
 				LayoutRoot.Margin = new Thickness(0);
 				await statusBar.HideAsync();
 			}
@@ -479,8 +479,8 @@ namespace LightNovel
 		async void imageContent_ImageOpened(object sender, RoutedEventArgs e)
 		{
 			var image = sender as Image;
-			await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 			image.ImageOpened -= imageContent_ImageOpened;
+			await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 		}
 
 		private void Image_DownloadProgress(object sender, DownloadProgressEventArgs e)
@@ -670,6 +670,44 @@ namespace LightNovel
 					}
 				}
 			}
+		}
+
+		//private void PageBottomCommandBar_IsOpenChanged(object sender, object e)
+		//{
+		//	if (PageBottomCommandBar.IsOpen)
+		//	{
+		//		PageBottomCommandBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+		//		PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
+		//		//foreach (var command in PageBottomCommandBar.PrimaryCommands)
+		//		//{
+		//		//	var element = (command as UIElement);
+		//		//	element.Visibility = Windows.UI.Xaml.Visibility.Visible;
+		//		//}
+		//		//BottomCommandBarOpenStory.Begin();
+		//	}
+		//	else
+		//	{
+		//		PageBottomCommandBar.Background = new SolidColorBrush(Colors.Transparent);
+		//		PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+		//		//foreach (var command in PageBottomCommandBar.PrimaryCommands)
+		//		//{
+		//		//	var element = (command as UIElement);
+		//		//	element.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+		//		//}
+
+		//		//BottomCommandBarCloseStory.Begin();
+		//	}
+		//}
+
+		private void ImageSetCoverButton_Click(object sender, RoutedEventArgs e)
+		{
+			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
+			ViewModel.SetCustomizeCover(lvm.ImageUri);
+		}
+
+		private void FullScreenButton_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 
 

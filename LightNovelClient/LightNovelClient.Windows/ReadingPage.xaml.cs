@@ -30,6 +30,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 using WinRTXamlToolkit.Controls.Extensions;
 //using PostSharp.Patterns.Model;
 
@@ -686,30 +687,41 @@ namespace LightNovel
 			if (element == null) return;
 
 			var line = (LineViewModel)element.GetValue(ParagrahViewModelProperty);
+			if (!(line.IsImage || ViewModel.EnableComments))
+				return;
 
-			if (!line.IsImage && !ViewModel.EnableComments)
-					return;
+			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 
-			if (line.HasNoComment)
+			if (ViewModel.EnableComments)
 			{
-				//ContentTextBlock.Select(element.ContentStart, element.ContentEnd);
-				if (this.RequestedTheme == ElementTheme.Light)
-					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Light;
+				CommentsTool.Visibility = Visibility.Visible;
+				if (App.Current.IsSignedIn)
+				{
+					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				}
 				else
-					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Dark;
-				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
-				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
+				{
+					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				}
 			}
 			else
 			{
-				if (this.RequestedTheme == ElementTheme.Light)
-					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Light;
-				else
-					((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Dark;
-				((FrameworkElement)CommentsFlyout.Content).DataContext = line;
-				Flyout.ShowAttachedFlyout((FrameworkElement)sender);
+				CommentsTool.Visibility = Visibility.Collapsed;
+			}
+
+			// Sync Flyout Theme
+			if (this.RequestedTheme == ElementTheme.Light)
+				((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Light;
+			else
+				((FrameworkElement)CommentsFlyout.Content).RequestedTheme = ElementTheme.Dark;
+			
+			Flyout.ShowAttachedFlyout((FrameworkElement)sender);
+
+			if (line.HasComments && !line.IsLoading)
+			{
 				await line.LoadCommentsAsync();
 			}
+
 		}
 
 		//private void SyncIndexSelection()
@@ -800,6 +812,30 @@ namespace LightNovel
 			{
 				IsIndexPanelOpen = false;
 			}
+		}
+
+		private async void Image_ImageOpened(object sender, RoutedEventArgs e)
+		{
+			var image = sender as Image;
+			image.ImageOpened -= Image_ImageOpened;
+			//RelayoutImageCommentsIndicator(image);
+			await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
+
+		}
+
+		private static void RelayoutImageCommentsIndicator(Image image)
+		{
+			var parent = image.GetVisualParent();
+			var indicator = parent.FindName("CommentsIndicator") as Rectangle;
+			var rect = image.GetBoundingRect(parent);
+			indicator.Height = rect.Height;
+			indicator.Margin = new Thickness(rect.Left - 5, rect.Top, 0, 0);
+		}
+
+		private void Image_SizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			var image = sender as Image;
+			RelayoutImageCommentsIndicator(image);
 		}
 
 	}

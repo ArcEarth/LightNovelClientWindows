@@ -275,6 +275,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition x:Name="ImageRefreshColumn" Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--<TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppAccentBrush}">Picture</TextBlock>-->
@@ -302,7 +303,7 @@
                     </Button>
                     <Button x:Uid="ImageRefreshButton"
                             x:Name="ImageRefreshButton"
-                            Grid.Column="2"
+                            Grid.Column="3"
                             MinHeight="60"
                             Margin="5,0,5,0"
                             HorizontalAlignment="Stretch"
@@ -322,6 +323,26 @@
                                         Foreground="{ThemeResource AppBackgroundBrush}"
                                         Symbol="Refresh" />
                         </Viewbox>
+                    </Button>
+                    <Button x:Uid="ImageSetCoverButton"
+                            x:Name="ImageSetCoverButton"
+                            Grid.Column="2"
+                            MinHeight="60"
+                            Margin="5,0,5,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="ImageSetCoverButton_Click"
+                            Foreground="{ThemeResource AppAccentBrush}"
+                            Padding="0">
+                        <Path Margin="0,7,0,4"
+                              Data="F1 M 30.5,38L 22.75,30L 27.5,30L 35.5,38L 27.5,46L 22.75,46L 30.5,38 Z M 18,29.75L 26.25,38L 18,46.25L 18,29.75 Z M 28,25L 58,25L 58,51L 28,51L 28,47.25L 31,44.25L 31,48L 55,48L 55,28L 31,28L 31,31.75L 28,28.75L 28,25 Z M 34,46L 37.1667,41.1667L 40.3333,44.3333L 48.25,36.4167L 51.4166,39.5834L 53,36.5L 53,46L 34,46 Z M 38.75,31.6667C 38.75,33.7164 37.3177,35.5468 35.4306,36.1806L 33,33.75L 33,30L 38.75,30.0834C 38.8447,30.4514 38.75,31.2691 38.75,31.6667 Z "
+                              Fill="{ThemeResource AppBackgroundBrush}"
+                              Stretch="Uniform" />
                     </Button>
                     <Button x:Uid="ImageFullScreenButton"
                             Grid.Column="1"
@@ -585,10 +606,23 @@
                     ClosedDisplayMode="Minimal"
                     Foreground="{ThemeResource AppBackgroundBrush}"
                     IsOpen="{Binding IsLoading,
-                                     Converter={StaticResource BooleanNegationConverter}}"
-                    Padding="20,0">
+                                     Converter={StaticResource BooleanNegationConverter}}">
             <CommandBar.PrimaryCommands>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
+                <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
+                <!--<AppBarToggleButton x:Uid="FullScreenButton"
+                                    x:Name="FullScreenButton"
+                                    Margin="0,0"
+                                    VerticalAlignment="Center"
+                                    BorderBrush="Transparent"
+                                    Foreground="{ThemeResource AppBackgroundBrush}"
+                                    Icon="FullScreen"
+                                    IsChecked="{Binding EnableComments,
+                                                        Mode=TwoWay}"
+                                    IsCompact="False"
+                                    Label="Full Screen"
+                                    Padding="0"
+                                    ToolTipService.ToolTip="Toggle if enable the comments in reading" />-->
                 <AppBarButton x:Uid="ReadingStyleButton"
                               x:Name="ReadingStyleButton"
                               Margin="0,0,0,0"
@@ -600,23 +634,19 @@
                               IsCompact="False"
                               Label="Theme"
                               Padding="0" />
-                <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Uid="CommentEnableButton"
                                     x:Name="CommentEnableButton"
                                     Margin="0,0"
                                     VerticalAlignment="Center"
                                     BorderBrush="Transparent"
                                     Foreground="{ThemeResource AppBackgroundBrush}"
+                                    Icon="Comment"
                                     IsChecked="{Binding EnableComments,
                                                         Mode=TwoWay}"
                                     IsCompact="False"
                                     Label="Comments"
                                     Padding="0"
-                                    ToolTipService.ToolTip="Toggle if enable the comments in reading">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="Comment" />
-                    </Viewbox>
-                </AppBarToggleButton>
+                                    ToolTipService.ToolTip="Toggle if enable the comments in reading" />
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <AppBarToggleButton x:Uid="FavoriteButton"
                                     x:Name="FavoriteButton"
@@ -625,14 +655,11 @@
                                     BorderBrush="Transparent"
                                     Click="BookmarkButton_Click"
                                     Foreground="{StaticResource AppBackgroundBrush}"
+                                    Icon="Favorite"
                                     IsChecked="{Binding IsFavored}"
                                     IsCompact="False"
                                     Label="Favrite"
-                                    ToolTipService.ToolTip="Bookmark current page">
-                    <Viewbox Margin="5">
-                        <SymbolIcon Symbol="Favorite" />
-                    </Viewbox>
-                </AppBarToggleButton>
+                                    ToolTipService.ToolTip="Bookmark current page" />
                 <AppBarToggleButton x:Uid="PinButton"
                                     x:Name="PinButton"
                                     HorizontalAlignment="Center"
@@ -640,14 +667,11 @@
                                     BorderBrush="Transparent"
                                     Click="PinButton_Click"
                                     Foreground="{StaticResource AppBackgroundBrush}"
+                                    Icon="Pin"
                                     IsChecked="{Binding IsPinned}"
                                     IsCompact="False"
                                     Label="Pin"
-                                    ToolTipService.ToolTip="Pin this page to Start">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="{Binding IsChecked, ElementName=PinButton, Converter={StaticResource IsPinnedToSymbolConverter}}" />
-                    </Viewbox>
-                </AppBarToggleButton>
+                                    ToolTipService.ToolTip="Pin this page to Start" />
             </CommandBar.PrimaryCommands>
             <!--  Download and manual layout function not enabled in this build  -->
             <CommandBar.SecondaryCommands>
@@ -1269,23 +1293,24 @@
             </ListView>
         </Grid>
 
-        <Grid x:Name="TitlePanel" Style="{StaticResource TitlePanelStyle}">
+        <Grid x:Name="TitlePanel"
+              Height="40"
+              Style="{StaticResource TitlePanelStyle}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="40" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0" />
-                <RowDefinition Height="40" />
-            </Grid.RowDefinitions>
+
             <ToggleButton x:Uid="IndexButton"
                           x:Name="IndexButton"
                           Grid.Row="1"
                           Grid.Column="0"
                           Grid.ColumnSpan="1"
-                          Height="60"
-                          MinHeight="40"
+                          Width="20"
+                          Height="20"
+                          MinWidth="20"
+                          MinHeight="20"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Center"
                           HorizontalContentAlignment="Left"
@@ -1299,7 +1324,6 @@
                                               ElementName=pageRoot,
                                               Mode=OneWay}"
                           Padding="0,-10"
-                          TabIndex="1"
                           ToolTipService.ToolTip="Open/Close the index panel">
 
                 <Viewbox Width="40"
@@ -1311,16 +1335,15 @@
                 </Viewbox>
             </ToggleButton>
             <TextBlock x:Name="pageTitle"
-                       Grid.Row="1"
                        Grid.Column="1"
                        Margin="10,0"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontSize="30"
+                       FontWeight="SemiLight"
                        Foreground="{StaticResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
                        Language="zh-CN"
-                       Style="{ThemeResource AppTextTitle1Style}"
                        Text="{Binding Header}"
                        TextAlignment="Left"
                        TextTrimming="WordEllipsis"

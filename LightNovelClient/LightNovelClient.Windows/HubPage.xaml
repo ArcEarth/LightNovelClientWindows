@@ -425,6 +425,7 @@
              Grid.RowSpan="2"
              Margin="0"
              Padding="0,79,0,0"
+             ScrollViewer.HorizontalScrollBarVisibility="Hidden"
              ScrollViewer.IsHorizontalScrollChainingEnabled="True"
              SectionHeaderClick="Hub_SectionHeaderClick"
              TabIndex="0">

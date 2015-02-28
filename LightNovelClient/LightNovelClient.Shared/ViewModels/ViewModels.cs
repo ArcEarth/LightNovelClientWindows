@@ -911,6 +911,10 @@ namespace LightNovel.ViewModels
 			}
 		}
 
+		internal void SetCustomizeCover(Uri uri)
+		{
+		}
+
 		public BookmarkInfo CreateBookmark()
 		{
 			var bookmark = new BookmarkInfo

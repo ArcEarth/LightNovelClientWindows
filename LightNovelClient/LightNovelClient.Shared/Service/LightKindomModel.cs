@@ -204,6 +204,7 @@ namespace LightNovel.Service
 		public string SeriesTitle { get; set; }
 		public string DescriptionThumbnailUri { get; set; }
 		public bool IsDeleted { get; set; }
+		public string CustomizedCoverImageUri { get; set; }
 
 		[JsonIgnore]
 		public Uri CoverImageUri

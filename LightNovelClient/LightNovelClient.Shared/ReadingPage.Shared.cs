@@ -316,6 +316,7 @@ namespace LightNovel
 		private void SyncPinButtonView()
 		{
 			PinButton.IsChecked = ViewModel.IsPinned;
+#if WINDOWS_APP
 			if (ViewModel.IsPinned)
 			{
 				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
@@ -326,6 +327,18 @@ namespace LightNovel
 				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
 				icon.Symbol = Symbol.Pin;
 			}
+#else
+			if (ViewModel.IsPinned)
+			{
+				var icon = PinButton.Icon as SymbolIcon;
+				icon.Symbol = Symbol.UnPin;
+			}
+			else
+			{
+				var icon = PinButton.Icon as SymbolIcon;
+				icon.Symbol = Symbol.Pin;
+			}
+#endif
 		}
 
 		/// <summary>
@@ -494,21 +507,13 @@ namespace LightNovel
 				var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), ViewModel.SeriesData.Title, args, imageUri, TileSize.Default);
 				//var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), "LightNovel", ViewModel.SeriesData.Title, args, TileOptions.ShowNameOnLogo, imageUri);
 				button.IsChecked = await tile.RequestCreateForSelectionAsync(new Rect(location, size));
-				if (button.IsChecked.Value)
-				{
-					var icon = (button.Content as Viewbox).Child as SymbolIcon;
-					icon.Symbol = Symbol.UnPin;
-				}
+				SyncPinButtonView();
 			}
 			else
 			{
 				var tile = new SecondaryTile(ViewModel.SeriesId.ToString());
 				button.IsChecked = !await tile.RequestDeleteAsync(location);
-				if (!button.IsChecked.Value)
-				{
-					var icon = (button.Content as Viewbox).Child as SymbolIcon;
-					icon.Symbol = Symbol.Pin;
-				}
+				SyncPinButtonView();
 			}
 		}
 

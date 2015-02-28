@@ -26,11 +26,7 @@
             <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
             <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
 
-            <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
-            <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
-            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
-            <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
-
+            <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="{ThemeResource AppForegroundDimColor}" />
             <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
@@ -71,11 +67,7 @@
             <Color x:Key="AppSubtleColor">#66000000</Color>
             <Color x:Key="AppSemitransparentColor10">#1FFFFFFF</Color>
 
-            <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
-            <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
-            <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
-            <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
-
+            <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="{ThemeResource AppForegroundDimColor}" />
             <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
@@ -123,6 +115,10 @@
     <SolidColorBrush x:Key="AppAccentBrush" Color="{ThemeResource AppAccentColor}" />
     <SolidColorBrush x:Key="AppAccentBrushSemiLight" Color="{ThemeResource AppAccentColorSemiLight}" />
     <SolidColorBrush x:Key="AppAccentBrushLight" Color="{ThemeResource AppAccentColorLight}" />
+    <SolidColorBrush x:Key="AppForegroundBrush" Color="{ThemeResource AppForegroundColor}" />
+    <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
+    <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
 
 
     <!--  Font sizes  -->
