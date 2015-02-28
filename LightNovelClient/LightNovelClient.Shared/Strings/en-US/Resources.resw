@@ -390,4 +390,10 @@
   <data name="LoginIndicator" xml:space="preserve">
     <value>Signing in...</value>
   </data>
+  <data name="OpenInNewWindowLabel" xml:space="preserve">
+    <value>Open in new Window</value>
+  </data>
+  <data name="OpenInNewViewButton.Label" xml:space="preserve">
+    <value>New Window</value>
+  </data>
 </root>

@@ -37,87 +37,65 @@ namespace LightNovel
 		/// a dictionary of state preserved by this page during an earlier
 		/// session.  The state will be null the first time a page is visited.</param>
 		private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
-		{
-			// TODO: Create an appropriate data model for your problem domain to replace the sample data
-			//var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-4");
+        {
+            // TODO: Create an appropriate data model for your problem domain to replace the sample data
+            //var sampleDataGroup = await SampleDataSource.GetGroupAsync("Group-4");
 
-			//Task<Session> LoginTask = null;
-			Task LoadingIndexTask = null;
-			Task LoadingRecommandTask = null;
-			//Task LoadingFavouriteTask = null;
-			//Task LoadingRecentTask = null;
-			Task LoginTask = null;
+            //Task<Session> LoginTask = null;
+            Task LoadingIndexTask = null;
+            Task LoadingRecommandTask = null;
+            //Task LoadingFavouriteTask = null;
+            //Task LoadingRecentTask = null;
+            Task LoginTask = null;
 
-			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
-			{
-				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
-			} 
-			ViewModel.IsLoading = true;
+            if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+            {
+                this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+            }
 
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			if (App.Current.RecentList.Count > 0)
-			{
-				ViewModel.LastReadSection = new HistoryItemViewModel(App.Current.RecentList[App.Current.RecentList.Count - 1]);
-				await ViewModel.RecentSection.LoadLocalAsync(true,9);
-			}
-			else
-			{
-				ViewModel.LastReadSection = new HistoryItemViewModel
-				{
-					Position = new NovelPositionIdentifier
-					{
-						SeriesId = "337",
-						VolumeNo = 0,
-						VolumeId = "1138",
-						ChapterNo = 0,
-						ChapterId = "8683"
-					},
-					SeriesTitle = "机巧少女不会受伤",
-					VolumeTitle = "第一卷 ",
-					Description = "机巧魔术──那是由内藏魔术回路的自动人偶与人偶使所使用的魔术。在英国最高学府的华尔普吉斯皇家机巧学院里，正举行着一场选出顶尖人偶使「魔王」的战斗「夜会」。来自日本的留学生雷真和他的搭档──少女型态的人偶夜夜，为了参加「夜会」，打算挑战其他入选者，夺取对方的资格。他们锁定的目标是下届魔王呼声极高的候选人，别名「暴龙」的美少女夏琳！然而就在雷真向她挑战时，突然出现意外的伏兵……？ 交响曲式学园战斗动作剧，第一集登场！",
-					CoverImageUri = "http://lknovel.lightnovel.cn/illustration/image/20120813/20120813085826_34455.jpg"
-				};
-			}
+            ViewModel.IsLoading = true;
 
-			if (!ViewModel.RecommandSection.IsLoaded && !ViewModel.RecommandSection.IsLoading)
-			{
-				LoadingRecommandTask = ViewModel.RecommandSection.LoadAsync();
-			}
+            await LoadConverAndRecent();
 
-			if (ViewModel.SeriesIndex == null)
-			{
-				LoadingIndexTask = ViewModel.LoadSeriesIndexDataAsync().ContinueWith(async task =>
-				{
-					await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-					{
-						if (SeriesIndexViewSource.View == null)
-						{
-							SeriesIndexViewSource.IsSourceGrouped = true;
-							SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
-						}
-						if (SeriesIndexViewSource.View != null)
-							ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
-					});
-				});
-			}
+            if (!ViewModel.RecommandSection.IsLoaded && !ViewModel.RecommandSection.IsLoading)
+            {
+                LoadingRecommandTask = ViewModel.RecommandSection.LoadAsync();
+            }
 
-			if (!App.Current.IsSignedIn)
-			{
-				LoginTask = ViewModel.TryLogInWithStoredCredentialAsync().ContinueWith(async task => {
-					await ViewModel.FavoriteSection.LoadAsync(false, 9);
-				});
-			}
-			else
-			{
-				ViewModel.IsSignedIn = true;
-				ViewModel.UserName = App.Current.User.UserName;
-				LoginTask = ViewModel.FavoriteSection.LoadAsync(false, 9);
-			}
+            if (ViewModel.SeriesIndex == null)
+            {
+                LoadingIndexTask = ViewModel.LoadSeriesIndexDataAsync().ContinueWith(async task =>
+                {
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (SeriesIndexViewSource.View == null)
+                        {
+                            SeriesIndexViewSource.IsSourceGrouped = true;
+                            SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
+                        }
+                        if (SeriesIndexViewSource.View != null)
+                            ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
+                    });
+                });
+            }
+
+            if (!App.Current.IsSignedIn)
+            {
+                LoginTask = ViewModel.TryLogInWithStoredCredentialAsync().ContinueWith(async task =>
+                {
+                    await ViewModel.FavoriteSection.LoadAsync(false, 9);
+                });
+            }
+            else
+            {
+                ViewModel.IsSignedIn = true;
+                ViewModel.UserName = App.Current.User.UserName;
+                LoginTask = ViewModel.FavoriteSection.LoadAsync(false, 9);
+            }
 
 #if WINDOWS_APP
-			if (HubScrollViewer != null)
-				HubScrollViewer.ViewChanged += HubScrollViewer_ViewChanged;
+            if (HubScrollViewer != null)
+                HubScrollViewer.ViewChanged += HubScrollViewer_ViewChanged;
 #else //WINDOWS_PHONE_APP
 			var statusBar = StatusBar.GetForCurrentView();
 			statusBar.ProgressIndicator.Text = "Synchronizing...";
@@ -127,42 +105,99 @@ namespace LightNovel
 			await statusBar.ProgressIndicator.ShowAsync();
 #endif
 
-			if (LoadingRecommandTask != null)
-				await LoadingRecommandTask;
-			if (LoginTask != null)
-				await LoginTask;
-			if (LoadingIndexTask != null)
-				await LoadingIndexTask;
+            if (LoadingRecommandTask != null)
+                await LoadingRecommandTask;
+            if (LoginTask != null)
+                await LoginTask;
+            if (LoadingIndexTask != null)
+                await LoadingIndexTask;
 
-			UpdateTile();
+            UpdateTile();
 
-			ViewModel.IsLoading = false;
+            ViewModel.IsLoading = false;
 
-#if  WINDOWS_APP
+#if WINDOWS_APP
 
-			foreach (var group in ViewModel.RecommandSection)
-			{
-				foreach (var item in group)
-				{
-					try
-					{
-						await item.LoadDescriptionAsync();
-					}
-					catch (Exception exception)
-					{
-						Debug.WriteLine("Exception in loading volume description : ({0},{1}), exception : {3}", item.Title, item.Id, exception.Message);
-					}
+            foreach (var group in ViewModel.RecommandSection)
+            {
+                foreach (var item in group)
+                {
+                    try
+                    {
+                        await item.LoadDescriptionAsync();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.WriteLine("Exception in loading volume description : ({0},{1}), exception : {3}", item.Title, item.Id, exception.Message);
+                    }
 
-				}
-			}
+                }
+            }
 
-			if (App.Current.Settings.EnableLiveTile)
-				UpdateTile();
+            if (App.Current.Settings.EnableLiveTile)
+                UpdateTile();
 #else
 			await statusBar.ProgressIndicator.HideAsync();
 #endif
-		}
-		void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        }
+
+        private async void Current_BookmarkListChanged(object sender, EventArgs e)
+        {
+            if (ViewModel.IsLoading) return;
+            await ViewModel.FavoriteSection.LoadAsync();
+        }
+
+        private async void Current_RecentListChanged(object sender, EventArgs e)
+        {
+            if (ViewModel.IsLoading) return;
+            await LoadConverAndRecent();
+        }
+
+        void HubPage_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
+        {
+            if (args.Request.ApplicationCommands.Any(c => c.Id == "Options"))
+                return;
+            var command = new Windows.UI.ApplicationSettings.SettingsCommand("Options", "Options", x =>
+            {
+                var settings = new SettingsPage();
+
+                settings.Show();
+            });
+            args.Request.ApplicationCommands.Add(command);
+        }
+
+        private async Task LoadConverAndRecent()
+        {
+            if (App.RecentList == null)
+                await App.LoadHistoryDataAsync();
+
+            if (App.RecentList.Count > 0)
+            {
+                ViewModel.LastReadSection = new HistoryItemViewModel(App.RecentList[App.RecentList.Count - 1]);
+                //LastReadSection.UpdateLayout();
+                await ViewModel.RecentSection.LoadLocalAsync(true, 9);
+            }
+            else
+            {
+                ViewModel.LastReadSection = new HistoryItemViewModel
+                {
+                    Position = new NovelPositionIdentifier
+                    {
+                        SeriesId = "337",
+                        VolumeNo = 0,
+                        VolumeId = "1138",
+                        ChapterNo = 0,
+                        ChapterId = "8683"
+                    },
+                    SeriesTitle = "机巧少女不会受伤",
+                    VolumeTitle = "第一卷 ",
+                    Description = "机巧魔术──那是由内藏魔术回路的自动人偶与人偶使所使用的魔术。在英国最高学府的华尔普吉斯皇家机巧学院里，正举行着一场选出顶尖人偶使「魔王」的战斗「夜会」。来自日本的留学生雷真和他的搭档──少女型态的人偶夜夜，为了参加「夜会」，打算挑战其他入选者，夺取对方的资格。他们锁定的目标是下届魔王呼声极高的候选人，别名「暴龙」的美少女夏琳！然而就在雷真向她挑战时，突然出现意外的伏兵……？ 交响曲式学园战斗动作剧，第一集登场！",
+                    CoverImageUri = "http://lknovel.lightnovel.cn/illustration/image/20120813/20120813085826_34455.jpg"
+                };
+            }
+        }
+
+        void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
 		{
 			double maxX = (double)App.Current.Resources["PosterWidth"];
 			ScrollViewer viewer = sender as ScrollViewer;
@@ -183,33 +218,5 @@ namespace LightNovel
 		{
 			this.BottomAppBar.IsOpen = true;
 		}
-
-		private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
-		{
-			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
-			var menu = new PopupMenu();
-			var label = resourceLoader.GetString("DeleteRecentLabel");
-			menu.Commands.Add(new UICommand(label, async (command) =>
-			{
-				ViewModel.IsLoading = true;
-				await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
-				ViewModel.RecentSection.Remove(hvm);
-				var recentItem = App.Current.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
-				if (recentItem != null)
-				{
-					App.Current.RecentList.Remove(recentItem);
-					await App.Current.SaveHistoryDataAsync();
-				}
-				ViewModel.IsLoading = false;
-			}));
-			try
-			{
-				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
-			}
-			catch (Exception)
-			{
-			}
-		}
-	}
+    }
 }

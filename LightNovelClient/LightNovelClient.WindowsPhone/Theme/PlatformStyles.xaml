@@ -318,15 +318,15 @@
         <Setter Property="Background" Value="{ThemeResource AppAccentBrush}" />
     </Style>
 
-    <Style x:Key="SeriesIndexListViewStyle" TargetType="ListView">
+    <Style x:Key="SeriesIndexListViewStyle" TargetType="GridView">
         <Setter Property="ContinuumNavigationTransitionInfo.ExitElementContainer" Value="True" />
-        <!--<Setter Property="ItemsPanel">
+        <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <ItemsStackPanel />
+                    <ItemsStackPanel Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </Setter.Value>
-        </Setter>-->
+        </Setter>
     </Style>
 
 </ResourceDictionary>

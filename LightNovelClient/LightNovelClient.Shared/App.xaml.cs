@@ -22,6 +22,8 @@ using Windows.UI.StartScreen;
 using Windows.Storage.Streams;
 using Windows.Graphics.Imaging;
 using Windows.UI.ViewManagement;
+using Windows.UI.Core;
+using System.Collections.ObjectModel;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -34,13 +36,15 @@ namespace LightNovel
 	{
 #if WINDOWS_PHONE_APP
 		private TransitionCollection transitions;
+#else
+        public ObservableCollection<ViewLifetimeControl> SecondaryViews = new ObservableCollection<ViewLifetimeControl>();
 #endif
 
-		/// <summary>
-		/// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
-		/// executed, and as such is the logical equivalent of main() or WinMain().
-		/// </summary>
-		public App()
+        /// <summary>
+        /// Initializes the singleton instance of the <see cref="App"/> class. This is the first line of authored code
+        /// executed, and as such is the logical equivalent of main() or WinMain().
+        /// </summary>
+        public App()
 		{
 			try
 			{
@@ -96,16 +100,19 @@ namespace LightNovel
 			}
 			Debug.WriteLine("AppOnLaunched");
 #endif
-			//CurrentState = new ApplicationState();
+            //CurrentState = new ApplicationState();
 
 #if WINDOWS_PHONE_APP
 			//Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
 			//	 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
 			//var statusBar = StatusBar.GetForCurrentView();
 			//statusBar.BackgroundOpacity = 0;
+#else
 #endif
+            mainDispatcher = Window.Current.Dispatcher;
+            mainViewId = ApplicationView.GetForCurrentView().Id;
 
-			Frame rootFrame = Window.Current.Content as Frame;
+            Frame rootFrame = Window.Current.Content as Frame;
 
 			// Do not repeat app initialization when the Window already has content,
 			// just ensure that the window is active
@@ -267,29 +274,48 @@ namespace LightNovel
 		public ApplicationSettings Settings { get { return _settings; } }
 		public bool IsSignedIn { get { return User != null && !User.Credential.Expired; } }
 
-		public bool _isHistoryListChanged = true;
-		public bool IsHistoryListChanged
+        public static bool _isHistoryListChanged = true;
+		public static bool IsHistoryListChanged
 		{
 			get { return _isHistoryListChanged; }
 			set { _isHistoryListChanged = value; }
 		}
 
 		public bool IsBookmarkListChanged { get; set; }
-		public List<BookmarkInfo> RecentList { get; set; }
-		public List<BookmarkInfo> BookmarkList { get; set; }
-		//public List<FavourVolume> FavoriteList { get; set; }
+		public static List<BookmarkInfo> RecentList { get; set; }
+		public static List<BookmarkInfo> BookmarkList { get; set; }
 
-		public Windows.Storage.StorageFolder IllustrationFolder { get; set; }
+        public static event EventHandler RecentListChanged;
+        public static event EventHandler BookmarkListChanged;
 
-		public async Task UpdateHistoryListAsync(BookmarkInfo bookmark)
+        public static void NotifyRecentsChanged() {
+            if (RecentListChanged != null)
+                RecentListChanged(Current,null);
+        }
+
+        public static void NotifyBookmarksChanged() {
+            if (BookmarkListChanged != null)
+                BookmarkListChanged(Current, null);
+        }
+        //public List<FavourVolume> FavoriteList { get; set; }
+
+        public Windows.Storage.StorageFolder IllustrationFolder { get; set; }
+
+		public static async Task UpdateHistoryListAsync(BookmarkInfo bookmark)
 		{
 			if (RecentList == null)
 				await LoadHistoryDataAsync();
-			RecentList.RemoveAll(item => item.Position.SeriesId == bookmark.Position.SeriesId);
+            //var existed = RecentList.FirstOrDefault(item => item.Position.SeriesId == bookmark.Position.SeriesId);
+
+            //// No Changes
+            //if (bookmark.Position.VolumeNo == existed.Position.VolumeNo && bookmark.Position.ChapterNo == existed.Position.ChapterNo && bookmark.Position.LineNo == existed.Position.LineNo)
+            //    return;
+            RecentList.RemoveAll(item => item.Position.SeriesId == bookmark.Position.SeriesId);
 			RecentList.Add(bookmark);
 			IsHistoryListChanged = true;
 			await SaveHistoryDataAsync();
-		}
+            NotifyRecentsChanged();
+        }
 
 		public static async Task<bool> UpdateSecondaryTileAsync(BookmarkInfo bookmark)
 		{
@@ -512,13 +538,13 @@ namespace LightNovel
 				return null;
 			}
 		}
-		private async Task SaveToLocalFolderAsync(object obj, string path)
+		private static async Task SaveToLocalFolderAsync(object obj, string path)
 		{
 			var file = await Windows.Storage.ApplicationData.Current.LocalFolder.CreateFileAsync(path, Windows.Storage.CreationCollisionOption.OpenIfExists);
 			var content = JsonConvert.SerializeObject(obj);
 			await Windows.Storage.FileIO.WriteTextAsync(file, content);
 		}
-		private async Task<bool> SaveToRoamingFolderAsync(object obj, string path)
+		private static async Task<bool> SaveToRoamingFolderAsync(object obj, string path)
 		{
 			try
 			{
@@ -534,7 +560,7 @@ namespace LightNovel
 		}
 		//public Task loadHistoryDataTask = null;
 		//public Task loadBookmarkDataTask = null;
-		public async Task LoadHistoryDataAsync()
+		public static async Task LoadHistoryDataAsync()
 		{
 			if (RecentList != null)
 				return;
@@ -556,7 +582,7 @@ namespace LightNovel
 				RecentList = new List<BookmarkInfo>();
 		}
 
-		public async Task SaveHistoryDataAsync()
+		public static async Task SaveHistoryDataAsync()
 		{
 			if (RecentList.Count > 30)
 				RecentList.RemoveRange(0, RecentList.Count - 30);
@@ -566,7 +592,7 @@ namespace LightNovel
 				IsHistoryListChanged = false;
 			}
 		}
-		public async Task LoadBookmarkDataAsync()
+		public static async Task LoadBookmarkDataAsync()
 		{
 			if (BookmarkList != null)
 				return;
@@ -576,7 +602,7 @@ namespace LightNovel
 				BookmarkList = new List<BookmarkInfo>();
 
 		}
-		public async Task SaveBookmarkDataAsync()
+		public static async Task SaveBookmarkDataAsync()
 		{
 			if (BookmarkList.Count > 100)
 				BookmarkList.RemoveRange(0, BookmarkList.Count - 100);
@@ -620,7 +646,7 @@ namespace LightNovel
 					Changed = true;
 				}
 				if (Changed)
-					await App.Current.SaveBookmarkDataAsync();
+					await App.SaveBookmarkDataAsync();
 			}
 		}
 
@@ -705,6 +731,24 @@ namespace LightNovel
 			App.Current.User = null;
 			return true;
 		}
-		#endregion
-	}
+
+        private CoreDispatcher mainDispatcher;
+        public CoreDispatcher MainDispatcher
+        {
+            get
+            {
+                return mainDispatcher;
+            }
+        }
+
+        private int mainViewId;
+        public int MainViewId
+        {
+            get
+            {
+                return mainViewId;
+            }
+        }
+        #endregion
+    }
 }

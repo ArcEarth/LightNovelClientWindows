@@ -51,7 +51,7 @@
                           ScrollViewer.HorizontalScrollMode="Disabled"
                           TabIndex="1">
                 <SemanticZoom.ZoomedInView>
-                    <ListView Margin="0"
+                    <GridView Margin="0"
                               HorizontalAlignment="Stretch"
                               IsItemClickEnabled="True"
                               IsSwipeEnabled="False"
@@ -60,7 +60,7 @@
                               Padding="15,0,0,0"
                               SelectionMode="None"
                               Style="{StaticResource SeriesIndexListViewStyle}">
-                        <ListView.GroupStyle>
+                        <GridView.GroupStyle>
                             <GroupStyle HidesIfEmpty="True">
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
@@ -79,8 +79,8 @@
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
-                        </ListView.GroupStyle>
-                        <ListView.ItemTemplate>
+                        </GridView.GroupStyle>
+                        <GridView.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Width="380"
                                            Margin="5,0,0,0"
@@ -92,8 +92,8 @@
                                            TextTrimming="WordEllipsis"
                                            TextWrapping="NoWrap" />
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </GridView.ItemTemplate>
+                    </GridView>
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
                     <GridView x:Uid="IndexZoomedOutView"

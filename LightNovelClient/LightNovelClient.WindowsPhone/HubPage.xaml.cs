@@ -52,11 +52,11 @@ namespace LightNovel
 			//statusBar.ProgressIndicator.ProgressValue = null;
 			//statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
 			//await statusBar.ProgressIndicator.ShowAsync();
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			if (App.Current.RecentList.Count > 0)
+			if (App.RecentList == null)
+				await App.LoadHistoryDataAsync();
+			if (App.RecentList.Count > 0)
 			{
-				ViewModel.LastReadSection = new HistoryItemViewModel(App.Current.RecentList[App.Current.RecentList.Count - 1]);
+				ViewModel.LastReadSection = new HistoryItemViewModel(App.RecentList[App.RecentList.Count - 1]);
 				await ViewModel.RecentSection.LoadLocalAsync(true);
 			}
 			else

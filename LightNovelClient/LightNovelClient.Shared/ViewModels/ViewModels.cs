@@ -461,9 +461,9 @@ namespace LightNovel.ViewModels
 				//if (Index == null || !App.Current.IsSignedIn || App.Current.User == null || App.Current.User.FavoriteList == null)
 				//	return false;
 				//return App.Current.User.FavoriteList.Any(vol => vol.VolumeId == VolumeData.Id);
-				if (Index == null || App.Current.BookmarkList == null)
+				if (Index == null || App.BookmarkList == null)
 					return false;
-				return App.Current.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+				return App.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
 			}
 		}
 
@@ -486,24 +486,31 @@ namespace LightNovel.ViewModels
 		}
 
 		public async Task<bool> AddCurrentVolumeToFavoriteAsync()
-		{
-			var bookmark = CreateBookmark();
-			App.Current.BookmarkList.RemoveAll(bk => bk.Position.SeriesId == bookmark.Position.SeriesId || bookmark.SeriesTitle == bk.SeriesTitle);
-			App.Current.BookmarkList.Add(bookmark);
-			await App.Current.SaveBookmarkDataAsync();
-			NotifyPropertyChanged("IsFavored");
-			if (App.Current.IsSignedIn)
-			{
-				var result = await App.Current.User.AddUserFavriteAsync(VolumeData,_SeriesData.Title);
-				return result;
-			}
-			return true;
-		}
+        {
+            var bookmark = CreateBookmark();
+            var result = await AddOrUpdateBookmark(bookmark);
+            NotifyPropertyChanged("IsFavored");
+            return result;
+        }
 
-		public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
+        public async Task<bool> AddOrUpdateBookmark(BookmarkInfo bookmark)
+        {
+            App.BookmarkList.RemoveAll(bk => bk.Position.SeriesId == bookmark.Position.SeriesId || bookmark.SeriesTitle == bk.SeriesTitle);
+            App.BookmarkList.Add(bookmark);
+            await App.SaveBookmarkDataAsync();
+            //NotifyPropertyChanged("IsFavored");
+            if (App.Current.IsSignedIn)
+            {
+                var result = await App.Current.User.AddUserFavriteAsync(VolumeData, _SeriesData.Title);
+                return result;
+            }
+            return true;
+        }
+
+        public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
 		{
-			App.Current.BookmarkList.RemoveAll(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
-			await App.Current.SaveBookmarkDataAsync(); 
+			App.BookmarkList.RemoveAll(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+			await App.SaveBookmarkDataAsync(); 
 			NotifyPropertyChanged("IsFavored");
 			if (App.Current.IsSignedIn)
 			{
@@ -756,8 +763,12 @@ namespace LightNovel.ViewModels
 				LineNo = Contents.Count + lineNo;
 
 			var bookmark = CreateBookmark();
-			await App.Current.UpdateHistoryListAsync(bookmark);
-			await App.UpdateSecondaryTileAsync(bookmark);
+
+            await App.Current.MainDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                 await App.UpdateHistoryListAsync(bookmark);
+                 await App.UpdateSecondaryTileAsync(bookmark);
+            });
 
 			if (EnableComments && Contents != null)
 			{

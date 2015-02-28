@@ -1,5 +1,4 @@
-﻿
-<!--  Copyright (c) Microsoft. All rights reserved.  -->
+﻿<!--  Copyright (c) Microsoft. All rights reserved.  -->
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="using:LightNovel.Controls">
@@ -7,14 +6,14 @@
     <!--  Non-brush values that vary across themes  -->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
-            <x:String x:Key="BackButtonGlyph"></x:String>
-            <x:String x:Key="BackButtonSnappedGlyph"></x:String>
             <!--  Lime Green  -->
             <Color x:Key="AppAccentColor">#FFA4C400</Color>
             <!--  Semi Light Lime Green  -->
             <Color x:Key="AppAccentColorSemiLight">#FF89A100</Color>
             <!--  Light Lime Green  -->
             <Color x:Key="AppAccentColorLight">#FF6F8400</Color>
+
+            <Color x:Key="AppAccentColorLightSemitransparent">#666F8400</Color>
             <!--  87 percent Black  -->
             <Color x:Key="AppForegroundColor">#DEFFFFFF</Color>
             <Color x:Key="AppForegroundDimColor">#DEDADADA</Color>
@@ -46,6 +45,24 @@
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
+
+            <!--<SolidColorBrush x:Key="ScrollBarButtonForegroundThemeBrush" Color="#99000000"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPointerOverBackgroundThemeBrush" Color="#FFDADADA"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPointerOverBorderThemeBrush" Color="#FFDADADA"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPointerOverForegroundThemeBrush" Color="#FF000000"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPressedBackgroundThemeBrush" Color="#99000000"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPressedBorderThemeBrush" Color="#99000000"/>
+            <SolidColorBrush x:Key="ScrollBarButtonPressedForegroundThemeBrush" Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="ScrollBarPanningBackgroundThemeBrush" Color="#FFCDCDCD"/>
+            <SolidColorBrush x:Key="ScrollBarPanningBorderThemeBrush" Color="#7D9A9A9A"/>
+            <SolidColorBrush x:Key="ScrollBarThumbBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}"/>
+            <SolidColorBrush x:Key="ScrollBarThumbBorderThemeBrush" Color="Transparent"/>
+            <SolidColorBrush x:Key="ScrollBarThumbPointerOverBackgroundThemeBrush" Color="#FFDADADA"/>
+            <SolidColorBrush x:Key="ScrollBarThumbPointerOverBorderThemeBrush" Color="#6BB7B7B7"/>
+            <SolidColorBrush x:Key="ScrollBarThumbPressedBackgroundThemeBrush" Color="#99000000"/>
+            <SolidColorBrush x:Key="ScrollBarThumbPressedBorderThemeBrush" Color="#ED555555"/>
+            <SolidColorBrush x:Key="ScrollBarTrackBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor10}" />
+            <SolidColorBrush x:Key="ScrollBarTrackBorderThemeBrush" Color="{ThemeResource AppAccentColorLight}" />-->
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Light">
@@ -90,22 +107,25 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">
-            <x:String x:Key="BackButtonGlyph"></x:String>
-            <x:String x:Key="BackButtonSnappedGlyph"></x:String>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-    <!--  System chrome color  -->
-    <Color x:Key="AppChromeColor">#FFDDDDDD</Color>
-    <!--  Deprecated colors  -->
-    <!--  20 percent Black  -->
-    <Color x:Key="AppInactiveColor">#33000000</Color>
-    <!--  Inverse inactive background color  -->
-    <Color x:Key="AppInverseInactiveColor">#FFE5E5E5</Color>
-    <!--  Inverse background color  -->
-    <Color x:Key="AppInverseBackgroundColor">#FFDDDDDD</Color>
-    <!--  60 percent Black  -->
-    <Color x:Key="AppBorderColor">#99000000</Color>
-    <!--  40 percent Black  -->
+    <Color x:Key="AppAccentColor">#FFA4C400</Color>
+    <!--  Semi Light Lime Green  -->
+    <Color x:Key="AppAccentColorSemiLight">#FF89A100</Color>
+    <!--  Light Lime Green  -->
+    <Color x:Key="AppAccentColorLight">#FF6F8400</Color>
+
+    <Color x:Key="AppAccentColorLightSemitransparent">#666F8400</Color>
+    <!--  87 percent Black  -->
+    <Color x:Key="AppForegroundColor">#DEFFFFFF</Color>
+    <Color x:Key="AppForegroundDimColor">#DEDADADA</Color>
+    <!--  100 percent White  -->
+    <Color x:Key="AppBackgroundColor">#FF000000</Color>
+    <Color x:Key="AppBackgroundDimColor">#FF252525</Color>
+    <!--  66 percent transparent  -->
+    <Color x:Key="AppSemitransparentColor">#AA000000</Color>
+    <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
+    <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
 
     <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
 

@@ -31,6 +31,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.DataTransfer;
 using WinRTXamlToolkit.AwaitableUI;
+using Windows.UI.Core;
 
 namespace LightNovel
 {
@@ -316,18 +317,7 @@ namespace LightNovel
 		private void SyncPinButtonView()
 		{
 			PinButton.IsChecked = ViewModel.IsPinned;
-#if WINDOWS_APP
-			if (ViewModel.IsPinned)
-			{
-				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
-				icon.Symbol = Symbol.UnPin;
-			}
-			else
-			{
-				var icon = (PinButton.Content as Viewbox).Child as SymbolIcon;
-				icon.Symbol = Symbol.Pin;
-			}
-#else
+
 			if (ViewModel.IsPinned)
 			{
 				var icon = PinButton.Icon as SymbolIcon;
@@ -338,7 +328,6 @@ namespace LightNovel
 				var icon = PinButton.Icon as SymbolIcon;
 				icon.Symbol = Symbol.Pin;
 			}
-#endif
 		}
 
 		/// <summary>
@@ -439,32 +428,49 @@ namespace LightNovel
 				int currentLine = GetCurrentLineNo();
 				ViewModel.ReportViewChanged(null, currentLine);
 #endif
+
 				e.PageState.Add("SeriesId", ViewModel.SeriesId);
 				e.PageState.Add("ChapterNo", ViewModel.ChapterNo);
 				e.PageState.Add("VolumeNo", ViewModel.VolumeNo);
 				e.PageState.Add("LineNo", ViewModel.LineNo);
-				var bookmark = ViewModel.CreateBookmark();
-				await App.Current.UpdateHistoryListAsync(bookmark);
-				await App.UpdateSecondaryTileAsync(bookmark);
-				if (ViewModel.IsFavored)
-					await ViewModel.AddCurrentVolumeToFavoriteAsync(); // Update Favorite
-				if (ViewModel.IsDownloading)
-					await ViewModel.CancelCachingRequestAsync();
+
+                if (DisableUpdateOnNavigateFrom) return;
+                DisableUpdateOnNavigateFrom = false;
+                await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal,async () =>
+                {
+                    await UpdateApplicationHistory();
+                });
 			}
 		}
 
-		#region NavigationHelper registration
+        private bool DisableUpdateOnNavigateFrom = false;
 
-		/// <summary>
-		/// The methods provided in this section are simply used to allow
-		/// NavigationHelper to respond to the page's navigation methods.
-		/// Page specific logic should be placed in event handlers for the  
-		/// <see cref="Common.NavigationHelper.LoadState"/>
-		/// and <see cref="Common.NavigationHelper.SaveState"/>.
-		/// The navigation parameter is available in the LoadState method 
-		/// in addition to page state preserved during an earlier session.
-		/// </summary>
-		protected override void OnNavigatedTo(NavigationEventArgs e)
+        public async Task UpdateApplicationHistory()
+        {
+            var bookmark = ViewModel.CreateBookmark();
+            await App.UpdateHistoryListAsync(bookmark);
+            await App.UpdateSecondaryTileAsync(bookmark);
+            if (ViewModel.IsFavored)
+            {
+                await ViewModel.AddOrUpdateBookmark(bookmark); // Update Favorite
+                App.NotifyBookmarksChanged();
+            }
+            if (ViewModel.IsDownloading)
+                await ViewModel.CancelCachingRequestAsync();
+        }
+
+        #region NavigationHelper registration
+
+        /// <summary>
+        /// The methods provided in this section are simply used to allow
+        /// NavigationHelper to respond to the page's navigation methods.
+        /// Page specific logic should be placed in event handlers for the  
+        /// <see cref="Common.NavigationHelper.LoadState"/>
+        /// and <see cref="Common.NavigationHelper.SaveState"/>.
+        /// The navigation parameter is available in the LoadState method 
+        /// in addition to page state preserved during an earlier session.
+        /// </summary>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			this.navigationHelper.OnNavigatedTo(e);
 		}

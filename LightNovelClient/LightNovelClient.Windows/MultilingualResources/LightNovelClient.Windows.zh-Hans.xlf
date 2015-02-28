@@ -6,6 +6,14 @@
     </header>
     <body>
       <group id="Resources">
+        <trans-unit id="Resources\OpenInNewViewButton\Label" translate="yes" xml:space="preserve">
+          <source>新窗体</source>
+          <target state="new">新窗体</target>
+        </trans-unit>
+        <trans-unit id="Resources\OpenInNewWindowLabel" translate="yes" xml:space="preserve">
+          <source>在新窗体中打开</source>
+          <target state="new">在新窗体中打开</target>
+        </trans-unit>
         <trans-unit id="Resources\LoginIndicator" translate="yes" xml:space="preserve">
           <source>正在登录...</source>
           <target state="new">正在登录...</target>

@@ -70,7 +70,7 @@ namespace LightNovel.ViewModels
 			for (int i = 0; i < this.Count; ++i)
 			{
 				var hvm = this[i];
-				var bookmark = App.Current.BookmarkList.FirstOrDefault(bk => bk.SeriesTitle == hvm.SeriesTitle);
+				var bookmark = App.BookmarkList.FirstOrDefault(bk => bk.SeriesTitle == hvm.SeriesTitle);
 				if (bookmark == null) //Thus we should remove this item from our collection
 				{
 					this.RemoveAt(i);
@@ -78,7 +78,7 @@ namespace LightNovel.ViewModels
 				}
 			} 
 			
-			foreach (var bk in App.Current.BookmarkList)
+			foreach (var bk in App.BookmarkList)
 			{
 				var hvm = this.FirstOrDefault(vm => vm.Position.SeriesId == bk.Position.SeriesId);
 				if (hvm == null)
@@ -284,9 +284,9 @@ namespace LightNovel.ViewModels
 			if (IsLoading)
 				return;
 			IsLoading = true;
-			if (App.Current.RecentList == null)
-				await App.Current.LoadHistoryDataAsync();
-			var historyList = App.Current.RecentList;
+			if (App.RecentList == null)
+				await App.LoadHistoryDataAsync();
+			var historyList = App.RecentList;
 
 			for (int i = 0; i < this.Count;++i)
 			{
@@ -333,7 +333,7 @@ namespace LightNovel.ViewModels
 					break;
 			}
 
-			App.Current.IsHistoryListChanged = false;
+			App.IsHistoryListChanged = false;
 			NotifyPropertyChanged("IsEmpty");
 			IsLoading = false;
 			IsLoaded = true;

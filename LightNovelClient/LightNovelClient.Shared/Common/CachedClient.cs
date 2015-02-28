@@ -104,7 +104,7 @@ namespace LightNovel.Common
 		{
 			return Task.Run(async () =>
 			{
-				var downloader = new BackgroundDownloader();
+				//var downloader = new BackgroundDownloader();
 
 				foreach (var cid in chapters)
 				{

@@ -115,6 +115,7 @@
     <Compile Include="CollectionPage.xaml.cs">
       <DependentUpon>CollectionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\ViewLifetimeControl.cs" />
     <Compile Include="Controls\SearchBox.cs" />
     <Compile Include="HubPage.xaml.cs">
       <DependentUpon>HubPage.xaml</DependentUpon>
