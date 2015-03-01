@@ -205,7 +205,7 @@
     <value>分享</value>
   </data>
   <data name="CommentEnableButton.Label" xml:space="preserve">
-    <value>评论</value>
+    <value>显示评论</value>
   </data>
   <data name="DarkThemeItem.Text" xml:space="preserve">
     <value>黑夜</value>
@@ -238,13 +238,13 @@
     <value>巨大</value>
   </data>
   <data name="LargeFontSizeButton.Text" xml:space="preserve">
-    <value>大</value>
+    <value>中大</value>
   </data>
   <data name="NormalFontSizeButton.Text" xml:space="preserve">
     <value>普通</value>
   </data>
   <data name="SmallFontSizeButton.Text" xml:space="preserve">
-    <value>小</value>
+    <value>中小</value>
   </data>
   <data name="SubtleFontSizeButton.Text" xml:space="preserve">
     <value>微小</value>
@@ -395,5 +395,35 @@
   </data>
   <data name="OpenInNewViewButton.Label" xml:space="preserve">
     <value>新窗体</value>
+  </data>
+  <data name="IllustrationLoadingPolicyLabel.Text" xml:space="preserve">
+    <value>插画缓存策略</value>
+  </data>
+  <data name="IllustrationLoadingPolicyDescription.Text" xml:space="preserve">
+    <value>"智能"策略会在存在Wi-Fi时自动加载插画，而在移动流量时手动加载。</value>
+  </data>
+  <data name="InterfaceLanguageLabel.Text" xml:space="preserve">
+    <value>界面语言</value>
+  </data>
+  <data name="InterfaceLanguageDescription.Text" xml:space="preserve">
+    <value>*语言选项需要重新启动应用.</value>
+  </data>
+  <data name="LanguageAutoItem.Content" xml:space="preserve">
+    <value>系统语言</value>
+  </data>
+  <data name="ImageLoadingPolicyAutomaticItem.Content" xml:space="preserve">
+    <value>智能</value>
+  </data>
+  <data name="ImageLoadingPolicyManualItem.Content" xml:space="preserve">
+    <value>总是手动</value>
+  </data>
+  <data name="ImageLoadingPolicySmartItem.Content" xml:space="preserve">
+    <value>总是自动</value>
+  </data>
+  <data name="Help3TextBlock.Text" xml:space="preserve">
+    <value>你可以在项目上长按来在新窗口里打开小说哦</value>
+  </data>
+  <data name="AutomaticThemeItem.Text" xml:space="preserve">
+    <value>自动</value>
   </data>
 </root>

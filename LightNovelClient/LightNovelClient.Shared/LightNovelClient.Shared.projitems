@@ -114,7 +114,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\ObservableDictionary.cs" />
     <Content Include="$(MSBuildThisFileDirectory)DataModel\series_726.json" />
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-US\Resources.resw" />
-    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-CN\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hans\Resources.resw" />
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\RichTextView.xaml">

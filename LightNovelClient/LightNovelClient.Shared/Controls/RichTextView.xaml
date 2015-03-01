@@ -12,7 +12,7 @@
 
     <ScrollViewer x:Name="ContentScrollViewer" Grid.Column="1" ViewChanged="ContentScrollViewer_ViewChanged"  Style="{StaticResource HorizontalScrollViewerStyle}" HorizontalScrollMode="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollMode="Disabled" ZoomMode="Disabled" HorizontalSnapPointsType="Mandatory" >
         <controls:RichTextColumns x:Name="ContentColumns" Height="Auto" VerticalAlignment="Stretch" Margin="0,20" ColumnWidth="640" ColumnHeight="668">
-            <RichTextBlock x:Name="ContentTextBlock" Style="{StaticResource BasicRichTextStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiLight" Width="640" Height="668" IsTextSelectionEnabled="True" TextAlignment="Left" Padding="30,0" Language="zh-CN" FontFamily="Segoe UI" Foreground="{StaticResource ApplicationForegroundThemeBrush}" VerticalAlignment="Top" >
+            <RichTextBlock x:Name="ContentTextBlock" Style="{StaticResource BasicRichTextStyle}" TextWrapping="WrapWholeWords" FontWeight="SemiLight" Width="640" Height="668" IsTextSelectionEnabled="True" TextAlignment="Left" Padding="30,0" Language="zh-Hans" FontFamily="Segoe UI" Foreground="{StaticResource ApplicationForegroundThemeBrush}" VerticalAlignment="Top" >
             </RichTextBlock>
             <controls:RichTextColumns.ColumnTemplate>
                 <DataTemplate>

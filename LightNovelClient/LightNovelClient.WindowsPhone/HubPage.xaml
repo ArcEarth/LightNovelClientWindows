@@ -42,7 +42,7 @@
                            HorizontalAlignment="Center"
                            FontSize="{ThemeResource AppFontSizeNormal}"
                            Foreground="{StaticResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Text="{Binding Title}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="Wrap" />
@@ -74,7 +74,7 @@
                            HorizontalAlignment="Left"
                            FontSize="{ThemeResource AppFontSizeLarge}"
                            Foreground="{StaticResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Text="{Binding SeriesTitle}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="Wrap" />
@@ -82,7 +82,7 @@
                            Grid.Column="1"
                            Margin="20,5,10,0"
                            FontSize="{ThemeResource AppFontSizeSmall}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{ThemeResource AppTextSubtleStyle}"
                            Text="{Binding Description}"
                            TextTrimming="CharacterEllipsis"
@@ -93,7 +93,7 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Stretch"
                            Foreground="{StaticResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{StaticResource AppTextSmallStyle}"
                            Text="{Binding UpdateTime}" />
                 <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
@@ -125,7 +125,7 @@
                            HorizontalAlignment="Left"
                            FontSize="{ThemeResource AppFontSizeLarge}"
                            Foreground="{StaticResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Text="{Binding SeriesTitle}"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="Wrap" />
@@ -133,7 +133,7 @@
                            Grid.Column="1"
                            Margin="20,5,10,0"
                            FontSize="{ThemeResource AppFontSizeSmall}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{ThemeResource AppTextSubtleStyle}"
                            Text="{Binding Description}"
                            TextTrimming="CharacterEllipsis"
@@ -144,7 +144,7 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Stretch"
                            Foreground="{StaticResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{StaticResource AppTextSmallStyle}"
                            Text="{Binding UpdateTime}" />
                 <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
@@ -182,7 +182,7 @@
                 <TextBlock Grid.Column="1"
                            Margin="20,5,10,0"
                            Foreground="{ThemeResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{StaticResource AppTextLargeStyle}"
                            Text="{Binding SeriesTitle}" />
                 <StackPanel Grid.Row="1"
@@ -191,16 +191,16 @@
                             Orientation="Horizontal">
                     <TextBlock FontWeight="SemiBold"
                                Foreground="{ThemeResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding VolumeNo}" />
                     <TextBlock Margin="10,0,0,0"
                                Foreground="{ThemeResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding VolumeTitle}" />
                 </StackPanel>
         -->
         <!--
-                    <TextBlock Language="zh-CN" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
+                    <TextBlock Language="zh-Hans" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
                     Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
         -->
         <!--
@@ -208,7 +208,7 @@
                            Grid.Column="1"
                            Margin="20,5,10,0"
                            FontSize="{ThemeResource AppFontSizeSmall}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Style="{ThemeResource AppTextSubtleStyle}"
                            Text="{Binding Description}"
                            TextTrimming="CharacterEllipsis"
@@ -237,7 +237,7 @@
                            FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                            FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                            Foreground="{ThemeResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Text="{Binding}" />
             </Grid>
             <!--  <TextBlock Text="{Binding}" Margin="0,-10,0,20" FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"></TextBlock>  -->
@@ -419,7 +419,7 @@
                             <TextBlock Grid.Row="1"
                                        Margin="10,0,10,0"
                                        Foreground="{StaticResource AppBackgroundBrush}"
-                                       Language="zh-CN"
+                                       Language="zh-Hans"
                                        Style="{StaticResource AppTextExtraLargeStyle}"
                                        Text="{Binding SeriesTitle}"
                                        TextTrimming="WordEllipsis"
@@ -429,7 +429,7 @@
                                        Margin="5,0,5,0"
                                        VerticalAlignment="Stretch"
                                        Foreground="{StaticResource AppSemitransparentBrush}"
-                                       Language="zh-CN"
+                                       Language="zh-Hans"
                                        Style="{StaticResource AppTextNormalStyle}"
                                        Text="{Binding Description}"
                                        TextTrimming="WordEllipsis"
@@ -439,7 +439,7 @@
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Stretch"
                                        Foreground="{StaticResource AppSemitransparentBrush}"
-                                       Language="zh-CN"
+                                       Language="zh-Hans"
                                        Style="{StaticResource AppTextNormalStyle}"
                                        Text="{Binding UpdateTime}" />
                             <!--<ProgressBar Grid.Row="3"
@@ -571,7 +571,7 @@
                                                        FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                                                        FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                                                        Foreground="{ThemeResource AppAccentBrush}"
-                                                       Language="zh-CN"
+                                                       Language="zh-Hans"
                                                        Text="{Binding Key}" />
                                         </Grid>
                                     </DataTemplate>

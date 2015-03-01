@@ -334,10 +334,10 @@
     <Language Code="xh-za" InMinimumRequirementSet="true" />
     <Language Code="yo-latn" InMinimumRequirementSet="true" />
     <Language Code="yo-ng" InMinimumRequirementSet="true" />
-    <Language Code="zh-cn" InMinimumRequirementSet="true" />
-    <Language Code="zh-hans" InMinimumRequirementSet="true" />
-    <Language Code="zh-hans-cn" InMinimumRequirementSet="true" />
-    <Language Code="zh-hans-sg" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans-sg" InMinimumRequirementSet="true" />
     <Language Code="zh-hant" InMinimumRequirementSet="true" />
     <Language Code="zh-hant-hk" InMinimumRequirementSet="true" />
     <Language Code="zh-hant-mo" InMinimumRequirementSet="true" />

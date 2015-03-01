@@ -46,23 +46,6 @@
             <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
             <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
 
-            <!--<SolidColorBrush x:Key="ScrollBarButtonForegroundThemeBrush" Color="#99000000"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPointerOverBackgroundThemeBrush" Color="#FFDADADA"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPointerOverBorderThemeBrush" Color="#FFDADADA"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPointerOverForegroundThemeBrush" Color="#FF000000"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPressedBackgroundThemeBrush" Color="#99000000"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPressedBorderThemeBrush" Color="#99000000"/>
-            <SolidColorBrush x:Key="ScrollBarButtonPressedForegroundThemeBrush" Color="#FFFFFFFF"/>
-            <SolidColorBrush x:Key="ScrollBarPanningBackgroundThemeBrush" Color="#FFCDCDCD"/>
-            <SolidColorBrush x:Key="ScrollBarPanningBorderThemeBrush" Color="#7D9A9A9A"/>
-            <SolidColorBrush x:Key="ScrollBarThumbBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}"/>
-            <SolidColorBrush x:Key="ScrollBarThumbBorderThemeBrush" Color="Transparent"/>
-            <SolidColorBrush x:Key="ScrollBarThumbPointerOverBackgroundThemeBrush" Color="#FFDADADA"/>
-            <SolidColorBrush x:Key="ScrollBarThumbPointerOverBorderThemeBrush" Color="#6BB7B7B7"/>
-            <SolidColorBrush x:Key="ScrollBarThumbPressedBackgroundThemeBrush" Color="#99000000"/>
-            <SolidColorBrush x:Key="ScrollBarThumbPressedBorderThemeBrush" Color="#ED555555"/>
-            <SolidColorBrush x:Key="ScrollBarTrackBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor10}" />
-            <SolidColorBrush x:Key="ScrollBarTrackBorderThemeBrush" Color="{ThemeResource AppAccentColorLight}" />-->
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Light">
@@ -107,25 +90,64 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="HighContrast">
+            <!--  Lime Green  -->
+            <Color x:Key="AppAccentColor">#FFA4C400</Color>
+            <!--  Semi Light Lime Green  -->
+            <Color x:Key="AppAccentColorSemiLight">#FF89A100</Color>
+            <!--  Light Lime Green  -->
+            <Color x:Key="AppAccentColorLight">#FF6F8400</Color>
+
+            <Color x:Key="AppAccentColorLightSemitransparent">#666F8400</Color>
+            <!--  87 percent Black  -->
+            <Color x:Key="AppForegroundColor">#DEFFFFFF</Color>
+            <Color x:Key="AppForegroundDimColor">#DEDADADA</Color>
+            <!--  100 percent White  -->
+            <Color x:Key="AppBackgroundColor">#FF000000</Color>
+            <Color x:Key="AppBackgroundDimColor">#FF252525</Color>
+            <!--  66 percent transparent  -->
+            <Color x:Key="AppSemitransparentColor">#AA000000</Color>
+            <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
+            <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
+
+            <SolidColorBrush x:Key="TextBoxPlaceholderTextThemeBrush" Color="{ThemeResource AppForegroundDimColor}" />
+            <SolidColorBrush x:Key="ToggleSwitchCurtainBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxItemSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxHighlightedBorderThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="ComboBoxPressedBackgroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="PhoneAccentBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="PhoneHighContrastSelectedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="AppBarItemBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor10}" />
+            <SolidColorBrush x:Key="AppBarItemForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="ToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
+            <SolidColorBrush x:Key="ToggleButtonCheckedPressedBackgroundThemeBrush" Color="{ThemeResource AppSemitransparentColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedBackgroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedBorderThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPointerOverBackgroundThemeBrush" Color="{ThemeResource AppAccentColorLight}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPointerOverBorderThemeBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBackgroundThemeBrush" Color="{ThemeResource AppAccentColorSemiLight}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedBorderThemeBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedPressedForegroundThemeBrush" Color="{ThemeResource AppBackgroundColor}" />
+            <SolidColorBrush x:Key="AppBarToggleButtonCheckedForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
+            <SolidColorBrush x:Key="TextBoxDisabledBorderThemeBrush" Color="Transparent" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-    <Color x:Key="AppAccentColor">#FFA4C400</Color>
-    <!--  Semi Light Lime Green  -->
+    <!--<Color x:Key="AppAccentColor">#FFA4C400</Color>
+    --><!--  Semi Light Lime Green  --><!--
     <Color x:Key="AppAccentColorSemiLight">#FF89A100</Color>
-    <!--  Light Lime Green  -->
+    --><!--  Light Lime Green  --><!--
     <Color x:Key="AppAccentColorLight">#FF6F8400</Color>
 
     <Color x:Key="AppAccentColorLightSemitransparent">#666F8400</Color>
-    <!--  87 percent Black  -->
+    --><!--  87 percent Black  --><!--
     <Color x:Key="AppForegroundColor">#DEFFFFFF</Color>
     <Color x:Key="AppForegroundDimColor">#DEDADADA</Color>
-    <!--  100 percent White  -->
+    --><!--  100 percent White  --><!--
     <Color x:Key="AppBackgroundColor">#FF000000</Color>
     <Color x:Key="AppBackgroundDimColor">#FF252525</Color>
-    <!--  66 percent transparent  -->
+    --><!--  66 percent transparent  --><!--
     <Color x:Key="AppSemitransparentColor">#AA000000</Color>
     <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
-    <Color x:Key="AppSemitransparentColor10">#1F000000</Color>
+    <Color x:Key="AppSemitransparentColor10">#1F000000</Color>-->
 
     <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
 
@@ -165,6 +187,10 @@
 
 
     <!--  TextBlock styles  -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Language" Value="zh-Hans" />
+    </Style>
+    
     <Style x:Key="AppTextBlockBase" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource AppFontSizeNormal}" />
         <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
@@ -744,6 +770,7 @@
                                        FontWeight="{TemplateBinding FontWeight}"
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Label}"
+                                       Language="zh-Hans"
                                        TextAlignment="Center"
                                        TextWrapping="Wrap" />
                         </StackPanel>
@@ -889,6 +916,7 @@
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Label}"
                                        TextAlignment="Center"
+                                       Language="zh-Hans"
                                        TextWrapping="Wrap" />
                         </StackPanel>
                         <Rectangle x:Name="FocusVisualWhite"

@@ -111,10 +111,10 @@ namespace LightNovel.Common
                 // It's generally a good idea to close a view after it has been consolidated, but keep it open while it's visible.
                 Consolidated = false;
             }
-            else
-            {
-                Consolidated = true;
-            }
+			//else
+			//{
+			//	Consolidated = true;
+			//}
         }
 
         // A view is consolidated with other views hen there's no way for the user to get to it (it's not in the list of recently used apps, cannot be

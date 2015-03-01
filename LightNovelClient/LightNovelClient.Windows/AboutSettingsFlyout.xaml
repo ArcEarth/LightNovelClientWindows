@@ -1,0 +1,110 @@
+﻿<SettingsFlyout x:Class="LightNovel.AboutSettingsFlyout"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:local="using:LightNovel"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                Title="About"
+                DataContext="{Binding ViewModel,
+                                      RelativeSource={RelativeSource Mode=Self}}"
+                Background="{ThemeResource AppBackgroundBrush}"
+                HeaderBackground="{ThemeResource AppAccentBrushSemiLight}"
+                HeaderForeground="{ThemeResource AppBackgroundBrush}"
+                Padding="30,20,30,20"
+                d:DesignWidth="346"
+                mc:Ignorable="d">
+
+    <!--  This StackPanel acts as a root panel for vertical layout of the content sections  -->
+    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        <!--  The StackPanel(s) below define individual content sections  -->
+
+        <!--  Content Section 1  -->
+        <StackPanel Style="{StaticResource SettingsFlyoutSectionStyle}">
+            <TextBlock x:Uid="ApplicationAboutLabel"
+                       Margin="0,5,0,0"
+                       FontSize="{ThemeResource AppFontSizeLarge}"
+                       FontWeight="SemiBold"
+                       Foreground="{ThemeResource AppAccentBrush}"
+                       TextWrapping="WrapWholeWords">
+                LightNovel for Windows
+            </TextBlock>
+            <Grid Margin="0,10,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Uid="CurrentVersionLabel"
+                           Margin="0,0"
+                           FontSize="{ThemeResource AppFontSizeNormal}"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AppAccentBrush}"
+                           TextWrapping="WrapWholeWords">
+                    Curent Version
+                </TextBlock>
+                <TextBlock Grid.Column="1"
+                           Margin="20,0"
+                           Foreground="{ThemeResource AppAccentBrush}"
+                           FontSize="{ThemeResource AppFontSizeNormal}"
+                           Text="{Binding SavedAppVersion}"
+                           TextAlignment="Right"
+                           TextWrapping="NoWrap" />
+            </Grid>
+            <TextBlock x:Uid="ReviewLabel"
+                       Foreground="{ThemeResource AppForegroundBrush}"
+                       Style="{ThemeResource AppTextNormalStyle}"
+                       TextWrapping="WrapWholeWords">
+                If you like this App, Please rate us 5 Star and share your feedback!
+            </TextBlock>
+            <HyperlinkButton x:Uid="ReviewButton"
+                             Margin="10,5"
+                             Content="Rate and review in Store"
+                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                             FontWeight="SemiBold"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             NavigateUri="{StaticResource StoreReviewLink}" />
+            <TextBlock x:Uid="ProjectLabel"
+                       Margin="0,5,0,0"
+                       Foreground="{ThemeResource AppForegroundBrush}"
+                       Style="{ThemeResource AppTextNormalStyle}"
+                       TextWrapping="WrapWholeWords">
+                If you want to contribute or have detailed feedback, please visit our project home!
+            </TextBlock>
+            <HyperlinkButton x:Uid="ProjectButton"
+                             Margin="10,5,0,5"
+                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                             FontWeight="SemiBold"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">
+                Project Home
+            </HyperlinkButton>
+            <HyperlinkButton x:Uid="FeedbackEmailButton"
+                             Grid.Column="1"
+                             Margin="10,0,0,10"
+                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                             FontWeight="SemiBold"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             NavigateUri="mailto:LightNovelApp@outlook.com?subject=AppFeedback">
+                Contact Author
+            </HyperlinkButton>
+
+            <TextBlock x:Uid="DataCreditLabel"
+                       Foreground="{ThemeResource AppForegroundBrush}"
+                       Style="{ThemeResource AppTextNormalStyle}"
+                       Text="Special thanks and Data Credit : " />
+            <HyperlinkButton Margin="10,10,10,0"
+                             HorizontalAlignment="Left"
+                             FontSize="{StaticResource AppFontSizeSmall}"
+                             Foreground="{StaticResource AppAccentBrush}"
+                             NavigateUri="http://lknovel.lightnovel.cn/">
+                <Image HorizontalAlignment="Left"
+                       Source="/Assets/LK_Logo.png"
+                       Stretch="Uniform" />
+            </HyperlinkButton>
+
+        </StackPanel>
+
+        <!--  Define more Content Sections below as necessary  -->
+
+    </StackPanel>
+</SettingsFlyout>

@@ -360,6 +360,11 @@ namespace LightNovel
 			LayoutRootFadeinStory.Begin();
 			await UpdateSizeOrientationDependentResourcesAsync();
 #else
+			if (this.Frame.CanGoBack)
+				OpenInNewViewButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+			else
+				OpenInNewViewButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
 #endif
 			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
 			{
@@ -408,6 +413,7 @@ namespace LightNovel
 			SyncPinButtonView();
 			ViewModel.NotifyPropertyChanged("IsFavored");
 		}
+
 		async void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
 			Debug.WriteLine("Saving States");
@@ -434,43 +440,43 @@ namespace LightNovel
 				e.PageState.Add("VolumeNo", ViewModel.VolumeNo);
 				e.PageState.Add("LineNo", ViewModel.LineNo);
 
-                if (DisableUpdateOnNavigateFrom) return;
-                DisableUpdateOnNavigateFrom = false;
-                await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal,async () =>
-                {
-                    await UpdateApplicationHistory();
-                });
+				if (DisableUpdateOnNavigateFrom) return;
+				DisableUpdateOnNavigateFrom = false;
+				await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal,async () =>
+				{
+					await UpdateApplicationHistory();
+				});
 			}
 		}
 
-        private bool DisableUpdateOnNavigateFrom = false;
+		private bool DisableUpdateOnNavigateFrom = false;
 
-        public async Task UpdateApplicationHistory()
-        {
-            var bookmark = ViewModel.CreateBookmark();
-            await App.UpdateHistoryListAsync(bookmark);
-            await App.UpdateSecondaryTileAsync(bookmark);
-            if (ViewModel.IsFavored)
-            {
-                await ViewModel.AddOrUpdateBookmark(bookmark); // Update Favorite
-                App.NotifyBookmarksChanged();
-            }
-            if (ViewModel.IsDownloading)
-                await ViewModel.CancelCachingRequestAsync();
-        }
+		public async Task UpdateApplicationHistory()
+		{
+			var bookmark = ViewModel.CreateBookmark();
+			await App.UpdateHistoryListAsync(bookmark);
+			await App.UpdateSecondaryTileAsync(bookmark);
+			if (ViewModel.IsFavored)
+			{
+				await ViewModel.AddOrUpdateBookmark(bookmark); // Update Favorite
+				App.NotifyBookmarksChanged();
+			}
+			if (ViewModel.IsDownloading)
+				await ViewModel.CancelCachingRequestAsync();
+		}
 
-        #region NavigationHelper registration
+		#region NavigationHelper registration
 
-        /// <summary>
-        /// The methods provided in this section are simply used to allow
-        /// NavigationHelper to respond to the page's navigation methods.
-        /// Page specific logic should be placed in event handlers for the  
-        /// <see cref="Common.NavigationHelper.LoadState"/>
-        /// and <see cref="Common.NavigationHelper.SaveState"/>.
-        /// The navigation parameter is available in the LoadState method 
-        /// in addition to page state preserved during an earlier session.
-        /// </summary>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+		/// <summary>
+		/// The methods provided in this section are simply used to allow
+		/// NavigationHelper to respond to the page's navigation methods.
+		/// Page specific logic should be placed in event handlers for the  
+		/// <see cref="Common.NavigationHelper.LoadState"/>
+		/// and <see cref="Common.NavigationHelper.SaveState"/>.
+		/// The navigation parameter is available in the LoadState method 
+		/// in addition to page state preserved during an earlier session.
+		/// </summary>
+		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			this.navigationHelper.OnNavigatedTo(e);
 		}
@@ -643,6 +649,7 @@ namespace LightNovel
 			var item = sender as MenuFlyoutItem;
 			ViewModel.Foreground = item.Foreground;
 			ViewModel.Background = item.Background;
+			App.Current.Settings.EnableAutomaticReadingTheme = (AutomaticThemeItem == sender);
 			//if (item.Text == "Dark")
 			//	this.RequestedTheme = ElementTheme.Dark;
 			//else

@@ -48,6 +48,8 @@ namespace LightNovel.Common
 				_roamingSettings.Add(EnableCommentsKey, true);
 			if (!_roamingSettings.ContainsKey(EnableLiveTileKey))
 				_roamingSettings.Add(EnableLiveTileKey, true);
+			if (!_roamingSettings.ContainsKey(EnableAutomaticReadingThemeKey))
+				_roamingSettings.Add(EnableAutomaticReadingThemeKey, true);
 			if (!_roamingSettings.ContainsKey(BackgroundThemeKey))
 				_roamingSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
 			if (!_roamingSettings.ContainsKey(ImageLoadingPolicyKey))
@@ -56,6 +58,9 @@ namespace LightNovel.Common
 				_localSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session { Expries = DateTime.Now.AddYears(-100), Key = "" }));
 			if (!_roamingSettings.ContainsKey(FontSizeKey))
 				_roamingSettings.Add(FontSizeKey, 19.0);
+			if (!_roamingSettings.ContainsKey(InterfaceLanguageKey))
+				_roamingSettings.Add(InterfaceLanguageKey, "zh-Hans");
+
 			if (!_localSettings.ContainsKey(FontFamilyKey))
 #if WINDOWS_PHONE_APP
 				_localSettings.Add(FontFamilyKey, "Segoe WP"); 
@@ -110,6 +115,35 @@ namespace LightNovel.Common
 			set
 			{
 				_roamingSettings[EnableLiveTileKey] = value;
+				NotifyPropertyChanged();
+			}
+		}
+		private const string EnableAutomaticReadingThemeKey = "EnableAutomaticReadingTheme";
+
+		public bool EnableAutomaticReadingTheme
+		{
+			get
+			{
+				return (bool)_roamingSettings[EnableAutomaticReadingThemeKey];
+			}
+			set
+			{
+				_roamingSettings[EnableAutomaticReadingThemeKey] = value;
+				NotifyPropertyChanged();
+			}
+		}
+
+		private const string InterfaceLanguageKey = "InterfaceLanguage";
+
+		public string InterfaceLanguage
+		{
+			get
+			{
+				return (string)_roamingSettings[InterfaceLanguageKey];
+			}
+			set
+			{
+				_roamingSettings[InterfaceLanguageKey] = value;
 				NotifyPropertyChanged();
 			}
 		}

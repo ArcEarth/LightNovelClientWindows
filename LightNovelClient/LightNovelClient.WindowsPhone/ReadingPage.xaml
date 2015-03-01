@@ -478,14 +478,23 @@
             <MenuFlyoutItem x:Uid="SegoeFontButton"
                             Click="FontStyleButton_Click"
                             FontFamily="SimSun"
-                            Language="zh-CN"
+                            Language="zh-Hans"
                             Text="宋体" />
             <MenuFlyoutItem x:Uid="LucidaFontButton"
                             Click="FontStyleButton_Click"
-                            Language="zh-CN"
+                            Language="zh-Hans"
                             Text="默认" />
         </MenuFlyout>
         <MenuFlyout x:Key="ReadingThemeFlyout">
+            <MenuFlyoutItem x:Uid="AutomaticThemeItem"
+                            x:Name="AutomaticThemeItem"
+                            Height="60"
+                            Margin="-20,0,0,0"
+                            HorizontalContentAlignment="Center"
+                            Background="{ThemeResource AppBackgroundBrush}"
+                            Click="ReadingThemButton_Click"
+                            Foreground="{ThemeResource AppForegroundBrush}"
+                            Text="Auto" />
             <MenuFlyoutItem x:Uid="DarkThemeItem"
                             Height="60"
                             Margin="-20,0,0,0"
@@ -998,7 +1007,7 @@
                       ItemClick="ContentListView_ItemClick"
                       ItemTemplate="{StaticResource LineViewCCGTemplate}"
                       ItemsSource="{Binding Contents}"
-                      Language="zh-CN"
+                      Language="zh-Hans"
                       Padding="0,0,0,0"
                       SelectionMode="None">
                 <!--<ListView.ItemContainerTransitions>
@@ -1240,7 +1249,7 @@
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                Foreground="{ThemeResource AppBackgroundBrush}"
-                                               Language="zh-CN"
+                                               Language="zh-Hans"
                                                Style="{ThemeResource AppTextTitle3Style}"
                                                Text="{Binding Label}"
                                                TextAlignment="Center"
@@ -1250,7 +1259,7 @@
                                                Grid.Column="2"
                                                Grid.ColumnSpan="2"
                                                VerticalAlignment="Center"
-                                               Language="zh-CN"
+                                               Language="zh-Hans"
                                                Style="{ThemeResource AppTextTitle2Style}"
                                                Text="{Binding Title}"
                                                TextWrapping="WrapWholeWords" />
@@ -1342,7 +1351,7 @@
                        FontWeight="SemiLight"
                        Foreground="{StaticResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
-                       Language="zh-CN"
+                       Language="zh-Hans"
                        Text="{Binding Header}"
                        TextAlignment="Left"
                        TextTrimming="WordEllipsis"

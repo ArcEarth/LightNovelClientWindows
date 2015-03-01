@@ -110,9 +110,9 @@ namespace LightNovel
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 			ViewModel.Settings = App.Current.Settings;
 #if WINDOWS_APP
-			Windows.UI.ApplicationSettings.SettingsPane.GetForCurrentView().CommandsRequested += HubPage_CommandsRequested;
-            App.RecentListChanged += Current_RecentListChanged;
-            App.BookmarkListChanged += Current_BookmarkListChanged;
+			Windows.UI.ApplicationSettings.SettingsPane.GetForCurrentView().CommandsRequested += App.ApplicationWiseCommands_CommandsRequested;
+			App.RecentListChanged += Current_RecentListChanged;
+			App.BookmarkListChanged += Current_BookmarkListChanged;
 #endif
 
 		}
@@ -169,7 +169,7 @@ namespace LightNovel
 				//wide310x150Content.Image.Alt = "Web image";
 				var wide310x150Content = TileContentFactory.CreateTileWide310x150PeekImageCollection05();
 				wide310x150Content.AddImageQuery = true;
-				//wide310x150Content.Lang = "zh-cn";
+				//wide310x150Content.Lang = "zh-Hans";
 				wide310x150Content.ImageMain.Src = imgs[0].CoverImageUri;
 				wide310x150Content.ImageMain.Alt = imgs[0].Title;
 				wide310x150Content.ImageSecondary.Src = imgs[0].CoverImageUri;
@@ -187,7 +187,7 @@ namespace LightNovel
 
 				// Create a notification for the Square150x150 tile using one of the available templates for the size.
 				var square150x150Content = TileContentFactory.CreateTileSquare150x150PeekImageAndText02();
-				//square150x150Content.Lang = "zh-cn";
+				//square150x150Content.Lang = "zh-Hans";
 				square150x150Content.Image.Src = imgs[0].CoverImageUri;
 				square150x150Content.Image.Alt = imgs[0].Title;
 				square150x150Content.TextHeading.Text = imgs[0].Title;
@@ -258,13 +258,13 @@ namespace LightNovel
 			var book = (BookCoverViewModel)e.ClickedItem;
 			if (book.ItemType == BookItemType.Volume)
 			{
-                await NavigateToReadingPageAsync(book.Title, new NovelPositionIdentifier { VolumeId = book.Id });
-                //this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { VolumeId = book.Id }.ToString());
+				await NavigateToReadingPageAsync(book.Title, new NovelPositionIdentifier { VolumeId = book.Id });
+				//this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { VolumeId = book.Id }.ToString());
 			}
 			else if (book.ItemType == BookItemType.Series)
 			{
-                await NavigateToReadingPageAsync(book.Title, new NovelPositionIdentifier { SeriesId = book.Id, VolumeNo = -1, ChapterNo = -1 });
-                //this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { SeriesId = book.Id, VolumeNo = -1, ChapterNo = -1 }.ToString());
+				await NavigateToReadingPageAsync(book.Title, new NovelPositionIdentifier { SeriesId = book.Id, VolumeNo = -1, ChapterNo = -1 });
+				//this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { SeriesId = book.Id, VolumeNo = -1, ChapterNo = -1 }.ToString());
 			}
 		}
 
@@ -343,69 +343,69 @@ namespace LightNovel
 			this.navigationHelper.OnNavigatedFrom(e);
 		}
 
-        #endregion
+		#endregion
 
-        async Task NavigateToReadingPageAsync(string seriesTitle, NovelPositionIdentifier nav, bool newWindows = false)
-        {
+		async Task NavigateToReadingPageAsync(string seriesTitle, NovelPositionIdentifier nav, bool newWindows = false)
+		{
 #if WINDOWS_APP
-            var view = App.Current.SecondaryViews.FirstOrDefault(v => v.Title == seriesTitle);
-            if (view == null && !newWindows)
-                this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
-            else
-                try
-                {
-                    if (view == null)
-                    {
-                        view = await ReadingPage.CreateInNewViewAsync(seriesTitle,nav);
-                    }
+			var view = App.Current.SecondaryViews.FirstOrDefault(v => v.Title == seriesTitle);
+			if (view == null && !newWindows)
+				this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
+			else
+				try
+				{
+					if (view == null)
+					{
+						view = await ReadingPage.CreateInNewViewAsync(seriesTitle,nav);
+					}
 
-                    // Prevent the view from closing while
-                    // switching to it
-                    view.StartViewInUse();
+					// Prevent the view from closing while
+					// switching to it
+					view.StartViewInUse();
 
-                    // Show the previously created secondary view, using the size
-                    // preferences the user specified. In your app, you should
-                    // choose a size that's best for your scenario and code it,
-                    // instead of requiring the user to decide.
-                    var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
-                        view.Id,
-                        ViewSizePreference.Default,
-                        ApplicationView.GetForCurrentView().Id,
-                        ViewSizePreference.Default);
+					// Show the previously created secondary view, using the size
+					// preferences the user specified. In your app, you should
+					// choose a size that's best for your scenario and code it,
+					// instead of requiring the user to decide.
+					var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
+						view.Id,
+						ViewSizePreference.Default,
+						ApplicationView.GetForCurrentView().Id,
+						ViewSizePreference.Default);
 
-                    if (!viewShown)
-                    {
-                        this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
-                    }
+					if (!viewShown)
+					{
+						this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
+					}
 
-                    // Signal that switching has completed and let the view close
-                    view.StopViewInUse();
-                }
-                catch (InvalidOperationException)
-                {
-                    Debug.WriteLine("Some thing wrong");
-                }
+					// Signal that switching has completed and let the view close
+					view.StopViewInUse();
+				}
+				catch (InvalidOperationException)
+				{
+					Debug.WriteLine("Some thing wrong");
+				}
 #else
-            this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
+			this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
 #endif
-        }
+		}
 
-        private async void RecentItem_Click(object sender, ItemClickEventArgs e)
+		private async void RecentItem_Click(object sender, ItemClickEventArgs e)
 		{
 			HistoryItemViewModel item = (HistoryItemViewModel)e.ClickedItem;
-            await NavigateToReadingPageAsync(item.SeriesTitle, item.Position);
-            //this.Frame.Navigate(typeof(ReadingPage), item.Position.ToString());
-        }
+			await NavigateToReadingPageAsync(item.SeriesTitle, item.Position);
+			//this.Frame.Navigate(typeof(ReadingPage), item.Position.ToString());
+		}
 
 		private async void LastReadSection_Clicked(object sender, object e)
 		{
 			HistoryItemViewModel item = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
 			//e.Handled = true;
 			//this.Frame.Navigate(typeof(ReadingPage), item.Position.ToString());
-            await NavigateToReadingPageAsync(item.SeriesTitle, item.Position);
-        }
+			await NavigateToReadingPageAsync(item.SeriesTitle, item.Position);
+		}
 
-        private void SearchBox_QuerySubmitted(object sender, SearchBoxQuerySubmittedEventArgs args)
+		private void SearchBox_QuerySubmitted(object sender, SearchBoxQuerySubmittedEventArgs args)
 		{
 			if (!String.IsNullOrEmpty(args.QueryText))
 				this.Frame.Navigate(typeof(SearchResultsPage), args.QueryText);
@@ -516,117 +516,124 @@ namespace LightNovel
 			}
 		}
 
-        private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
-        {
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-            var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
-            var menu = new PopupMenu();
+		private async void RecentItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
 
 #if WINDOWS_APP
-            var newWindowLabel = resourceLoader.GetString("OpenInNewWindowLabel");
-            menu.Commands.Add(new UICommand(newWindowLabel, async (command) => {
-                await NavigateToReadingPageAsync(hvm.SeriesTitle, hvm.Position, true);
-            }));
+			var newWindowLabel = resourceLoader.GetString("OpenInNewWindowLabel");
+			menu.Commands.Add(new UICommand(newWindowLabel, async (command) => {
+				await NavigateToReadingPageAsync(hvm.SeriesTitle, hvm.Position, true);
+			}));
 #endif
 
-            var label = resourceLoader.GetString("DeleteRecentLabel");
-            menu.Commands.Add(new UICommand(label, async (command) =>
-            {
-                await RemoveRecentItem(hvm);
-            }));
+			var label = resourceLoader.GetString("DeleteRecentLabel");
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				await RemoveRecentItem(hvm);
+			}));
 
-            try
-            {
-                var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
-            }
-            catch (Exception)
-            {
-            }
-        }
+			try
+			{
+				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-        private async Task RemoveRecentItem(HistoryItemViewModel hvm)
-        {
-            ViewModel.IsLoading = true;
-            await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
-            ViewModel.RecentSection.Remove(hvm);
-            var recentItem = App.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
-            if (recentItem != null)
-            {
-                App.RecentList.Remove(recentItem);
-                await App.SaveHistoryDataAsync();
-            }
-            ViewModel.IsLoading = false;
-        }
+		private async Task RemoveRecentItem(HistoryItemViewModel hvm)
+		{
+			ViewModel.IsLoading = true;
+			await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+			ViewModel.RecentSection.Remove(hvm);
+			var recentItem = App.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+			if (recentItem != null)
+			{
+				App.RecentList.Remove(recentItem);
+				await App.SaveHistoryDataAsync();
+			}
+			ViewModel.IsLoading = false;
+		}
 
-        private async void BookmarkItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
-        {
-            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-            var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
-            var menu = new PopupMenu();
-            var label = resourceLoader.GetString("DeleteBookmarkLabel");
+		private async void BookmarkItem_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+		{
+			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+			var hvm = (sender as FrameworkElement).DataContext as HistoryItemViewModel;
+			var menu = new PopupMenu();
+			var label = resourceLoader.GetString("DeleteBookmarkLabel");
 
 #if WINDOWS_APP
-            var newWindowLabel = resourceLoader.GetString("OpenInNewWindowLabel");
-            menu.Commands.Add(new UICommand(newWindowLabel, async (command) => {
-                await NavigateToReadingPageAsync(hvm.SeriesTitle, hvm.Position, true);
-            }));
+			var newWindowLabel = resourceLoader.GetString("OpenInNewWindowLabel");
+			menu.Commands.Add(new UICommand(newWindowLabel, async (command) => {
+				await NavigateToReadingPageAsync(hvm.SeriesTitle, hvm.Position, true);
+			}));
 #endif
 
-            menu.Commands.Add(new UICommand(label, async (command) =>
-            {
-                await RemoveBookmarkFromFavorite(hvm);
-            }));
-            var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
-        }
+			menu.Commands.Add(new UICommand(label, async (command) =>
+			{
+				await RemoveBookmarkFromFavorite(hvm);
+			}));
 
-        private async Task RemoveBookmarkFromFavorite(HistoryItemViewModel hvm)
-        {
-            ViewModel.IsLoading = true;
+			try
+			{
+				var chosenCommand = await menu.ShowForSelectionAsync(GetElementRect((FrameworkElement)sender));
+			}
+			catch (Exception)
+			{
+			}
+		}
 
-            ViewModel.FavoriteSection.Remove(hvm);
-            ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
+		private async Task RemoveBookmarkFromFavorite(HistoryItemViewModel hvm)
+		{
+			ViewModel.IsLoading = true;
 
-            try
-            {
-                var idx = App.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
-                if (idx >= 0)
-                {
-                    App.BookmarkList.RemoveAt(idx);
-                    await App.SaveBookmarkDataAsync();
-                }
+			ViewModel.FavoriteSection.Remove(hvm);
+			ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
 
-                if (App.Current.IsSignedIn)
-                {
-                    var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
-                    if (favDeSer.Any(id => id == null))
-                    {
-                        await App.Current.User.SyncFavoriteListAsync(true);
-                        (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
-                    }
+			try
+			{
+				var idx = App.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
+				if (idx >= 0)
+				{
+					App.BookmarkList.RemoveAt(idx);
+					await App.SaveBookmarkDataAsync();
+				}
 
-                    await App.Current.User.RemoveUserFavriteAsync(favDeSer);
-                }
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Exception happens when deleting favorite");
-            }
+				if (App.Current.IsSignedIn)
+				{
+					var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+					if (favDeSer.Any(id => id == null))
+					{
+						await App.Current.User.SyncFavoriteListAsync(true);
+						(from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+					}
 
-            ViewModel.IsLoading = false;
-        }
+					await App.Current.User.RemoveUserFavriteAsync(favDeSer);
+				}
+			}
+			catch (Exception)
+			{
+				Debug.WriteLine("Exception happens when deleting favorite");
+			}
 
-        private void RecentItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+			ViewModel.IsLoading = false;
+		}
+
+		private void RecentItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
 		{
 			e.Handled = true;
 			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
-            RecentItem_RightTapped(sender, null);
-        }
+			RecentItem_RightTapped(sender, null);
+		}
 		private void BookmarkItem_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
 		{
 			e.Handled = true;
 			if (e.HoldingState != Windows.UI.Input.HoldingState.Started) return;
-            BookmarkItem_RightTapped(sender, null);
-        }
+			BookmarkItem_RightTapped(sender, null);
+		}
 
 		private async void RefreshButton_Click(object sender, RoutedEventArgs e)
 		{

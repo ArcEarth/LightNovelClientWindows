@@ -153,19 +153,6 @@ namespace LightNovel
             await LoadConverAndRecent();
         }
 
-        void HubPage_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
-        {
-            if (args.Request.ApplicationCommands.Any(c => c.Id == "Options"))
-                return;
-            var command = new Windows.UI.ApplicationSettings.SettingsCommand("Options", "Options", x =>
-            {
-                var settings = new SettingsPage();
-
-                settings.Show();
-            });
-            args.Request.ApplicationCommands.Add(command);
-        }
-
         private async Task LoadConverAndRecent()
         {
             if (App.RecentList == null)

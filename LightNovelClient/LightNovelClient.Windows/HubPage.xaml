@@ -45,7 +45,7 @@
                                HorizontalAlignment="Left"
                                FontSize="{ThemeResource AppFontSizeLarge}"
                                Foreground="{StaticResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding Title}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -53,8 +53,8 @@
                                Grid.Column="1"
                                Margin="20,5,10,0"
                                FontSize="{ThemeResource AppFontSizeSmall}"
-                               Language="zh-CN"
-                               Style="{ThemeResource AppTextSubtleStyle}"
+                               Language="zh-Hans"
+                               Foreground="{ThemeResource AppSubtleBrush}"
                                Text="{Binding Description}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -92,7 +92,7 @@
                                HorizontalAlignment="Left"
                                FontSize="{ThemeResource AppFontSizeLarge}"
                                Foreground="{StaticResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding SeriesTitle}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -100,8 +100,8 @@
                                Grid.Column="1"
                                Margin="20,5,10,0"
                                FontSize="{ThemeResource AppFontSizeSmall}"
-                               Language="zh-CN"
-                               Style="{ThemeResource AppTextSubtleStyle}"
+                               Language="zh-Hans"
+                               Foreground="{ThemeResource AppSubtleBrush}"
                                Text="{Binding Description}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -111,8 +111,8 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Stretch"
                                Foreground="{StaticResource AppAccentBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextSmallStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeSmall}"
                                Text="{Binding UpdateTime}" />
                     <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
                 </Grid>
@@ -122,8 +122,9 @@
                       VerticalAlignment="Top"
                       Background="{ThemeResource VolumeTileBackgroundBrush}"
                       Holding="BookmarkItem_Holding"
-                      RightTapped="BookmarkItem_RightTapped"
-                      IsHoldingEnabled="True">
+                      IsHoldingEnabled="False"
+                      IsRightTapEnabled="True"
+                      RightTapped="BookmarkItem_RightTapped">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
                         <ColumnDefinition Width="300" />
@@ -148,7 +149,7 @@
                                HorizontalAlignment="Left"
                                FontSize="{ThemeResource AppFontSizeLarge}"
                                Foreground="{StaticResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding SeriesTitle}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -156,8 +157,8 @@
                                Grid.Column="1"
                                Margin="20,5,10,0"
                                FontSize="{ThemeResource AppFontSizeSmall}"
-                               Language="zh-CN"
-                               Style="{ThemeResource AppTextSubtleStyle}"
+                               Language="zh-Hans"
+                               Foreground="{ThemeResource AppSubtleBrush}"
                                Text="{Binding Description}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -167,8 +168,8 @@
                                HorizontalAlignment="Left"
                                VerticalAlignment="Stretch"
                                Foreground="{StaticResource AppAccentBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextSmallStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeSmall}"
                                Text="{Binding UpdateTime}" />
                     <!--  <ProgressBar Padding="0" Background="{StaticResource AppAccentBrush}" Foreground="{StaticResource AppDisabledBrush}" Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" IsIndeterminate="False" Value="{Binding ProgressPercentage}" Maximum="1.0" Minimum="0.0" SmallChange="0.01" LargeChange="0.1" ></ProgressBar>  -->
                 </Grid>
@@ -200,8 +201,8 @@
                     <TextBlock Grid.Column="1"
                                Margin="20,5,10,0"
                                Foreground="{ThemeResource AppAccentBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextLargeStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeLarge}"
                                Text="{Binding SeriesTitle}" />
                     <StackPanel Grid.Row="1"
                                 Grid.Column="1"
@@ -209,23 +210,23 @@
                                 Orientation="Horizontal">
                         <TextBlock FontWeight="SemiBold"
                                    Foreground="{ThemeResource AppAccentBrush}"
-                                   Language="zh-CN"
+                                   Language="zh-Hans"
                                    Text="{Binding VolumeNo}" />
                         <TextBlock Margin="10,0,0,0"
                                    Foreground="{ThemeResource AppAccentBrush}"
-                                   Language="zh-CN"
+                                   Language="zh-Hans"
                                    Text="{Binding VolumeTitle}" />
                     </StackPanel>
                     <!--
-                    <TextBlock Language="zh-CN" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
+                    <TextBlock Language="zh-Hans" Grid.Row="2" Text="{Binding FavTime}"  Margin="0,0,5,5" Style="{StaticResource AppTextSmallStyle}" Foreground="{StaticResource AppAccentBrush}"
                     Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
                     -->
                     <TextBlock Grid.Row="2"
                                Grid.Column="1"
                                Margin="20,5,10,0"
                                FontSize="{ThemeResource AppFontSizeSmall}"
-                               Language="zh-CN"
-                               Style="{ThemeResource AppTextSubtleStyle}"
+                               Language="zh-Hans"
+                               Foreground="{ThemeResource AppSubtleBrush}"
                                Text="{Binding Description}"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="Wrap" />
@@ -253,7 +254,7 @@
                                FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                                FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                                Foreground="{ThemeResource AppAccentBrush}"
-                               Language="zh-CN"
+                               Language="zh-Hans"
                                Text="{Binding}" />
                 </Grid>
                 <!--  <TextBlock Text="{Binding}" Margin="0,-10,0,20" FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"></TextBlock>  -->
@@ -284,8 +285,8 @@
                     <TextBlock Grid.Row="1"
                                Margin="10,0,10,0"
                                Foreground="{StaticResource AppBackgroundBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextExtraLargeStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeExtraLarge}"
                                Text="{Binding SeriesTitle}"
                                TextTrimming="WordEllipsis"
                                TextWrapping="Wrap" />
@@ -294,8 +295,8 @@
                                Margin="5,0,5,0"
                                VerticalAlignment="Stretch"
                                Foreground="{StaticResource AppSemitransparentBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextNormalStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeNormal}"
                                Text="{Binding Description}"
                                TextTrimming="WordEllipsis"
                                TextWrapping="Wrap" />
@@ -304,8 +305,8 @@
                                HorizontalAlignment="Right"
                                VerticalAlignment="Stretch"
                                Foreground="{StaticResource AppSemitransparentBrush}"
-                               Language="zh-CN"
-                               Style="{StaticResource AppTextNormalStyle}"
+                               Language="zh-Hans"
+                               FontSize="{ThemeResource AppFontSizeNormal}"
                                Text="{Binding UpdateTime}" />
                     <!--<ProgressBar Grid.Row="3"
                                  VerticalAlignment="Bottom"
@@ -354,26 +355,33 @@
                               Label="Help">
                     <AppBarButton.Flyout>
                         <Flyout>
-                            <StackPanel Width="380" HorizontalAlignment="Stretch">
+                            <StackPanel Width="420" HorizontalAlignment="Stretch">
                                 <TextBlock x:Uid="HelpHeaderTextBlock"
                                            FontWeight="Bold"
                                            Foreground="{ThemeResource AppAccentBrush}"
-                                           Style="{ThemeResource AppTextTitle1Style}"
+                                           FontSize="{ThemeResource AppFontSizeExtraLarge}"
                                            Text="Tips" />
                                 <TextBlock x:Uid="Help1TextBlock"
                                            Margin="15,5"
-                                           Style="{ThemeResource AppTextLargeStyle}"
+                                           FontSize="{ThemeResource AppFontSizeLarge}"
                                            Text="Tap and Hold your finger among a Recent or Favorite Item to Delete them. "
                                            TextWrapping="Wrap" />
                                 <TextBlock x:Uid="Help2TextBlock"
                                            Margin="15,5"
-                                           Style="{ThemeResource AppTextLargeStyle}"
+                                           FontSize="{ThemeResource AppFontSizeLarge}"
                                            Text="Perform an Edge Swipe from Left to open Index Panel"
+                                           TextWrapping="Wrap" />
+                                <TextBlock x:Uid="Help3TextBlock"
+                                           Margin="15,5"
+                                           FontSize="{ThemeResource AppFontSizeLarge}"
+                                           Text="Help 3"
                                            TextWrapping="Wrap" />
                             </StackPanel>
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
                                     <Setter Property="Width" Value="400" />
+                                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrushSemiLight}" />
+                                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme,ElementName=pageRoot}"/>
                                     <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
                                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
@@ -401,7 +409,10 @@
             <RowDefinition Height="80" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Rectangle x:Name="TitleBackground" Stroke="Transparent" StrokeThickness="0" Fill="{ThemeResource AppAccentBrush}" />
+        <Rectangle x:Name="TitleBackground"
+                   Fill="{ThemeResource AppAccentBrush}"
+                   Stroke="Transparent"
+                   StrokeThickness="0" />
         <ProgressBar Grid.Row="1"
                      Grid.ColumnSpan="4"
                      VerticalAlignment="Bottom"
@@ -536,7 +547,7 @@
                                                        FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                                                        FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                                                        Foreground="{ThemeResource AppAccentBrush}"
-                                                       Language="zh-CN"
+                                                       Language="zh-Hans"
                                                        Text="{Binding Key}" />
                                         </Grid>
                                     </DataTemplate>
@@ -776,32 +787,32 @@
             </HubSection>-->
         </Hub>
 
-        <Grid >
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="600"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="600" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <ContentControl x:Name="LogoImage"
-                        Grid.Column="0"
-                        Margin="-240,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                            Height="60"
+                            Grid.Column="0"
                             Width="200"
-                        ContentTemplate="{StaticResource LogoWideTemplate}"
-                        Foreground="{ThemeResource AppBackgroundBrush}">
+                            Height="60"
+                            Margin="-240,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            ContentTemplate="{StaticResource LogoWideTemplate}"
+                            Foreground="{ThemeResource AppBackgroundBrush}">
                 <ContentControl.RenderTransform>
                     <TranslateTransform x:Name="LogoImageTranslate" />
                 </ContentControl.RenderTransform>
             </ContentControl>
             <Button Grid.Column="1"
-                MinWidth="50"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Background="Transparent"
-                BorderBrush="Transparent"
-                Click="UserAccount_Click">
+                    MinWidth="50"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="UserAccount_Click">
                 <Button.Transitions>
                     <TransitionCollection>
                         <EntranceThemeTransition />
@@ -817,34 +828,34 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <SymbolIcon Grid.RowSpan="2"
-                            Grid.Column="0"
-                            Foreground="{ThemeResource AppBackgroundBrush}"
-                            Symbol="ContactPresence" />
+                                Grid.Column="0"
+                                Foreground="{ThemeResource AppBackgroundBrush}"
+                                Symbol="ContactPresence" />
                     <TextBlock Grid.Row="0"
-                           Grid.Column="1"
-                           Margin="10,0,0,0"
-                           VerticalAlignment="Center"
-                           FontSize="{ThemeResource AppFontSizeLarge}"
-                           Foreground="{ThemeResource AppBackgroundBrush}"
-                           Style="{StaticResource AppTextAccentStyle}"
-                           Text="{Binding UserName}" />
+                               Grid.Column="1"
+                               Margin="10,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="{ThemeResource AppFontSizeLarge}"
+                               Foreground="{ThemeResource AppBackgroundBrush}"
+                               FontWeight="SemiBold"
+                               Text="{Binding UserName}" />
                     <!--  <Button Grid.Column="1" Grid.Row="1"  Style="{StaticResource PureButtonStyle}" Name="LogoutButton" Click="LogoutButton_Click" FontWeight="SemiLight">Log out</Button>  -->
                 </Grid>
             </Button>
 
             <controls:SearchBox x:Uid="HubSearchBox"
-                            Grid.Column="2"
-                            MaxWidth="300"
-                            MinWidth="50"
-                            Margin="20,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            BorderBrush="{ThemeResource AppAccentBrushSemiLight}"
-                            Foreground="{ThemeResource AppAccentBrush}"
-                            PlaceholderText="Search for Novel"
-                            QuerySubmitted="SearchBox_QuerySubmitted"
-                            SearchHistoryEnabled="True"
-                            TabIndex="2" />
+                                Grid.Column="2"
+                                MinWidth="50"
+                                MaxWidth="300"
+                                Margin="20,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                BorderBrush="{ThemeResource AppAccentBrushSemiLight}"
+                                Foreground="{ThemeResource AppAccentBrush}"
+                                PlaceholderText="Search for Novel"
+                                QuerySubmitted="SearchBox_QuerySubmitted"
+                                SearchHistoryEnabled="True"
+                                TabIndex="2" />
         </Grid>
 
 
@@ -904,7 +915,7 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                Foreground="{ThemeResource AppBackgroundBrush}"
-                               Style="{ThemeResource AppTextLargeStyle}">
+                               FontSize="{ThemeResource AppFontSizeLarge}">
                         Signin to lightnovel account
                     </TextBlock>
                 </Border>

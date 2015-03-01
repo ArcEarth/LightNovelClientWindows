@@ -1,10 +1,10 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-    <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windowsphone\obj\debug\intermediatexaml\lightnovelclient.windowsphone.exe" HashGuid="df5e287e-4f6f-93fd-28cb-d4d6d8075da2" />
-    <ReferenceAssembly PathName="d:\user\yupeng\documents\github\lightnovelclientwindows\packages\htmlagilitypack.1.4.9\lib\portable-net45+netcore45+wpa81+wp8+monoandroid+monotouch\htmlagilitypack.dll" HashGuid="365e4636-8cbf-8d2d-3790-d3267e801443" />
-    <ReferenceAssembly PathName="d:\user\yupeng\documents\github\lightnovelclientwindows\packages\newtonsoft.json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="225745d8-3693-ad6f-ebd5-8845d81f8e0f" />
-    <ReferenceAssembly PathName="d:\user\yupeng\documents\github\lightnovelclientwindows\packages\q42.winrt.1.2.6.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="9ae986bb-5773-4b0f-5ffe-3a76d9adae67" />
-    <ReferenceAssembly PathName="d:\user\yupeng\documents\github\lightnovelclientwindows\packages\q42.winrt.portable.1.2.3.42\lib\portable-net45+win+wpa81+wp80\q42.winrt.portable.dll" HashGuid="081b1fd5-23eb-c63c-c9f2-8e237bce1f25" />
-    <ReferenceAssembly PathName="d:\user\yupeng\documents\github\lightnovelclientwindows\packages\winrtxamltoolkit.windowsphone.1.8.1.0\lib\wpa\winrtxamltoolkit.dll" HashGuid="221e17c6-64f2-d53e-b7b5-145a2dbe921c" />
+    <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windowsphone\obj\debug\intermediatexaml\lightnovelclient.windowsphone.exe" HashGuid="134a723d-7f24-6055-d133-ef80b247a836" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\htmlagilitypack.1.4.9\lib\portable-net45+netcore45+wpa81+wp8+monoandroid+monotouch\htmlagilitypack.dll" HashGuid="365e4636-8cbf-8d2d-3790-d3267e801443" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\newtonsoft.json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="225745d8-3693-ad6f-ebd5-8845d81f8e0f" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.1.2.6.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="9ae986bb-5773-4b0f-5ffe-3a76d9adae67" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.portable.1.2.3.42\lib\portable-net45+win+wpa81+wp80\q42.winrt.portable.dll" HashGuid="081b1fd5-23eb-c63c-c9f2-8e237bce1f25" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\winrtxamltoolkit.windowsphone.1.8.1.0\lib\wpa\winrtxamltoolkit.dll" HashGuid="221e17c6-64f2-d53e-b7b5-145a2dbe921c" />
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>

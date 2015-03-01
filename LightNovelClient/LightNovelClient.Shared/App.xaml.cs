@@ -35,7 +35,7 @@ namespace LightNovel
 	public sealed partial class App : Application
 	{
 #if WINDOWS_PHONE_APP
-		private TransitionCollection transitions;
+		//private TransitionCollection transitions;
 #else
         public ObservableCollection<ViewLifetimeControl> SecondaryViews = new ObservableCollection<ViewLifetimeControl>();
 #endif
@@ -56,7 +56,9 @@ namespace LightNovel
 				{
 					this.RequestedTheme = ApplicationTheme.Dark;
 				}
-				//Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = "zh-CN";// Windows.Globalization.ApplicationLanguages.Languages[0];
+				var language = Settings.InterfaceLanguage;
+				if (language != null)
+					Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
 				this.InitializeComponent();
 				this.Suspending += this.OnSuspending;
 				this.Resuming += this.OnResuming;
@@ -245,7 +247,32 @@ namespace LightNovel
 				rootFrame.ContentTransitions = new TransitionCollection() { new NavigationThemeTransition() { DefaultNavigationTransitionInfo = new ContinuumNavigationTransitionInfo() } };
 			rootFrame.Navigated -= this.RootFrame_FirstNavigated;
 		}
+#else
+		public static void ApplicationWiseCommands_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
+		{
+			if (!args.Request.ApplicationCommands.Any(c => c.Id == "Options"))
+			{
+				var command = new Windows.UI.ApplicationSettings.SettingsCommand("Options", "Options", x =>
+				{
+					var settings = new SettingsPage();
+
+					settings.Show();
+				});
+				args.Request.ApplicationCommands.Add(command);
+			}
+
+			if (!args.Request.ApplicationCommands.Any(c => c.Id == "About"))
+			{
+				var command = new Windows.UI.ApplicationSettings.SettingsCommand("About", "About", x =>
+				{
+					var settings = new AboutSettingsFlyout();
+					settings.Show();
+				});
+				args.Request.ApplicationCommands.Add(command);
+			}
+		}
 #endif
+
 
 		/// <summary>
 		/// Invoked when application execution is being suspended.  Application state is saved

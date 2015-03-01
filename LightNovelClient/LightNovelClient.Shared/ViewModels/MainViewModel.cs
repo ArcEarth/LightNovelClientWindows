@@ -654,7 +654,7 @@ namespace LightNovel.ViewModels
 
 				//SeriesIndex = AlphaKeyGroup<SeriesPreviewModel>.CreateGroups(
 				//	serVmList,
-				//	new System.Globalization.CultureInfo("zh-CN"),
+				//	new System.Globalization.CultureInfo("zh-Hans"),
 				//	svm => svm.Title, true);
 				IsIndexDataLoaded = true;
 			}

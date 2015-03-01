@@ -39,7 +39,7 @@
                            FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                            FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                            Foreground="{ThemeResource AppAccentBrush}"
-                           Language="zh-CN"
+                           Language="zh-Hans"
                            Text="{Binding Key}" />
             </Grid>
         </DataTemplate>
@@ -140,11 +140,11 @@
                                         <StackPanel Grid.Column="1" Margin="10,5,10,0">
                                             <TextBlock FontSize="{ThemeResource AppFontSizeMedium}"
                                                        Foreground="{StaticResource AppAccentBrush}"
-                                                       Language="zh-CN"
+                                                       Language="zh-Hans"
                                                        Text="{Binding Title}"
                                                        TextWrapping="Wrap" />
                                             <TextBlock Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}"
-                                                       Language="zh-CN"
+                                                       Language="zh-Hans"
                                                        Style="{StaticResource BodyTextBlockStyle}"
                                                        Text="{Binding Subtitle}"
                                                        TextWrapping="Wrap" />
@@ -194,7 +194,7 @@
                                                    FontSize="{StaticResource HubSectionHeaderThemeFontSize}"
                                                    FontWeight="{StaticResource HubSectionHeaderThemeFontWeight}"
                                                    Foreground="{ThemeResource AppAccentBrush}"
-                                                   Language="zh-CN"
+                                                   Language="zh-Hans"
                                                    Text="{Binding Group.Key}" />
                                     </Grid>
                                 </DataTemplate>
@@ -257,7 +257,7 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-CN">
+                           Language="zh-Hans">
                     &#x201c;
                 </TextBlock>
                 <TextBox x:Name="queryText"
@@ -275,7 +275,7 @@
                          InputScope="Search"
                          IsEnabled="False"
                          KeyDown="QueryTextBox_KeyDown"
-                         Language="zh-CN"
+                         Language="zh-Hans"
                          LostFocus="QuertTextBox_lostFocus"
                          Padding="0"
                          TabIndex="0"
@@ -298,7 +298,7 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-CN">
+                           Language="zh-Hans">
                     &#x201d;
                 </TextBlock>
             </Grid>

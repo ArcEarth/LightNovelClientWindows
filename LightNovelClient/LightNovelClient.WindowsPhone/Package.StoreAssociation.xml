@@ -136,8 +136,8 @@
     <Language Code="ru" InMinimumRequirementSet="true" />
     <Language Code="ru-ru" InMinimumRequirementSet="true" />
     <Language Code="zh" InMinimumRequirementSet="true" />
-    <Language Code="zh-cn" InMinimumRequirementSet="true" />
-    <Language Code="zh-hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
     <Language Code="zh-sg" InMinimumRequirementSet="true" />
     <Language Code="sk" InMinimumRequirementSet="true" />
     <Language Code="sk-sk" InMinimumRequirementSet="true" />

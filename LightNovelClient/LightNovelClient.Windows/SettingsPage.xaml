@@ -7,8 +7,9 @@
                 Title="Options"
                 DataContext="{Binding ViewModel,
                                       RelativeSource={RelativeSource Mode=Self}}"
+                Background="{ThemeResource AppBackgroundBrush}"
                 HeaderBackground="{ThemeResource AppAccentBrushSemiLight}"
-                HeaderForeground="{ThemeResource AppForegroundBrush}"
+                HeaderForeground="{ThemeResource AppBackgroundBrush}"
                 Padding="40,20,30,20"
                 d:DesignWidth="346"
                 mc:Ignorable="d">
@@ -58,7 +59,8 @@
             <ComboBoxItem x:Uid="AppLightThemeItem">Light</ComboBoxItem>
             <ComboBoxItem x:Uid="AppDarkThemeItem">Dark</ComboBoxItem>
         </ComboBox>
-        <!--<TextBlock x:Uid="IllustrationLoadingPolicyLabel"
+        <TextBlock x:Uid="IllustrationLoadingPolicyLabel"
+                   Margin="0,10,0,0"
                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
                            FontWeight="SemiBold"
                            Foreground="{ThemeResource AppAccentBrush}"
@@ -81,7 +83,33 @@
                     <ComboBoxItem x:Uid="ImageLoadingPolicyManualItem">Manual</ComboBoxItem>
                     <ComboBoxItem x:Uid="ImageLoadingPolicySmartItem">Smart</ComboBoxItem>
                     <ComboBoxItem x:Uid="ImageLoadingPolicyAutomaticItem">Automatic</ComboBoxItem>
-                </ComboBox>-->
+                </ComboBox>
+        <TextBlock x:Uid="InterfaceLanguageLabel"
+                   Margin="0,10,0,0"
+                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                   FontWeight="SemiBold"
+                   Foreground="{ThemeResource AppAccentBrush}"
+                   TextWrapping="WrapWholeWords">
+            Interface Language
+        </TextBlock>
+        <TextBlock x:Uid="InterfaceLanguageDescription"
+                   Foreground="{ThemeResource AppForegroundBrush}"
+                   Style="{ThemeResource AppTextNormalStyle}"
+                   TextWrapping="WrapWholeWords">
+            You will need Restart Application to change language
+        </TextBlock>
+        <ComboBox x:Uid="InterfaceLanguageComboBox"
+                  x:Name="InterfaceLanguageComboBox"
+                  Margin="0,0,15,0"
+                  Background="{ThemeResource AppBackgroundBrush}"
+                  BorderBrush="{ThemeResource AppForegroundBrush}"
+                  Foreground="{ThemeResource AppForegroundBrush}"
+                  SelectionChanged="InterfaceLanguage_SelectionChanged">
+            <ComboBoxItem x:Name="LanguageAutoItem" x:Uid="LanguageAutoItem">System</ComboBoxItem>
+            <ComboBoxItem x:Uid="LanguageEnglishItem" Language="en-US">English</ComboBoxItem>
+            <ComboBoxItem x:Uid="LanguageChineseSimplified" Language="zh-Hans">简体中文</ComboBoxItem>
+            <ComboBoxItem x:Uid="LanguageChineseTraditional" Language="zh-TW">繁體中文</ComboBoxItem>
+        </ComboBox>
 
         <!--<TextBlock x:Uid="ClearCacheLabel"
                                        FontSize="{ThemeResource AppFontSizeMediumLarge}"
@@ -108,82 +136,5 @@
                                     <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Cache</TextBlock>
                                 </StackPanel>
                             </Button>-->
-
-        <Rectangle Height="2"
-                   Margin="0,10,0,5"
-                   Fill="{ThemeResource AppAccentBrush}" />
-        <Grid Margin="0,0,0,5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Uid="CurrentVersionLabel"
-                       Margin="10,0"
-                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                       FontWeight="SemiBold"
-                       Foreground="{ThemeResource AppAccentBrush}"
-                       TextWrapping="WrapWholeWords">
-                Curent Version
-            </TextBlock>
-            <TextBlock Grid.Column="1"
-                       Margin="20,0"
-                       Foreground="{ThemeResource AppAccentBrush}"
-                       Style="{ThemeResource AppTextNormalStyle}"
-                       Text="{Binding SavedAppVersion}"
-                       TextAlignment="Right"
-                       TextWrapping="NoWrap" />
-        </Grid>
-        <TextBlock x:Uid="ReviewLabel"
-                   Foreground="{ThemeResource AppForegroundBrush}"
-                   Style="{ThemeResource AppTextNormalStyle}"
-                   TextWrapping="WrapWholeWords">
-            If you like this App, Please rate us 5 Star and share your feedback!
-        </TextBlock>
-        <HyperlinkButton x:Uid="ReviewButton"
-                         Margin="10,5"
-                         Content="Rate and review in Store"
-                         FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                         FontWeight="SemiBold"
-                         Foreground="{ThemeResource AppAccentBrush}"
-                         NavigateUri="{StaticResource StoreReviewLink}" />
-        <TextBlock x:Uid="ProjectLabel"
-                   Margin="0,5,0,0"
-                   Foreground="{ThemeResource AppForegroundBrush}"
-                   Style="{ThemeResource AppTextNormalStyle}"
-                   TextWrapping="WrapWholeWords">
-            If you want to contribute or have detailed feedback, please visit our project home!
-        </TextBlock>
-        <HyperlinkButton x:Uid="ProjectButton"
-                         Margin="10,5,0,5"
-                         FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                         FontWeight="SemiBold"
-                         Foreground="{ThemeResource AppAccentBrush}"
-                         NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">
-            Project Home
-        </HyperlinkButton>
-        <HyperlinkButton x:Uid="FeedbackEmailButton"
-                         Grid.Column="1"
-                         Margin="10,0,0,10"
-                         FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                         FontWeight="SemiBold"
-                         Foreground="{ThemeResource AppAccentBrush}"
-                         NavigateUri="mailto:LightNovelApp@outlook.com?subject=AppFeedback">
-            Contact Author
-        </HyperlinkButton>
-
-        <TextBlock x:Uid="DataCreditLabel"
-                   Foreground="{ThemeResource AppForegroundBrush}"
-                   Style="{ThemeResource AppTextNormalStyle}"
-                   Text="Special thanks and Data Credit : " />
-        <HyperlinkButton Margin="10,10,10,0"
-                         HorizontalAlignment="Left"
-                         FontSize="{StaticResource AppFontSizeSmall}"
-                         Foreground="{StaticResource AppAccentBrush}"
-                         NavigateUri="http://lknovel.lightnovel.cn/">
-            <Image HorizontalAlignment="Left"
-                   Source="/Assets/LK_Logo.png"
-                   Stretch="Uniform" />
-        </HyperlinkButton>
-
     </StackPanel>
 </SettingsFlyout>

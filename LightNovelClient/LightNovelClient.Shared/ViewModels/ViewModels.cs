@@ -573,6 +573,8 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
+				if (App.Current.Settings.EnableAutomaticReadingTheme)
+					return (SolidColorBrush)App.Current.Resources["AppForegroundBrush"];
 				return _Foreground;
 			}
 			set
@@ -586,6 +588,8 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
+				if (App.Current.Settings.EnableAutomaticReadingTheme)
+					return (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
 				return _Background;
 			}
 			set

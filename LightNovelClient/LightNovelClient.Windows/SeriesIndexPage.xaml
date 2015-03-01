@@ -128,10 +128,8 @@
                     AutomationProperties.AutomationId="BackButton"
                     AutomationProperties.ItemType="Navigation Button"
                     AutomationProperties.Name="Back"
-                    BorderBrush="{ThemeResource AppBackgroundBrush}"
                     Command="{Binding NavigationHelper.GoBackCommand,
                                       ElementName=pageRoot}"
-                    Foreground="{ThemeResource AppBackgroundBrush}"
                     Style="{StaticResource NavigationBackButtonNormalStyle}" />
             <SymbolIcon Grid.Column="1"
                         Margin="10,0,5,-2"

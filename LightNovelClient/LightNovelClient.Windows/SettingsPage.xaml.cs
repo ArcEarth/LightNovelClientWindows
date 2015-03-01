@@ -56,11 +56,43 @@ namespace LightNovel
 			if (combo.SelectedIndex >= 0)
 			{
 				this.RequestedTheme = (Windows.UI.Xaml.ElementTheme)(combo.SelectedIndex);
+				var frame = Window.Current.Content as Frame;
+				if (frame != null)
+				{
+					var page = frame.Content as Page;
+					page.RequestedTheme = (Windows.UI.Xaml.ElementTheme)(combo.SelectedIndex);
+				}
 			}
 		}
 		public SettingsPage()
 		{
+			this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+
 			this.InitializeComponent();
+
+			var lan = App.Current.Settings.InterfaceLanguage ;
+			var combo = InterfaceLanguageComboBox.Items.FirstOrDefault(item => ((ComboBoxItem)item).Language == lan);
+			if (combo != null)
+				InterfaceLanguageComboBox.SelectedItem = combo;
+			else
+				InterfaceLanguageComboBox.SelectedItem = LanguageAutoItem;
+		}
+
+		private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
+		}
+
+		private void InterfaceLanguage_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var item = (ComboBoxItem)(InterfaceLanguageComboBox.SelectedItem);
+			string language = "";
+			if (item != LanguageAutoItem)
+				language = item.Language;
+
+			App.Current.Settings.InterfaceLanguage = language;
+			if (language != "")
+				Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
 		}
 	}
 }
