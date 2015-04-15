@@ -328,8 +328,7 @@
                                   IsSourceGrouped="true"
                                   Source="{Binding SeriesIndex}" />
             <DataTemplate x:Key="PosterSectionButtonTemplate">
-                <Button Width="{ThemeResource PosterWidth}"
-                        VerticalAlignment="Stretch"
+                <Button VerticalAlignment="Stretch"
                         Click="LastReadSection_Clicked"
                         ContentTemplate="{StaticResource PosterHubSectionDataTemplate}"
                         Style="{ThemeResource PureButtonStyle}" />
@@ -394,6 +393,7 @@
                               Click="SettingsButton_Click"
                               Icon="Setting"
                               Label="Settings" />
+                <AppBarButton Icon="Account" Label="Auth" Click="AppBarButton_Click" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -432,6 +432,7 @@
              TabIndex="0">
             <HubSection x:Name="LastReadSection"
                         Margin="0,-79,0,0"
+                        Width="{ThemeResource PosterWidth}"
                         VerticalAlignment="Stretch"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
@@ -569,7 +570,7 @@
             </HubSection>
 
 
-            <HubSection x:Name="AllSection"
+            <!--<HubSection x:Name="AllSection"
                         Margin="0,-4,0,0"
                         Padding="30,0,0,40">
                 <DataTemplate>
@@ -625,11 +626,11 @@
                                         <Setter Property="Padding" Value="2" />
                                     </Style>
                                 </ListView.ItemContainerStyle>
-                                <!--<GridView.ItemsPanel>
+                                --><!--<GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel Orientation="Vertical"/>
                             </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>-->
+                        </GridView.ItemsPanel>--><!--
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
@@ -657,148 +658,21 @@
                         </SemanticZoom.ZoomedOutView>
                     </SemanticZoom>
                 </DataTemplate>
-            </HubSection>
-
-            <!--<HubSection x:Uid="AboutSection"
-                        Header="About"
-                        HeaderTemplate="{StaticResource HubPageHubSectionHeaderTemplate}"
-                        Padding="30,0,0,40">
-                <DataTemplate>
-                    <ScrollViewer Width="330"
-                                  Margin="0,-10,0,0"
-                                  Style="{ThemeResource VerticalScrollViewerStyle}">
-                        <StackPanel Margin="0,0,0,0" DataContext="{Binding Settings}">
-                            <TextBlock x:Uid="LiveTileLabel"
-                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                       FontWeight="SemiBold"
-                                       Foreground="{ThemeResource AppAccentBrush}"
-                                       TextWrapping="WrapWholeWords">
-                                Live Tile
-                            </TextBlock>
-                            <TextBlock x:Uid="LiveTileDescription"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       TextWrapping="WrapWholeWords">
-                                Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
-                            </TextBlock>
-                            <ToggleSwitch x:Name="LiveTileSwitch"
-                                          HorizontalAlignment="Stretch"
-                                          IsOn="{Binding EnableLiveTile}"
-                                          Padding="0"
-                                          Toggled="LiveTileSwitch_Toggled" />
-                            <TextBlock x:Uid="AppThemeLabel"
-                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                       FontWeight="SemiBold"
-                                       Foreground="{ThemeResource AppAccentBrush}"
-                                       TextWrapping="WrapWholeWords">
-                                Theme
-                            </TextBlock>
-                            <TextBlock x:Uid="AppThemeDescription"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       TextWrapping="WrapWholeWords">
-                                Change the background them of Application, &quot;Autmatic&quot; may need to restart App to apply the theme change
-                            </TextBlock>
-                            <ComboBox x:Uid="AppThemeComboBox"
-                                      Margin="0,10,15,0"
-                                      SelectedIndex="{Binding BackgroundThemeIndexBindingProperty,
-                                                              Mode=TwoWay}"
-                                      SelectionChanged="BackgroundThemeComboBox_SelectionChanged">
-                                <ComboBoxItem x:Uid="AppDefaultThemeItem">Automatic</ComboBoxItem>
-                                <ComboBoxItem x:Uid="AppLightThemeItem">Light</ComboBoxItem>
-                                <ComboBoxItem x:Uid="AppDarkThemeItem">Dark</ComboBoxItem>
-                            </ComboBox>
-            -->
-            <!--<TextBlock x:Uid="ClearCacheLabel"
-                                       FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                       FontWeight="SemiBold"
-                                       Foreground="{ThemeResource AppAccentBrush}"
-                                       TextWrapping="WrapWholeWords">
-                                Clear Cache
-                            </TextBlock>
-                            <TextBlock x:Uid="ClearCacheDescription"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       TextWrapping="WrapWholeWords">
-                                Clear Cache may help free up spaces and may solve some Bug
-                            </TextBlock>
-                            <Button Grid.Column="1"
-                                    Margin="5,0,20,0"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    Background="{ThemeResource AppAccentBrush}"
-                                    BorderBrush="Transparent"
-                                    BorderThickness="0"
-                                    Padding="0">
-                                <StackPanel Margin="5,0" Orientation="Horizontal">
-                                    <SymbolIcon Foreground="{ThemeResource AppBackgroundBrush}" Symbol="Delete" />
-                                    <TextBlock x:Uid="ClearCacheLabel" Foreground="{ThemeResource AppBackgroundBrush}">Clear Cache</TextBlock>
-                                </StackPanel>
-                            </Button>-->
-            <!--
-
-                            <Rectangle Height="2"
-                                       Margin="0,10,0,10"
-                                       Fill="{ThemeResource AppAccentBrush}" />
-                            <TextBlock x:Uid="ReviewLabel"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       TextWrapping="WrapWholeWords">
-                                If you like this App, Please rate us 5 Star and share your feedback!
-                            </TextBlock>
-                            <HyperlinkButton x:Uid="ReviewButton"
-                                             Margin="10,10"
-                                             Content="Rate and review in Store"
-                                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                             FontWeight="SemiBold"
-                                             Foreground="{ThemeResource AppAccentBrush}"
-                                             NavigateUri="{StaticResource StoreReviewLink}" />
-                            <TextBlock x:Uid="ProjectLabel"
-                                       Margin="0,5,0,0"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       TextWrapping="WrapWholeWords">
-                                If you want to contribute or have detailed feedback, please visit our project home!
-                            </TextBlock>
-                            <HyperlinkButton x:Uid="ProjectButton"
-                                             Margin="10,10,0,10"
-                                             FontSize="{ThemeResource AppFontSizeMediumLarge}"
-                                             FontWeight="SemiBold"
-                                             Foreground="{ThemeResource AppAccentBrush}"
-                                             NavigateUri="http://arcearth.github.io/LightNovelClientWindows/">
-                                Project Home
-                            </HyperlinkButton>
-                            <TextBlock x:Uid="DataCreditLabel"
-                                       Foreground="{ThemeResource AppForegroundBrush}"
-                                       Style="{ThemeResource AppTextNormalStyle}"
-                                       Text="Special thanks and Data Credit : " />
-                            <HyperlinkButton Margin="10,10,10,0"
-                                             HorizontalAlignment="Left"
-                                             FontSize="{StaticResource AppFontSizeSmall}"
-                                             Foreground="{StaticResource AppAccentBrush}"
-                                             NavigateUri="http://lknovel.lightnovel.cn/">
-                                <Image HorizontalAlignment="Left"
-                                       Source="/Assets/LK_Logo.png"
-                                       Stretch="None" />
-                            </HyperlinkButton>
-
-                        </StackPanel>
-                    </ScrollViewer>
-                </DataTemplate>
             </HubSection>-->
         </Hub>
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="600" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <ContentControl x:Name="LogoImage"
                             Grid.Column="0"
                             Width="200"
                             Height="60"
-                            Margin="-240,0"
-                            HorizontalAlignment="Right"
+                            Margin="640,0"
+                            HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             ContentTemplate="{StaticResource LogoWideTemplate}"
                             Foreground="{ThemeResource AppBackgroundBrush}">
@@ -846,7 +720,6 @@
             <controls:SearchBox x:Uid="HubSearchBox"
                                 Grid.Column="2"
                                 MinWidth="50"
-                                MaxWidth="300"
                                 Margin="20,0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"

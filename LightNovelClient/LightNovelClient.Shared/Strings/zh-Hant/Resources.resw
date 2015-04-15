@@ -118,121 +118,121 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationName" xml:space="preserve">
-    <value>轻阅读</value>
+    <value>輕閱讀</value>
   </data>
   <data name="CommentInputBox.PlaceholderText" xml:space="preserve">
-    <value>在这里输入评论</value>
+    <value>在這裡輸入評論</value>
   </data>
   <data name="FavoriteButton.Label" xml:space="preserve">
     <value>收藏</value>
   </data>
   <data name="FavoriteButton_ToolTip" xml:space="preserve">
-    <value>收藏该卷</value>
+    <value>收藏該卷</value>
   </data>
   <data name="FavoriteSection.Header" xml:space="preserve">
-    <value>用户收藏</value>
+    <value>用戶收藏</value>
   </data>
   <data name="FontSizeButton.Label" xml:space="preserve">
-    <value>字号</value>
+    <value>字型大小</value>
   </data>
   <data name="HubSearchBox.PlaceholderText" xml:space="preserve">
-    <value>搜索书名,作者</value>
+    <value>搜索書名,作者</value>
   </data>
   <data name="IndexButton_Label" xml:space="preserve">
-    <value>目录</value>
+    <value>目錄</value>
   </data>
   <data name="IndexButton_ToolTip" xml:space="preserve">
-    <value>打开/关闭 目录</value>
+    <value>打開/關閉 目錄</value>
   </data>
   <data name="LoginSection.Header" xml:space="preserve">
-    <value>用户登陆</value>
+    <value>用戶登陸</value>
   </data>
   <data name="NoCommentLabel.Text" xml:space="preserve">
-    <value>目前还没有评论</value>
+    <value>目前還沒有評論</value>
   </data>
   <data name="PasswordLabel.PlaceholderText" xml:space="preserve">
-    <value>密码</value>
+    <value>密碼</value>
   </data>
   <data name="PictureToolLabel.Text" xml:space="preserve">
-    <value>图片</value>
+    <value>圖片</value>
   </data>
   <data name="PinButton.Label" xml:space="preserve">
     <value>固定</value>
   </data>
   <data name="PinButton_ToolTip" xml:space="preserve">
-    <value>将该卷订到"开始屏幕"</value>
+    <value>將該卷訂到"開始螢幕"</value>
   </data>
   <data name="ReadingStyleButton.Label" xml:space="preserve">
-    <value>主题</value>
+    <value>主題</value>
   </data>
   <data name="RecentReadingSection.Header" xml:space="preserve">
-    <value>最近阅读</value>
+    <value>最近閱讀</value>
   </data>
   <data name="SearchResultLabel.Text" xml:space="preserve">
-    <value>搜索结果：</value>
+    <value>搜索結果：</value>
   </data>
   <data name="SignUpButton.Content" xml:space="preserve">
-    <value>注册"轻之国度"</value>
+    <value>註冊"輕之國度"</value>
   </data>
   <data name="UserNameLabel.PlaceholderText" xml:space="preserve">
-    <value>用户名</value>
+    <value>用戶名</value>
   </data>
   <data name="SigninPopupTitle.Text" xml:space="preserve">
-    <value>登陆"轻之国度"账户</value>
+    <value>登陸"輕之國度"帳戶</value>
   </data>
   <data name="NoAccountHintLabel.Text" xml:space="preserve">
-    <value>现在还有没账户?</value>
+    <value>現在還有沒帳戶?</value>
   </data>
   <data name="AboutSection.Header" xml:space="preserve">
-    <value>设置与关于</value>
+    <value>設置與關於</value>
   </data>
   <data name="ReviewLabel.Text" xml:space="preserve">
-    <value>如果您喜欢这个应用，请在商店中给我们五星并提出您的意见 :)</value>
+    <value>如果您喜歡這個應用，請在商店中給我們五星並提出您的意見 :)</value>
   </data>
   <data name="ReviewButton.Content" xml:space="preserve">
-    <value>评分与反馈</value>
+    <value>評分與回饋</value>
   </data>
   <data name="ProjectLabel.Text" xml:space="preserve">
-    <value>如果您有反馈的意见或者希望参与与改善这个项目，请联系开发者或者访问我们的项目主页 :)</value>
+    <value>如果您有回饋的意見或者希望參與與改善這個項目，請聯繫開發者或者訪問我們的專案主頁 :)</value>
   </data>
   <data name="ProjectButton.Content" xml:space="preserve">
-    <value>项目主页</value>
+    <value>項目主頁</value>
   </data>
   <data name="DataCreditLabel.Text" xml:space="preserve">
-    <value>特别感谢与数据来源：</value>
+    <value>特別感謝與資料來源：</value>
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>分享</value>
   </data>
   <data name="CommentEnableButton.Label" xml:space="preserve">
-    <value>显示评论</value>
+    <value>顯示評論</value>
   </data>
   <data name="DarkThemeItem.Text" xml:space="preserve">
     <value>黑夜</value>
   </data>
   <data name="LightGrayThemeItem.Text" xml:space="preserve">
-    <value>浅灰</value>
+    <value>淺灰</value>
   </data>
   <data name="GreenThemeItem.Text" xml:space="preserve">
-    <value>浅绿</value>
+    <value>淺綠</value>
   </data>
   <data name="SepiaThemeItem.Text" xml:space="preserve">
-    <value>麦秸</value>
+    <value>麥秸</value>
   </data>
   <data name="LightThemeItem.Text" xml:space="preserve">
-    <value>白昼</value>
+    <value>白晝</value>
   </data>
   <data name="DarkGrayThemeItem.Text" xml:space="preserve">
     <value>深灰</value>
   </data>
   <data name="DownloadButton.Label" xml:space="preserve">
-    <value>离线缓存</value>
+    <value>離線緩存</value>
   </data>
   <data name="DownloadButtonPauseLabel" xml:space="preserve">
-    <value>停止缓存</value>
+    <value>停止緩存</value>
   </data>
   <data name="DownloadingStartDescriptioin" xml:space="preserve">
-    <value>您正在离线缓存当前小说接下来的章节，您可以在缓存时继续您的阅读，已缓存的章节在目录中的左侧会显示一道绿色竖线，退出当前页会自动停止缓存任务。取消缓存操作请按后退键。 (*缓存插画模式依然不够稳定，有Bug请反馈给开发者）</value>
+    <value>您正在離線緩存當前小說接下來的章節，您可以在緩存時繼續您的閱讀，已緩存的章節在目錄中的左側會顯示一道綠色分隔號，退出當前頁會自動停止緩存任務。取消緩存操作請按後退鍵。 (*緩存插畫模式依然不夠穩定，有Bug請回饋給開發者）</value>
   </data>
   <data name="HugeFontSizeButton.Text" xml:space="preserve">
     <value>巨大</value>
@@ -250,40 +250,40 @@
     <value>微小</value>
   </data>
   <data name="DownloadingStartDescriptioinTtile" xml:space="preserve">
-    <value>离线缓存模式</value>
+    <value>離線緩存模式</value>
   </data>
   <data name="ImageLoadingPlaceholderText" xml:space="preserve">
-    <value>正在加载图片...</value>
+    <value>正在載入圖片...</value>
   </data>
   <data name="DownloadButtonStartLabel" xml:space="preserve">
-    <value>离线缓存</value>
+    <value>離線緩存</value>
   </data>
   <data name="FontFamilyButton.Label" xml:space="preserve">
-    <value>字体</value>
+    <value>字體</value>
   </data>
   <data name="NextChapterButtonLabel.Text" xml:space="preserve">
     <value>下一章</value>
   </data>
   <data name="ClearCacheLabel.Text" xml:space="preserve">
-    <value>清理缓存</value>
+    <value>清理緩存</value>
   </data>
   <data name="LiveTileLabel.Text" xml:space="preserve">
-    <value>动态磁贴</value>
+    <value>動態磁貼</value>
   </data>
   <data name="LiveTileDescription.Text" xml:space="preserve">
-    <value>开启动态磁贴会使得磁贴被动态更新的图片覆盖而非透明.</value>
+    <value>開啟動態磁貼會使得磁貼被動態更新的圖片覆蓋而非透明.</value>
   </data>
   <data name="ClearCacheDescription.Text" xml:space="preserve">
-    <value>危险.清理缓存能释放存储空间,并可能解决一些少见的闪退问题.也清除你的离线数据!</value>
+    <value>危險.清理緩存能釋放存儲空間,並可能解決一些少見的閃退問題.也清除你的離線資料!</value>
   </data>
   <data name="AppThemeLabel.Text" xml:space="preserve">
-    <value>背景主题</value>
+    <value>背景主題</value>
   </data>
   <data name="AppThemeDescription.Text" xml:space="preserve">
-    <value>改变应用的背景色调 *需要重启应用才会生效（请长按后退键，然后干掉这个应用卡片）</value>
+    <value>改變應用的背景色調 *需要重啟應用才會生效（請長按後退鍵，然後幹掉這個應用卡片）</value>
   </data>
   <data name="AppDefaultThemeItem.Content" xml:space="preserve">
-    <value>系统主题</value>
+    <value>系統主題</value>
   </data>
   <data name="AppLightThemeItem.Content" xml:space="preserve">
     <value>白色</value>
@@ -298,61 +298,61 @@
     <value>正在登出...</value>
   </data>
   <data name="LoginLabel" xml:space="preserve">
-    <value>登陆</value>
+    <value>登陸</value>
   </data>
   <data name="LoginFailedMessageDialogTitle" xml:space="preserve">
-    <value>登陆失败</value>
+    <value>登陸失敗</value>
   </data>
   <data name="LoginFailedMessageDialogDetail" xml:space="preserve">
-    <value>请检查用户名和密码,或在检查网络连接后重试</value>
+    <value>請檢查用戶名和密碼,或在檢查網路連接後重試</value>
   </data>
   <data name="DownloadSuccessLabel" xml:space="preserve">
-    <value>缓存成功</value>
+    <value>緩存成功</value>
   </data>
   <data name="DownloadSuccessDescription" xml:space="preserve">
-    <value>缓存成功！现在你可以离线阅读这部小说的剩余章节了</value>
+    <value>緩存成功！現在你可以離線閱讀這部小說的剩餘章節了</value>
   </data>
   <data name="DownloadFailedLabel" xml:space="preserve">
-    <value>缓存取消或失败了 :(</value>
+    <value>緩存取消或失敗了 :(</value>
   </data>
   <data name="DownloadFailedDescription" xml:space="preserve">
-    <value>如果您没有手动取消缓存任务，那么怪蜀黍出现在了缓存的过程里，检查一下网络情况再重试吧 :)</value>
+    <value>如果您沒有手動取消緩存任務，那麼怪蜀黍出現在了緩存的過程裡，檢查一下網路情況再重試吧 :)</value>
   </data>
   <data name="DownloadButtonCompletedLabel" xml:space="preserve">
-    <value>缓存已完成</value>
+    <value>緩存已完成</value>
   </data>
   <data name="SeriesIndexLabel.Text" xml:space="preserve">
     <value>系列索引</value>
   </data>
   <data name="DeleteRecentLabel" xml:space="preserve">
-    <value>删除记录与缓存</value>
+    <value>刪除記錄與緩存</value>
   </data>
   <data name="DeleteBookmarkLabel" xml:space="preserve">
     <value>取消收藏</value>
   </data>
   <data name="RefreshFavortite_Merge_Label" xml:space="preserve">
-    <value>同步收藏 (合并)</value>
+    <value>同步收藏 (合併)</value>
   </data>
   <data name="RefreshFavortite_Pull_Label" xml:space="preserve">
-    <value>下载收藏 (允许云端删除)</value>
+    <value>下載收藏 (允許雲端刪除)</value>
   </data>
   <data name="RefreshFavortite_Push_Label" xml:space="preserve">
-    <value>强制上传收藏(抛弃云端)</value>
+    <value>強制上傳收藏(拋棄雲端)</value>
   </data>
   <data name="ImageSaveSuccessMessage" xml:space="preserve">
-    <value>下载成功！插画已保存到"Saved Picture" 文件夹。</value>
+    <value>下載成功！插畫已保存到"Saved Picture" 資料夾。</value>
   </data>
   <data name="ImageSaveFailedMessage" xml:space="preserve">
-    <value>下载失败了 :( 请尝试在图片加载完成再试.</value>
+    <value>下載失敗了 :( 請嘗試在圖片載入完成再試.</value>
   </data>
   <data name="ImageSaveMessageTitle" xml:space="preserve">
-    <value>插画下载</value>
+    <value>插畫下載</value>
   </data>
   <data name="SettingsLabel.Text" xml:space="preserve">
-    <value>设置与关于</value>
+    <value>設置與關於</value>
   </data>
   <data name="SeriesIndexButton.Label" xml:space="preserve">
-    <value>全部小说</value>
+    <value>全部小說</value>
   </data>
   <data name="RefreshButton.Label" xml:space="preserve">
     <value>刷新</value>
@@ -361,69 +361,102 @@
     <value>小技巧</value>
   </data>
   <data name="HelpHeaderTextBlock.Text" xml:space="preserve">
-    <value>你知道吗？</value>
+    <value>你知道嗎？</value>
   </data>
   <data name="Help1TextBlock.Text" xml:space="preserve">
-    <value>你可以通过在"最近"与“收藏”的卡片上"长按"来删除它们哦.</value>
+    <value>你可以通過在"最近"與“收藏”的卡片上"長按"來刪除它們哦.</value>
   </data>
   <data name="Help2TextBlock.Text" xml:space="preserve">
-    <value>在阅读时，你可以在屏幕”左边缘“右划来唤出目录栏哦.</value>
+    <value>在閱讀時，你可以在螢幕”左邊緣“右劃來喚出目錄欄哦.</value>
   </data>
   <data name="FeedbackEmailButton.Content" xml:space="preserve">
-    <value>发邮件给开发者</value>
+    <value>發郵件給開發者</value>
   </data>
   <data name="CurrentVersionLabel.Text" xml:space="preserve">
-    <value>当前应用版本</value>
+    <value>當前應用版本</value>
   </data>
   <data name="SettingButton.Label" xml:space="preserve">
-    <value>设置</value>
+    <value>設置</value>
   </data>
   <data name="CancelLabel" xml:space="preserve">
     <value>取消</value>
   </data>
   <data name="DownloadWithIllustrationLabel" xml:space="preserve">
-    <value>文本及插画</value>
+    <value>文本及插畫</value>
   </data>
   <data name="DownloadWithoutIllustrationLabel" xml:space="preserve">
-    <value>纯文本</value>
+    <value>純文字</value>
   </data>
   <data name="LoginIndicator" xml:space="preserve">
-    <value>正在登录...</value>
+    <value>正在登錄...</value>
   </data>
   <data name="OpenInNewWindowLabel" xml:space="preserve">
-    <value>在新窗体中打开</value>
+    <value>在新表單中打開</value>
   </data>
   <data name="OpenInNewViewButton.Label" xml:space="preserve">
-    <value>新窗体</value>
+    <value>新表單</value>
   </data>
   <data name="IllustrationLoadingPolicyLabel.Text" xml:space="preserve">
-    <value>插画缓存策略</value>
+    <value>插畫緩存策略</value>
   </data>
   <data name="IllustrationLoadingPolicyDescription.Text" xml:space="preserve">
-    <value>"智能"策略会在存在Wi-Fi时自动加载插画，而在移动流量时手动加载。</value>
+    <value>"智慧"策略會在存在Wi-Fi時自動載入插畫，而在移動流量時手動載入。</value>
   </data>
   <data name="InterfaceLanguageLabel.Text" xml:space="preserve">
-    <value>界面语言</value>
+    <value>介面語言</value>
   </data>
   <data name="InterfaceLanguageDescription.Text" xml:space="preserve">
-    <value>*语言选项需要重新启动应用.</value>
+    <value>*語言選項需要重新開機應用.</value>
   </data>
   <data name="LanguageAutoItem.Content" xml:space="preserve">
-    <value>系统语言</value>
+    <value>系統語言</value>
   </data>
   <data name="ImageLoadingPolicyAutomaticItem.Content" xml:space="preserve">
-    <value>智能</value>
+    <value>自動載入插畫</value>
   </data>
   <data name="ImageLoadingPolicyManualItem.Content" xml:space="preserve">
-    <value>总是手动</value>
+    <value>手動載入插畫</value>
   </data>
   <data name="ImageLoadingPolicySmartItem.Content" xml:space="preserve">
-    <value>总是自动</value>
+    <value>智能</value>
   </data>
   <data name="Help3TextBlock.Text" xml:space="preserve">
-    <value>你可以在项目上长按来在新窗口里打开小说哦</value>
+    <value>你可以在專案上長按來在新視窗裡打開小說哦</value>
   </data>
   <data name="AutomaticThemeItem.Text" xml:space="preserve">
-    <value>自动</value>
+    <value>自動</value>
+  </data>
+  <data name="ImageTapToLoadPlaceholderText" xml:space="preserve">
+    <value>點擊載入插畫</value>
+  </data>
+  <data name="GeneralOptionsItem.Header" xml:space="preserve">
+    <value>選項</value>
+  </data>
+  <data name="AboutItem.Header" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="RefreshContentButton.Label" xml:space="preserve">
+    <value>刷新目錄</value>
+  </data>
+  <data name="FullScreenButton.Label" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="LoadingHeader" xml:space="preserve">
+    <value>載入中...</value>
+  </data>
+  <data name="LoadingFailedContentNetworkIssue" xml:space="preserve">
+    <value>我們當前無法連接到網路，請確認您的Wi-fi與資料設置。</value>
+  </data>
+  <data name="LoadingFailedContentSeviceIssue" xml:space="preserve">
+    <value>您所請求的章節已被伺服器隱藏。</value>
+  </data>
+  <data name="LoadingFailedContentOverallLabel" xml:space="preserve">
+    <value>載入失敗了 :(</value>
+  </data>
+  <data name="ViewInBrowserButton.Label" xml:space="preserve">
+    <value>在流覽器中打開</value>
+  </data>
+  <data name="AcknowledgeLabel.Text" xml:space="preserve">
+    <value>感謝這些為應用的進步做出了特別努力的人們 : </value>
   </data>
 </root>

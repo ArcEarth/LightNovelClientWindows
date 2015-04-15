@@ -48,9 +48,9 @@ namespace LightNovel
             //Task LoadingRecentTask = null;
             Task LoginTask = null;
 
-            if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+            if (this.RequestedTheme != App.Settings.BackgroundTheme)
             {
-                this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+                this.RequestedTheme = App.Settings.BackgroundTheme;
             }
 
             ViewModel.IsLoading = true;
@@ -62,22 +62,22 @@ namespace LightNovel
                 LoadingRecommandTask = ViewModel.RecommandSection.LoadAsync();
             }
 
-            if (ViewModel.SeriesIndex == null)
-            {
-                LoadingIndexTask = ViewModel.LoadSeriesIndexDataAsync().ContinueWith(async task =>
-                {
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                    {
-                        if (SeriesIndexViewSource.View == null)
-                        {
-                            SeriesIndexViewSource.IsSourceGrouped = true;
-                            SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
-                        }
-                        if (SeriesIndexViewSource.View != null)
-                            ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
-                    });
-                });
-            }
+            //if (ViewModel.SeriesIndex == null)
+            //{
+            //    LoadingIndexTask = ViewModel.LoadSeriesIndexDataAsync().ContinueWith(async task =>
+            //    {
+            //        await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            //        {
+            //            if (SeriesIndexViewSource.View == null)
+            //            {
+            //                SeriesIndexViewSource.IsSourceGrouped = true;
+            //                SeriesIndexViewSource.Source = ViewModel.SeriesIndex;
+            //            }
+            //            if (SeriesIndexViewSource.View != null)
+            //                ViewModel.SeriesIndexGroupView = SeriesIndexViewSource.View.CollectionGroups;
+            //        });
+            //    });
+            //}
 
             if (!App.Current.IsSignedIn)
             {
@@ -89,7 +89,7 @@ namespace LightNovel
             else
             {
                 ViewModel.IsSignedIn = true;
-                ViewModel.UserName = App.Current.User.UserName;
+                ViewModel.UserName = App.User.UserName;
                 LoginTask = ViewModel.FavoriteSection.LoadAsync(false, 9);
             }
 
@@ -134,7 +134,7 @@ namespace LightNovel
                 }
             }
 
-            if (App.Current.Settings.EnableLiveTile)
+            if (App.Settings.EnableLiveTile)
                 UpdateTile();
 #else
 			await statusBar.ProgressIndicator.HideAsync();
@@ -184,11 +184,13 @@ namespace LightNovel
             }
         }
 
+        private double LogoShiftingFactor = 1.0f;
+
         void HubScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
 		{
-			double maxX = (double)App.Current.Resources["PosterWidth"];
+			double maxX = LastReadSection.ActualWidth;
 			ScrollViewer viewer = sender as ScrollViewer;
-			LogoImageTranslate.X = Math.Max(-viewer.HorizontalOffset, -maxX);
+			LogoImageTranslate.X = Math.Max(-viewer.HorizontalOffset * LogoShiftingFactor, -maxX);
 		}
 
 		private void SeriesIndexButton_Click(object sender, RoutedEventArgs e)
@@ -201,9 +203,10 @@ namespace LightNovel
 			Windows.UI.ApplicationSettings.SettingsPane.Show();
 		}
 
-		private void AppBarHint_Click(object sender, RoutedEventArgs e)
+		private void AppBarButton_Click(object sender, RoutedEventArgs e)
 		{
-			this.BottomAppBar.IsOpen = true;
+			Frame.Navigate(typeof(AuthPage));
 		}
+
     }
 }

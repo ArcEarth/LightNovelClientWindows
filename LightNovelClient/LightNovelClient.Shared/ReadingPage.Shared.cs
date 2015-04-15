@@ -99,6 +99,7 @@ namespace LightNovel
 		}
 
 		string ImageLoadingTextPlaceholder = "Image Loading ...";
+		string ImageTapToLoadPlaceholder = "Tap to load Illustration";
 
 		private NavigationHelper navigationHelper;
 		private NovelPositionIdentifier navigationId;
@@ -252,6 +253,31 @@ namespace LightNovel
 					}
 
 					break;
+
+				case "IsFullScreen":
+					{
+						if (ViewModel.IsFullScreen)
+						{
+							VisualStateManager.GoToState(this, "HideTitleBarState", true);
+						}
+						else
+						{
+							VisualStateManager.GoToState(this, "ShowTitleBarState", true);
+						}
+#if WINDOWS_PHONE_APP
+						SyncBottomAppBarTheme();
+						var statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+						if (ViewModel.IsFullScreen)
+						{
+							statusBar.ForegroundColor = (Color)App.Current.Resources["AppAccentColor"];
+						}
+						else
+						{
+							statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
+						}
+#endif
+					}
+					break;
 				case "IsDownloading":
 					{
 #if WINDOWS_PHONE_APP
@@ -366,9 +392,9 @@ namespace LightNovel
 				OpenInNewViewButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
 #endif
-			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+			if (this.RequestedTheme != App.Settings.BackgroundTheme)
 			{
-				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+				this.RequestedTheme = App.Settings.BackgroundTheme;
 			}
 			//Relayout_ContentColumn(ContentRegion.RenderSize);
 			if (e.PageState != null && e.PageState.Count > 0)
@@ -381,6 +407,18 @@ namespace LightNovel
 				}
 				else
 				{
+					var fullScreen = (bool)e.PageState["IsFullScreen"];
+					if (fullScreen)
+					{
+						VisualStateManager.GoToState(this, "HideTitleBarState", false);
+						ViewModel.IsFullScreen = true;
+					}
+					else
+					{
+						VisualStateManager.GoToState(this, "ShowTitleBarState", false);
+						ViewModel.IsFullScreen = false;
+					}
+
 					var volumeNo = (int)e.PageState["VolumeNo"];
 					var chapterNo = (int)e.PageState["ChapterNo"];
 					var seriesId = (int)e.PageState["SeriesId"];
@@ -396,6 +434,9 @@ namespace LightNovel
 			}
 			else
 			{
+				VisualStateManager.GoToState(this, "ShowTitleBarState", false);
+				ViewModel.IsFullScreen = false;
+
 				navigationId = NovelPositionIdentifier.Parse((string)e.NavigationParameter);
 
 				if (navigationId.SeriesId != null && (navigationId.VolumeNo == -1 || navigationId.ChapterNo == -1))
@@ -433,6 +474,8 @@ namespace LightNovel
 #if WINDOWS_PHONE_APP
 				int currentLine = GetCurrentLineNo();
 				ViewModel.ReportViewChanged(null, currentLine);
+				e.PageState.Add("IsFullScreen", ViewModel.IsFullScreen);
+
 #endif
 
 				e.PageState.Add("SeriesId", ViewModel.SeriesId);
@@ -442,7 +485,7 @@ namespace LightNovel
 
 				if (DisableUpdateOnNavigateFrom) return;
 				DisableUpdateOnNavigateFrom = false;
-				await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal,async () =>
+				await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
 				{
 					await UpdateApplicationHistory();
 				});
@@ -647,9 +690,18 @@ namespace LightNovel
 		private void ReadingThemButton_Click(object sender, RoutedEventArgs e)
 		{
 			var item = sender as MenuFlyoutItem;
-			ViewModel.Foreground = item.Foreground;
-			ViewModel.Background = item.Background;
-			App.Current.Settings.EnableAutomaticReadingTheme = (AutomaticThemeItem == sender);
+			App.Settings.EnableAutomaticReadingTheme = (AutomaticThemeItem == sender);
+
+			if (AutomaticThemeItem != sender)
+			{
+				ViewModel.Foreground = item.Foreground;
+				ViewModel.Background = item.Background;
+			}
+			else
+			{
+				ViewModel.Foreground = (SolidColorBrush)App.Current.Resources["AppForegroundBrush"];
+				ViewModel.Background = (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
+			}
 			//if (item.Text == "Dark")
 			//	this.RequestedTheme = ElementTheme.Dark;
 			//else
@@ -727,7 +779,10 @@ namespace LightNovel
 				var caching = ViewModel.CachingRestChaptersAsync(cacheImage);
 				DownloadButton.Label = pauseLabel;
 				var result = await caching;
-				if (result)
+				if (result == null) // Canceled
+					return;
+
+				if (result.Value)
 				{
 					dialog.Commands.Clear();
 					dialog.Title = resourceLoader.GetString("DownloadSuccessLabel");
@@ -747,8 +802,34 @@ namespace LightNovel
 		}
 		private void AppBarHint_Click(object sender, RoutedEventArgs e)
 		{
-			this.BottomAppBar.Opacity = 1;
-			this.BottomAppBar.IsOpen = true;
+			if (!this.BottomAppBar.IsOpen)
+			{
+				this.BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				this.BottomAppBar.Opacity = 1;
+				this.BottomAppBar.IsOpen = true;
+			}
+			else
+			{
+				this.BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				this.BottomAppBar.Opacity = 0;
+				this.BottomAppBar.IsOpen = false;
+			}
 		}
+		private void AppBarHintButton_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.Cumulative.Translation.Y < -25)
+			{
+				e.Complete();
+				AppBarHint_Click(sender, null);
+			}
+		}
+
+		private async void ViewInBrowserButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (ViewModel.ChapterData != null && !String.IsNullOrEmpty(ViewModel.ChapterData.Id))
+				await Windows.System.Launcher.LaunchUriAsync(new Uri("http://lknovel.lightnovel.cn/main/view/" + ViewModel.ChapterData.Id + ".html"));
+		}
+
 	}
 }

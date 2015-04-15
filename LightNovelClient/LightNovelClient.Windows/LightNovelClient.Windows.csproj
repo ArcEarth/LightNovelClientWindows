@@ -115,9 +115,6 @@
     <Compile Include="AboutSettingsFlyout.xaml.cs">
       <DependentUpon>AboutSettingsFlyout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CollectionPage.xaml.cs">
-      <DependentUpon>CollectionPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Common\ViewLifetimeControl.cs" />
     <Compile Include="Controls\SearchBox.cs" />
     <Compile Include="HubPage.xaml.cs">
@@ -144,10 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="AboutSettingsFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CollectionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

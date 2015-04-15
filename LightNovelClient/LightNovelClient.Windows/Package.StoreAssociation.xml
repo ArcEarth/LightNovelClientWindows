@@ -334,10 +334,10 @@
     <Language Code="xh-za" InMinimumRequirementSet="true" />
     <Language Code="yo-latn" InMinimumRequirementSet="true" />
     <Language Code="yo-ng" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans-cn" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans-sg" InMinimumRequirementSet="true" />
+    <Language Code="zh-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans-sg" InMinimumRequirementSet="true" />
     <Language Code="zh-hant" InMinimumRequirementSet="true" />
     <Language Code="zh-hant-hk" InMinimumRequirementSet="true" />
     <Language Code="zh-hant-mo" InMinimumRequirementSet="true" />
@@ -356,6 +356,7 @@
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
+    <MainPackageIdentityName>10039ArcEarth.Light.Novel</MainPackageIdentityName>
     <MainPackageIdentityName>10039ArcEarth.11426B07B2717</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/f685715a-305d-4584-ae00-4ff774710331">
@@ -363,22 +364,22 @@
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>Neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.2.1.2</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.2.3.3</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>Neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.2.1.2</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.2.3.3</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>Neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.2.1.2</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.2.3.3</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>Neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.2.1.2</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.2.3.3</PackageMaxArchitectureVersion>
       </PackageInfo>
     </BundleInfo>
   </PackageInfoList>

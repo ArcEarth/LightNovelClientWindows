@@ -15,18 +15,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Settings Flyout item template is documented at http://go.microsoft.com/fwlink/?LinkId=273769
+// The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace LightNovel
 {
-	public sealed partial class SettingsPage : SettingsFlyout
-	{
-		public SettingsPage()
+    public sealed partial class AboutSection : StackPanel
+    {
+		public ApplicationSettings ViewModel
 		{
-			this.RequestedTheme = App.Settings.BackgroundTheme;
-
-			this.InitializeComponent();
+			get { return App.Settings; }
 		}
 
-	}
+		public AboutSection()
+		{
+			this.RequestedTheme = App.Settings.BackgroundTheme;
+			this.InitializeComponent();
+		}
+    }
 }

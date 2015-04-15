@@ -19,8 +19,14 @@
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="$(MSBuildThisFileDirectory)AboutSection.xaml.cs">
+      <DependentUpon>AboutSection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)AuthPage.xaml.cs">
+      <DependentUpon>AuthPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\AlphaKeyGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationSettings.cs" />
@@ -43,6 +49,9 @@
       <DependentUpon>ExtendedSplash.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)HubPage.Shared.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IllustrationView.xaml.cs">
+      <DependentUpon>IllustrationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Notifaction\BadgeContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifaction\Common.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Notifaction\ContentInterfaces.cs" />
@@ -54,9 +63,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Service\HtmlNodeExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomHtmlClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SettingSection.xaml.cs">
+      <DependentUpon>SettingSection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModels.cs" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\LightNovelLogo.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\LK_Logo.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Logo-150.scale-100.png" />
     <Content Include="$(MSBuildThisFileDirectory)Assets\Logo-150.scale-140.png" />
@@ -105,9 +116,6 @@
     <Content Include="$(MSBuildThisFileDirectory)DataModel\chapter_33735.json" />
     <Content Include="$(MSBuildThisFileDirectory)DataModel\recommand_list.json" />
     <Content Include="$(MSBuildThisFileDirectory)DataModel\SampleData.json" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\LightGray.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\MediumGray.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Assets\DarkGray.png" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\NavigationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\RelayCommand.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
@@ -118,6 +126,10 @@
     <PRIResource Include="$(MSBuildThisFileDirectory)Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)AuthPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="$(MSBuildThisFileDirectory)Controls\RichTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -127,6 +139,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)ExtendedSplash.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)AboutSection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)IllustrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)SettingSection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

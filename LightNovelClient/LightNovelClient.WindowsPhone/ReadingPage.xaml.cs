@@ -96,6 +96,7 @@ namespace LightNovel
 			RefreshThemeColor();
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			ImageLoadingTextPlaceholder = resourceLoader.GetString("ImageLoadingPlaceholderText");
+			ImageTapToLoadPlaceholder = resourceLoader.GetString("ImageTapToLoadPlaceholderText");
 		}
 
 		void ViewModel_CommentsListLoaded(object sender, IEnumerable<int> e)
@@ -133,16 +134,31 @@ namespace LightNovel
 				statusBar.ProgressIndicator.ProgressValue = 0;
 				statusBar.ForegroundColor = (Color)App.Current.Resources["AppBackgroundColor"];
 				//statusBar.BackgroundColor = (Color)App.Current.Resources["AppAccentColor"];
-				LayoutRoot.Margin = new Thickness(0, 0, 0, 20);
+				//LayoutRoot.Margin = new Thickness(0, 0, 0, 20);
+				//ContentListView.Margin = new Thickness(0, 0, 0, 0);
 				await statusBar.ShowAsync();
 				await statusBar.ProgressIndicator.ShowAsync();
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				AppBarHint.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				BottomAppBar.Closed -= BottomAppBar_Closed;
 			}
 			else
 			{
-				appView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseVisible);
-				LayoutRoot.Margin = new Thickness(0);
+				appView.SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+				//ContentListView.Margin = new Thickness(0, 0, 0, -20);
+				//LayoutRoot.Margin = new Thickness(0);
 				await statusBar.HideAsync();
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				BottomAppBar.IsOpen = false;
+				BottomAppBar.Closed -= BottomAppBar_Closed;
+				BottomAppBar.Closed += BottomAppBar_Closed;
+				AppBarHint.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
+		}
+
+		void BottomAppBar_Closed(object sender, object e)
+		{
+			BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 		}
 
 		private bool CanGoBack()
@@ -308,10 +324,20 @@ namespace LightNovel
 
 			var line = (LineViewModel)e.ClickedItem;
 
+
+			var container = ContentListView.ContainerFromIndex(line.No - 1) as SelectorItem;
+			var iv = container.ContentTemplateRoot as Grid;
+			var textContent = iv.FindName("TextContent") as TextBlock;
+			if (line.IsImage && textContent.Text == ImageTapToLoadPlaceholder)
+			{
+				textContent.Text = ImageLoadingTextPlaceholder;
+				LoadItemIllustation(iv, line);
+				return;
+			}
+
 			if (!(line.IsImage || ViewModel.EnableComments))
 				return;
 
-			var container = ContentListView.ContainerFromIndex(line.No - 1) as SelectorItem;
 			((FrameworkElement)CommentsFlyout.Content).DataContext = line;
 			if (ViewModel.EnableComments)
 			{
@@ -332,7 +358,6 @@ namespace LightNovel
 
 			if (line.IsImage && line.IsImageCached)
 			{
-				var iv = container.ContentTemplateRoot as Grid;
 				var imageContent = iv.FindName("ImageContent") as Image;
 				var bitmap = imageContent.Source as BitmapImage;
 				if (bitmap.UriSource.AbsoluteUri.StartsWith("ms-appdata"))
@@ -349,9 +374,8 @@ namespace LightNovel
 				HideImageRefreshButton();
 			}
 
-			if (line.IsImage || line.HasComments)
-				CommentsFlyout.ShowAt((FrameworkElement)container);
-			//CommentInputBox.Focus(Windows.UI.Xaml.FocusState.Unfocused);
+			CommentsFlyout.ShowAt((FrameworkElement)container);
+
 			if (line.HasComments && !line.IsLoading)
 			{
 				await line.LoadCommentsAsync();
@@ -387,6 +411,7 @@ namespace LightNovel
 					var bitmap = imageContent.Source as BitmapImage;
 					bitmap.DownloadProgress -= Image_DownloadProgress;
 				}
+				imageContent.DataContext = null;
 				imageContent.ClearValue(Image.SourceProperty);
 				imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 				imageContent.Height = 0;
@@ -403,6 +428,8 @@ namespace LightNovel
 				var textContent = iv.FindName("TextContent") as TextBlock;
 				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
 				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+
+				var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
 
 				var line = (LineViewModel)args.Item;
 
@@ -422,19 +449,34 @@ namespace LightNovel
 
 				if (line.IsImage)
 				{
-					textContent.Text = ImageLoadingTextPlaceholder;
-					imageContent.MinHeight = 440;
-					imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-					textContent.TextAlignment = TextAlignment.Center;
+					if (!App.ShouldAutoLoadImage)
+					{
+						textContent.Text = ImageTapToLoadPlaceholder;
+						//imageContent.MinHeight = 440;
+						imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+						imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+						textContent.TextAlignment = TextAlignment.Center;
+					}
+					else
+					{
+						textContent.Text = ImageLoadingTextPlaceholder;
+						//imageContent.MinHeight = 440;
+						imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+						imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+						textContent.TextAlignment = TextAlignment.Center;
+					}
 				}
 				else
 				{
 					textContent.Text = line.Content;
 					//textContent.Height = double.NaN;
 					textContent.TextAlignment = TextAlignment.Left;
-					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
+					imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+					imageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+					imageContent.DataContext = null;
 				}
+
 				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
 				//} else if (args.Phase == 1)
 				//{
@@ -442,44 +484,57 @@ namespace LightNovel
 				//	//textContent.Opacity = 1;
 				//	//args.RegisterUpdateCallback(ContentListView_ContainerContentChanging); 
 			}
-			else if (args.Phase == 1)
+			else if (args.Phase == 1) // Show comment indicator rectangle / progress bar
 			{
 				var line = (LineViewModel)args.Item;
 				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
 				if (line.HasComments)
+				{
 					commentIndicator.Opacity = 1;
+					args.RegisterUpdateCallback(3, ContentListView_ContainerContentChanging);
+				}
 				if (line.IsImage)
-					args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
+				{
+					var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+					progressIndicator.Value = 0;
+					progressIndicator.Opacity = 1;
+					if (App.ShouldAutoLoadImage)
+						args.RegisterUpdateCallback(2, ContentListView_ContainerContentChanging);
+				}
 			}
 			else if (args.Phase == 2)
 			{
 				var line = (LineViewModel)args.Item;
-
-				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
-				progressIndicator.Opacity = 1;
-				args.RegisterUpdateCallback(ContentListView_ContainerContentChanging);
-			}
-			else if (args.Phase == 3)
+				LoadItemIllustation(iv, line);
+			} else if (args.Phase == 3)
 			{
 				var line = (LineViewModel)args.Item;
-				var bitMap = new BitmapImage(line.ImageUri);
-				var imageContent = iv.FindName("ImageContent") as Image;
-				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
-				bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
-				bitMap.DownloadProgress += Image_DownloadProgress;
-				imageContent.ImageOpened += imageContent_ImageOpened;
-				//imageContent.Opacity = 1;
-				imageContent.Source = bitMap;
-				//imageContent.Height = double.NaN;
-				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				line.LoadCommentsAsync();
 			}
 			args.Handled = true;
+		}
+
+		private void LoadItemIllustation(Grid iv, LineViewModel line)
+		{
+			var bitMap = new BitmapImage(line.ImageUri);
+			var imageContent = iv.FindName("ImageContent") as Image;
+			imageContent.DataContext = line;
+			var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
+			var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+
+			bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
+			bitMap.DownloadProgress += Image_DownloadProgress;
+			imageContent.ImageOpened += imageContent_ImageOpened;
+			imageContent.ImageFailed += ImageContent_Failed;
+			imageContent.Source = bitMap;
 		}
 
 		async void imageContent_ImageOpened(object sender, RoutedEventArgs e)
 		{
 			var image = sender as Image;
+			var imagePlaceHolder = image.GetVisualParent().FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
 			image.ImageOpened -= imageContent_ImageOpened;
+			imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 			await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 		}
 
@@ -637,7 +692,7 @@ namespace LightNovel
 			}
 		}
 
-		private void IllustrationRefreshButton_Click(object sender, RoutedEventArgs e)
+		private async void IllustrationRefreshButton_Click(object sender, RoutedEventArgs e)
 		{
 			var lvm = ((FrameworkElement)sender).DataContext as LineViewModel;
 			if (lvm.IsImageCached) // LocalUri
@@ -645,59 +700,88 @@ namespace LightNovel
 				var container = ContentListView.ContainerFromIndex(lvm.No - 1) as SelectorItem;
 				if (container != null)
 				{
-					var iv = container.ContentTemplateRoot as Grid;
-					var imageContent = iv.FindName("ImageContent") as Image;
-					var bitmap = imageContent.Source as BitmapImage;
-					if (bitmap.UriSource.AbsoluteUri.StartsWith("ms-appdata"))
-					{
-						var textContent = iv.FindName("TextContent") as TextBlock;
-						var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
-						var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
-
-						textContent.Text = ImageLoadingTextPlaceholder;
-						imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-						textContent.TextAlignment = TextAlignment.Center;
-						textContent.Opacity = 1;
-						imageContent.Opacity = 0;
-						progressIndicator.Opacity = 1;
-
-						imageContent.ImageOpened -= imageContent_ImageOpened;
-						bitmap.DownloadProgress -= Image_DownloadProgress;
-						bitmap.UriSource = new Uri(lvm.Content);
-						bitmap.DownloadProgress += Image_DownloadProgress;
-						imageContent.ImageOpened += imageContent_ImageOpened;
-						HideImageRefreshButton();
-					}
+					var iv = container.ContentTemplateRoot as Grid; 
+					HideImageRefreshButton();
+					await RefreshCruptedImageItem(iv);
 				}
 			}
 		}
 
-		//private void PageBottomCommandBar_IsOpenChanged(object sender, object e)
-		//{
-		//	if (PageBottomCommandBar.IsOpen)
-		//	{
-		//		PageBottomCommandBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
-		//		PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
-		//		//foreach (var command in PageBottomCommandBar.PrimaryCommands)
-		//		//{
-		//		//	var element = (command as UIElement);
-		//		//	element.Visibility = Windows.UI.Xaml.Visibility.Visible;
-		//		//}
-		//		//BottomCommandBarOpenStory.Begin();
-		//	}
-		//	else
-		//	{
-		//		PageBottomCommandBar.Background = new SolidColorBrush(Colors.Transparent);
-		//		PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
-		//		//foreach (var command in PageBottomCommandBar.PrimaryCommands)
-		//		//{
-		//		//	var element = (command as UIElement);
-		//		//	element.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-		//		//}
+		private async void ImageContent_Failed(object sender, ExceptionRoutedEventArgs e)
+		{
+			var iv = ((Image)sender).GetFirstAncestorOfType<Grid>() as Grid;
+			await RefreshCruptedImageItem(iv);
+		}
 
-		//		//BottomCommandBarCloseStory.Begin();
-		//	}
-		//}
+
+		private async Task RefreshCruptedImageItem(Grid iv)
+		{
+			var imageContent = iv.FindName("ImageContent") as Image;
+			var lvm = imageContent.DataContext as LineViewModel;
+			if (lvm == null) return;
+
+			var bitmap = imageContent.Source as BitmapImage;
+			if (bitmap == null) return;
+
+			var uri = bitmap.UriSource.AbsoluteUri;
+			if (uri.StartsWith("ms-appdata"))
+			{
+
+				var textContent = iv.FindName("TextContent") as TextBlock;
+				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+				var imagePlaceholder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
+
+				var remoteUri = lvm.Content;
+
+				textContent.Text = ImageLoadingTextPlaceholder;
+				imagePlaceholder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				imagePlaceholder.Opacity = 1;
+				imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				textContent.TextAlignment = TextAlignment.Center;
+				textContent.Opacity = 1;
+				imageContent.Opacity = 0;
+				progressIndicator.Opacity = 1;
+
+				imageContent.ImageOpened -= imageContent_ImageOpened;
+				bitmap.DownloadProgress -= Image_DownloadProgress;
+
+				bitmap.UriSource = new Uri(remoteUri);
+				bitmap.DownloadProgress += Image_DownloadProgress;
+				imageContent.ImageOpened += imageContent_ImageOpened;
+
+				await CachedClient.DeleteIllustationAsync(remoteUri);
+			} // else is Network Issue
+		}
+
+		private void PageBottomCommandBar_IsOpenChanged(object sender, object e)
+		{
+			if (!ViewModel.IsFullScreen)
+				return;
+			SyncBottomAppBarTheme();
+			if (PageBottomCommandBar.IsOpen)
+			{
+				VisualStateManager.GoToState(this, "PeekTitleBarState", true);
+			}
+			else
+			{
+				VisualStateManager.GoToState(this, "HideTitleBarState", true);
+			}
+		}
+
+		private void SyncBottomAppBarTheme()
+		{
+			if (!ViewModel.IsFullScreen || PageBottomCommandBar.IsOpen)
+			{
+				PageBottomCommandBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+				PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
+			}
+			else
+			{
+				PageBottomCommandBar.Background = new SolidColorBrush(Colors.Transparent);
+				PageBottomCommandBar.Foreground = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+			}
+		}
 
 		private void ImageSetCoverButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -707,7 +791,12 @@ namespace LightNovel
 
 		private void FullScreenButton_Click(object sender, RoutedEventArgs e)
 		{
+			ViewModel.IsFullScreen = !ViewModel.IsFullScreen;
+		}
 
+		private async void RefreshContentButtonClick(object sender, RoutedEventArgs e)
+		{
+			await ViewModel.RefreshSeriesDataAsync();
 		}
 
 

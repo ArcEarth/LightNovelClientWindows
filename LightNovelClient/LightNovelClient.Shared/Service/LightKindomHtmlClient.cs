@@ -50,6 +50,8 @@ namespace LightNovel.Service
 		//private static readonly Dictionary<string, Series> SeriesDictionary = new Dictionary<string, Series>();
 		//private static readonly Dictionary<string, Chapter> ChaptersDictionary = new Dictionary<string, Chapter>();
 
+		private const string CharsetAffix = "?charset=big5";
+
 		private const string SeverBasePath = "http://lknovel.lightnovel.cn";
 		private const string ChapterSource = SeverBasePath + "/main/view/";
 		private const string ChapterSource1 = SeverBasePath + "/mobile/view/";
@@ -76,7 +78,7 @@ namespace LightNovel.Service
 		private const string UserSetBookmarkPath = SeverBasePath + "/main/set_bookmark.html";
 
 		private const string IE11UserAgentString = "Mozilla/5.0 (IE 11.0; Windows NT 6.3; Trident/7.0; .NET4.0E; .NET4.0C; rv:11.0) like Gecko";
-		private const string CiSession = "ci_session";
+		private const string CiSession = "ci_session_3";
 		//	$.post("/main/set_bookmark.html", {
 		//		chapter_id: c,
 		//		line_id: b
@@ -150,7 +152,8 @@ namespace LightNovel.Service
 					var cookie = new HttpCookie(CiSession, SeverBasePath, "/");
 					cookie.Value = _ci_session.Key;
 					_CiSessionCookie = cookie;
-					_fileter.CookieManager.SetCookie(cookie);
+					//_fileter.CookieManager.SetCookie(cookie);
+
 					//cookie.Domain = "lknovel.lightnovel.cn";
 					//var header = _cookieContainer.GetCookieHeader(SeverBaseUri);
 					//Debug.WriteLine(header);
@@ -254,7 +257,7 @@ namespace LightNovel.Service
 
 				var filter = new HttpBaseProtocolFilter();
 				var cookies = filter.CookieManager.GetCookies(SeverBaseUri);
-				var cookie = cookies.FirstOrDefault(c => c.Name == "ci_session");
+				var cookie = cookies.FirstOrDefault(c => c.Name == CiSession);
 				if (cookie == null)
 					throw new Exception("Didn't get proper login token!");
 				Credential = new Session { Key = cookie.Value, Expries = cookie.Expires.Value.DateTime };
@@ -732,6 +735,7 @@ namespace LightNovel.Service
 			var novelUrl = new Uri(ChapterSource1 + id + ".html");
 			using (var client = NewUserHttpClient(UserAgentType.IE11))
 			{
+				var filter = new HttpBaseProtocolFilter();
 				var stream = await client.GetInputStreamAsync(novelUrl);
 				return ParseChapterAlter(id, stream.AsStreamForRead());
 			}

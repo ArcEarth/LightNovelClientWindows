@@ -52,14 +52,14 @@ namespace LightNovel.Common
 				_roamingSettings.Add(EnableAutomaticReadingThemeKey, true);
 			if (!_roamingSettings.ContainsKey(BackgroundThemeKey))
 				_roamingSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
-			if (!_roamingSettings.ContainsKey(ImageLoadingPolicyKey))
-				_roamingSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
+			if (!_localSettings.ContainsKey(ImageLoadingPolicyKey))
+				_localSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
 			if (!_localSettings.ContainsKey(CredentialKey))
 				_localSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session { Expries = DateTime.Now.AddYears(-100), Key = "" }));
 			if (!_roamingSettings.ContainsKey(FontSizeKey))
 				_roamingSettings.Add(FontSizeKey, 19.0);
 			if (!_roamingSettings.ContainsKey(InterfaceLanguageKey))
-				_roamingSettings.Add(InterfaceLanguageKey, "zh-Hans");
+				_roamingSettings.Add(InterfaceLanguageKey, "");
 
 			if (!_localSettings.ContainsKey(FontFamilyKey))
 #if WINDOWS_PHONE_APP
@@ -154,22 +154,25 @@ namespace LightNovel.Common
 		{
 			get
 			{
-				return (ImageLoadingPolicy)_roamingSettings[ImageLoadingPolicyKey];
+				return (ImageLoadingPolicy)_localSettings[ImageLoadingPolicyKey];
 			}
 			set
 			{
-				_roamingSettings[ImageLoadingPolicyKey] = (int)value;
+				_localSettings[ImageLoadingPolicyKey] = (int)value;
 				NotifyPropertyChanged();
 			}
 		}
 		public int ImageLoadingPolicyBindingProperty
 		{
 			get
-			{ return (int)ImageLoadingPolicy; }
+			{ 
+				return (int)ImageLoadingPolicy;
+			}
 			set
 			{
 				ImageLoadingPolicy = (ImageLoadingPolicy)value;
 				NotifyPropertyChanged();
+				App.RefreshAutoLoadPolicy();
 			}
 		}
 

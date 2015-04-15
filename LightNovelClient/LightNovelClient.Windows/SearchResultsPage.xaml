@@ -227,15 +227,13 @@
                     AutomationProperties.AutomationId="BackButton"
                     AutomationProperties.ItemType="Navigation Button"
                     AutomationProperties.Name="Back"
-                    BorderBrush="{StaticResource AppBackgroundBrush}"
-                    BorderThickness="2"
                     Command="{Binding NavigationHelper.GoBackCommand,
                                       ElementName=pageRoot}"
-                    Foreground="{StaticResource AppBackgroundBrush}"
-                    Style="{ThemeResource NavigationBackButtonNormalStyle}" />
+                    Style="{StaticResource NavigationBackButtonNormalStyle}" />
             <TextBlock x:Uid="SearchResultLabel"
                        x:Name="resultText"
                        Grid.Column="2"
+                       Language="zh-Hans"
                        Margin="0,0,0,20"
                        VerticalAlignment="Bottom"
                        Foreground="{ThemeResource AppBackgroundBrush}"
@@ -257,8 +255,8 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-Hans">
-                    &#x201c;
+                           Language="zh-Hans" Text="&#x201c;">
+                    
                 </TextBlock>
                 <TextBox x:Name="queryText"
                          Grid.Column="1"
@@ -298,8 +296,8 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-Hans">
-                    &#x201d;
+                           Language="zh-Hans" Text="&#x201d;">
+                    
                 </TextBlock>
             </Grid>
         </Grid>

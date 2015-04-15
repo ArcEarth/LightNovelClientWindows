@@ -412,18 +412,51 @@
     <value>系统语言</value>
   </data>
   <data name="ImageLoadingPolicyAutomaticItem.Content" xml:space="preserve">
-    <value>智能</value>
+    <value>自动加载插画</value>
   </data>
   <data name="ImageLoadingPolicyManualItem.Content" xml:space="preserve">
-    <value>总是手动</value>
+    <value>手动加载插画</value>
   </data>
   <data name="ImageLoadingPolicySmartItem.Content" xml:space="preserve">
-    <value>总是自动</value>
+    <value>智能</value>
   </data>
   <data name="Help3TextBlock.Text" xml:space="preserve">
     <value>你可以在项目上长按来在新窗口里打开小说哦</value>
   </data>
   <data name="AutomaticThemeItem.Text" xml:space="preserve">
     <value>自动</value>
+  </data>
+  <data name="GeneralOptionsItem.Header" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="AboutItem.Header" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="ImageTapToLoadPlaceholderText" xml:space="preserve">
+    <value>点击加载插画</value>
+  </data>
+  <data name="RefreshContentButton.Label" xml:space="preserve">
+    <value>刷新目录</value>
+  </data>
+  <data name="FullScreenButton.Label" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="LoadingHeader" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="LoadingFailedContentNetworkIssue" xml:space="preserve">
+    <value>我们当前无法连接到网络，请确认您的Wi-fi与数据设置。</value>
+  </data>
+  <data name="LoadingFailedContentOverallLabel" xml:space="preserve">
+    <value>加载失败了 :(</value>
+  </data>
+  <data name="ViewInBrowserButton.Label" xml:space="preserve">
+    <value>在浏览器中打开</value>
+  </data>
+  <data name="LoadingFailedContentSeviceIssue" xml:space="preserve">
+    <value>您所请求的章节已被服务器隐藏。</value>
+  </data>
+  <data name="AcknowledgeLabel.Text" xml:space="preserve">
+    <value>感谢这些为应用的进步做出了特别努力的人们 : </value>
   </data>
 </root>

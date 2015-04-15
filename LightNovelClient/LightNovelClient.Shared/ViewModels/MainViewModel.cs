@@ -114,11 +114,11 @@ namespace LightNovel.ViewModels
 			IsLoaded = true;
 			IsLoading = false;
 
-			//await App.Current.User.SyncFavoriteListAsync(foreceRefresh);
+			//await App.User.SyncFavoriteListAsync(foreceRefresh);
 
-			//App.Current.User.FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
+			//App.User.FavoriteList.CollectionChanged += FavoriteList_CollectionChanged;
 
-			//var favList = from fav in App.Current.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
+			//var favList = from fav in App.User.FavoriteList orderby fav.VolumeNo group fav by fav.SeriesTitle ;
 
 			//foreach (var series in favList)
 			//{
@@ -134,7 +134,7 @@ namespace LightNovel.ViewModels
 
 			//IsLoading = false;
 			//IsLoaded = true;
-			//return App.Current.User.FavoriteList;
+			//return App.User.FavoriteList;
 
 		}
 
@@ -787,14 +787,14 @@ namespace LightNovel.ViewModels
 			if (App.Current.IsSignedIn)
 			{
 				IsSignedIn = true;
-				UserName = App.Current.User.UserName;
+				UserName = App.User.UserName;
 			}
 			else
 			{
 				UserName = resourceLoader.GetString("LoginIndicator");
 				IsSignedIn = await App.Current.SignInAutomaticllyAsync();
 				if (IsSignedIn)
-					UserName = App.Current.User.UserName;
+					UserName = App.User.UserName;
 				else
 					UserName = resourceLoader.GetString("LoginLabel");
 			}
@@ -814,11 +814,11 @@ namespace LightNovel.ViewModels
 			catch (Exception)
 			{
 				IsSignedIn = false;
-				App.Current.User = null;
+				App.User = null;
 			}
 			if (IsSignedIn)
 			{
-				UserName = App.Current.User.UserName;
+				UserName = App.User.UserName;
 			}
 			return IsSignedIn;
 		}

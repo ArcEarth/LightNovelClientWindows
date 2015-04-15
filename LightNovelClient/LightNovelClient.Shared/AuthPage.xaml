@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="LightNovel.AuthPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="pageRoot"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <WebView Grid.Row="1" x:Name="webView"/>
+        <Grid Background="{ThemeResource AppAccentBrush}" Style="{StaticResource TitlePanelStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    AutomationProperties.AutomationId="BackButton"
+                    AutomationProperties.ItemType="Navigation Button"
+                    AutomationProperties.Name="Back"
+                    Command="{Binding NavigationHelper.GoBackCommand,
+                                      ElementName=pageRoot}"
+                    Style="{StaticResource NavigationBackButtonNormalStyle}" />
+            <SymbolIcon Grid.Column="1"
+            	Margin="10,0,5,-2"
+            	Foreground="{ThemeResource AppBackgroundBrush}"
+            	Symbol="Permissions" />
+            <TextBlock x:Uid="AuthPageLabel"
+                       x:Name="AuthPageLabel"
+                       Grid.Column="2"
+                       Margin="5,0,0,8"
+                       Language="zh-Hans"
+                       VerticalAlignment="Center"
+                       Foreground="{ThemeResource AppBackgroundBrush}"
+                       IsHitTestVisible="false"
+                       Style="{StaticResource SubheaderTextBlockStyle}"
+                       Text="Authentication"
+                       TextWrapping="NoWrap" />
+        </Grid>
+
+    </Grid>
+</Page>

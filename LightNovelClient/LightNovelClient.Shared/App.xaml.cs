@@ -1,29 +1,29 @@
-﻿using System;
+﻿using LightNovel.Common;
+using LightNovel.Service;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
+using Windows.Graphics.Imaging;
+using Windows.Networking.Connectivity;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Core;
+using Windows.UI.StartScreen;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using System.Linq;
-using LightNovel.Common;
-using LightNovel.Service;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Diagnostics;
-using Windows.Networking.Connectivity;
-using Windows.Storage;
 using Windows.Web.Http;
-using System.Net;
-using Windows.UI.StartScreen;
-using Windows.Storage.Streams;
-using Windows.Graphics.Imaging;
-using Windows.UI.ViewManagement;
-using Windows.UI.Core;
-using System.Collections.ObjectModel;
 
 // The Universal Hub Application project template is documented at http://go.microsoft.com/fwlink/?LinkID=391955
 
@@ -57,11 +57,12 @@ namespace LightNovel
 					this.RequestedTheme = ApplicationTheme.Dark;
 				}
 				var language = Settings.InterfaceLanguage;
-				if (language != null)
+				if (!string.IsNullOrEmpty(language))
 					Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
 				this.InitializeComponent();
 				this.Suspending += this.OnSuspending;
 				this.Resuming += this.OnResuming;
+				NetworkInformation.NetworkStatusChanged += NetworkInformation_NetworkStatusChanged;
 			}
 			catch (Exception exception)
 			{
@@ -102,16 +103,8 @@ namespace LightNovel
 			}
 			Debug.WriteLine("AppOnLaunched");
 #endif
-            //CurrentState = new ApplicationState();
 
-#if WINDOWS_PHONE_APP
-			//Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
-			//	 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
-			//var statusBar = StatusBar.GetForCurrentView();
-			//statusBar.BackgroundOpacity = 0;
-#else
-#endif
-            mainDispatcher = Window.Current.Dispatcher;
+			mainDispatcher = Window.Current.Dispatcher;
             mainViewId = ApplicationView.GetForCurrentView().Id;
 
             Frame rootFrame = Window.Current.Content as Frame;
@@ -154,9 +147,17 @@ namespace LightNovel
 			}
 
 			#region Preloading
+#if WINDOWS_PHONE_APP
+			//Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
+			//	 .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
+			var statusBar = StatusBar.GetForCurrentView();
+			statusBar.BackgroundOpacity = 0;
+			statusBar.ForegroundColor = (Windows.UI.Color)Resources["AppBackgroundColor"];
+#endif
 			await LoadHistoryDataAsync(); ;
 			await LoadBookmarkDataAsync();
 			await CachedClient.InitializeCachedSetAsync();
+			RefreshAutoLoadPolicy();
 			#endregion
 
 			if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -250,7 +251,7 @@ namespace LightNovel
 #else
 		public static void ApplicationWiseCommands_CommandsRequested(Windows.UI.ApplicationSettings.SettingsPane sender, Windows.UI.ApplicationSettings.SettingsPaneCommandsRequestedEventArgs args)
 		{
-			if (!args.Request.ApplicationCommands.Any(c => c.Id == "Options"))
+			if (!args.Request.ApplicationCommands.Any(c => ((string)c.Id) == "Options"))
 			{
 				var command = new Windows.UI.ApplicationSettings.SettingsCommand("Options", "Options", x =>
 				{
@@ -261,7 +262,7 @@ namespace LightNovel
 				args.Request.ApplicationCommands.Add(command);
 			}
 
-			if (!args.Request.ApplicationCommands.Any(c => c.Id == "About"))
+			if (!args.Request.ApplicationCommands.Any(c => ((string)c.Id) == "About"))
 			{
 				var command = new Windows.UI.ApplicationSettings.SettingsCommand("About", "About", x =>
 				{
@@ -294,11 +295,56 @@ namespace LightNovel
 			return (connectionProfile != null && connectionProfile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess);
 		}
 
+		static bool _shouldAutoImage = true;
+		public static bool ShouldAutoLoadImage
+		{
+			get
+			{
+				return _shouldAutoImage;
+			}
+		}
+
+		public static void RefreshAutoLoadPolicy()
+		{
+			if (App.Settings.ImageLoadingPolicy == ImageLoadingPolicy.Automatic)
+				_shouldAutoImage = true;
+			else if (App.Settings.ImageLoadingPolicy == ImageLoadingPolicy.Manual)
+				_shouldAutoImage = false;
+			else
+				_shouldAutoImage = App.NetworkState == App.AppNetworkState.Unrestricted;
+		}
+
+		static void NetworkInformation_NetworkStatusChanged(object sender)
+		{
+			RefreshAutoLoadPolicy();
+		}
+
+		public enum AppNetworkState
+		{
+				Unconnected = 0,
+				Metered = 1,
+				Unrestricted = 2
+		};
+
+		public static AppNetworkState NetworkState
+		{
+			get
+			{
+				ConnectionProfile connectionProfile = NetworkInformation.GetInternetConnectionProfile();
+				if (connectionProfile == null || connectionProfile.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
+					return AppNetworkState.Unconnected;
+				if (connectionProfile.GetConnectionCost().NetworkCostType == NetworkCostType.Unrestricted)
+					return AppNetworkState.Unrestricted;
+				else
+					return AppNetworkState.Metered;
+			}
+		}
+
 		private const string LocalRecentFilePath = "history.json";
 		private const string LocalBookmarkFilePath = "bookmark.json";
-		private ApplicationSettings _settings = new ApplicationSettings();
-		public UserInfo User { get; set; }
-		public ApplicationSettings Settings { get { return _settings; } }
+		private static ApplicationSettings _settings = new ApplicationSettings();
+		public static UserInfo User { get; set; }
+		public static ApplicationSettings Settings { get { return _settings; } }
 		public bool IsSignedIn { get { return User != null && !User.Credential.Expired; } }
 
         public static bool _isHistoryListChanged = true;
@@ -707,8 +753,8 @@ namespace LightNovel
 				var session = await LightKindomHtmlClient.LoginAsync(userName, password);
 				if (session == null)
 					return null;
-				App.Current.Settings.Credential = session;
-				App.Current.Settings.SetUserNameAndPassword(userName, password);
+				App.Settings.Credential = session;
+				App.Settings.SetUserNameAndPassword(userName, password);
 				User = new UserInfo { UserName = userName, Password = password, Credential = session };
 			}
 			catch (Exception)
@@ -720,9 +766,9 @@ namespace LightNovel
 
 		public async Task<bool> SignInAutomaticllyAsync(bool forecRefresh = false)
 		{
-			var userName = App.Current.Settings.UserName;
-			var session = App.Current.Settings.Credential;
-			var password = App.Current.Settings.Password;
+			var userName = App.Settings.UserName;
+			var session = App.Settings.Credential;
+			var password = App.Settings.Password;
 			if (String.IsNullOrEmpty(password) || String.IsNullOrEmpty(userName))
 				return false;
 			try
@@ -737,7 +783,7 @@ namespace LightNovel
 					var newSession = await LightKindomHtmlClient.LoginAsync(userName, password);
 					if (newSession == null)
 						return false;
-					App.Current.Settings.Credential = newSession;
+					App.Settings.Credential = newSession;
 					User = new UserInfo { UserName = userName, Password = password, Credential = newSession };
 				}
 				return true;
@@ -751,11 +797,11 @@ namespace LightNovel
 		public async Task<bool> SignOutAsync()
 		{
 			if (!IsSignedIn) return true;
-			App.Current.Settings.SetUserNameAndPassword("", "");
-			App.Current.Settings.Credential = new Session();
-			var clearTask = App.Current.User.ClearUserInfoAsync();
+			App.Settings.SetUserNameAndPassword("", "");
+			App.Settings.Credential = new Session();
+			var clearTask = App.User.ClearUserInfoAsync();
 			await clearTask;
-			App.Current.User = null;
+			App.User = null;
 			return true;
 		}
 

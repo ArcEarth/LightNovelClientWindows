@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.3.2.5" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.4.2.5" />
   <mp:PhoneIdentity PhoneProductId="8a260f73-d110-4117-8748-645292634468" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>LightNovel</DisplayName>

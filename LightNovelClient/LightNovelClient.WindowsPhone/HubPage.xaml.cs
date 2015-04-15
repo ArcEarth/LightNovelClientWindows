@@ -38,9 +38,9 @@ namespace LightNovel
 		{
 			//var lv = LastReadSection.GetFirstDescendantOfType<ListViewItem>();
 			//var position = lv.GetPosition(new Point(0,0) , LastReadSection);
-			if (this.RequestedTheme != App.Current.Settings.BackgroundTheme)
+			if (this.RequestedTheme != App.Settings.BackgroundTheme)
 			{
-				this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+				this.RequestedTheme = App.Settings.BackgroundTheme;
 			} 
 			ViewModel.IsLoading = true;
 			var statusBar = StatusBar.GetForCurrentView();
@@ -85,11 +85,11 @@ namespace LightNovel
 			else
 			{
 				ViewModel.IsSignedIn = true;
-				ViewModel.UserName = App.Current.User.UserName;
+				ViewModel.UserName = App.User.UserName;
 			}
 
 			await ViewModel.RecommandSection.LoadAsync(false,20);
-			if (App.Current.Settings.EnableLiveTile)
+			if (App.Settings.EnableLiveTile)
 				UpdateTile();
 
 			await ViewModel.FavoriteSection.LoadAsync();

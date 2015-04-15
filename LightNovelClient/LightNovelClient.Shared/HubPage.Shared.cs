@@ -18,6 +18,7 @@ using LightNovel.Controls;
 using Windows.UI.ViewManagement;
 using Windows.UI.Notifications;
 using NotificationsExtensions.TileContent;
+using Windows.UI.Xaml.Input;
 
 namespace LightNovel
 {
@@ -108,7 +109,7 @@ namespace LightNovel
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-			ViewModel.Settings = App.Current.Settings;
+			ViewModel.Settings = App.Settings;
 #if WINDOWS_APP
 			Windows.UI.ApplicationSettings.SettingsPane.GetForCurrentView().CommandsRequested += App.ApplicationWiseCommands_CommandsRequested;
 			App.RecentListChanged += Current_RecentListChanged;
@@ -121,22 +122,69 @@ namespace LightNovel
 		{ 
 			var appView = ApplicationView.GetForCurrentView();
 #if WINDOWS_PHONE_APP
-			appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseVisible);
-#endif
+			appView.SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
 
-//			if (appView.Orientation == ApplicationViewOrientation.Landscape)
-//			{
-//#if WINDOWS_PHONE_APP
-//				LastReadSection.Margin = new Thickness(0, -60, 0, 0);
-//#else
-//				LastReadSection.Margin = new Thickness(0, -79, 0, 0);
-//#endif
-//			}
-//			else
-//			{
-//				LastReadSection.Margin = new Thickness(0);
-//			}
+			if (appView.Orientation == ApplicationViewOrientation.Landscape)
+			{
+				BottomAppBar.Closed += BottomAppBar_IsOpenChanged;
+				BottomAppBar.Opened += BottomAppBar_IsOpenChanged;
+				BottomAppBar.Opacity = 0;
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				AppBarHint.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				LastReadSection.Margin = new Thickness(0,-60,0,0);
+				var logo = VisualTreeHelperExtensions.GetDescendantsOfType<Canvas>(RootHub).FirstOrDefault(elem => elem.Name == "Logo");
+				if (logo != null)
+				{
+					(logo.RenderTransform as TranslateTransform).X = LastReadSection.ActualWidth;
+				}
+			}
+			else
+			{
+				BottomAppBar.Closed -= BottomAppBar_IsOpenChanged;
+				BottomAppBar.Opened -= BottomAppBar_IsOpenChanged;
+				BottomAppBar.Opacity = 1;
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				AppBarHint.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				LastReadSection.Margin = new Thickness(0, 0, 0, 0);
+				var logo = VisualTreeHelperExtensions.GetDescendantsOfType<Canvas>(RootHub).FirstOrDefault(elem => elem.Name == "Logo");
+				if (logo != null)
+				{
+					(logo.RenderTransform as TranslateTransform).X = 0;
+				}
+			}
+#else
+            if (appView.Orientation == ApplicationViewOrientation.Landscape)
+            {
+                LastReadSection.Margin = new Thickness(0, -79, 0, 0);
+                LastReadSection.Width = (this.ActualHeight -80) * 0.6;
+                LogoImage.Margin = new Thickness(this.ActualHeight * 0.6 + 40, 0, 0, 0);
+                LogoShiftingFactor = 1.0;
+                LastReadSection.Width = 600;
+            }
+            else
+            {
+                LastReadSection.Margin = new Thickness(0, 0, 0, 0);
+                LastReadSection.Width = (this.ActualHeight - 80) * 0.6;
+                LogoImage.Margin = new Thickness(20, 0,0,0);
+                LogoShiftingFactor = 0.1;
+            }
+#endif
+        }
+
+		void BottomAppBar_IsOpenChanged(object sender, object e)
+		{
+			var appBar = sender as AppBar;
+			if (appBar.IsOpen)
+			{
+				BottomAppBar.Opacity = 1;
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Visible;
+			}
+			else {
+				BottomAppBar.Opacity = 0;
+				BottomAppBar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+			}
 		}
+
 		void HubPage_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			SyncViewWithOrientation();
@@ -303,7 +351,7 @@ namespace LightNovel
 			catch (Exception)
 			{
 				Debug.WriteLine("Failed to login");
-				App.Current.User = null;
+				App.User = null;
 			}
 
 			if (!App.Current.IsSignedIn)
@@ -497,12 +545,12 @@ namespace LightNovel
 			var switcher = sender as ToggleSwitch;
 			if (switcher.IsOn)
 			{
-				App.Current.Settings.EnableLiveTile = true;
+				App.Settings.EnableLiveTile = true;
 				UpdateTile();
 			}
 			else
 			{
-				App.Current.Settings.EnableLiveTile = false;
+				App.Settings.EnableLiveTile = false;
 				ClearTile();
 			}
 		}
@@ -591,7 +639,6 @@ namespace LightNovel
 			ViewModel.IsLoading = true;
 
 			ViewModel.FavoriteSection.Remove(hvm);
-			ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
 
 			try
 			{
@@ -604,14 +651,14 @@ namespace LightNovel
 
 				if (App.Current.IsSignedIn)
 				{
-					var favDeSer = (from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+					var favDeSer = (from fav in App.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
 					if (favDeSer.Any(id => id == null))
 					{
-						await App.Current.User.SyncFavoriteListAsync(true);
-						(from fav in App.Current.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						await App.User.SyncFavoriteListAsync(true);
+						(from fav in App.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
 					}
 
-					await App.Current.User.RemoveUserFavriteAsync(favDeSer);
+					await App.User.RemoveUserFavriteAsync(favDeSer);
 				}
 			}
 			catch (Exception)
@@ -619,6 +666,7 @@ namespace LightNovel
 				Debug.WriteLine("Exception happens when deleting favorite");
 			}
 
+			//ViewModel.FavoriteSection.NotifyPropertyChanged("IsEmpty");
 			ViewModel.IsLoading = false;
 		}
 
@@ -646,6 +694,28 @@ namespace LightNovel
 				ViewModel.IsLoading = true;
 				await ViewModel.RecommandSection.LoadAsync(true, 20);
 				ViewModel.IsLoading = false;
+			}
+		}
+
+		private void AppBarHint_Click(object sender, RoutedEventArgs e)
+		{
+			if (!this.BottomAppBar.IsOpen)
+			{
+				this.BottomAppBar.IsOpen = true;
+			}
+			else
+			{
+				this.BottomAppBar.IsOpen = false;
+			}
+		}
+
+		private void AppBarHintButton_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+		{
+			e.Handled = true;
+			if (e.Cumulative.Translation.Y < -25)
+			{
+				e.Complete();
+				AppBarHint_Click(sender, null);
 			}
 		}
 	}

@@ -248,6 +248,7 @@
                        x:Name="resultText"
                        Grid.Column="0"
                        Margin="15,0,0,3"
+                       Language="zh-Hans"
                        VerticalAlignment="Bottom"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
@@ -268,8 +269,7 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-Hans">
-                    &#x201c;
+                           Language="zh-Hans" Text="&#x201c;">
                 </TextBlock>
                 <TextBox x:Name="queryText"
                          Grid.Column="1"
@@ -309,8 +309,8 @@
                            FontWeight="Light"
                            Foreground="{ThemeResource AppAccentBrushLight}"
                            IsHitTestVisible="false"
-                           Language="zh-Hans">
-                    &#x201d;
+                           Language="zh-Hans" Text="&#x201d;">
+                    
                 </TextBlock>
             </Grid>
         </Grid>

@@ -136,8 +136,8 @@
     <Language Code="ru" InMinimumRequirementSet="true" />
     <Language Code="ru-ru" InMinimumRequirementSet="true" />
     <Language Code="zh" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
-    <Language Code="zh-Hans" InMinimumRequirementSet="true" />
+    <Language Code="zh-cn" InMinimumRequirementSet="true" />
+    <Language Code="zh-hans" InMinimumRequirementSet="true" />
     <Language Code="zh-sg" InMinimumRequirementSet="true" />
     <Language Code="sk" InMinimumRequirementSet="true" />
     <Language Code="sk-sk" InMinimumRequirementSet="true" />
@@ -200,27 +200,32 @@
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.3.1.3</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
+      </PackageInfo>
+      <PackageInfo>
+        <OsMinVersion>6.3.0.0</OsMinVersion>
+        <PackageArchitecture></PackageArchitecture>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.3.1.3</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.3.1.3</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.3.1.3</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.3.1.3</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.4.1.4</PackageMaxArchitectureVersion>
       </PackageInfo>
     </BundleInfo>
   </PackageInfoList>

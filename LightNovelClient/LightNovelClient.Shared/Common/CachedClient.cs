@@ -99,6 +99,20 @@ namespace LightNovel.Common
 			else
 				return new Uri(img_url);
 		}
+		public async static Task DeleteIllustationAsync(string img_url)
+		{
+			var localName = System.IO.Path.GetFileName(img_url);
+			CachedIllustrationSet.Remove(img_url);
+			try
+			{
+				var item = await App.Current.IllustrationFolder.GetItemAsync(localName);
+				await item.DeleteAsync();
+			}
+			catch (Exception)
+			{
+			}
+		}
+
 
 		static Task CacheChaptersAsync(CancellationToken c, IProgress<string> progress, IEnumerable<string> chapters, bool cache_images)
 		{
@@ -138,21 +152,45 @@ namespace LightNovel.Common
 
 										try
 										{
-											using (var client = new HttpClient())
+											//using (var client = new HttpClient())
+											//{
+											StorageFile file = await App.Current.IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.FailIfExists);
+											if (c.IsCancellationRequested)
+												return;
+
+
+											//var stream = await client.GetInputStreamAsync(new Uri(img));
+											//if (c.IsCancellationRequested)
+											//	return;
+											//var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+											//if (c.IsCancellationRequested)
+											//	return;
+											//await stream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
+
+											bool succ = false;
+											try
 											{
-												StorageFile file = await App.Current.IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.FailIfExists);
+												var downloader = new BackgroundDownloader();
+												var task = downloader.CreateDownload(new Uri(img), file);
+
 												if (c.IsCancellationRequested)
 													return;
-												var stream = await client.GetInputStreamAsync(new Uri(img));
-												if (c.IsCancellationRequested)
-													return;
-												var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite);
-												if (c.IsCancellationRequested)
-													return;
-												await stream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
-												//downloader.CreateDownload(new Uri(img), file);
+
+												await task.StartAsync();
+
 												CachedIllustrationSet.Add(localName);
+												succ = true;
 											}
+											catch (Exception)
+											{
+												succ = false;
+											}
+
+											if (!succ)
+											{
+												await file.DeleteAsync(); // Remove the file as it may mislead the system
+											}
+											//}
 										}
 										catch (Exception exc)
 										{
@@ -275,6 +313,18 @@ namespace LightNovel.Common
 				{
 					if (CachedChapterSet.Contains(cpt.Id))
 					{
+						try
+						{
+							var chapter = await GetChapterAsync(cpt.Id);
+							foreach (var imageLine in chapter.Lines.Where(line => line.ContentType == LineContentType.ImageContent))
+							{
+								await DeleteIllustationAsync(imageLine.Content);
+							}
+						}
+						catch (Exception)
+						{
+						}
+
 						await DataCache.Delete("chapter-" + cpt.Id);
 						CachedSeriesSet.Remove(cpt.Id);
 					}

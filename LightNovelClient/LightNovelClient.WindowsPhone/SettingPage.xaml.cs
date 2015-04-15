@@ -30,7 +30,7 @@ namespace LightNovel
 
 		public ApplicationSettings ViewModel
 		{
-			get { return App.Current.Settings; }
+			get { return App.Settings; }
 		}
 		/// <summary>
 		/// NavigationHelper is used on each page to aid in navigation and 
@@ -52,11 +52,11 @@ namespace LightNovel
 			var switcher = sender as ToggleSwitch;
 			if (switcher.IsOn)
 			{
-				App.Current.Settings.EnableLiveTile = true;
+				App.Settings.EnableLiveTile = true;
 			}
 			else
 			{
-				App.Current.Settings.EnableLiveTile = false;
+				App.Settings.EnableLiveTile = false;
 				ClearTile();
 			}
 		}

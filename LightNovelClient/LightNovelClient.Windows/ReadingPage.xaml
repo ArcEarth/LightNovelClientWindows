@@ -996,7 +996,6 @@
         <Grid x:Name="IndexRegion"
               Grid.Row="1"
               Grid.Column="0"
-              MaxWidth="640"
               Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

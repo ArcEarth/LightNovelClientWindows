@@ -155,6 +155,7 @@ namespace LightNovel.Service
 
 	public class Chapter : ChapterProperties
 	{
+		public string ErrorMessage { get; set; }
 		public IList<Line> Lines { get; set; }
 
 		//public string Id { get; set; }

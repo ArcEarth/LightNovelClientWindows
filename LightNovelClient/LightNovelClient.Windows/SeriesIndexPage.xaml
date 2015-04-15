@@ -139,6 +139,7 @@
                        x:Name="SeriesIndexLabel"
                        Grid.Column="2"
                        Margin="5,0,0,8"
+                       Language="zh-Hans"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"

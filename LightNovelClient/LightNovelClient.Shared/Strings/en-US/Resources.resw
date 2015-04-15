@@ -199,7 +199,7 @@
     <value>Project Home</value>
   </data>
   <data name="DataCreditLabel.Text" xml:space="preserve">
-    <value>Special thanks and Data Credit : </value>
+    <value>Special thanks and Data Credit :</value>
   </data>
   <data name="ShareButton.Label" xml:space="preserve">
     <value>Share</value>
@@ -403,13 +403,13 @@
     <value>"Smart" Policy will automatic load illustration when connect to an Wi-Fi, while manual load in Cellar.</value>
   </data>
   <data name="ImageLoadingPolicyManualItem.Content" xml:space="preserve">
-    <value>Always Manual</value>
+    <value>Manual Load Illustation</value>
   </data>
   <data name="ImageLoadingPolicySmartItem.Content" xml:space="preserve">
-    <value>Always Automatic</value>
+    <value>Smart</value>
   </data>
   <data name="ImageLoadingPolicyAutomaticItem.Content" xml:space="preserve">
-    <value>Smart</value>
+    <value>Automatic Load Illustration</value>
   </data>
   <data name="InterfaceLanguageLabel.Text" xml:space="preserve">
     <value>Interface Language</value>
@@ -418,12 +418,45 @@
     <value>You will need Restart Application to change language</value>
   </data>
   <data name="LanguageAutoItem.Content" xml:space="preserve">
-    <value>System Language </value>
+    <value>System Language</value>
   </data>
   <data name="Help3TextBlock.Text" xml:space="preserve">
     <value>You can open a novel in new Window by right click or holding on an item</value>
   </data>
   <data name="AutomaticThemeItem.Text" xml:space="preserve">
     <value>Automatic</value>
+  </data>
+  <data name="GeneralOptionsItem.Header" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="AboutItem.Header" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ImageTapToLoadPlaceholderText" xml:space="preserve">
+    <value>Tap to load Illustation</value>
+  </data>
+  <data name="RefreshContentButton.Label" xml:space="preserve">
+    <value>Refresh Content</value>
+  </data>
+  <data name="FullScreenButton.Label" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
+  <data name="LoadingHeader" xml:space="preserve">
+    <value>Loading</value>
+  </data>
+  <data name="LoadingFailedContentNetworkIssue" xml:space="preserve">
+    <value>We cannot reach the internet right now</value>
+  </data>
+  <data name="LoadingFailedContentSeviceIssue" xml:space="preserve">
+    <value>The chapter you request is hide from service side.</value>
+  </data>
+  <data name="LoadingFailedContentOverallLabel" xml:space="preserve">
+    <value>Failed to Load :(</value>
+  </data>
+  <data name="ViewInBrowserButton.Label" xml:space="preserve">
+    <value>View in Browser</value>
+  </data>
+  <data name="AcknowledgeLabel.Text" xml:space="preserve">
+    <value>Acknowledge : </value>
   </data>
 </root>

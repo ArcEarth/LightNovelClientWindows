@@ -20,14 +20,9 @@ namespace LightNovel
 {
 	public sealed partial class AboutSettingsFlyout : SettingsFlyout
 	{
-		public ApplicationSettings ViewModel
-		{
-			get { return App.Current.Settings; }
-		}
-
 		public AboutSettingsFlyout()
 		{
-			this.RequestedTheme = App.Current.Settings.BackgroundTheme;
+			this.RequestedTheme = App.Settings.BackgroundTheme;
 			this.InitializeComponent();
 		}
 	}

@@ -85,6 +85,7 @@
                                 <TextBlock Width="380"
                                            Margin="5,0,0,0"
                                            HorizontalAlignment="Stretch"
+                                           TextAlignment="Left"
                                            VerticalAlignment="Center"
                                            FontSize="{ThemeResource AppFontSizeMediumLarge}"
                                            Foreground="{ThemeResource AppAccentBrush}"

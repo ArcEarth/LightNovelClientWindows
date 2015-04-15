@@ -14,7 +14,6 @@
                             RelativeSource={RelativeSource Self}}"
       NavigationCacheMode="Required"
       mc:Ignorable="d">
-
     <Page.Resources>
         <!--  Collection of items displayed by this page  -->
         <CollectionViewSource x:Name="VolumesViewSource"
@@ -36,21 +35,26 @@
         <DataTemplate x:Key="LineViewCCGTemplate" x:Name="LineViewCCGTemplate">
             <Grid HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgressBar"
-                             Height="{Binding FontSize,
-                                              ElementName=ContentListView}"
-                             Margin="10,0,10,0"
+                             Margin="20,5"
                              HorizontalAlignment="Stretch"
-                             VerticalAlignment="Center"
-                             Background="{ThemeResource AppSemitransparentBrush}"
+                             VerticalAlignment="Stretch"
+                             Background="{ThemeResource AppAccentBrushLight}"
                              Foreground="{ThemeResource AppAccentBrush}"
                              Maximum="100"
                              Minimum="0"
                              Value="0" />
+                <Path x:Name="ImagePlaceHolder"
+                      Margin="20,5" Visibility="Collapsed" 
+                      HorizontalAlignment="Stretch"
+                      Height="440" Fill="{ThemeResource ContentBackgroundBrush}" Stretch="Fill"  Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "></Path>
+
                 <Image x:Name="ImageContent"
                        Margin="0,5"
                        HorizontalAlignment="Stretch"
                        VerticalAlignment="Center"
+                       ImageFailed="ImageContent_Failed"
                        Stretch="Uniform" />
+
                 <TextBlock x:Name="TextContent"
                            Margin="12,2"
                            HorizontalAlignment="Stretch"
@@ -71,94 +75,6 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">
-            <Grid Loaded="IllustrationViewGrid_Loaded">
-                <ProgressBar x:Name="ProgressBar"
-                             Margin="10,0,10,20"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Center"
-                             Background="{ThemeResource AppSemitransparentBrush}"
-                             Foreground="{ThemeResource AppAccentBrush}"
-                             Maximum="100"
-                             Minimum="0"
-                             Value="0" />
-                <TextBlock x:Uid="ImageLoadingIndicator"
-                           Margin="0,0,0,0"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="{ThemeResource AppFontSizeMedium}"
-                           FontWeight="SemiBold"
-                           Foreground="{ThemeResource AppAccentBrush}"
-                           Visibility="{Binding Visibility,
-                                                ElementName=ProgressBar}">
-                    Image Loading...
-                </TextBlock>
-                <Image HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"
-                       Stretch="Uniform"
-                       Visibility="{Binding IsImage,
-                                            Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <!--<Interactivity:Interaction.Behaviors>
-                        <Core:IncrementalUpdateBehavior Phase="3"/>
-                    </Interactivity:Interaction.Behaviors>-->
-                    <Image.Source>
-                        <BitmapImage x:Name="IllustrationBitmap"
-                                     DownloadProgress="Illustration_DownloadProgress"
-                                     UriSource="{Binding ImageUri}" />
-                    </Image.Source>
-                </Image>
-                <TextBlock Margin="12,0"
-                           HorizontalAlignment="Left"
-                           FontSize="{Binding FontSize,
-                                              ElementName=ContentListView}"
-                           FontWeight="Normal"
-                           Foreground="{Binding Foreground,
-                                                ElementName=ContentListView}"
-                           Text="{Binding Content}"
-                           TextAlignment="Left"
-                           TextWrapping="Wrap"
-                           Visibility="{Binding IsImage,
-                                                Converter={StaticResource BooleanToVisibilityReverseConverter}}" />
-
-                <Rectangle Width="5"
-                           HorizontalAlignment="Left"
-                           Fill="{ThemeResource AppAccentBrush}"
-                           Visibility="{Binding HasComments,
-                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="TextLineViewTemplate" d:DataType="{system:Type vm:LineViewModel}">
-            <Grid>
-                <Rectangle Width="5"
-                           HorizontalAlignment="Left"
-                           Fill="{ThemeResource AppAccentBrush}"
-                           Visibility="{Binding HasComments,
-                                                Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <TextBlock Margin="12,0"
-                           HorizontalAlignment="Left"
-                           FontSize="{Binding FontSize,
-                                              ElementName=ContentListView}"
-                           FontWeight="Normal"
-                           Foreground="{Binding Foreground,
-                                                ElementName=ContentListView}"
-                           Text="{Binding Content}"
-                           TextAlignment="Left"
-                           TextWrapping="Wrap" />
-            </Grid>
-        </DataTemplate>
-        <local:NovelLineDataTemplateSelector x:Key="LineViewTemplateSelector"
-                                             IllustrationDataTemplate="{StaticResource IllustrationViewTemplate}"
-                                             TextDataTemplate="{StaticResource TextLineViewTemplate}" />
-        <CollectionViewSource x:Key="LinesViewSource" Source="{Binding Contents}" />
-        <!--<DataTemplate x:Key="LineViewTemplateSelectorTemplate">
-            <local:TemplateSelectorContent>
-                <local:TemplateSelectorContent.ContentTemplateSelector>
-               </local:TemplateSelectorContent.ContentTemplateSelector>
-            </local:TemplateSelectorContent>
-        </DataTemplate>-->
-
-        <DataTemplate x:Key="LineViewTemplateWithoutComment" d:DataType="{system:Type vm:LineViewModel}" />
-
         <Flyout x:Key="CommentsFlyout"
                 x:Name="CommentsFlyout"
                 Placement="Top">
@@ -168,7 +84,7 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <!--  Comment Tools  -->
-                <Grid x:Name="CommentsTool">
+                <Grid x:Name="CommentsTool" Margin="0,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="auto" />
@@ -233,6 +149,7 @@
                                  x:Name="CommentInputBox"
                                  HorizontalAlignment="Stretch"
                                  VerticalAlignment="Stretch"
+                                 Padding="5"
                                  VerticalContentAlignment="Center"
                                  Background="{ThemeResource AppBackgroundDimBrush}"
                                  BorderBrush="{ThemeResource TransparentBrush}"
@@ -274,7 +191,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
                         <ColumnDefinition x:Name="ImageRefreshColumn" Width="*" />
                     </Grid.ColumnDefinitions>
                     <!--<TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppAccentBrush}">Picture</TextBlock>-->
@@ -335,6 +252,7 @@
                             Background="{ThemeResource AppAccentBrush}"
                             BorderBrush="{ThemeResource TransparentBrush}"
                             BorderThickness="0"
+                            Visibility="Collapsed"
                             Click="ImageSetCoverButton_Click"
                             Foreground="{ThemeResource AppAccentBrush}"
                             Padding="0">
@@ -369,6 +287,7 @@
             </Grid>
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
                     <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
@@ -379,7 +298,7 @@
                     <Setter Property="Background" Value="{StaticResource AppSemitransparentBrush}" />
                     <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrush}" />
                     <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Padding" Value="5,5,5,5" />
+                    <Setter Property="Padding" Value="5,0,5,5" />
                 </Style>
             </Flyout.FlyoutPresenterStyle>
         </Flyout>
@@ -421,6 +340,7 @@
             </Grid>-->
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
                     <Setter Property="ScrollViewer.ZoomMode" Value="Enabled" />
                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
@@ -435,7 +355,16 @@
                 </Style>
             </Flyout.FlyoutPresenterStyle>
         </Flyout>
+
+
+
         <MenuFlyout x:Key="FontSizeFlyout">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrushSemiLight}" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
             <MenuFlyoutItem x:Uid="SubtleFontSizeButton"
                             Click="FontSizeButton_Click"
                             FontSize="{ThemeResource AppFontSizeSmall}"
@@ -463,6 +392,13 @@
                             Text="Huge" />
         </MenuFlyout>
         <MenuFlyout x:Key="FontStyleFlyout">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrushSemiLight}" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+
             <!--<MenuFlyoutItem x:Uid="SegoeFontButton"
                                             Click="FontSizeButton_Click"
                                             FontFamily="Segoe WP SemiLight"
@@ -486,14 +422,19 @@
                             Text="默认" />
         </MenuFlyout>
         <MenuFlyout x:Key="ReadingThemeFlyout">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrushSemiLight}" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+
             <MenuFlyoutItem x:Uid="AutomaticThemeItem"
                             x:Name="AutomaticThemeItem"
                             Height="60"
                             Margin="-20,0,0,0"
                             HorizontalContentAlignment="Center"
-                            Background="{ThemeResource AppBackgroundBrush}"
                             Click="ReadingThemButton_Click"
-                            Foreground="{ThemeResource AppForegroundBrush}"
                             Text="Auto" />
             <MenuFlyoutItem x:Uid="DarkThemeItem"
                             Height="60"
@@ -590,6 +531,7 @@
             </Grid>
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme, ElementName=pageRoot}" />
                     <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
@@ -611,37 +553,31 @@
                     Background="{ThemeResource AppAccentBrush}"
                     BorderBrush="Transparent"
                     BorderThickness="0"
+                    Closed="PageBottomCommandBar_IsOpenChanged"
                     ClosedDisplayMode="Minimal"
                     Foreground="{ThemeResource AppBackgroundBrush}"
                     IsOpen="{Binding IsLoading,
-                                     Converter={StaticResource BooleanNegationConverter}}">
+                                     Converter={StaticResource BooleanNegationConverter}}"
+                    Opened="PageBottomCommandBar_IsOpenChanged"
+                    RequestedTheme="{Binding RequestedTheme,
+                                             ElementName=pageRoot}">
             <CommandBar.PrimaryCommands>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
-                <!--<AppBarToggleButton x:Uid="FullScreenButton"
+                <AppBarToggleButton x:Uid="FullScreenButton"
                                     x:Name="FullScreenButton"
                                     Margin="0,0"
                                     VerticalAlignment="Center"
                                     BorderBrush="Transparent"
                                     Foreground="{ThemeResource AppBackgroundBrush}"
                                     Icon="FullScreen"
-                                    IsChecked="{Binding EnableComments,
+                                    IsChecked="{Binding IsFullScreen,
                                                         Mode=TwoWay}"
                                     IsCompact="False"
                                     Label="Full Screen"
                                     Padding="0"
-                                    ToolTipService.ToolTip="Toggle if enable the comments in reading" />-->
-                <AppBarButton x:Uid="ReadingStyleButton"
-                              x:Name="ReadingStyleButton"
-                              Margin="0,0,0,0"
-                              VerticalAlignment="Center"
-                              BorderBrush="{ThemeResource TransparentBrush}"
-                              Click="ReadingThemeButtonClick"
-                              Foreground="{ThemeResource AppBackgroundBrush}"
-                              Icon="FontColor"
-                              IsCompact="False"
-                              Label="Theme"
-                              Padding="0" />
+                                    ToolTipService.ToolTip="Toggle if enable the comments in reading" />
+
                 <AppBarToggleButton x:Uid="CommentEnableButton"
                                     x:Name="CommentEnableButton"
                                     Margin="0,0"
@@ -686,14 +622,13 @@
                 <AppBarButton x:Uid="ShareButton"
                               x:Name="ShareButton"
                               Grid.Column="1"
-                              Margin="0,0,0,0"
+                              Margin="0,-8" 
                               VerticalAlignment="Center"
                               BorderBrush="{ThemeResource TransparentBrush}"
                               Click="ShareButton_Click"
                               Foreground="{ThemeResource AppBackgroundBrush}"
                               IsCompact="False"
-                              Label="Share"
-                              Padding="0">
+                              Label="Share">
                     <Viewbox Margin="0">
                         <Canvas x:Name="appbar_share"
                                 Width="76"
@@ -715,13 +650,10 @@
                               BorderBrush="{ThemeResource TransparentBrush}"
                               Click="DownloadButton_Click"
                               Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="Download"
                               IsCompact="False"
                               Label="Make aviable offline"
-                              Padding="0">
-                    <Viewbox Margin="8">
-                        <SymbolIcon Symbol="Download" />
-                    </Viewbox>
-                </AppBarButton>
+                              Margin="0,-8" />
                 <AppBarButton x:Uid="FontSizeButton"
                               x:Name="FontSizeButton"
                               VerticalAlignment="Center"
@@ -731,7 +663,7 @@
                               Icon="FontSize"
                               IsCompact="False"
                               Label="Font Size"
-                              Padding="0" />
+                              Margin="0,-8" />
                 <AppBarButton x:Uid="FontFamilyButton"
                               x:Name="FontFamilyButton"
                               VerticalAlignment="Center"
@@ -741,7 +673,40 @@
                               Icon="Font"
                               IsCompact="False"
                               Label="Font Style"
+                              Margin="0,-8"/>
+                <AppBarButton x:Uid="ReadingStyleButton"
+                              x:Name="ReadingStyleButton"
+                              Margin="0,-8"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="ReadingThemeButtonClick"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="FontColor"
+                              IsCompact="False"
+                              Label="Theme"
                               Padding="0" />
+                <AppBarButton x:Uid="RefreshContentButton"
+                              x:Name="RefreshContentButton"
+                              Margin="0,-8"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="RefreshContentButtonClick"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="Refresh"
+                              IsCompact="False"
+                              Label="Refresh"
+                              Padding="0" />
+                <AppBarButton x:Uid="ViewInBrowserButton"
+                              x:Name="ViewInBrowserButton"
+                              Margin="0,-8"
+                              VerticalAlignment="Center"
+                              BorderBrush="{ThemeResource TransparentBrush}"
+                              Click="ViewInBrowserButton_Click"
+                              Foreground="{ThemeResource AppBackgroundBrush}"
+                              Icon="Globe"
+                              IsCompact="False"
+                              Label="View in Browser"
+                              />
                 <!--<AppBarButton Icon="Go" Label="Jump To ..." Click="JumpToAppBarButton_Click" />-->
 
             </CommandBar.SecondaryCommands>
@@ -758,228 +723,12 @@
             <RowDefinition Height="auto" />
             <RowDefinition x:Name="ContentRow" Height="*" />
         </Grid.RowDefinitions>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="LoadingStates">
-                <VisualState x:Name="Ready" />
-                <VisualState x:Name="Loading">
-                    <Storyboard>
-                        <DoubleAnimation Duration="0:0:0"
-                                         Storyboard.TargetName="VerticalPrevButton"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="0.0" />
-                        <DoubleAnimation Duration="0:0:0"
-                                         Storyboard.TargetName="VerticalNextButton"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="0.0" />
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Duration="0:0:00"
-                                         Storyboard.TargetName="ContentRegion"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="0.0" />
-                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="IsActive">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
-                        </ObjectAnimationUsingKeyFrames>-->
-                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                        </ObjectAnimationUsingKeyFrames>-->
-                    </Storyboard>
-                </VisualState>
-                <VisualStateGroup.Transitions>
-                    <VisualTransition From="Ready" To="Loading">
-                        <Storyboard>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="0" />
-                                <EasingDoubleKeyFrame x:Name="ReadyToLoadingEndingFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.4"
-                                                      Value="-640" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation Duration="0:0:0.0"
-                                             Storyboard.TargetName="VerticalPrevButton"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="0.0" />
-                            <DoubleAnimation Duration="0:0:0.0"
-                                             Storyboard.TargetName="VerticalNextButton"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="0.0" />
-                            <DoubleAnimation Duration="0:0:0.4"
-                                             Storyboard.TargetName="ContentRegion"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="0.0" />
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
-                            </ObjectAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </VisualTransition>
-                    <VisualTransition From="Loading" To="Ready">
-                        <Storyboard>
-                            <DoubleAnimation Duration="0:0:0.4"
-                                             From="0"
-                                             Storyboard.TargetName="VerticalPrevButton"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1" />
-                            <DoubleAnimation Duration="0:0:0.4"
-                                             From="0"
-                                             Storyboard.TargetName="VerticalNextButton"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1" />
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
-                                <EasingDoubleKeyFrame x:Name="LoadingToReadyIntialFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="640" />
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.4"
-                                                      Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation Duration="0:0:0.4"
-                                             From="0"
-                                             Storyboard.TargetName="ContentRegion"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1.0" />
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </VisualTransition>
-                </VisualStateGroup.Transitions>
-            </VisualStateGroup>
-            <VisualStateGroup x:Name="IndexPanelStates">
-                <VisualState x:Name="IndexClosed">
-                    <!--<Storyboard>
-
-                    -->
-                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
-                        </ObjectAnimationUsingKeyFrames>
-                    -->
-                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="False" />
-                        </ObjectAnimationUsingKeyFrames>-->
-                    <!--
-
-                        <DoubleAnimation Duration="0"
-                                         Storyboard.TargetName="IndexPanel"
-                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                         To="-330" />-->
-                    <!--<DoubleAnimation Duration="0"
-                                         Storyboard.TargetName="IndexPanel"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="0.0" />-->
-                    <!--
-                    </Storyboard>-->
-                </VisualState>
-                <VisualState x:Name="IndexOpen">
-                    <Storyboard>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                        </ObjectAnimationUsingKeyFrames>
-                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True" />
-                        </ObjectAnimationUsingKeyFrames>-->
-                        <DoubleAnimation Duration="0"
-                                         Storyboard.TargetName="IndexPanel"
-                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                         To="0" />
-                        <DoubleAnimation Duration="0"
-                                         Storyboard.TargetName="ContentRegion"
-                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                         To="330" />
-                        <DoubleAnimation Duration="0"
-                                         Storyboard.TargetName="IndexPanel"
-                                         Storyboard.TargetProperty="(UIElement.Opacity)"
-                                         To="1.0" />
-                    </Storyboard>
-                </VisualState>
-                <VisualStateGroup.Transitions>
-                    <VisualTransition From="IndexClosed"
-                                      GeneratedDuration="0:0:25"
-                                      To="IndexOpen">
-                        <Storyboard x:Name="IndexOpenStoryBoard">
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                <EasingDoubleKeyFrame x:Name="IndexCollapsedToExpandedKeyFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="-330" />
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
-                                                      Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                <EasingDoubleKeyFrame x:Name="ContentCollapsedToExpandedKeyFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="0" />
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
-                                                      Value="330" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation Duration="0:0:0.25"
-                                             From="0"
-                                             Storyboard.TargetName="IndexPanel"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="1.0" />
-                        </Storyboard>
-                    </VisualTransition>
-                    <VisualTransition From="IndexOpen"
-                                      GeneratedDuration="0:0:0.25"
-                                      To="IndexClosed">
-                        <Storyboard x:Name="IndexCloseStoryBoard">
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
-                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False" />
-                            </ObjectAnimationUsingKeyFrames>-->
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedStartKeyFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="0" />
-                                <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedKeyFrame"
-                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
-                                                      Value="-330" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.00"
-                                                      Value="330" />
-                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
-                                                      KeyTime="0:0:0.25"
-                                                      Value="0" />
-                            </DoubleAnimationUsingKeyFrames>
-                            <!--<DoubleAnimation Duration="0:0:0.25"
-                                             Storyboard.TargetName="IndexPanel"
-                                             Storyboard.TargetProperty="(UIElement.Opacity)"
-                                             To="0.0" />-->
-                        </Storyboard>
-                    </VisualTransition>
-                </VisualStateGroup.Transitions>
-            </VisualStateGroup>
-
-        </VisualStateManager.VisualStateGroups>
 
         <!--  Back button and page title  -->
         <Grid x:Name="ContentRegion"
               Grid.Row="1"
               Grid.Column="0"
+              Margin="0,0,0,0"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
               CommonNavigationTransitionInfo.IsStaggerElement="False"
@@ -988,7 +737,6 @@
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="ContentPanelTranslation" X="0" Y="0" />
             </Grid.RenderTransform>
-
             <ListView x:Name="ContentListView"
                       Grid.ColumnSpan="2"
                       Margin="0,0,0,0"
@@ -1062,7 +810,7 @@
                 </ListView.Header>
                 <ListView.Footer>
                     <Button x:Name="VerticalNextButton"
-                            Height="60"
+                            Height="80"
                             MinHeight="30"
                             HorizontalAlignment="Left"
                             Background="{ThemeResource AppAccentBrush}"
@@ -1081,23 +829,23 @@
                                           Data="M0,60 H120 V0 H60 Z"
                                           Fill="{TemplateBinding Background}" />-->
                                     <Path x:Name="Arc"
-                                          Width="120"
-                                          Height="60"
+                                          Width="140"
+                                          Height="80"
                                           HorizontalAlignment="Left"
-                                          Data="M0,0 V60 H120 L60,0 Z"
+                                          Data="M0,0 V80 H140 L60,0 Z"
                                           Fill="{TemplateBinding Background}" />
                                     <Path x:Name="Arrow"
                                           Width="30"
                                           Height="20"
-                                          Margin="25,0,25,0"
+                                          Margin="25,20,25,0"
                                           HorizontalAlignment="Left"
-                                          VerticalAlignment="Center"
+                                          VerticalAlignment="Top"
                                           Data="M0.06,0 L5.47,5.56 L10.88,0 L10.94,4.12 L5.48,9.67 L0,4.12 z"
                                           Fill="{TemplateBinding Foreground}"
                                           Stretch="Fill" />
-                                    <TextBlock Margin="100,0,20,10"
+                                    <TextBlock Margin="100,10,20,10"
                                                HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"
+                                               VerticalAlignment="Top"
                                                FontSize="{ThemeResource AppFontSizeLarge}"
                                                Foreground="{ThemeResource AppAccentBrush}"
                                                Text="{Binding NextChapterHeader}"
@@ -1300,10 +1048,34 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-
+        <!--<Grid Grid.Row="1" Width="200" Height="300" >
+            <ProgressBar VerticalAlignment="Stretch" Background="{ThemeResource AppAccentBrushLight}" Maximum="1" Minimum="0" Value="0.5" Foreground="{ThemeResource AppAccentBrush}"></ProgressBar>
+            <Path Fill="{ThemeResource AppBackgroundBrush}" Stretch="Fill"  Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "></Path>
+        </Grid>-->
+        <Button x:Name="AppBarHint"
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Height="25"
+                MinHeight="25"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Click="AppBarHint_Click"
+                ManipulationMode="TranslateY"
+                ManipulationDelta="AppBarHintButton_ManipulationDelta"
+                Foreground="{ThemeResource AppAccentBrush}"
+                Style="{StaticResource PureButtonStyle}">
+            <SymbolIcon Margin="0,0"
+                        Width="50"
+                        HorizontalAlignment="Right"
+                        Foreground="{ThemeResource AppAccentBrush}"
+                        Symbol="More" />
+        </Button>
         <Grid x:Name="TitlePanel"
               Height="40"
               Style="{StaticResource TitlePanelStyle}">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
@@ -1356,12 +1128,25 @@
                        TextAlignment="Left"
                        TextTrimming="WordEllipsis"
                        TextWrapping="NoWrap" />
-            <!--<Path Grid.Row="0" Height="40" Width="40"
-                                              Grid.Column="1"
-                                              Margin="0,0,10,0"
-                                              HorizontalAlignment="Right"
-                                              Data="F1 M 52.2573,19.0027L 38.0053,33.2546L 50.6737,33.2546L 25.3369,57.008L 35.4716,38.0053L 23.7533,38.0053L 36.4217,19.0027L 52.2573,19.0027 Z "
-                                              Fill="{ThemeResource AppBackgroundBrush}" />-->
+            <!--<Button Grid.Row="0"
+                    Grid.Column="2"
+                    MinWidth="10"
+                    MinHeight="10"
+                    Margin="0,0,0,-20"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Click="FullScreenButton_Click"
+                    Padding="0,23,0,25"
+                    Style="{StaticResource PureButtonStyle}">
+                <Path x:Name="FullScreenButtonIcon" HorizontalAlignment="Center"
+                      Data="F1 M 37.8516,35.625L 34.6849,38.7917L 23.6016,50.2708L 23.6016,39.9792L 37.8516,24.9375L 52.1016,39.9792L 52.1016,50.2708L 41.0182,38.7917L 37.8516,35.625 Z "
+                      Fill="{ThemeResource AppBackgroundBrush}"
+                      Stretch="Uniform" RenderTransformOrigin="0.5,0.5" >
+                    <Path.RenderTransform>
+                        <CompositeTransform Rotation="0"></CompositeTransform>
+                    </Path.RenderTransform>
+                </Path>
+            </Button>-->
 
 
 
@@ -1392,5 +1177,354 @@
                      Maximum="1"
                      Minimum="0"
                      Visibility="Collapsed" />
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LoadingStates">
+                <VisualState x:Name="Ready" />
+                <VisualState x:Name="Loading">
+                    <Storyboard>
+                        <DoubleAnimation Duration="0:0:0"
+                                         Storyboard.TargetName="VerticalPrevButton"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
+                        <DoubleAnimation Duration="0:0:0"
+                                         Storyboard.TargetName="VerticalNextButton"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0:0:00"
+                                         Storyboard.TargetName="ContentRegion"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="IsActive">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>-->
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>-->
+                    </Storyboard>
+                </VisualState>
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="Ready" To="Loading">
+                        <Storyboard>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="0" />
+                                <EasingDoubleKeyFrame x:Name="ReadyToLoadingEndingFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.4"
+                                                      Value="-640" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.0"
+                                             Storyboard.TargetName="VerticalPrevButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />
+                            <DoubleAnimation Duration="0:0:0.0"
+                                             Storyboard.TargetName="VerticalNextButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             Storyboard.TargetName="ContentRegion"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>-->
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="Loading" To="Ready">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
+                                             Storyboard.TargetName="VerticalPrevButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1" />
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
+                                             Storyboard.TargetName="VerticalNextButton"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1" />
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)">
+                                <EasingDoubleKeyFrame x:Name="LoadingToReadyIntialFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="640" />
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.4"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.4"
+                                             From="0"
+                                             Storyboard.TargetName="ContentRegion"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1.0" />
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>-->
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoadingIndicator" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="FullScreenStates">
+                <VisualState x:Name="ShowTitleBarState" />
+                <VisualState x:Name="HideTitleBarState">
+                    <Storyboard>
+                        <!--<ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" To="{ThemeResource AppAccentColor}"/>
+                    <ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Background).(SolidColorBrush.Color)" To="Transparent"/>-->
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="TitlePanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         To="-40" />
+                        <!--<DoubleAnimation Duration="0:0:0"
+                                         Storyboard.TargetName="FullScreenButtonIcon"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)"
+                                         To="180" />-->
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="PeekTitleBarState">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="TitlePanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                         To="0" />
+                    </Storyboard>
+                </VisualState>
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="ShowTitleBarState"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="HideTitleBarState">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="TitlePanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="-40" />
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="HideTitleBarState"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="ShowTitleBarState">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="TitlePanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="0" />
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="PeekTitleBarState"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="HideTitleBarState">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="TitlePanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="-40" />
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="HideTitleBarState"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="PeekTitleBarState">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,-40,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="TitlePanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="0" />
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="PeekTitleBarState"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="ShowTitleBarState">
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="ContentRegion"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             From="0"
+                                             To="40" />
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="IndexPanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             From="0"
+                                             To="40" />
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="TitlePanel"
+                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                             To="0" />
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="IndexPanelStates">
+                <VisualState x:Name="IndexClosed">
+                    <!--<Storyboard>
+
+                    -->
+                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                    -->
+                    <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="False" />
+                        </ObjectAnimationUsingKeyFrames>-->
+                    <!--
+
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="IndexPanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         To="-330" />-->
+                    <!--<DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="IndexPanel"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="0.0" />-->
+                    <!--
+                    </Storyboard>-->
+                </VisualState>
+                <VisualState x:Name="IndexOpen">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True" />
+                        </ObjectAnimationUsingKeyFrames>-->
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="IndexPanel"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         To="0" />
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="ContentRegion"
+                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
+                                         To="330" />
+                        <DoubleAnimation Duration="0"
+                                         Storyboard.TargetName="IndexPanel"
+                                         Storyboard.TargetProperty="(UIElement.Opacity)"
+                                         To="1.0" />
+                    </Storyboard>
+                </VisualState>
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="IndexClosed"
+                                      GeneratedDuration="0:0:25"
+                                      To="IndexOpen">
+                        <Storyboard x:Name="IndexOpenStoryBoard">
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.0" Value="True" />
+                            </ObjectAnimationUsingKeyFrames>-->
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+                                <EasingDoubleKeyFrame x:Name="IndexCollapsedToExpandedKeyFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="-330" />
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.25"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+                                <EasingDoubleKeyFrame x:Name="ContentCollapsedToExpandedKeyFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="0" />
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.25"
+                                                      Value="330" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimation Duration="0:0:0.25"
+                                             From="0"
+                                             Storyboard.TargetName="IndexPanel"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="1.0" />
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="IndexOpen"
+                                      GeneratedDuration="0:0:0.25"
+                                      To="IndexClosed">
+                        <Storyboard x:Name="IndexCloseStoryBoard">
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="IsOpen">
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.25" Value="False" />
+                            </ObjectAnimationUsingKeyFrames>-->
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="IndexPanel" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+                                <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedStartKeyFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="0" />
+                                <EasingDoubleKeyFrame x:Name="IndexExpandedToCollapsedKeyFrame"
+                                                      EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.25"
+                                                      Value="-330" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)">
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.00"
+                                                      Value="330" />
+                                <EasingDoubleKeyFrame EasingFunction="{StaticResource QuadraticEaseOut}"
+                                                      KeyTime="0:0:0.25"
+                                                      Value="0" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <!--<DoubleAnimation Duration="0:0:0.25"
+                                             Storyboard.TargetName="IndexPanel"
+                                             Storyboard.TargetProperty="(UIElement.Opacity)"
+                                             To="0.0" />-->
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+
+        </VisualStateManager.VisualStateGroups>
+
     </Grid>
+
+
 </Page>

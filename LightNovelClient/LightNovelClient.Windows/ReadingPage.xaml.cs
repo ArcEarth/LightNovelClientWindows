@@ -71,6 +71,10 @@ namespace LightNovel
 
 		public ReadingPage()
 		{
+			if (this.RequestedTheme != App.Settings.BackgroundTheme)
+			{
+				this.RequestedTheme = App.Settings.BackgroundTheme;
+			} 
 			this.InitializeComponent();
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
@@ -92,7 +96,7 @@ namespace LightNovel
 
 		private void IndexRegion_SizeChanged(object sender, SizeChangedEventArgs e)
 		{
-			if (e.NewSize.Width >= 450)
+			if (e.NewSize.Width >= 500)
 			{
 				VolumeListView.Visibility = Visibility.Visible;
 				ChapterListView.Visibility = Visibility.Visible;
@@ -190,6 +194,7 @@ namespace LightNovel
 			{
 				ContentColumns.Orientation = Orientation.Vertical;
 				ContentColumns.Margin = new Thickness(0, 100, 0, 100);
+				ContentTextBlock.Padding = new Thickness(20, 40, 20, 40);
 				ContentScrollViewer.Style = (Style)App.Current.Resources["VerticalScrollViewerStyle"];
 				ContentScrollViewer.HorizontalSnapPointsType = SnapPointsType.None;
 				ContentScrollViewer.VerticalSnapPointsType = SnapPointsType.Mandatory;
@@ -198,6 +203,7 @@ namespace LightNovel
 			{
 				ContentColumns.Orientation = Orientation.Horizontal;
 				ContentColumns.Margin = new Thickness(100, 0, 100, 0);
+				ContentTextBlock.Padding = new Thickness(40);
 				ContentScrollViewer.Style = (Style)App.Current.Resources["HorizontalScrollViewerStyle"];
 				ContentScrollViewer.HorizontalSnapPointsType = SnapPointsType.Mandatory;
 				ContentScrollViewer.VerticalSnapPointsType = SnapPointsType.None;
@@ -237,7 +243,6 @@ namespace LightNovel
 
 			if (displaySize.Width < 500)
 			{
-				ContentTextBlock.Padding = new Thickness(20);
 				foreach (var col in ContentColumns.Children)
 				{
 					var page = col as RichTextBlockOverflow;
@@ -247,7 +252,6 @@ namespace LightNovel
 			}
 			else
 			{
-				ContentTextBlock.Padding = new Thickness(40);
 				foreach (var col in ContentColumns.Children)
 				{
 					var page = col as RichTextBlockOverflow;
