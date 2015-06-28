@@ -73,9 +73,9 @@ namespace LightNovel.Common
 
 			try
 			{
-				if (App.Current.IllustrationFolder == null)
-					App.Current.IllustrationFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("illustration", CreationCollisionOption.OpenIfExists);
-				var illustrations = await App.Current.IllustrationFolder.GetFilesAsync();
+				if (AppGlobal.IllustrationFolder == null)
+                    AppGlobal.IllustrationFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("illustration", CreationCollisionOption.OpenIfExists);
+				var illustrations = await AppGlobal.IllustrationFolder.GetFilesAsync();
 				if (illustrations != null)
 				{
 					CachedIllustrationSet.UnionWith(from item in illustrations select item.Name);
@@ -105,7 +105,7 @@ namespace LightNovel.Common
 			CachedIllustrationSet.Remove(img_url);
 			try
 			{
-				var item = await App.Current.IllustrationFolder.GetItemAsync(localName);
+				var item = await AppGlobal.IllustrationFolder.GetItemAsync(localName);
 				await item.DeleteAsync();
 			}
 			catch (Exception)
@@ -154,7 +154,7 @@ namespace LightNovel.Common
 										{
 											//using (var client = new HttpClient())
 											//{
-											StorageFile file = await App.Current.IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.FailIfExists);
+											StorageFile file = await AppGlobal.IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.FailIfExists);
 											if (c.IsCancellationRequested)
 												return;
 
@@ -362,7 +362,7 @@ namespace LightNovel.Common
 			}
 			if (IsSigninError)
 			{
-				if (await App.Current.SignInAutomaticllyAsync(true))
+				if (await AppGlobal.SignInAutomaticllyAsync(true))
 				{
 					return await DataCache.GetAsync("user_fav", LightKindomHtmlClient.GetUserFavoriteVolumesAsync, DateTime.Now.AddDays(1), true);
 				}

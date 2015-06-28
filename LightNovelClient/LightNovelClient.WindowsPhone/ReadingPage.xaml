@@ -42,7 +42,8 @@
                              Foreground="{ThemeResource AppAccentBrush}"
                              Maximum="100"
                              Minimum="0"
-                             Value="0" />
+                             Value="0" 
+                             Visibility="Collapsed" />
                 <Path x:Name="ImagePlaceHolder"
                       Margin="20,5" Visibility="Collapsed" 
                       HorizontalAlignment="Stretch"
@@ -56,7 +57,7 @@
                        Stretch="Uniform" />
 
                 <TextBlock x:Name="TextContent"
-                           Margin="12,2"
+                           Margin="12,2,6,2"
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
                            FontFamily="{Binding FontFamily,
@@ -564,6 +565,12 @@
             <CommandBar.PrimaryCommands>
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
                 <!--<AppBarSeparator Foreground="{ThemeResource AppBackgroundBrush}" />-->
+                <!--<AppBarButton x:Uid="OpenInNewViewButton"
+                              x:Name="OpenInNewViewButton"
+                              Click="OpenInNewViewButton_Click"
+                              Icon="NewWindow"
+                              Label="New Window" />-->
+                
                 <AppBarToggleButton x:Uid="FullScreenButton"
                                     x:Name="FullScreenButton"
                                     Margin="0,0"

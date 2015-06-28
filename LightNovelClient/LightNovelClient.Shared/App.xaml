@@ -30,7 +30,8 @@
                         Canvas.Left="0"
                         Canvas.Top="0"
                         Width="200"
-                        Height="60">
+                        Margin="20,0,0,0"
+                        Height="55">
                     <Canvas.RenderTransform>
                         <TranslateTransform X="0" Y="0" />
                     </Canvas.RenderTransform>

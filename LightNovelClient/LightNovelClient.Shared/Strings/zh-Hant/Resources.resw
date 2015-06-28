@@ -459,4 +459,22 @@
   <data name="AcknowledgeLabel.Text" xml:space="preserve">
     <value>感謝這些為應用的進步做出了特別努力的人們 : </value>
   </data>
+  <data name="AuthPageLabel.Text" xml:space="preserve">
+    <value>用戶驗證</value>
+  </data>
+  <data name="RetryHintTextBlock.Text" xml:space="preserve">
+    <value>驗證失敗了::(&gt;_&lt;):: 重試或者放棄吧</value>
+  </data>
+  <data name="AuthenticateButton.Label" xml:space="preserve">
+    <value>用戶驗證</value>
+  </data>
+  <data name="ReleaseNoteLabel.Text" xml:space="preserve">
+    <value>版本日誌</value>
+  </data>
+  <data name="ReleaseNoteContent.Text" xml:space="preserve">
+    <value>添加驗證的支持，修復了用戶登錄的問題。修復了偶爾閱讀時文章抖動的現象。開發者之後會主要更新Windows 10版本的應用 :)</value>
+  </data>
+  <data name="AuthPageLoadFailedHint.Text" xml:space="preserve">
+    <value>添加驗證的支持，修復了用戶登錄的問題。修復了偶爾閱讀時文章抖動的現象。開發者之後會主要更新Windows 10版本的應用 :)</value>
+  </data>
 </root>

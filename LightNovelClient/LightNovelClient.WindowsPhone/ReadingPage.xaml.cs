@@ -342,7 +342,7 @@ namespace LightNovel
 			if (ViewModel.EnableComments)
 			{
 				CommentsTool.Visibility = Visibility.Visible;
-				if (App.Current.IsSignedIn)
+				if (AppGlobal.IsSignedIn)
 				{
 					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				}
@@ -428,15 +428,17 @@ namespace LightNovel
 				var textContent = iv.FindName("TextContent") as TextBlock;
 				var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
 				var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+                if (!Double.IsNaN(sender.ActualWidth) && sender.ActualWidth > 0)
+                    iv.MaxWidth = sender.ActualWidth;
 
-				var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
+                var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
 
 				var line = (LineViewModel)args.Item;
 
 				iv.Height = double.NaN;
 				imageContent.Opacity = 0;
 				imageContent.Height = double.NaN;
-				commentIndicator.Opacity = 0;
+                commentIndicator.Opacity = 0;
 				progressIndicator.Opacity = 0;
 				textContent.Opacity = 1;
 
@@ -449,7 +451,7 @@ namespace LightNovel
 
 				if (line.IsImage)
 				{
-					if (!App.ShouldAutoLoadImage)
+					if (!AppGlobal.ShouldAutoLoadImage)
 					{
 						textContent.Text = ImageTapToLoadPlaceholder;
 						//imageContent.MinHeight = 440;
@@ -498,7 +500,7 @@ namespace LightNovel
 					var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
 					progressIndicator.Value = 0;
 					progressIndicator.Opacity = 1;
-					if (App.ShouldAutoLoadImage)
+					if (AppGlobal.ShouldAutoLoadImage)
 						args.RegisterUpdateCallback(2, ContentListView_ContainerContentChanging);
 				}
 			}

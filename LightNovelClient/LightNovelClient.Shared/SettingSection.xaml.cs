@@ -23,7 +23,7 @@ namespace LightNovel
     {
 		public ApplicationSettings ViewModel
 		{
-			get { return App.Settings; }
+			get { return AppGlobal.Settings; }
 		}
 		/// <summary>
 		/// NavigationHelper is used on each page to aid in navigation and 
@@ -41,11 +41,11 @@ namespace LightNovel
 			var switcher = sender as ToggleSwitch;
 			if (switcher.IsOn)
 			{
-				App.Settings.EnableLiveTile = true;
+                AppGlobal.Settings.EnableLiveTile = true;
 			}
 			else
 			{
-				App.Settings.EnableLiveTile = false;
+                AppGlobal.Settings.EnableLiveTile = false;
 				ClearTile();
 			}
 		}
@@ -66,11 +66,11 @@ namespace LightNovel
 		}
 		public SettingSection()
 		{
-			this.RequestedTheme = App.Settings.BackgroundTheme;
+			this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
 
 			this.InitializeComponent();
 
-			var lan = App.Settings.InterfaceLanguage ;
+			var lan = AppGlobal.Settings.InterfaceLanguage ;
 			var combo = InterfaceLanguageComboBox.Items.FirstOrDefault(item => ((ComboBoxItem)item).Language == lan);
 			if (combo != null)
 				InterfaceLanguageComboBox.SelectedItem = combo;
@@ -90,7 +90,7 @@ namespace LightNovel
 			if (item != LanguageAutoItem)
 				language = item.Language;
 
-			App.Settings.InterfaceLanguage = language;
+            AppGlobal.Settings.InterfaceLanguage = language;
 			if (language != "")
 				Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
 		}

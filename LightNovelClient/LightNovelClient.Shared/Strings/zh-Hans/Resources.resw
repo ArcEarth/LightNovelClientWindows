@@ -459,4 +459,22 @@
   <data name="AcknowledgeLabel.Text" xml:space="preserve">
     <value>感谢这些为应用的进步做出了特别努力的人们 : </value>
   </data>
+  <data name="AuthPageLabel.Text" xml:space="preserve">
+    <value>用户验证</value>
+  </data>
+  <data name="RetryHintTextBlock.Text" xml:space="preserve">
+    <value>验证失败了::(&gt;_&lt;):: 重试或者放弃吧</value>
+  </data>
+  <data name="AuthenticateButton.Label" xml:space="preserve">
+    <value>用户验证</value>
+  </data>
+  <data name="ReleaseNoteLabel.Text" xml:space="preserve">
+    <value>版本日志</value>
+  </data>
+  <data name="ReleaseNoteContent.Text" xml:space="preserve">
+    <value>添加验证的支持，修复了用户登录的问题。修复了偶尔阅读时文章抖动的现象。开发者之后会主要更新Windows 10版本的应用 :)</value>
+  </data>
+  <data name="AuthPageLoadFailedHint.Text" xml:space="preserve">
+    <value>验证页面加载失败了……这很有可能是因为网络或者服务器问题导致的，请等等再试:)</value>
+  </data>
 </root>

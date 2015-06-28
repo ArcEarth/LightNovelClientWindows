@@ -165,17 +165,17 @@
 
     <!--  Font sizes  -->
     <!--  13pt  -->
-    <x:Double x:Key="AppFontSizeSmall">13</x:Double>
+    <x:Double x:Key="AppFontSizeSmall">12</x:Double>
     <!--  15pt  -->
-    <x:Double x:Key="AppFontSizeNormal">15</x:Double>
+    <x:Double x:Key="AppFontSizeNormal">13</x:Double>
     <!--  17pt  -->
-    <x:Double x:Key="AppFontSizeMedium">17</x:Double>
+    <x:Double x:Key="AppFontSizeMedium">15</x:Double>
     <!--  20pt  -->
-    <x:Double x:Key="AppFontSizeMediumLarge">20</x:Double>
+    <x:Double x:Key="AppFontSizeMediumLarge">18.14</x:Double>
     <!--  24pt  -->
-    <x:Double x:Key="AppFontSizeLarge">24</x:Double>
+    <x:Double x:Key="AppFontSizeLarge">20</x:Double>
     <!--  32pt  -->
-    <x:Double x:Key="AppFontSizeExtraLarge">32</x:Double>
+    <x:Double x:Key="AppFontSizeExtraLarge">22</x:Double>
     <!--  42pt  -->
     <x:Double x:Key="AppFontSizeExtraExtraLarge">42</x:Double>
     <!--  140pt  -->
@@ -591,7 +591,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="AppBarToggleButton">
+    <!--<Style TargetType="AppBarToggleButton">
         <Setter Property="Foreground" Value="{ThemeResource AppBarItemForegroundThemeBrush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Background" Value="{ThemeResource AppBarItemBackgroundThemeBrush}" />
@@ -613,9 +613,9 @@
                           Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ApplicationViewStates">
-                                <!--  FullSize is used when we are in landscape or filled mode  -->
+                                --><!--  FullSize is used when we are in landscape or filled mode  --><!--
                                 <VisualState x:Name="FullSize" />
-                                <!--  Compact is used when we are in portrait or snapped mode  -->
+                                --><!--  Compact is used when we are in portrait or snapped mode  --><!--
                                 <VisualState x:Name="Compact">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Visibility">
@@ -813,9 +813,9 @@
                     <Grid x:Name="RootGrid" Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ApplicationViewStates">
-                                <!--  FullSize is used when we are in landscape or filled mode  -->
+                                --><!--  FullSize is used when we are in landscape or filled mode  --><!--
                                 <VisualState x:Name="FullSize" />
-                                <!--  Compact is used when we are in portrait or snapped mode  -->
+                                --><!--  Compact is used when we are in portrait or snapped mode  --><!--
                                 <VisualState x:Name="Compact">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Visibility">
@@ -937,6 +937,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
 </ResourceDictionary>

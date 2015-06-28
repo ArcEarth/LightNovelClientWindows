@@ -22,7 +22,7 @@ namespace LightNovel
 	{
 		public AboutSettingsFlyout()
 		{
-			this.RequestedTheme = App.Settings.BackgroundTheme;
+			this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
 			this.InitializeComponent();
 		}
 	}

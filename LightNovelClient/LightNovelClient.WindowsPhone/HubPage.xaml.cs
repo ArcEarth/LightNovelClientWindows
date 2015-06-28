@@ -38,13 +38,16 @@ namespace LightNovel
 		{
 			//var lv = LastReadSection.GetFirstDescendantOfType<ListViewItem>();
 			//var position = lv.GetPosition(new Point(0,0) , LastReadSection);
-			if (this.RequestedTheme != App.Settings.BackgroundTheme)
+			if (this.RequestedTheme != AppGlobal.Settings.BackgroundTheme)
 			{
-				this.RequestedTheme = App.Settings.BackgroundTheme;
+				this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
 			} 
 			ViewModel.IsLoading = true;
 			var statusBar = StatusBar.GetForCurrentView();
 			await statusBar.HideAsync();
+
+			if (e.PageState != null && e.PageState.Count > 0 && (bool)e.PageState["IsSigninPopupOpen"])
+				SigninPopup.IsOpen = true;
 
 			SyncViewWithOrientation();
 
@@ -52,11 +55,11 @@ namespace LightNovel
 			//statusBar.ProgressIndicator.ProgressValue = null;
 			//statusBar.ForegroundColor = ((SolidColorBrush)App.Current.Resources["AppBackgroundBrush"]).Color;
 			//await statusBar.ProgressIndicator.ShowAsync();
-			if (App.RecentList == null)
-				await App.LoadHistoryDataAsync();
-			if (App.RecentList.Count > 0)
+			if (AppGlobal.RecentList == null)
+				await AppGlobal.LoadHistoryDataAsync();
+			if (AppGlobal.RecentList.Count > 0)
 			{
-				ViewModel.LastReadSection = new HistoryItemViewModel(App.RecentList[App.RecentList.Count - 1]);
+				ViewModel.LastReadSection = new HistoryItemViewModel(AppGlobal.RecentList[AppGlobal.RecentList.Count - 1]);
 				await ViewModel.RecentSection.LoadLocalAsync(true);
 			}
 			else
@@ -78,18 +81,18 @@ namespace LightNovel
 				};
 			}
 
-			if (!App.Current.IsSignedIn)
+			if (!AppGlobal.IsSignedIn)
 			{
 				await ViewModel.TryLogInWithStoredCredentialAsync();
 			}
 			else
 			{
 				ViewModel.IsSignedIn = true;
-				ViewModel.UserName = App.User.UserName;
+				ViewModel.UserName = AppGlobal.User.UserName;
 			}
 
 			await ViewModel.RecommandSection.LoadAsync(false,20);
-			if (App.Settings.EnableLiveTile)
+			if (AppGlobal.Settings.EnableLiveTile)
 				UpdateTile();
 
 			await ViewModel.FavoriteSection.LoadAsync();
@@ -145,6 +148,11 @@ namespace LightNovel
 		private void SettingsButton_Click(object sender, RoutedEventArgs e)
 		{
 			this.Frame.Navigate(typeof(SettingPage));
+		}
+
+		private void AuthenticateButton_Click(object sender, RoutedEventArgs e)
+		{
+			this.Frame.Navigate(typeof(AuthPage));
 		}
 	}
 }

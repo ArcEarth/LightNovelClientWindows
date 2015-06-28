@@ -194,21 +194,27 @@ namespace LightNovel.Common
                 // Prevent the view from closing while
                 // switching to it
                 StartViewInUse();
-
+#if WINDOWS_PHONE_APP
+                return false;
+#else
                 // Show the previously created secondary view, using the size
                 // preferences the user specified. In your app, you should
                 // choose a size that's best for your scenario and code it,
                 // instead of requiring the user to decide.
                 var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
                     this.Id,
-                    ViewSizePreference.Default,
-                    ApplicationView.GetForCurrentView().Id,
-                    ViewSizePreference.Default);
+                    ViewSizePreference.Default); //ApplicationView.GetForCurrentView().Id,ViewSizePreference.Default
 
+                if (viewShown)
+                {
+                    Consolidated = false;
+                }
                 // Signal that switching has completed and let the view close
                 StopViewInUse();
 
                 return viewShown;
+#endif
+
             }
             catch (InvalidOperationException)
             {

@@ -23,12 +23,12 @@ namespace LightNovel
     {
 		public ApplicationSettings ViewModel
 		{
-			get { return App.Settings; }
+			get { return AppGlobal.Settings; }
 		}
 
 		public AboutSection()
 		{
-			this.RequestedTheme = App.Settings.BackgroundTheme;
+			this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
 			this.InitializeComponent();
 		}
     }

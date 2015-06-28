@@ -172,7 +172,7 @@ namespace LightNovel.Common
 			{
 				ImageLoadingPolicy = (ImageLoadingPolicy)value;
 				NotifyPropertyChanged();
-				App.RefreshAutoLoadPolicy();
+                AppGlobal.RefreshAutoLoadPolicy();
 			}
 		}
 

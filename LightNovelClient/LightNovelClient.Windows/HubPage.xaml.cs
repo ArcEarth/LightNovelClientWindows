@@ -48,9 +48,9 @@ namespace LightNovel
             //Task LoadingRecentTask = null;
             Task LoginTask = null;
 
-            if (this.RequestedTheme != App.Settings.BackgroundTheme)
+            if (this.RequestedTheme != AppGlobal.Settings.BackgroundTheme)
             {
-                this.RequestedTheme = App.Settings.BackgroundTheme;
+                this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
             }
 
             ViewModel.IsLoading = true;
@@ -79,7 +79,7 @@ namespace LightNovel
             //    });
             //}
 
-            if (!App.Current.IsSignedIn)
+            if (!AppGlobal.IsSignedIn)
             {
                 LoginTask = ViewModel.TryLogInWithStoredCredentialAsync().ContinueWith(async task =>
                 {
@@ -89,7 +89,7 @@ namespace LightNovel
             else
             {
                 ViewModel.IsSignedIn = true;
-                ViewModel.UserName = App.User.UserName;
+                ViewModel.UserName = AppGlobal.User.UserName;
                 LoginTask = ViewModel.FavoriteSection.LoadAsync(false, 9);
             }
 
@@ -134,7 +134,7 @@ namespace LightNovel
                 }
             }
 
-            if (App.Settings.EnableLiveTile)
+            if (AppGlobal.Settings.EnableLiveTile)
                 UpdateTile();
 #else
 			await statusBar.ProgressIndicator.HideAsync();
@@ -155,12 +155,12 @@ namespace LightNovel
 
         private async Task LoadConverAndRecent()
         {
-            if (App.RecentList == null)
-                await App.LoadHistoryDataAsync();
+            if (AppGlobal.RecentList == null)
+                await AppGlobal.LoadHistoryDataAsync();
 
-            if (App.RecentList.Count > 0)
+            if (AppGlobal.RecentList.Count > 0)
             {
-                ViewModel.LastReadSection = new HistoryItemViewModel(App.RecentList[App.RecentList.Count - 1]);
+                ViewModel.LastReadSection = new HistoryItemViewModel(AppGlobal.RecentList[AppGlobal.RecentList.Count - 1]);
                 //LastReadSection.UpdateLayout();
                 await ViewModel.RecentSection.LoadLocalAsync(true, 9);
             }

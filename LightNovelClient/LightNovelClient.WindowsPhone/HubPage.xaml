@@ -302,7 +302,7 @@
                               Label="Settings" />
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="" />
+                <AppBarButton x:Uid="AuthenticateButton" Icon="Permissions" Label="Authenticate" Click="AuthenticateButton_Click" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
@@ -588,7 +588,7 @@
                 </DataTemplate>
             </HubSection>-->
         </Hub>
-        
+
         <ProgressBar x:Name="progressBar"
                      Grid.Row="1"
                      VerticalAlignment="Top"
@@ -671,6 +671,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Border Grid.ColumnSpan="2" Background="{ThemeResource AppAccentBrushSemiLight}">
@@ -703,6 +704,7 @@
                              Grid.Row="2"
                              Grid.Column="1"
                              Margin="50,20"
+                             Height="40"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              IsEnabled="{Binding IsLoading,
@@ -712,53 +714,49 @@
                              Password="{Binding Password,
                                                 Mode=TwoWay}"
                              PlaceholderText="Password" />
+                <Grid Grid.Row="2" HorizontalAlignment="Right" Margin="50,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--<TextBlock Grid.Row="0" Grid.ColumnSpan="2" FontSize="{ThemeResource AppFontSizeNormal}"> *** Please Authenticate before sign-in ***</TextBlock>-->
                 <Button x:Uid="LoginButton"
                         x:Name="LoginButton"
-                        Grid.Row="2"
                         Grid.Column="1"
-                        Width="34"
-                        Height="34"
-                        MinWidth="30"
-                        MinHeight="30"
-                        Margin="0,0,52.5,0"
+                        Margin="0,0,3,0" 
+                        MinHeight="40"
+                        MinWidth="40"
+                        Width="40"
+                        Height="54"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
                         HorizontalContentAlignment="Stretch"
                         VerticalContentAlignment="Stretch"
                         AutomationProperties.AutomationId="LoginButton"
-                        Background="{StaticResource AppAccentBrush}"
+                        Background="{StaticResource AppAccentBrushSemiLight}"
                         BorderBrush="Transparent"
                         BorderThickness="0"
                         Click="LoginButton_Click"
-                        Foreground="{StaticResource AppBackgroundBrush}"
+                        Foreground="{StaticResource AppForegroundBrush}"
                         IsEnabled="{Binding IsLoading,
                                             Converter={StaticResource BooleanNegationConverter},
                                             ConverterParameter=False}"
                         Padding="0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter Margin="{TemplateBinding Padding}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Viewbox Margin="0"
-                             HorizontalAlignment="Stretch"
-                             VerticalAlignment="Top"
-                             Stretch="Uniform">
-                        <SymbolIcon Margin="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Symbol="Forward" />
-                    </Viewbox>
-                </Button>
 
-                <StackPanel Grid.Row="3"
-                            Margin="50,0,0,5"
+                        <SymbolIcon Margin="0" Symbol="Forward" VerticalAlignment="Stretch" />
+                    </Button>
+                <!--<Button Grid.Row="1" Grid.Column="0" Margin="0,0,5,0" Padding="0" MinHeight="50" HorizontalAlignment="Stretch" BorderThickness="0" Background="{ThemeResource AppAccentBrushSemiLight}" Click="AuthenticateButton_Click">
+                    <StackPanel Orientation="Horizontal" Margin="0">
+                        <SymbolIcon Symbol="Permissions" />
+                        <TextBlock FontSize="{ThemeResource AppFontSizeMedium}" VerticalAlignment="Center" > Authenticate</TextBlock>
+                    </StackPanel>
+
+                </Button>-->                    
+                </Grid>
+
+
+                <StackPanel Grid.Row="4"
+                            Margin="50,5,0,5"
                             HorizontalAlignment="Left"
                             Orientation="Horizontal">
                     <TextBlock x:Uid="NoAccountHintLabel"
@@ -771,7 +769,7 @@
                                      HorizontalAlignment="Left"
                                      VerticalAlignment="Center"
                                      FontSize="{ThemeResource AppFontSizeNormal}"
-                                     Foreground="{StaticResource AppBackgroundBrush}"
+                                     Foreground="{ThemeResource AppBackgroundBrush}"
                                      NavigateUri="http://www.lightnovel.cn/member.php?mod=register">
                         Sign up for Lightnovel.cn
                     </HyperlinkButton>

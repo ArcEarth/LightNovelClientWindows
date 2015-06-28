@@ -57,9 +57,9 @@ namespace LightNovel.ViewModels
 			//_FontSize = (double)App.Current.Resources["AppFontSizeMediumLarge"];
 			//_Background = (SolidColorBrush)App.Current.Resources["AppReadingBackgroundBrush"];
 			//_Foreground = (SolidColorBrush)App.Current.Resources["AppForegroundBrush"];
-			_FontSize = App.Settings.FontSize;
-			_Background = App.Settings.Background;
-			_Foreground = App.Settings.Foreground;
+			_FontSize = AppGlobal.Settings.FontSize;
+			_Background = AppGlobal.Settings.Background;
+			_Foreground = AppGlobal.Settings.Foreground;
 
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			LoadingHeader = resourceLoader.GetString("LoadingHeader");
@@ -153,12 +153,12 @@ namespace LightNovel.ViewModels
 								 }).ToList()
 							 }).ToList();
 
-#if WINDOWS_APP
+
 					if (VolumeNo >= 0 && ChapterNo >= 0 && Index.Count > VolumeNo && Index[VolumeNo].Chapters.Count > ChapterNo)
 					{
 						SeconderyIndex = Index[VolumeNo].Chapters;
 					}
-#endif
+
 					NotifyPropertyChanged("Header");
 				}
 			}
@@ -283,15 +283,9 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public bool IsSignedIn
-		{
-			get
-			{
-				return App.Current.IsSignedIn;
-			}
-		}
+        public bool IsSignedIn => AppGlobal.IsSignedIn;
 
-		public int SeriesId
+        public int SeriesId
 		{
 			get { return _SeriesId; }
 			private set
@@ -322,10 +316,10 @@ namespace LightNovel.ViewModels
 					}
 					NotifyPropertyChanged();
 					NotifyPropertyChanged("NextChapterHeader");
-#if WINDOWS_APP
-					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
+
+                    if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
 						SeconderyIndex = Index[_VolumeNo].Chapters;
-#endif
+
 				}
 			}
 		}
@@ -343,10 +337,10 @@ namespace LightNovel.ViewModels
 					{
 						throw new NotImplementedException("Set ChapterData before set series ID");
 					}
-#if WINDOWS_APP
-					if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
+
+                    if (Index != null && _VolumeNo >=0 && _ChapterNo >= 0)
 						SeconderyIndex = Index[_VolumeNo].Chapters;
-#endif
+
 					var cvm = Index[VolumeNo][ChapterNo];
 					cvm.NotifyPropertyChanged("IsDownloaded");
 					NotifyPropertyChanged();
@@ -403,11 +397,11 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
-				return App.Settings.EnableComments;
+				return AppGlobal.Settings.EnableComments;
 			}
 			set
 			{
-				App.Settings.EnableComments = value;
+                AppGlobal.Settings.EnableComments = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -451,9 +445,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-#if WINDOWS_APP
-
-		public IList<ChapterPreviewModel> SeconderyIndex
+        public IList<ChapterPreviewModel> SeconderyIndex
 		{
 			get { return _SeconderyIndex; }
 			private set
@@ -465,7 +457,6 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
-#endif
 
 		public bool IsPinned
 		{
@@ -491,9 +482,9 @@ namespace LightNovel.ViewModels
 				//if (Index == null || !App.Current.IsSignedIn || App.User == null || App.User.FavoriteList == null)
 				//	return false;
 				//return App.User.FavoriteList.Any(vol => vol.VolumeId == VolumeData.Id);
-				if (Index == null || App.BookmarkList == null)
+				if (Index == null || AppGlobal.BookmarkList == null)
 					return false;
-				return App.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+				return AppGlobal.BookmarkList.Any(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
 			}
 		}
 
@@ -525,13 +516,13 @@ namespace LightNovel.ViewModels
 
 		public async Task<bool> AddOrUpdateBookmark(BookmarkInfo bookmark)
 		{
-			App.BookmarkList.RemoveAll(bk => bk.Position.SeriesId == bookmark.Position.SeriesId || bookmark.SeriesTitle == bk.SeriesTitle);
-			App.BookmarkList.Add(bookmark);
-			await App.SaveBookmarkDataAsync();
+            AppGlobal.BookmarkList.RemoveAll(bk => bk.Position.SeriesId == bookmark.Position.SeriesId || bookmark.SeriesTitle == bk.SeriesTitle);
+			AppGlobal.BookmarkList.Add(bookmark);
+			await AppGlobal.SaveBookmarkDataAsync();
 			//NotifyPropertyChanged("IsFavored");
-			if (App.Current.IsSignedIn)
+			if (AppGlobal.IsSignedIn)
 			{
-				var result = await App.User.AddUserFavriteAsync(VolumeData, _SeriesData.Title);
+				var result = await AppGlobal.User.AddUserFavriteAsync(VolumeData, _SeriesData.Title);
 				return result;
 			}
 			return true;
@@ -539,21 +530,21 @@ namespace LightNovel.ViewModels
 
 		public async Task<bool> RemoveCurrentVolumeFromFavoriteAsync()
 		{
-			App.BookmarkList.RemoveAll(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
-			await App.SaveBookmarkDataAsync(); 
+			AppGlobal.BookmarkList.RemoveAll(bk => (bk.SeriesTitle == SeriesData.Title || bk.Position.SeriesId == SeriesData.Id));
+			await AppGlobal.SaveBookmarkDataAsync(); 
 			NotifyPropertyChanged("IsFavored");
-			if (App.Current.IsSignedIn)
+			if (AppGlobal.IsSignedIn)
 			{
-				var favol = App.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
+				var favol = AppGlobal.User.FavoriteList.FirstOrDefault(fav => fav.VolumeId == VolumeData.Id);
 				if (favol == null)
 					return true;
-				var favDeSer = (from fav in App.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
+				var favDeSer = (from fav in AppGlobal.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
 				if (favDeSer.Any(id => id == null))
 				{
-					await App.User.SyncFavoriteListAsync(true);
-					(from fav in App.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
+					await AppGlobal.User.SyncFavoriteListAsync(true);
+					(from fav in AppGlobal.User.FavoriteList where fav.SeriesTitle == SeriesData.Title select fav.FavId).ToArray();
 				}
-				await App.User.RemoveUserFavriteAsync(favDeSer);
+				await AppGlobal.User.RemoveUserFavriteAsync(favDeSer);
 			}
 			return true;
 		}
@@ -579,7 +570,7 @@ namespace LightNovel.ViewModels
 				{
 					_FontSize = value;
 					NotifyPropertyChanged();
-					App.Settings.FontSize = value;
+					AppGlobal.Settings.FontSize = value;
 				}
 			}
 		}
@@ -596,14 +587,14 @@ namespace LightNovel.ViewModels
 				else
 					_FontFamily = (FontFamily)App.Current.Resources["AppContentFontFamily"];
 				NotifyPropertyChanged();
-				App.Settings.FontFamily = value;
+                AppGlobal.Settings.FontFamily = value;
 			}
 		}
 		public Brush Foreground
 		{
 			get
 			{
-				if (App.Settings.EnableAutomaticReadingTheme)
+				if (AppGlobal.Settings.EnableAutomaticReadingTheme)
 					return (SolidColorBrush)App.Current.Resources["AppForegroundBrush"];
 				return _Foreground;
 			}
@@ -611,14 +602,14 @@ namespace LightNovel.ViewModels
 			{
 				_Foreground = value;
 				NotifyPropertyChanged();
-				App.Settings.Foreground = value;
+                AppGlobal.Settings.Foreground = value;
 			}
 		}
 		public Brush Background
 		{
 			get
 			{
-				if (App.Settings.EnableAutomaticReadingTheme)
+				if (AppGlobal.Settings.EnableAutomaticReadingTheme)
 					return (SolidColorBrush)App.Current.Resources["AppBackgroundBrush"];
 				return _Background;
 			}
@@ -626,7 +617,7 @@ namespace LightNovel.ViewModels
 			{
 				_Background = value;
 				NotifyPropertyChanged();
-				App.Settings.Background = value;
+                AppGlobal.Settings.Background = value;
 			}
 		}
 
@@ -838,7 +829,7 @@ namespace LightNovel.ViewModels
 						Contents = new LineViewModel[] { 
 							new LineViewModel(1,LoadingFailedContentOverallLabel),
 							new LineViewModel(2,LoadingFailedContentSeviceIssue),
-							new LineViewModel(3,_ChapterData.ErrorMessage) };
+							new LineViewModel(3,"Detail : " + _ChapterData.ErrorMessage) };
 					}
 					//var collection = new PagelizedIncrementalVector<LineViewModel>(ChapterNo,new List<int>(VolumeData.Chapters.Select(c=>0)), lvms);
 					//collection.AccuirePageData = async chptNo =>
@@ -865,7 +856,7 @@ namespace LightNovel.ViewModels
 				Contents = new LineViewModel[] { 
 					new LineViewModel(1,LoadingFailedContentOverallLabel),
 					new LineViewModel(2,LoadingFailedContentNetworkIssue),
-					new LineViewModel(3,ex.Message) };
+					new LineViewModel(3,"Detail : " + ex.Message) };
 				IsLoading = false;
 				LineNo = 0;
 				return;
@@ -885,8 +876,8 @@ namespace LightNovel.ViewModels
 
 			await App.Current.MainDispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
 			{
-				 await App.UpdateHistoryListAsync(bookmark);
-				 await App.UpdateSecondaryTileAsync(bookmark);
+				 await AppGlobal.UpdateHistoryListAsync(bookmark);
+				 await AppGlobal.UpdateSecondaryTileAsync(bookmark);
 			});
 
 			if (c.IsCancellationRequested)
@@ -1908,7 +1899,7 @@ namespace LightNovel.ViewModels
 
 		public async Task<bool> AddCommentAsync(string commentText)
 		{
-			if (!string.IsNullOrEmpty(commentText) && commentText.Length < 300 && !String.IsNullOrEmpty(ParentChapterId) && App.Current.IsSignedIn)
+			if (!string.IsNullOrEmpty(commentText) && commentText.Length < 300 && !String.IsNullOrEmpty(ParentChapterId) && AppGlobal.IsSignedIn)
 			{
 				if (HasNoComment)
 					MarkAsCommented();
@@ -1919,7 +1910,7 @@ namespace LightNovel.ViewModels
 					if (!result)
 					{
 						// Re-signin
-						result = await App.Current.SignInAutomaticllyAsync();
+						result = await AppGlobal.SignInAutomaticllyAsync();
 						if (!result)
 							return false;
 						// And retry

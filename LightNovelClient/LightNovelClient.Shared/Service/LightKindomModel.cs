@@ -212,10 +212,12 @@ namespace LightNovel.Service
 		{
 			get
 			{
-				if (!String.IsNullOrEmpty(DescriptionThumbnailUri))
-					return new Uri(DescriptionThumbnailUri);
-				else 
-					return new Uri(DescriptionImageUri);
+                if (!String.IsNullOrEmpty(DescriptionThumbnailUri))
+                    return new Uri(DescriptionThumbnailUri);
+                else if (!String.IsNullOrEmpty(DescriptionImageUri))
+                    return new Uri(DescriptionImageUri);
+                else
+                    return null;
 			}
 		}
 		[JsonIgnore]

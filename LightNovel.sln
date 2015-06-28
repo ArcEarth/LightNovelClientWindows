@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LightNovelClient", "LightNovelClient", "{7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}"
 EndProject
@@ -11,11 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNovelClient.Windows", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNovelClient.WindowsPhone", "LightNovelClient\LightNovelClient.WindowsPhone\LightNovelClient.WindowsPhone.csproj", "{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNovelClient.UAP", "LightNovelClient.UAP\LightNovelClient.UAP.csproj", "{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		LightNovelClient\LightNovelClient.Shared\LightNovelClient.Shared.projitems*{8e9afc82-367f-428f-ab20-439797c87178}*SharedItemsImports = 13
 		LightNovelClient\LightNovelClient.Shared\LightNovelClient.Shared.projitems*{bee7c5d9-d63c-45e6-9ef1-751f9de6c5c1}*SharedItemsImports = 4
 		LightNovelClient\LightNovelClient.Shared\LightNovelClient.Shared.projitems*{21b23aea-7b30-4f44-8be2-3839bb2d7321}*SharedItemsImports = 4
+		LightNovelClient\LightNovelClient.Shared\LightNovelClient.Shared.projitems*{51414b8a-099a-4f19-9d7d-2d57b3dd87ec}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +75,30 @@ Global
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.ActiveCfg = Release|x86
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.Build.0 = Release|x86
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.Deploy.0 = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|Any CPU.Build.0 = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|Any CPU.Deploy.0 = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|ARM.ActiveCfg = Debug|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|ARM.Build.0 = Debug|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|ARM.Deploy.0 = Debug|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x64.ActiveCfg = Debug|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x64.Build.0 = Debug|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x64.Deploy.0 = Debug|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x86.ActiveCfg = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x86.Build.0 = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Debug|x86.Deploy.0 = Debug|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|Any CPU.ActiveCfg = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|Any CPU.Build.0 = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|Any CPU.Deploy.0 = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|ARM.ActiveCfg = Release|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|ARM.Build.0 = Release|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|ARM.Deploy.0 = Release|ARM
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x64.ActiveCfg = Release|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x64.Build.0 = Release|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x64.Deploy.0 = Release|x64
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x86.ActiveCfg = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x86.Build.0 = Release|x86
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,5 +107,6 @@ Global
 		{8E9AFC82-367F-428F-AB20-439797C87178} = {7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}
 		{21B23AEA-7B30-4F44-8BE2-3839BB2D7321} = {7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1} = {7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}
+		{51414B8A-099A-4F19-9D7D-2D57B3DD87EC} = {7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}
 	EndGlobalSection
 EndGlobal

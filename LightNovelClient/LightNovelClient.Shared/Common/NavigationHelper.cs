@@ -79,7 +79,10 @@ namespace LightNovel.Common
             {
 #if WINDOWS_PHONE_APP
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#else
+#elif WINDOWS_UAP
+                SystemNavigationManager.GetForCurrentView().BackRequested += NavigationHelper_BackRequested;
+#endif
+#if WINDOWS_APP
                 // Keyboard and mouse navigation only apply when occupying the entire window
                 if (this.Page.ActualHeight == Window.Current.Bounds.Height &&
                     this.Page.ActualWidth == Window.Current.Bounds.Width)
@@ -98,7 +101,10 @@ namespace LightNovel.Common
             {
 #if WINDOWS_PHONE_APP
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-#else
+#elif WINDOWS_UAP
+                SystemNavigationManager.GetForCurrentView().BackRequested += NavigationHelper_BackRequested;
+#endif
+#if WINDOWS_APP
                 Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated -=
                     CoreDispatcher_AcceleratorKeyActivated;
                 Window.Current.CoreWindow.PointerPressed -=
@@ -214,7 +220,17 @@ namespace LightNovel.Common
                 this.GoBackCommand.Execute(null);
             }
         }
-#else
+#elif WINDOWS_UAP
+        private void NavigationHelper_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (this.GoBackCommand.CanExecute(null))
+            {
+                e.Handled = true;
+                this.GoBackCommand.Execute(null);
+            }
+        }
+#endif
+#if WINDOWS_APP
         /// <summary>
         /// Invoked on every keystroke, including system keys such as Alt key combinations, when
         /// this page is active and occupies the entire window.  Used to detect keyboard navigation
@@ -319,6 +335,9 @@ namespace LightNovel.Common
             var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
             this._pageKey = "Page-" + this.Frame.BackStackDepth;
 
+            GoBackCommand_CanExecuteChanged(GoBackCommand, null);
+            this.GoBackCommand.CanExecuteChanged += GoBackCommand_CanExecuteChanged;
+ 
             if (e.NavigationMode == NavigationMode.New)
             {
                 // Clear existing state for forward navigation when adding a new page to the
@@ -349,6 +368,18 @@ namespace LightNovel.Common
             }
         }
 
+        private void GoBackCommand_CanExecuteChanged(object sender, EventArgs e)
+        {
+            var command = sender as RelayCommand;
+#if WINDOWS_UAP
+            if (command.CanExecute(null))
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            else
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+#endif
+        }
+
+
         /// <summary>
         /// Invoked when this page will no longer be displayed in a Frame.
         /// This method calls <see cref="SaveState"/>, where all page specific
@@ -358,6 +389,8 @@ namespace LightNovel.Common
         /// property provides the group to be displayed.</param>
         public void OnNavigatedFrom(NavigationEventArgs e)
         {
+            this.GoBackCommand.CanExecuteChanged -= GoBackCommand_CanExecuteChanged;
+
             var frameState = SuspensionManager.SessionStateForFrame(this.Frame);
             var pageState = new Dictionary<String, Object>();
             if (this.SaveState != null)

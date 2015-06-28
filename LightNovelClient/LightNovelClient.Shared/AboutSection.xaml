@@ -38,6 +38,21 @@
                            TextAlignment="Right"
                            TextWrapping="NoWrap" />
     </Grid>
+    <TextBlock x:Uid="ReleaseNoteLabel"
+                           Margin="0,0"
+                           FontSize="{ThemeResource AppFontSizeNormal}"
+                           FontWeight="SemiBold"
+                           Foreground="{ThemeResource AppAccentBrush}"
+                           TextWrapping="WrapWholeWords">
+                    Relaese Note
+    </TextBlock>
+    <TextBlock x:Uid="ReleaseNoteContent"
+                       Foreground="{ThemeResource AppForegroundBrush}"
+                       Style="{ThemeResource AppTextNormalStyle}"
+                           TextWrapping="WrapWholeWords">
+                    Relaese Conetnt
+    </TextBlock>    
+    <Rectangle Fill="{ThemeResource AppAccentBrush}" Height="1" Margin="00,5"></Rectangle>
     <TextBlock x:Uid="ReviewLabel"
                        Foreground="{ThemeResource AppForegroundBrush}"
                        Style="{ThemeResource AppTextNormalStyle}"
@@ -87,7 +102,7 @@
                              NavigateUri="http://lknovel.lightnovel.cn/">
         <Image HorizontalAlignment="Left"
                        Source="/Assets/LK_Logo.png"
-                       Stretch="Uniform" />
+                       Stretch="Uniform" MaxWidth="249"/>
     </HyperlinkButton>
 
     <TextBlock x:Uid="AcknowledgeLabel" Margin="0,10"

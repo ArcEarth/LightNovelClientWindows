@@ -109,11 +109,11 @@ namespace LightNovel
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-			ViewModel.Settings = App.Settings;
+			ViewModel.Settings = AppGlobal.Settings;
 #if WINDOWS_APP
 			Windows.UI.ApplicationSettings.SettingsPane.GetForCurrentView().CommandsRequested += App.ApplicationWiseCommands_CommandsRequested;
-			App.RecentListChanged += Current_RecentListChanged;
-			App.BookmarkListChanged += Current_BookmarkListChanged;
+            AppGlobal.RecentListChanged += Current_RecentListChanged;
+            AppGlobal.BookmarkListChanged += Current_BookmarkListChanged;
 #endif
 
 		}
@@ -152,7 +152,7 @@ namespace LightNovel
 					(logo.RenderTransform as TranslateTransform).X = 0;
 				}
 			}
-#else
+#elif WINDOWS_APP
             if (appView.Orientation == ApplicationViewOrientation.Landscape)
             {
                 LastReadSection.Margin = new Thickness(0, -79, 0, 0);
@@ -274,13 +274,18 @@ namespace LightNovel
 		private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
 		{
 			e.PageState.Add("HubOffset", HubScrollViewer.HorizontalOffset);
-		}
-		/// <summary>
-		/// Invoked when a HubSection header is clicked.
-		/// </summary>
-		/// <param name="sender">The Hub that contains the HubSection whose header was clicked.</param>
-		/// <param name="e">Event data that describes how the click was initiated.</param>
-		void Hub_SectionHeaderClick(object sender, HubSectionHeaderClickEventArgs e)
+#if WINDOWS_UAP
+            e.PageState.Add("IsSigninPopupOpen", false); //!Hack!!!
+#else
+            e.PageState.Add("IsSigninPopupOpen", SigninPopup.IsOpen);
+#endif
+        }
+        /// <summary>
+        /// Invoked when a HubSection header is clicked.
+        /// </summary>
+        /// <param name="sender">The Hub that contains the HubSection whose header was clicked.</param>
+        /// <param name="e">Event data that describes how the click was initiated.</param>
+        void Hub_SectionHeaderClick(object sender, HubSectionHeaderClickEventArgs e)
 		{
 			HubSection section = e.Section;
 			//var group = section.DataContext;
@@ -343,6 +348,21 @@ namespace LightNovel
 		{
 			var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
 			ViewModel.IsLoading = true;
+			bool isAuthed = false;
+			try
+			{
+				isAuthed = await LightKindomHtmlClient.ValidateLoginAuth();
+			}
+			catch (Exception)
+			{
+			}
+
+			if (!isAuthed)
+			{
+				Frame.Navigate(typeof(AuthPage));
+                return;
+			}
+
 			try
 			{
 				var loginTask = ViewModel.TryLogInWithUserInputCredentialAsync();
@@ -351,10 +371,10 @@ namespace LightNovel
 			catch (Exception)
 			{
 				Debug.WriteLine("Failed to login");
-				App.User = null;
+                AppGlobal.User = null;
 			}
 
-			if (!App.Current.IsSignedIn)
+			if (!AppGlobal.IsSignedIn)
 			{
 				MessageDialog diag = new MessageDialog(resourceLoader.GetString("LoginFailedMessageDialogDetail"), resourceLoader.GetString("LoginFailedMessageDialogTitle"));
 				var dialogShow = diag.ShowAsync();
@@ -364,13 +384,17 @@ namespace LightNovel
 			else
 			{
 				ViewModel.IsLoading = false;
-				SigninPopup.IsOpen = false;
+#if WINDOWS_UAP
+                SigninPopup.Hide();
+#else
+                SigninPopup.IsOpen = false;
 				SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-				await ViewModel.FavoriteSection.LoadAsync(true);
+#endif
+                await ViewModel.FavoriteSection.LoadAsync(true);
 			}
 		}
 
-		#region NavigationHelper registration
+#region NavigationHelper registration
 
 		/// <summary>
 		/// The methods provided in this section are simply used to allow
@@ -391,12 +415,12 @@ namespace LightNovel
 			this.navigationHelper.OnNavigatedFrom(e);
 		}
 
-		#endregion
+#endregion
 
 		async Task NavigateToReadingPageAsync(string seriesTitle, NovelPositionIdentifier nav, bool newWindows = false)
 		{
-#if WINDOWS_APP
-			var view = App.Current.SecondaryViews.FirstOrDefault(v => v.Title == seriesTitle);
+#if WINDOWS_APP || WINDOWS_UAP
+			var view = AppGlobal.SecondaryViews.FirstOrDefault(v => v.Title == seriesTitle);
 			if (view == null && !newWindows)
 				this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
 			else
@@ -434,7 +458,7 @@ namespace LightNovel
 					Debug.WriteLine("Some thing wrong");
 				}
 #else
-			this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
+            this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
 #endif
 		}
 
@@ -504,10 +528,14 @@ namespace LightNovel
 			}
 			else
 			{
+                if (ViewModel.UserName == resourceLoader.GetString("LoginLabel"))
+                    ViewModel.UserName = "";
+#if WINDOWS_UAP
+                SigninPopup.ShowAt(AccountButton);
+#else
 				SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				SigninPopup.IsOpen = true;
-				if (ViewModel.UserName == resourceLoader.GetString("LoginLabel"))
-					ViewModel.UserName = "";
+#endif
 			}
 			//if (chosenCommand == null)
 		}
@@ -519,8 +547,13 @@ namespace LightNovel
 				return;
 			ViewModel.UserName = resourceLoader.GetString("LoginLabel");
 			ViewModel.Password = "";
+
+#if WINDOWS_UAP
+            SigninPopup.Hide();
+#else
 			SigninPopup.IsOpen = false;
 			SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+#endif
 
 		}
 
@@ -545,12 +578,12 @@ namespace LightNovel
 			var switcher = sender as ToggleSwitch;
 			if (switcher.IsOn)
 			{
-				App.Settings.EnableLiveTile = true;
+                AppGlobal.Settings.EnableLiveTile = true;
 				UpdateTile();
 			}
 			else
 			{
-				App.Settings.EnableLiveTile = false;
+                AppGlobal.Settings.EnableLiveTile = false;
 				ClearTile();
 			}
 		}
@@ -597,11 +630,11 @@ namespace LightNovel
 			ViewModel.IsLoading = true;
 			await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
 			ViewModel.RecentSection.Remove(hvm);
-			var recentItem = App.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
+			var recentItem = AppGlobal.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
 			if (recentItem != null)
 			{
-				App.RecentList.Remove(recentItem);
-				await App.SaveHistoryDataAsync();
+                AppGlobal.RecentList.Remove(recentItem);
+				await AppGlobal.SaveHistoryDataAsync();
 			}
 			ViewModel.IsLoading = false;
 		}
@@ -642,23 +675,23 @@ namespace LightNovel
 
 			try
 			{
-				var idx = App.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
+				var idx = AppGlobal.BookmarkList.FindIndex(bk => bk.SeriesTitle == hvm.SeriesTitle);
 				if (idx >= 0)
 				{
-					App.BookmarkList.RemoveAt(idx);
-					await App.SaveBookmarkDataAsync();
+                    AppGlobal.BookmarkList.RemoveAt(idx);
+					await AppGlobal.SaveBookmarkDataAsync();
 				}
 
-				if (App.Current.IsSignedIn)
+				if (AppGlobal.IsSignedIn)
 				{
-					var favDeSer = (from fav in App.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+					var favDeSer = (from fav in AppGlobal.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
 					if (favDeSer.Any(id => id == null))
 					{
-						await App.User.SyncFavoriteListAsync(true);
-						(from fav in App.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
+						await AppGlobal.User.SyncFavoriteListAsync(true);
+						(from fav in AppGlobal.User.FavoriteList where fav.SeriesTitle == hvm.SeriesTitle select fav.FavId).ToArray();
 					}
 
-					await App.User.RemoveUserFavriteAsync(favDeSer);
+					await AppGlobal.User.RemoveUserFavriteAsync(favDeSer);
 				}
 			}
 			catch (Exception)

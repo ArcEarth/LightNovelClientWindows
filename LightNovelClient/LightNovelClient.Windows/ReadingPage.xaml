@@ -915,18 +915,6 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="80" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton"
-                    Margin="10"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    AutomationProperties.AutomationId="BackButton"
-                    AutomationProperties.ItemType="Navigation Button"
-                    AutomationProperties.Name="Back"
-                    Command="{Binding NavigationHelper.GoBackCommand,
-                                      ElementName=pageRoot}"
-                    Foreground="{ThemeResource AppBackgroundBrush}"
-                    Style="{StaticResource NavigationBackButtonNormalStyle}" />
             <ScrollViewer Grid.Column="1"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"

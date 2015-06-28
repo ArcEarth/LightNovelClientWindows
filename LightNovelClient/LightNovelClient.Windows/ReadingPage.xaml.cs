@@ -71,9 +71,9 @@ namespace LightNovel
 
 		public ReadingPage()
 		{
-			if (this.RequestedTheme != App.Settings.BackgroundTheme)
+			if (this.RequestedTheme != AppGlobal.Settings.BackgroundTheme)
 			{
-				this.RequestedTheme = App.Settings.BackgroundTheme;
+				this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
 			} 
 			this.InitializeComponent();
 			this.navigationHelper = new NavigationHelper(this);
@@ -743,7 +743,7 @@ namespace LightNovel
 			if (ViewModel.EnableComments)
 			{
 				CommentsTool.Visibility = Visibility.Visible;
-				if (App.Current.IsSignedIn)
+				if (AppGlobal.IsSignedIn)
 				{
 					CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				}
@@ -963,7 +963,7 @@ namespace LightNovel
 				// like the open document or page inside that window
 				viewControl = ViewLifetimeControl.CreateForCurrentView();
 				viewControl.Title = seriesTitle;
-				App.Current.SecondaryViews.Add(viewControl);
+				AppGlobal.SecondaryViews.Add(viewControl);
 
 				var frame = new Frame();
 				frame.Navigate(typeof(ReadingPage), nav.ToString());
@@ -992,7 +992,7 @@ namespace LightNovel
 			// So, the object must be removed from that thread
 			await App.Current.MainDispatcher.RunAsync(CoreDispatcherPriority.Normal,async () =>
 			{
-				App.Current.SecondaryViews.Remove(thisViewControl);
+                AppGlobal.SecondaryViews.Remove(thisViewControl);
 				await UpdateApplicationHistory();
 			});
 

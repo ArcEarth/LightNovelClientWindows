@@ -30,6 +30,7 @@ namespace LightNovel.Service
 			Key = null;
 			Expries = DateTime.Now.AddYears(-100);
 		}
+		public string Name { get; set; }
 		public string Key { get; set; }
 		public DateTime Expries { get; set; }
 		public bool Expired
@@ -67,6 +68,7 @@ namespace LightNovel.Service
 		private const string HomePageSource = SeverBasePath;// + "/main/index.html"; // Well ,it's Ok to use the base address directly
 
 		private const string UserLoginPath = SeverBasePath + "/main/user_login_withQuestion.html";
+		private const string UserLoginInterfacePath = SeverBasePath + "/main/login.html";
 		private const string UserLogoutPath = SeverBasePath + "/main/user_logout.html";
 		private const string UserRecentPath = SeverBasePath + "/user/index.html";
 		private const string UserFavourPath = SeverBasePath + "/user/favour.html";
@@ -77,7 +79,7 @@ namespace LightNovel.Service
 		private const string UserAddFavoriteSeriesPath = SeverBasePath + "/main/add_batch_favourite.html"; // Post { series_id : id}
 		private const string UserSetBookmarkPath = SeverBasePath + "/main/set_bookmark.html";
 
-		private const string IE11UserAgentString = "Mozilla/5.0 (IE 11.0; Windows NT 6.3; Trident/7.0; .NET4.0E; .NET4.0C; rv:11.0) like Gecko";
+		public const string	UserAgentString = "Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; rv:11.0; IE/11.0; Microsoft) like Gecko";
 		private const string CiSession = "ci_session_3";
 		//	$.post("/main/set_bookmark.html", {
 		//		chapter_id: c,
@@ -96,6 +98,7 @@ namespace LightNovel.Service
 		public readonly static Uri QueryUri = new Uri(QueryPath);
 		public readonly static Uri HomePageSourceUri = new Uri(HomePageSource);// + "/main/index.html"; // Well ,it's Ok to use the base address directly
 		public readonly static Uri UserLoginUri = new Uri(UserLoginPath);
+		public readonly static Uri UserLoginInterfaceUri = new Uri(UserLoginInterfacePath);
 		public readonly static Uri UserLogoutUri = new Uri(UserLogoutPath);
 		public readonly static Uri UserRecentUri = new Uri(UserRecentPath);
 		public readonly static Uri UserFavourUri = new Uri(UserFavourPath);
@@ -190,7 +193,7 @@ namespace LightNovel.Service
 			switch (userAgentType)
 			{
 				case UserAgentType.IE11:
-					client.DefaultRequestHeaders.Add("User-Agent", IE11UserAgentString);
+					client.DefaultRequestHeaders.Add("User-Agent", UserAgentString);
 					break;
 				case UserAgentType.None:
 				default:
@@ -206,6 +209,16 @@ namespace LightNovel.Service
 			{
 				await client.PostAsync(UserLogoutUri, new HttpStringContent(""));
 				Credential = null;
+			}
+		}
+
+		public static async Task<bool> ValidateLoginAuth()
+		{
+			using (var client = NewUserHttpClient(UserAgentType.IE11))
+			{
+				var resp = await client.GetAsync(UserLoginInterfaceUri);
+				var html = await resp.Content.ReadAsStringAsync();
+				return !html.Contains("/userauth/index.html") && html.Contains("lk-login");
 			}
 		}
 
@@ -257,10 +270,10 @@ namespace LightNovel.Service
 
 				var filter = new HttpBaseProtocolFilter();
 				var cookies = filter.CookieManager.GetCookies(SeverBaseUri);
-				var cookie = cookies.FirstOrDefault(c => c.Name == CiSession);
+				var cookie = cookies.FirstOrDefault(c => c.Name.Contains("ci_session"));
 				if (cookie == null)
 					throw new Exception("Didn't get proper login token!");
-				Credential = new Session { Key = cookie.Value, Expries = cookie.Expires.Value.DateTime };
+				Credential = new Session { Name = cookie.Name, Key = cookie.Value, Expries = cookie.Expires.Value.DateTime };
 				//var doc = await client.GetStringAsync(UserRecentPath);
 
 			}
@@ -484,16 +497,28 @@ namespace LightNovel.Service
 				doc.Load(stream.AsStreamForRead());
 				var nodes = doc.DocumentNode.Descendants();
 
-				var pathNodes =
-					nodes.First(
-						node =>
-							node.Name == "ul"
-							&& node.Attributes["class"] != null
-							&& node.Attributes["class"].Value.StartsWith("breadcrumb")).Elements("li")
-					.Select(node => node.Element("a"));
-				volume.ParentSeriesId = RetriveId(pathNodes.First(
-						node => node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/main/vollist/"))
-					.Attributes["href"].Value);
+				try
+				{
+					var pathNodes =
+						nodes.First(
+							node =>
+								node.Name == "ul"
+								&& node.Attributes["class"] != null
+								&& node.Attributes["class"].Value.StartsWith("breadcrumb")).Elements("li")
+						.Select(node => node.Element("a"));
+					volume.ParentSeriesId = RetriveId(pathNodes.First(
+							node => node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/main/vollist/"))
+						.Attributes["href"].Value);
+				}
+				catch (Exception)
+				{
+
+				}
+
+				//var parentSerNode = nodes.FirstOrDefault(node =>
+				//	node.Attributes["href"] != null &&
+				//	node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/mobile/vollist/"));
+				//volume.ParentSeriesId = RetriveId(parentSerNode.Attributes["href"].Value);
 				// Naviagtion Proporties
 				var detailNode = nodes.FirstOrDefault(
 					node => node.Attributes["class"] != null &&
