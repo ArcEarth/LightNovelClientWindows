@@ -477,4 +477,10 @@
   <data name="AuthPageLoadFailedHint.Text" xml:space="preserve">
     <value>添加驗證的支持，修復了用戶登錄的問題。修復了偶爾閱讀時文章抖動的現象。開發者之後會主要更新Windows 10版本的應用 :)</value>
   </data>
+  <data name="AuthSucceedDialogContent" xml:space="preserve">
+    <value>如果您仍旧无法登陆，请尝试重新启动应用:)</value>
+  </data>
+  <data name="AuthSucceedDialogTitle" xml:space="preserve">
+    <value>验证成功</value>
+  </data>
 </root>

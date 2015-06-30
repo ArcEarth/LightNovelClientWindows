@@ -71,8 +71,12 @@ namespace LightNovel.Common
 			{
 				_localSettings.Add(SavedAppVersionKey, "00.00.00.00");
 			}
-			try
-			{
+            if (!_localSettings.ContainsKey(DeviceUserAgentKey))
+            {
+                _localSettings.Add(DeviceUserAgentKey, "");
+            }
+            try
+            {
 				var creds = _Vault.FindAllByResource("lightnovel.cn");
 				if (creds.Count < 1)
 					_Cred = null;
@@ -291,8 +295,22 @@ namespace LightNovel.Common
 				NotifyPropertyChanged();
 			}
 		}
+        private const string DeviceUserAgentKey = "DeviceUserAgent";
+        public string DeviceUserAgent
+        {
+            get
+            {
+                var val = (string)_localSettings[DeviceUserAgentKey];
+                return (string)val;
+            }
 
-		public void UpdateSavedAppVersion()
+            set
+            {
+                _localSettings[DeviceUserAgentKey] = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public void UpdateSavedAppVersion()
 		{
 			var CurrentVersion = Package.Current.Id.Version;
 			SavedAppVersion = String.Format("{0}.{1}.{2}.{3}", CurrentVersion.Major.ToString("D2"), CurrentVersion.Minor.ToString("D2"), CurrentVersion.Revision.ToString("D2"), CurrentVersion.Build.ToString("D2"));

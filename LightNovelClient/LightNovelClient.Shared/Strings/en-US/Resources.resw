@@ -477,4 +477,10 @@
   <data name="AuthPageLoadFailedHint.Text" xml:space="preserve">
     <value>Failed to load Authentication page, maybe there is a net work issue.</value>
   </data>
+  <data name="AuthSucceedDialogTitle" xml:space="preserve">
+    <value>Authentication succeed</value>
+  </data>
+  <data name="AuthSucceedDialogContent" xml:space="preserve">
+    <value>If you still cannot login , try to close the App and restart it :)</value>
+  </data>
 </root>

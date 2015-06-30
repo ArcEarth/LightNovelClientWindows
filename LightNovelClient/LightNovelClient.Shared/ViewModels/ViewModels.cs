@@ -1910,7 +1910,7 @@ namespace LightNovel.ViewModels
 					if (!result)
 					{
 						// Re-signin
-						result = await AppGlobal.SignInAutomaticllyAsync();
+						result = await AppGlobal.SignInAutomaticllyAsync(true);
 						if (!result)
 							return false;
 						// And retry

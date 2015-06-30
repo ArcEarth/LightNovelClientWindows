@@ -26,6 +26,7 @@ namespace LightNovel
             Settings = new ApplicationSettings();
             IsHistoryListChanged = true;
             SecondaryViews = new ObservableCollection<ViewLifetimeControl>();
+            LightKindomHtmlClient.AccountUserAgent = Settings.DeviceUserAgent;
         }
 
 
@@ -37,7 +38,7 @@ namespace LightNovel
         private const string LocalRecentFilePath = "history.json";
         private const string LocalBookmarkFilePath = "bookmark.json";
 
-        public static bool IsSignedIn => User != null && !User.Credential.Expired;
+        public static bool IsSignedIn => User != null && !User.Credential.Expired && !string.IsNullOrEmpty(Settings.DeviceUserAgent);
 
         public static bool IsHistoryListChanged { get; set; }
 
@@ -255,6 +256,13 @@ namespace LightNovel
                 }
             }
         }
+
+        public static void SetAccountUserAgent(string ua)
+        {
+            LightKindomHtmlClient.AccountUserAgent = ua;
+            Settings.DeviceUserAgent = ua;
+        }
+
 
         public static async Task<UserInfo> SignInAsync(string userName, string password)
         {

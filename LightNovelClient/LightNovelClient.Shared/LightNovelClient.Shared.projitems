@@ -38,6 +38,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\UserInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ViewLifetimeControl.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\BooleanToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\CommentsFlyout.xaml.cs">
+      <DependentUpon>CommentsFlyout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Controls\ExpanderView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\LineViewDataTemplateSelector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\RichTextColumns.cs" />
@@ -129,6 +132,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)AuthPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\CommentsFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -24,40 +25,53 @@ using Windows.Web.Http.Filters;
 
 namespace LightNovel
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
-	public sealed partial class AuthPage : Page
-	{
-		private NavigationHelper navigationHelper;
-		public NavigationHelper NavigationHelper
-		{
-			get { return this.navigationHelper; }
-		}
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class AuthPage : Page
+    {
+        private NavigationHelper navigationHelper;
+        public NavigationHelper NavigationHelper
+        {
+            get { return this.navigationHelper; }
+        }
 
-		public AuthPage()
-		{
-			this.InitializeComponent();
-			ChangeUserAgent(LightKindomHtmlClient.UserAgentString);
-			this.navigationHelper = new NavigationHelper(this);
-			this.navigationHelper.LoadState += navigationHelper_LoadState;
-			this.navigationHelper.SaveState += navigationHelper_SaveState; 
-			
-			webView.NavigationCompleted += webView_NavigationCompleted;
-		}
+        public AuthPage()
+        {
+            this.InitializeComponent();
+            //ChangeUserAgent(LightKindomHtmlClient.DefaultUserAgent);
+            this.navigationHelper = new NavigationHelper(this);
+            this.navigationHelper.LoadState += navigationHelper_LoadState;
+            this.navigationHelper.SaveState += navigationHelper_SaveState;
 
-		[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
-		private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
+            webView.NavigationStarting += WebView_NavigationStarting;
+            webView.NavigationCompleted += webView_NavigationCompleted;
+        }
 
-		const int URLMON_OPTION_USERAGENT = 0x10000001;
-		public void ChangeUserAgent(string Agent)
-		{
-			UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, Agent, Agent.Length, 0);
-		}
+        private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        {
+            
+        }
 
+        //[DllImport("urlmon.dll", CharSet = CharSet.Ansi)]
+        //private static extern int UrlMkSetSessionOption(int dwOption, string pBuffer, int dwBufferLength, int dwReserved);
 
-		async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-		{
+        //const int URLMON_OPTION_USERAGENT = 0x10000001;
+        //public void ChangeUserAgent(string Agent)
+        //{
+        //    UrlMkSetSessionOption(URLMON_OPTION_USERAGENT, Agent, Agent.Length, 0);
+        //}
+
+        void WebViewNavigate(Uri uri)
+        {
+            webView.Navigate(uri);
+            //var msg = new HttpRequestMessage(HttpMethod.Get, uri);
+            //msg.Headers.Add("User-Agent", "This is a UA dummy");
+            //webView.NavigateWithHttpRequestMessage(msg);
+        }
+
+        async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        {
             if (args.Uri.AbsolutePath.EndsWith("/userauth/index.html"))
             {
                 if (args.IsSuccess)
@@ -66,13 +80,13 @@ namespace LightNovel
                     progressRing.Visibility = Visibility.Collapsed;
                     progressRing.IsActive = false;
                     RetryHintTextBlock.Visibility = Visibility.Collapsed;
-                } else
+                }
+                else
                 {
                     AuthPageLoadFailedHint.Visibility = Visibility.Visible;
                 }
-            }
-			if (args.Uri.AbsolutePath.EndsWith("getautha.html"))
-			{
+            } else if (args.Uri.AbsolutePath.EndsWith("getautha.html"))
+            {
                 var content = await webView.InvokeScriptAsync("eval", new string[] { "document.body.innerHTML;" });
                 if (content.Contains("验证失败"))
                 {
@@ -87,11 +101,28 @@ namespace LightNovel
                     }
                     else
                     {
-                        webView.Navigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
+                        WebViewNavigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
                     }
                 }
                 else
+                {
+                    var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+                    MessageDialog dialog = new MessageDialog(resourceLoader.GetString("AuthSucceedDialogContent"), resourceLoader.GetString("AuthSucceedDialogTitle"));
+
+                    //HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter();
+                    var ua = await webView.InvokeScriptAsync("eval", new string[] { "navigator.userAgent;" });
+                    AppGlobal.SetAccountUserAgent(ua);
+
+                    await dialog.ShowAsync();
                     Frame.GoBack(); // Return to HubPage
+
+                    //var resulst = await LightKindomHtmlClient.ValidateLoginAuth();
+                    //using (var client = LightKindomHtmlClient.NewUserHttpClient(UserAgentType.Account))
+                    //{
+                    //    var str = await client.GetStringAsync(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
+                    //    Debug.WriteLine(str);
+                    //}
+                }
 
                 //.CaptureSelectedContentToDataPackageAsync();
                 //var text = await datapackage.GetView().GetTextAsync();
@@ -113,51 +144,59 @@ namespace LightNovel
                 //	Debug.WriteLine(str);
                 //}
             }
-		}
-		/// <summary>
-		/// Populates the page with content passed during navigation.  Any saved state is also
-		/// provided when recreating a page from a prior session.
-		/// </summary>
-		/// <param name="navigationParameter">The parameter value passed to
-		/// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
-		/// </param>
-		/// <param name="pageState">A dictionary of state preserved by this page during an earlier
-		/// session.  This will be null the first time a page is visited.</param>
-		private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
-		{
+            else if (args.IsSuccess)
+            {
+                webView.Visibility = Visibility.Visible;
+                progressRing.Visibility = Visibility.Collapsed;
+                progressRing.IsActive = false;
+                RetryHintTextBlock.Visibility = Visibility.Collapsed;
+            }
+
+        }
+        /// <summary>
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
+        /// </summary>
+        /// <param name="navigationParameter">The parameter value passed to
+        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
+        /// </param>
+        /// <param name="pageState">A dictionary of state preserved by this page during an earlier
+        /// session.  This will be null the first time a page is visited.</param>
+        private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        {
             //webView.Navigate(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
-            //webView.Navigate(new Uri("http://whatsmyuseragent.com/"));
-            webView.Visibility = Visibility.Collapsed;
+            //WebViewNavigate(new Uri("http://useragentapi.com/"));
+            //webView.Visibility = Visibility.Visible;
             progressRing.IsActive = true;
             progressRing.Visibility = Visibility.Visible;
             RetryHintTextBlock.Visibility = Visibility.Collapsed;
-            webView.Navigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
-		}
-		private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
-		{
-		}
+            WebViewNavigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
+        }
+        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
+        {
+        }
 
-		#region NavigationHelper registration
+        #region NavigationHelper registration
 
-		/// The methods provided in this section are simply used to allow
-		/// NavigationHelper to respond to the page's navigation methods.
-		/// 
-		/// Page specific logic should be placed in event handlers for the  
-		/// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
-		/// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
-		/// The navigation parameter is available in the LoadState method 
-		/// in addition to page state preserved during an earlier session.
+        /// The methods provided in this section are simply used to allow
+        /// NavigationHelper to respond to the page's navigation methods.
+        /// 
+        /// Page specific logic should be placed in event handlers for the  
+        /// <see cref="GridCS.Common.NavigationHelper.LoadState"/>
+        /// and <see cref="GridCS.Common.NavigationHelper.SaveState"/>.
+        /// The navigation parameter is available in the LoadState method 
+        /// in addition to page state preserved during an earlier session.
 
-		protected override void OnNavigatedTo(NavigationEventArgs e)
-		{
-			navigationHelper.OnNavigatedTo(e);
-		}
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            navigationHelper.OnNavigatedTo(e);
+        }
 
-		protected override void OnNavigatedFrom(NavigationEventArgs e)
-		{
-			navigationHelper.OnNavigatedFrom(e);
-		}
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            navigationHelper.OnNavigatedFrom(e);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

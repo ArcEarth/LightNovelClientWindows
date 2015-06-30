@@ -1,0 +1,183 @@
+﻿<UserControl
+    x:Class="LightNovel.Controls.CommentsFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightNovel.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid Width="400" MaxHeight="600">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <!--  Comment Tools  -->
+        <Grid x:Name="CommentsTool">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock x:Uid="NoCommentLabel"
+                               Grid.Row="0"
+                               Margin="5"
+                               FontSize="{ThemeResource AppFontSizeMedium}"
+                               Foreground="{ThemeResource AppForegroundBrush}"
+                               Style="{ThemeResource AppTextAccentStyle}"
+                               TextWrapping="WrapWholeWords"
+                               Visibility="{Binding HasNoComment,
+                                                    Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Send the first comment.
+            </TextBlock>
+            <ProgressBar Grid.Row="0"
+                                 Margin="0,0,0,5"
+                                 VerticalAlignment="Top"
+                                 Foreground="{ThemeResource AppAccentBrush}"
+                                 IsIndeterminate="True"
+                                 Visibility="{Binding IsLoading,
+                                                      Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <ListView Grid.Row="0" 
+                              x:Name="CommentsListView"
+                              MaxHeight="250"
+                              ItemsSource="{Binding Comments}"
+                              Visibility="{Binding IsLoading,
+                                                   Converter={StaticResource BooleanToVisibilityReverseConverter}}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock MaxWidth="350"
+                                           FontSize="{ThemeResource AppFontSizeNormal}"
+                                           Foreground="{ThemeResource AppForegroundBrush}"
+                                           Text="{Binding Content}"
+                                           TextWrapping="WrapWholeWords" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter x:Name="contentPresenter"
+                                                              Margin="{TemplateBinding Padding}"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                              Content="{TemplateBinding Content}"
+                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                              ContentTransitions="{TemplateBinding ContentTransitions}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <Grid x:Name="CommentsInputTool" Grid.Row="1">
+                <TextBox x:Uid="CommentInputBox"
+                                 x:Name="CommentInputBox"
+                                 MinHeight="34"
+                                 MaxHeight="120"
+                                 Margin="3,3,80,3"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 Background="{ThemeResource ProgressBarBackgroundThemeBrush}"
+                                 BorderBrush="{ThemeResource TransparentBrush}"
+                                 BorderThickness="0"
+                                 FontSize="{ThemeResource AppFontSizeMedium}"
+                                 FontWeight="Light"
+                                 Foreground="{ThemeResource AppForegroundBrush}"
+                                 KeyDown="CommentInputBox_KeyDown"
+                                 MaxLength="300"
+                                 Padding="5"
+                                 PlaceholderText="Input comment here"
+                                 SelectionHighlightColor="{ThemeResource AppAccentBrush}"
+                                 TabIndex="2"
+                                 TextAlignment="Left" />
+                <Button x:Uid="SubmmitButton"
+                                Width="80"
+                                MinWidth="80"
+                                MinHeight="30"
+                                Height="34"
+                                Margin="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Stretch"
+                                Background="{ThemeResource AppAccentBrush}"
+                                BorderBrush="{ThemeResource AppAccentBrush}"
+                                BorderThickness="0"
+                                Click="CommentSubmitButton_Click"
+                                Foreground="{ThemeResource AppBackgroundBrush}"
+                                Padding="0"
+                                TabIndex="1">
+                    <Viewbox Width="80"
+                                     Height="40"
+                                     Margin="0"
+                                     HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Center"
+                                     Stretch="Uniform">
+                        <SymbolIcon Margin="10" Symbol="PostUpdate" />
+                    </Viewbox>
+                </Button>
+            </Grid>
+        </Grid>
+
+
+        <!--  Image Tools  -->
+        <Grid Grid.Row="1"
+                      Height="40"
+                      Margin="0"
+                      Visibility="{Binding IsImage,
+                                           Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--<TextBlock  x:Uid="PictureToolLabel" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="SemiBold" Margin="5" FontSize="{ThemeResource AppFontSizeMedium}" Foreground="{ThemeResource AppAccentBrush}">Picture</TextBlock>-->
+            <Button x:Uid="ImageDownloadButton"
+                            Grid.Column="0"
+                            MinHeight="40"
+                            Margin="3,2,2,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="IllustrationSaveButton_Click"
+                            Foreground="{ThemeResource AppAccentBrush}"
+                            Padding="2">
+                <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Stretch="Uniform">
+                    <SymbolIcon Margin="3"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Symbol="Download" />
+                </Viewbox>
+            </Button>
+            <Button x:Uid="ImageFullScreenButton"
+                            Grid.Column="1"
+                            MinHeight="40"
+                            Margin="2,2,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Background="{ThemeResource AppAccentBrush}"
+                            BorderBrush="{ThemeResource TransparentBrush}"
+                            BorderThickness="0"
+                            Click="IllustrationFullScreenButton_Click"
+                            Foreground="{ThemeResource AppBackgroundBrush}"
+                            Padding="2">
+                <Viewbox HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 Stretch="Uniform">
+                    <SymbolIcon Margin="3"
+                                        Foreground="{ThemeResource AppBackgroundBrush}"
+                                        Symbol="FullScreen" />
+                </Viewbox>
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

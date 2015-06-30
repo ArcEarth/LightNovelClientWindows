@@ -194,7 +194,13 @@ namespace LightNovel
 				ContentColumns.Orientation = Orientation.Vertical;
 				ContentColumns.Margin = new Thickness(0, 0, 0, 0);
 				ContentTextBlock.Padding = new Thickness(20, 0, 20, 0);
-				ContentScrollViewer.Style = (Style)App.Current.Resources["VerticalScrollViewerStyle"];
+                foreach (UIElement elem in ContentColumns.Children)
+                {
+                    var rtbo = elem as RichTextBlockOverflow;
+                    if (rtbo != null)
+                    rtbo.Padding = ContentTextBlock.Padding;
+                }
+                ContentScrollViewer.Style = (Style)App.Current.Resources["VerticalScrollViewerStyle"];
 				ContentScrollViewer.HorizontalSnapPointsType = SnapPointsType.None;
 				ContentScrollViewer.VerticalSnapPointsType = SnapPointsType.Optional;
 			}
@@ -203,7 +209,13 @@ namespace LightNovel
 				ContentColumns.Orientation = Orientation.Horizontal;
 				ContentColumns.Margin = new Thickness(100, 0, 100, 0);
 				ContentTextBlock.Padding = new Thickness(40);
-				ContentScrollViewer.Style = (Style)App.Current.Resources["HorizontalScrollViewerStyle"];
+                foreach (UIElement elem in ContentColumns.Children)
+                {
+                    var rtbo = elem as RichTextBlockOverflow;
+                    if (rtbo != null)
+                        rtbo.Padding = ContentTextBlock.Padding;
+                }
+                ContentScrollViewer.Style = (Style)App.Current.Resources["HorizontalScrollViewerStyle"];
 				ContentScrollViewer.HorizontalSnapPointsType = SnapPointsType.Mandatory;
 				ContentScrollViewer.VerticalSnapPointsType = SnapPointsType.None;
 			}

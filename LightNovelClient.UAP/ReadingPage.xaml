@@ -89,7 +89,7 @@
         </DataTemplate>
         <Flyout x:Key="CommentsFlyout"
                 x:Name="CommentsFlyout"
-                Placement="Right">
+                Placement="Top">
             <Grid Width="400" MaxHeight="600">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -121,7 +121,6 @@
                                                       Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ListView Grid.Row="0" 
                               x:Name="CommentsListView"
-                              x:DeferLoadStrategy="Lazy"
                               MaxHeight="250"
                               ItemsSource="{Binding Comments}"
                               Visibility="{Binding IsLoading,
@@ -139,6 +138,8 @@
                             <Style TargetType="ListViewItem">
                                 <Setter Property="VerticalContentAlignment" Value="Center" />
                                 <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="Padding" Value="0" />
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListViewItem">
@@ -830,7 +831,7 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            
+
             <AppBarToggleButton x:Uid="IndexButton"
                                 x:Name="IndexButton"
                                 Grid.Column="0"
@@ -863,30 +864,35 @@
                            TextWrapping="NoWrap" />
             </ScrollViewer>
 
-            <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="10,5">
-                <TextBox MinWidth="40"
+            <Button Style="{StaticResource PureButtonStyle}" Grid.Column="3"  Margin="10,5" Padding="0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock MinWidth="40"
                          Margin="0,0,0,0"
                          VerticalAlignment="Bottom"
-                         Background="Transparent"
-                         BorderBrush="Transparent"
-                         BorderThickness="0"
                          FontSize="{ThemeResource AppFontSizeLarge}"
                          Foreground="{ThemeResource AppAccentBrushLight}"
-                         KeyDown="PageBox_KeyDown"
-                         TabIndex="2"
                          Text="{Binding Path=PageNo,
                                         Converter={StaticResource PlusConverter},
                                         ConverterParameter=1,
-                                        Mode=TwoWay}"
+                                        Mode=OneWay}"
                          TextAlignment="Center" />
-                <TextBlock Margin="0,0,0,0"
+                    <TextBlock Margin="0,0,0,0"
                            VerticalAlignment="Bottom"
                            FontSize="{ThemeResource AppFontSizeExtraLarge}"
                            FontWeight="SemiBold"
                            Foreground="{ThemeResource AppBackgroundBrush}"
                            Text="{Binding PagesCount}"
                            TextAlignment="Center" />
-            </StackPanel>
+                </StackPanel>
+                <Button.Flyout>
+                    <Flyout>
+                        <Slider Width="200" Orientation="Horizontal" Minimum="1" Maximum="{Binding PagesCount}" LargeChange="5" SmallChange="1" Value="{Binding Path=PageNo,
+                                        Converter={StaticResource PlusConverter},
+                                        ConverterParameter=1,
+                                        Mode=TwoWay}"></Slider>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
 
         </Grid>
 

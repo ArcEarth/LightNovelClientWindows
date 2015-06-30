@@ -100,8 +100,15 @@ namespace LightNovel
 			}
 			Debug.WriteLine("AppOnLaunched");
 #endif
+#if WINDOWS_UAP
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = Colors.Transparent;
+            titleBar.ButtonBackgroundColor = (Color)Resources["AppAccentColor"];
+            titleBar.ButtonInactiveBackgroundColor = (Color)Resources["AppAccentColor"];
+#endif
 
-			mainDispatcher = Window.Current.Dispatcher;
+            mainDispatcher = Window.Current.Dispatcher;
             mainViewId = ApplicationView.GetForCurrentView().Id;
 
             Frame rootFrame = Window.Current.Content as Frame;
@@ -150,13 +157,6 @@ namespace LightNovel
 			var statusBar = StatusBar.GetForCurrentView();
 			statusBar.BackgroundOpacity = 0;
 			statusBar.ForegroundColor = (Windows.UI.Color)Resources["AppBackgroundColor"];
-#endif
-#if WINDOWS_UAP
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = Colors.Transparent;
-            titleBar.ButtonBackgroundColor = (Color)Resources["AppAccentColor"];
-            titleBar.ButtonInactiveBackgroundColor = (Color)Resources["AppAccentColor"];
 #endif
             await AppGlobal.LoadHistoryDataAsync();
 			await AppGlobal.LoadBookmarkDataAsync();

@@ -248,3 +248,6 @@ LightNovelClient/LightNovelClient.Windows/obj/Debug/Common/ApplicationCommonReso
 LightNovelClient/LightNovelClient.Windows/obj/Debug/Controls/RichTextView.g.cs
 LightNovelClient/LightNovelClient.WindowsPhone/obj/Debug/HubPage.g.cs
 LightNovelClient/LightNovelClient.WindowsPhone/obj/Debug/HubPage.g.i.cs
+*.cache
+LightNovelClient/LightNovelClient.Windows/obj/Debug/XamlSaveStateFile.xml
+LightNovelClient/LightNovelClient.Windows/obj/Debug/XamlSaveStateFile.xml

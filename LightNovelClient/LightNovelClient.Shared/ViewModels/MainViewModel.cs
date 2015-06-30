@@ -785,9 +785,9 @@ namespace LightNovel.ViewModels
             UserName = null;
             Password = null;
             IsSignedIn = false;
-            FavoriteSection.Clear(); //Erase the user favorite data
-            FavoriteSection.IsLoaded = false;
-            FavoriteSection.NotifyPropertyChanged("IsEmpty");
+            //FavoriteSection.Clear(); //Erase the user favorite data
+            //FavoriteSection.IsLoaded = false;
+            //FavoriteSection.NotifyPropertyChanged("IsEmpty");
             IsLoading = false;
         }
 

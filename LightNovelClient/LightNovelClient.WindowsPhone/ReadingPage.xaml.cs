@@ -454,8 +454,9 @@ namespace LightNovel
 					if (!AppGlobal.ShouldAutoLoadImage)
 					{
 						textContent.Text = ImageTapToLoadPlaceholder;
-						//imageContent.MinHeight = 440;
-						imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                        //imageContent.MinHeight = 440;
+                        progressIndicator.Visibility = Visibility.Visible;
+                        imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 						imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
 						textContent.TextAlignment = TextAlignment.Center;
 					}
