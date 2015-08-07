@@ -42,14 +42,60 @@ $scale = 1.8
 }
 #>
 
-0.8,1.0,1.4,1.8,2.4 | %{
+<#
+1.0,1.25,1.5,2.0,4.0 | %{
     $scale = $_
     $pngName = "Logo-150.scale-$($scale*100).png"
     $wsize = [math]::round(150*$scale)
     $hsize = [math]::round(150*$scale)
 	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "LogoSquareMedium.svg"
 }
+#>
 
+
+
+1.0,1.25,1.5,2.0,4.0  | %{
+    $scale = $_
+    $pngName = "StoreLogo.scale-$($scale*100).png"
+    $wsize = [math]::round(50*$scale + 0.001)
+    $hsize = [math]::round(50*$scale + 0.001)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "Logo.svg"
+}
+
+<#
+1.0,1.25,1.5,2.0,4.0  | %{
+    $scale = $_
+    $pngName = "Logo-71.scale-$($scale*100).png"
+    $wsize = [math]::round(71*$scale+0.0001)
+    $hsize = [math]::round(71*$scale+0.0001)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "Logo.svg"
+}
+
+1.0,1.25,1.5,2.0,4.0  | %{
+    $scale = $_
+    $pngName = "Logo-44.scale-$($scale*100).png"
+    $wsize = [math]::round(44*$scale)
+    $hsize = [math]::round(44*$scale)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "Logo.svg"
+}
+
+1.0,1.25,1.5,2.0,4.0  | %{
+    $scale = $_
+    $pngName = "Logo-310.scale-$($scale*100).png"
+    $wsize = [math]::round(310*$scale)
+    $hsize = [math]::round(310*$scale)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "LogoSquareHuge.svg"
+}
+
+
+1.0,1.25,1.5,2.0,4.0  | %{
+    $scale = $_
+    $pngName = "Logo-310x150.scale-$($scale*100).png"
+    $wsize = [math]::round(310*$scale)
+    $hsize = [math]::round(150*$scale)
+	& "$inkscapeExe" --export-png="$($pngName)" -w $wsize -h $hsize "LogoWide.svg"
+}
+#>
 <#
 0.8,1.0,1.4,1.8,2.4 | %{
     $scale = $_

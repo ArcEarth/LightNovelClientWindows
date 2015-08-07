@@ -2,6 +2,7 @@
   <ReferenceAssemblyList>
     <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windows\obj\debug\intermediatexaml\lightnovelclient.store.exe" HashGuid="05b33994-19ff-82ef-aae1-a7cbd803c3f1" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\htmlagilitypack.1.4.9\lib\netcore45\htmlagilitypack.dll" HashGuid="e8cf0f9d-ac45-cdb5-bce5-7ce81a506bdf" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\win2d.0.0.21\lib\win\microsoft.graphics.canvas.winmd" HashGuid="9d994b5e-5473-8d21-724a-c91d2714a15b" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\newtonsoft.json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="0b4cdfc1-2257-2e75-23cf-4052e97b309e" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.1.2.6.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="9ae986bb-5773-4b0f-5ffe-3a76d9adae67" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.portable.1.2.3.42\lib\portable-net45+win+wpa81+wp80\q42.winrt.portable.dll" HashGuid="081b1fd5-23eb-c63c-c9f2-8e237bce1f25" />

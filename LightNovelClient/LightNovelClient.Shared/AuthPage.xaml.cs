@@ -101,7 +101,7 @@ namespace LightNovel
                     }
                     else
                     {
-                        WebViewNavigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
+                        WebViewNavigate(new Uri("http://www.linovel.com/userauth/index.html"));
                     }
                 }
                 else
@@ -119,17 +119,17 @@ namespace LightNovel
                     //var resulst = await LightKindomHtmlClient.ValidateLoginAuth();
                     //using (var client = LightKindomHtmlClient.NewUserHttpClient(UserAgentType.Account))
                     //{
-                    //    var str = await client.GetStringAsync(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
+                    //    var str = await client.GetStringAsync(new Uri("http://www.linovel.com/main/login.html?from=www.linovel.com/"));
                     //    Debug.WriteLine(str);
                     //}
                 }
 
                 //.CaptureSelectedContentToDataPackageAsync();
                 //var text = await datapackage.GetView().GetTextAsync();
-                //webView.Navigate(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
+                //webView.Navigate(new Uri("http://www.linovel.com/main/login.html?from=www.linovel.com/"));
                 //var filter = new HttpBaseProtocolFilter();
                 //var cookieManager = filter.CookieManager;
-                //var cookies = cookieManager.GetCookies(new Uri("http://lknovel.lightnovel.cn/"));
+                //var cookies = cookieManager.GetCookies(new Uri("http://www.linovel.com/"));
                 //var ci_session = cookies.FirstOrDefault(ck => ck.Name == "ci_session_3");
                 //foreach(var ck in cookies)
                 //{
@@ -140,7 +140,7 @@ namespace LightNovel
                 //using (var client = new HttpClient())
                 //{
                 //	client.DefaultRequestHeaders.Add("User-Agent", LightKindomHtmlClient.UserAgentString);
-                //	var str = await client.GetStringAsync(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
+                //	var str = await client.GetStringAsync(new Uri("http://www.linovel.com/main/login.html?from=www.linovel.com/"));
                 //	Debug.WriteLine(str);
                 //}
             }
@@ -164,13 +164,13 @@ namespace LightNovel
         /// session.  This will be null the first time a page is visited.</param>
         private async void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            //webView.Navigate(new Uri("http://lknovel.lightnovel.cn/main/login.html?from=lknovel.lightnovel.cn/"));
+            //webView.Navigate(new Uri("http://www.linovel.com/main/login.html?from=www.linovel.com/"));
             //WebViewNavigate(new Uri("http://useragentapi.com/"));
             //webView.Visibility = Visibility.Visible;
             progressRing.IsActive = true;
             progressRing.Visibility = Visibility.Visible;
             RetryHintTextBlock.Visibility = Visibility.Collapsed;
-            WebViewNavigate(new Uri("http://lknovel.lightnovel.cn/userauth/index.html"));
+            WebViewNavigate(new Uri("http://www.linovel.com/userauth/index.html"));
         }
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {

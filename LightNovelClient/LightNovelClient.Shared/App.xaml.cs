@@ -56,6 +56,9 @@ namespace LightNovel
 				var language = AppGlobal.Settings.InterfaceLanguage;
 				if (!string.IsNullOrEmpty(language))
 					Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
+                if (language == "zh-Hant")
+                    LightKindomHtmlClient.UseSimplifiedCharset = false;
+
 				this.InitializeComponent();
 				this.Suspending += this.OnSuspending;
 				this.Resuming += this.OnResuming;
@@ -102,7 +105,10 @@ namespace LightNovel
 #endif
 #if WINDOWS_UAP
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
+            ApplicationView.GetForCurrentView().FullScreenSystemOverlayMode = FullScreenSystemOverlayMode.Minimal;
+            ApplicationView.GetForCurrentView().SuppressSystemOverlays = true;
             titleBar.BackgroundColor = Colors.Transparent;
             titleBar.ButtonBackgroundColor = (Color)Resources["AppAccentColor"];
             titleBar.ButtonInactiveBackgroundColor = (Color)Resources["AppAccentColor"];
@@ -129,7 +135,7 @@ namespace LightNovel
 				// Create a Frame to act as the navigation context and navigate to the first page
 				rootFrame = extendedSplash.RootFrame;
 				// TODO: change this value to a cache size that is appropriate for your application
-				rootFrame.CacheSize = 2;
+				rootFrame.CacheSize = 3;
 
 				//Associate the frame with a SuspensionManager key 
 				try
@@ -158,6 +164,8 @@ namespace LightNovel
 			statusBar.BackgroundOpacity = 0;
 			statusBar.ForegroundColor = (Windows.UI.Color)Resources["AppBackgroundColor"];
 #endif
+            //return;
+
             await AppGlobal.LoadHistoryDataAsync();
 			await AppGlobal.LoadBookmarkDataAsync();
 			await CachedClient.InitializeCachedSetAsync();

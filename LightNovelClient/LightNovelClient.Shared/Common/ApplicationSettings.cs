@@ -58,7 +58,9 @@ namespace LightNovel.Common
 				_localSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session { Expries = DateTime.Now.AddYears(-100), Key = "" }));
 			if (!_roamingSettings.ContainsKey(FontSizeKey))
 				_roamingSettings.Add(FontSizeKey, 19.0);
-			if (!_roamingSettings.ContainsKey(InterfaceLanguageKey))
+            if (!_roamingSettings.ContainsKey(FontWeightKey))
+                _roamingSettings.Add(FontWeightKey, Windows.UI.Text.FontWeights.SemiLight.Weight);
+            if (!_roamingSettings.ContainsKey(InterfaceLanguageKey))
 				_roamingSettings.Add(InterfaceLanguageKey, "");
 
 			if (!_localSettings.ContainsKey(FontFamilyKey))
@@ -265,8 +267,22 @@ namespace LightNovel.Common
 				NotifyPropertyChanged();
 			}
 		}
+        private const string FontWeightKey = "FontWeight";
+        public UInt16 FontWeight
+        {
+            get
+            {
+                var val = (UInt16)_roamingSettings[FontWeightKey];
+                return val;
+            }
 
-		private const string FontFamilyKey = "FontFamily";
+            set
+            {
+                _roamingSettings[FontWeightKey] = value;
+                NotifyPropertyChanged();
+            }
+        }
+        private const string FontFamilyKey = "FontFamily";
 		public FontFamily FontFamily
 		{
 			get

@@ -1,47 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
-
-  <Identity
-    Name="3ffb125e-376b-4e0e-99b2-f2492e9386ac"
-    Publisher="CN=Yupeng"
-    Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="3ffb125e-376b-4e0e-99b2-f2492e9386ac" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.1.0.0" />
+  <mp:PhoneIdentity PhoneProductId="3ffb125e-376b-4e0e-99b2-f2492e9386ac" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>LightNovelClient.UAP</DisplayName>
-    <PublisherDisplayName>Yupeng</PublisherDisplayName>
+    <DisplayName>LightNovel</DisplayName>
+    <PublisherDisplayName>Arc Earth</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10069.0" MaxVersionTested="10.0.10069.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.10240.0" MaxVersionTested="10.0.10240.0" />
   </Dependencies>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="LightNovel.App">
-      <uap:VisualElements
-        DisplayName="LightNovelClient.UAP"
-        Square150x150Logo="Assets\Logo-150.png"
-        Square44x44Logo="Assets\Logo-44.png"
-        Description="LightNovelClient.UAP"
-        BackgroundColor="#A4C400">
-        <uap:SplashScreen Image="Assets\SplashScreen-620x300.png" />
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LightNovel.App">
+      <uap:VisualElements DisplayName="LightNovel" Square150x150Logo="Assets\Logo-150.png" Square44x44Logo="Assets\Logo-44.png" Description="LightNovelClient.UAP" BackgroundColor="#A4C400">
+        <uap:DefaultTile Square310x310Logo="Asset\Logo-310.png" Wide310x150Logo="Asset\Logo-310x150.png" Square71x71Logo="Asset\Logo-71.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        <uap:SplashScreen Image="Assets\SplashScreen-620x300.png" BackgroundColor="#A4C400" />
       </uap:VisualElements>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
   </Capabilities>

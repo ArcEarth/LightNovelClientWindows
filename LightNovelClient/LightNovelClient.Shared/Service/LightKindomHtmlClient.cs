@@ -54,7 +54,7 @@ namespace LightNovel.Service
 
         private const string CharsetAffix = "?charset=big5";
 
-        private const string SeverBasePath = "http://lknovel.lightnovel.cn";
+        private const string SeverBasePath = "http://www.linovel.com";
         private const string ChapterSource = SeverBasePath + "/main/view/";
         private const string ChapterSource1 = SeverBasePath + "/mobile/view/";
         private const string VolumeSource = SeverBasePath + "/main/book/";
@@ -118,6 +118,8 @@ namespace LightNovel.Service
         public readonly static Uri UserAddFavoriteSeriesUri = new Uri(UserAddFavoriteSeriesPath); // Post { series_id : id}
         public readonly static Uri UserSetBookmarkUri = new Uri(UserSetBookmarkPath);
 
+        public static bool UseSimplifiedCharset { get; set; } = true;
+
         private static HttpBaseProtocolFilter _fileter = new HttpBaseProtocolFilter();
         private static HttpCookie _CiSessionCookie;
         private static Session _ci_session;
@@ -129,7 +131,7 @@ namespace LightNovel.Service
         //	set
         //	{
         //		_credentialCookie = value;
-        //		_credentialCookie.Domain = "lknovel.lightnovel.cn";
+        //		_credentialCookie.Domain = "www.linovel.com";
         //		//_credentialCookie.Port = "";
         //		if (_credentialCookie != null)
         //		{
@@ -166,7 +168,7 @@ namespace LightNovel.Service
                     _CiSessionCookie = cookie;
                     //_fileter.CookieManager.SetCookie(cookie);
 
-                    //cookie.Domain = "lknovel.lightnovel.cn";
+                    //cookie.Domain = "www.linovel.com";
                     //var header = _cookieContainer.GetCookieHeader(SeverBaseUri);
                     //Debug.WriteLine(header);
                 }
@@ -580,7 +582,7 @@ namespace LightNovel.Service
                             && node.Attributes["class"].Value.StartsWith("breadcrumb")).Elements("li")
                     .Select(node => node.Element("a"));
                 volume.ParentSeriesId = RetriveId(pathNodes.First(
-                        node => node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/main/vollist/"))
+                        node => node.Attributes["href"].Value.Contains("vollist/"))
                     .Attributes["href"].Value);
             }
             catch (Exception)
@@ -590,7 +592,7 @@ namespace LightNovel.Service
 
             //var parentSerNode = nodes.FirstOrDefault(node =>
             //	node.Attributes["href"] != null &&
-            //	node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/mobile/vollist/"));
+            //	node.Attributes["href"].Value.StartsWith("http://www.linovel.com/mobile/vollist/"));
             //volume.ParentSeriesId = RetriveId(parentSerNode.Attributes["href"].Value);
             // Naviagtion Proporties
             var detailNode = nodes.FirstOrDefault(
@@ -742,7 +744,7 @@ namespace LightNovel.Service
 
             var chapter = new Chapter();
             chapter.Id = id;
-            var novelUrl = new Uri(ChapterSource + id + ".html");
+            var novelUrl = new Uri(ChapterSource + id + ".html" + (UseSimplifiedCharset ? String.Empty : CharsetAffix));
             var doc = await GetHtmlDocumentAsync(novelUrl);
             if (doc == null) return null;
 
@@ -760,7 +762,7 @@ namespace LightNovel.Service
 
 
                 chapter.ParentSeriesId = RetriveId(pathNodes.First(
-                        node => node.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/main/vollist/"))
+                        node => node.Attributes["href"].Value.Contains("vollist/"))
                     .Attributes["href"].Value);
 
                 var navi = nodes.First(
@@ -821,7 +823,7 @@ namespace LightNovel.Service
         public async static Task<Chapter> GetChapterAlterAsync(string id)
         {
 
-            var novelUrl = new Uri(ChapterSource1 + id + ".html");
+            var novelUrl = new Uri(ChapterSource1 + id + ".html" + (UseSimplifiedCharset ? String.Empty : CharsetAffix));
             var doc = await GetHtmlDocumentAsync(novelUrl);
             if (doc == null) return null;
             return ParseChapterAlter(id, doc);
@@ -1063,7 +1065,7 @@ namespace LightNovel.Service
             return (from link in nodes
                     where
                         link.Attributes["href"] != null &&
-                        link.Attributes["href"].Value.StartsWith("http://lknovel.lightnovel.cn/main/vollist/")
+                        link.Attributes["href"].Value.Contains("vollist/")
                     select new Descriptor
                     {
                         Id = RetriveId(link.Attributes["href"].Value),

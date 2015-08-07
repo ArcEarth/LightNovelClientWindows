@@ -23,7 +23,7 @@
             Enable Live Tile will make the tile have dynamic changed image and not &quot;Transparent&quot;
         </TextBlock>
         <ToggleSwitch x:Name="LiveTileSwitch"
-                      Margin="0,-15,15,-5"
+                      Margin="0,0,15,-5"
                       IsOn="{Binding EnableLiveTile}"
                       Padding="0"
                       Toggled="LiveTileSwitch_Toggled" />

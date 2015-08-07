@@ -201,9 +201,18 @@ namespace LightNovel.Common
                 // preferences the user specified. In your app, you should
                 // choose a size that's best for your scenario and code it,
                 // instead of requiring the user to decide.
-                var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
-                    this.Id,
-                    ViewSizePreference.Default); //ApplicationView.GetForCurrentView().Id,ViewSizePreference.Default
+
+                bool viewShown = false;
+                try
+                {
+                    viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(
+                        this.Id,
+                        ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);
+                    //await ApplicationViewSwitcher.SwitchAsync(this.Id);
+                }
+                catch (Exception)
+                {
+                }
 
                 if (viewShown)
                 {

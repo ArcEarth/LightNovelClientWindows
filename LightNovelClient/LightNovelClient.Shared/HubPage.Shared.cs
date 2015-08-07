@@ -118,6 +118,33 @@ namespace LightNovel
 
         }
 
+        void SwitchGridViewOrientation(GridView gridView, Orientation orientation, int maxItemsPerRow = 1)
+        {
+            if (gridView == null) return;
+            var wrapGrid = gridView.ItemsPanelRoot as ItemsWrapGrid;
+
+            // Desiered GridView Orientation should be oppsite with WrapGrid's major layout orientation
+            if (wrapGrid.Orientation != orientation)
+                return;
+
+            var scrollViwer = gridView.GetFirstDescendantOfType<ScrollViewer>();
+            if (orientation == Orientation.Horizontal)
+            {
+                scrollViwer.VerticalScrollMode = ScrollMode.Disabled;
+                scrollViwer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                wrapGrid.Orientation = Orientation.Vertical;
+                wrapGrid.MaximumRowsOrColumns = -1;
+            }
+            else
+            {
+                scrollViwer.VerticalScrollMode = ScrollMode.Enabled;
+                scrollViwer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                wrapGrid.Orientation = Orientation.Horizontal;
+                wrapGrid.MaximumRowsOrColumns = maxItemsPerRow;
+            }
+
+        }
+
         private void SyncViewWithOrientation()
         {
             var appView = ApplicationView.GetForCurrentView();
@@ -153,6 +180,8 @@ namespace LightNovel
                 }
             }
 #elif WINDOWS_UAP
+
+
             if (appView.Orientation == ApplicationViewOrientation.Landscape)
             {
                 LastReadSection.Margin = new Thickness(0, -52, 0, 0);
@@ -160,6 +189,22 @@ namespace LightNovel
                 if (logo != null)
                 {
                     (logo.RenderTransform as TranslateTransform).X = LastReadSection.ActualWidth;
+                }
+
+                SwitchGridViewOrientation(FavoriteSection.GetFirstDescendantOfType<GridView>(), Orientation.Horizontal);
+                SwitchGridViewOrientation(RecentReadingSection.GetFirstDescendantOfType<GridView>(), Orientation.Horizontal);
+                SwitchGridViewOrientation(RecommandSection.GetFirstDescendantOfType<GridView>(), Orientation.Horizontal,6);
+
+                Grid.SetRow(ToolBar, 0);
+                ToolBar.HorizontalAlignment = HorizontalAlignment.Right;
+                ToolBar.Background = (SolidColorBrush)App.Current.Resources["TransparentBrush"];
+                if (appView.IsFullScreenMode)
+                {
+                    ToolBar.Padding = new Thickness(0);
+                }
+                else
+                {
+                    ToolBar.Padding = new Thickness(0, 0, 140, 0);
                 }
             }
             else
@@ -170,6 +215,16 @@ namespace LightNovel
                 {
                     (logo.RenderTransform as TranslateTransform).X = 0;
                 }
+                SwitchGridViewOrientation(FavoriteSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical);
+                SwitchGridViewOrientation(RecentReadingSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical);
+                SwitchGridViewOrientation(RecommandSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical, 6);
+
+                Grid.SetRow(ToolBar,2);
+                ToolBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+                ToolBar.Padding = new Thickness(0);
+                ToolBar.Margin = new Thickness(0);
+                ToolBar.HorizontalAlignment = HorizontalAlignment.Stretch;
+
             }
 #elif WINDOWS_APP
             if (appView.Orientation == ApplicationViewOrientation.Landscape)

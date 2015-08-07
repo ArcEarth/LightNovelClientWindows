@@ -349,7 +349,7 @@ namespace LightNovel
 
 		private void UpdateContentsView(IEnumerable<LineViewModel> lines)
 		{
-			Uri severBaseUri = new Uri("http://lknovel.lightnovel.cn");
+            Uri severBaseUri = LightKindomHtmlClient.SeverBaseUri;
 			ContentTextBlock.Blocks.Clear();
 			bool prevLineBreakFlag = false;
 			foreach (var line in lines)
@@ -969,7 +969,8 @@ namespace LightNovel
 				frame.Navigate(typeof(ReadingPage), nav.ToString());
 				Window.Current.Content = frame;
 				var readingPage = frame.Content as ReadingPage;
-				if (readingPage != null)
+                readingPage.OpenInNewViewButton.Visibility = Visibility.Collapsed;
+                if (readingPage != null)
 					viewControl.Released += readingPage.ViewControl_Released;
 
 				ApplicationView.GetForCurrentView().Title = viewControl.Title;

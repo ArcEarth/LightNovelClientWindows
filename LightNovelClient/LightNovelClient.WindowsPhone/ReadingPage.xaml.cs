@@ -88,7 +88,7 @@ namespace LightNovel
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
 			this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-			this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
+			this.navigationHelper.GoBackCommand = new RelayCommand(() => this.GoBack(), () => this.CanGoBack());
 			ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 			ViewModel.CommentsListLoaded += ViewModel_CommentsListLoaded;
 			RegisterForShare();

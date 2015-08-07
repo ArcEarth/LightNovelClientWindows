@@ -67,6 +67,15 @@ namespace LightNovel
         // Position the extended splash screen image in the same location as the system splash screen image.
         void PositionImage()
         {
+            Logo.Height = splashImageRect.Height / 3;
+            Logo.Width = splashImageRect.Width * 0.62;
+            var viewBox = (Logo.ContentTemplateRoot as Viewbox);
+            if (viewBox != null)
+            {
+                viewBox.Stretch = Stretch.Uniform;
+                viewBox.Height = Logo.Height;
+                viewBox.Width = Logo.Width;
+            }
             //SplashImage.SetValue(HeightProperty, splashImageRect.Height);
             //SplashImage.SetValue(WidthProperty, splashImageRect.Width);
         }

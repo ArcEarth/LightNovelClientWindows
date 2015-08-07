@@ -2,11 +2,10 @@
   <ReferenceAssemblyList>
     <LocalAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\lightnovelclient\lightnovelclient.windowsphone\obj\debug\intermediatexaml\lightnovelclient.windowsphone.exe" HashGuid="d36b9a74-ed5e-05df-71db-af77f6fe43c7" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\htmlagilitypack.1.4.9\lib\portable-net45+netcore45+wpa81+wp8+monoandroid+monotouch\htmlagilitypack.dll" HashGuid="365e4636-8cbf-8d2d-3790-d3267e801443" />
-    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\newtonsoft.json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="225745d8-3693-ad6f-ebd5-8845d81f8e0f" />
-    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.1.2.6.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="9ae986bb-5773-4b0f-5ffe-3a76d9adae67" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\win2d.0.0.21\lib\wpa\microsoft.graphics.canvas.winmd" HashGuid="0d5943de-8925-2d44-34a5-4914d46b46d5" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\newtonsoft.json.7.0.1\lib\portable-net45+wp80+win8+wpa81+dnxcore50\newtonsoft.json.dll" HashGuid="86223907-5808-be51-71b4-c872f8140e29" />
+    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.1.4.2.42\lib\portable-win81+wpa81\q42.winrt.dll" HashGuid="84c9f527-5c81-1bae-69d0-e28003f81a08" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\q42.winrt.portable.1.2.3.42\lib\portable-net45+win+wpa81+wp80\q42.winrt.portable.dll" HashGuid="081b1fd5-23eb-c63c-c9f2-8e237bce1f25" />
-    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\microsoft.net.http.2.2.29\lib\wpa81\system.net.http.extensions.dll" HashGuid="794366f8-cc6d-f0fa-3d07-33b45136e193" />
-    <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\microsoft.net.http.2.2.29\lib\wpa81\system.net.http.primitives.dll" HashGuid="7b71418d-e056-7613-c839-85fb8f6472a6" />
     <ReferenceAssembly PathName="c:\users\yupeng\source\workspaces\lightnovelclientwindows\packages\winrtxamltoolkit.windowsphone.1.8.1.0\lib\wpa\winrtxamltoolkit.dll" HashGuid="221e17c6-64f2-d53e-b7b5-145a2dbe921c" />
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>

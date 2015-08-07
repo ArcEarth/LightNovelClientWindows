@@ -9,9 +9,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.Extensions;
 
 // TODO: Connect the Search Results Page to your in-app search.
 // The Search Results Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234240
@@ -61,10 +63,56 @@ namespace LightNovel
 			this.InitializeComponent();
 			this.navigationHelper = new NavigationHelper(this);
 			this.navigationHelper.LoadState += navigationHelper_LoadState;
-			this.navigationHelper.SaveState += navigationHelper_SaveState;
-		}
+            this.navigationHelper.SaveState += navigationHelper_SaveState;
+            this.SizeChanged += SearchResultsPage_SizeChanged;
+        }
 
-		void LoadResultIntoView()
+        private void SearchResultsPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().Orientation == ApplicationViewOrientation.Landscape)
+            {
+                SwitchGridViewOrientation(resultsView.ZoomedInView as GridView, Orientation.Horizontal);
+                SwitchGridViewOrientation(resultsView.ZoomedOutView as GridView, Orientation.Horizontal);
+            }
+            else
+            {
+                SwitchGridViewOrientation(resultsView.ZoomedInView as GridView, Orientation.Vertical, -1);
+                SwitchGridViewOrientation(resultsView.ZoomedOutView as GridView, Orientation.Vertical, -1);
+            }
+        }
+
+        public static void SwitchGridViewOrientation(GridView gridView, Orientation orientation, int maxItemsPerRow = -1)
+        {
+            if (gridView == null) return;
+            var wrapGrid = gridView.ItemsPanelRoot as ItemsWrapGrid;
+
+            // Desiered GridView Orientation should be oppsite with WrapGrid's major layout orientation
+            if (wrapGrid == null || wrapGrid.Orientation != orientation)
+                return;
+
+            var scrollViwer = gridView.GetFirstDescendantOfType<ScrollViewer>();
+            if (orientation == Orientation.Horizontal)
+            {
+                scrollViwer.VerticalScrollMode = ScrollMode.Disabled;
+                scrollViwer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                scrollViwer.HorizontalScrollMode = ScrollMode.Enabled;
+                scrollViwer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                wrapGrid.Orientation = Orientation.Vertical;
+                wrapGrid.MaximumRowsOrColumns = maxItemsPerRow;
+            }
+            else
+            {
+                scrollViwer.VerticalScrollMode = ScrollMode.Enabled;
+                scrollViwer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                scrollViwer.HorizontalScrollMode = ScrollMode.Disabled;
+                scrollViwer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                wrapGrid.Orientation = Orientation.Horizontal;
+                wrapGrid.MaximumRowsOrColumns = maxItemsPerRow;
+            }
+        }
+
+
+        void LoadResultIntoView()
 		{
 			if (Results == null)
 				VisualStateManager.GoToState(this, "ErrorInSearch", true);
@@ -372,5 +420,17 @@ namespace LightNovel
 		{
 			queryText.Text = QueryText;
 		}
-	}
+
+        private void GridView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ApplicationView.GetForCurrentView().Orientation == ApplicationViewOrientation.Landscape)
+            {
+                SwitchGridViewOrientation(sender as GridView, Orientation.Horizontal);
+            }
+            else
+            {
+                SwitchGridViewOrientation(sender as GridView, Orientation.Vertical);
+            }
+        }
+    }
 }

@@ -19,17 +19,17 @@ namespace LightNovel.Controls
 {
 	public sealed partial class RichTextView : UserControl
 	{
-		/// <summary>
-		/// Identifies the <see cref="ColumnWidth"/> dependency property.
-		/// </summary>
-		public static readonly DependencyProperty PageWidthProperty =
+        /// <summary>
+        /// Identifies the <see cref="PageWidth"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageWidthProperty =
 			DependencyProperty.Register("PageWidth", typeof(double),
 			typeof(RichTextColumns), new PropertyMetadata(double.NaN, null));
 
-		/// <summary>
-		/// Identifies the <see cref="ColumnWidth"/> dependency property.
-		/// </summary>
-		public static readonly DependencyProperty PageHeightProperty =
+        /// <summary>
+        /// Identifies the <see cref="PageHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PageHeightProperty =
 			DependencyProperty.Register("PageHeight", typeof(double),
 			typeof(RichTextColumns), new PropertyMetadata(double.NaN, null));
 		

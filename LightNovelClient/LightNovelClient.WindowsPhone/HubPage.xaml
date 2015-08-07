@@ -600,6 +600,7 @@
                 MinWidth="50"
                 MinHeight="50"
                 Margin="40,0"
+                Visibility="Collapsed"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Click="UserAccount_Click"

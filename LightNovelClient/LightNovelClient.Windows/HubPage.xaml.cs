@@ -179,7 +179,7 @@ namespace LightNovel
                     SeriesTitle = "机巧少女不会受伤",
                     VolumeTitle = "第一卷 ",
                     Description = "机巧魔术──那是由内藏魔术回路的自动人偶与人偶使所使用的魔术。在英国最高学府的华尔普吉斯皇家机巧学院里，正举行着一场选出顶尖人偶使「魔王」的战斗「夜会」。来自日本的留学生雷真和他的搭档──少女型态的人偶夜夜，为了参加「夜会」，打算挑战其他入选者，夺取对方的资格。他们锁定的目标是下届魔王呼声极高的候选人，别名「暴龙」的美少女夏琳！然而就在雷真向她挑战时，突然出现意外的伏兵……？ 交响曲式学园战斗动作剧，第一集登场！",
-                    CoverImageUri = "http://lknovel.lightnovel.cn/illustration/image/20120813/20120813085826_34455.jpg"
+                    CoverImageUri = LightKindomHtmlClient.SeverBaseUri + "/illustration/image/20120813/20120813085826_34455.jpg"
                 };
             }
         }

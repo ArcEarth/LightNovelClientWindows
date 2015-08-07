@@ -217,15 +217,15 @@ namespace LightNovel
                         ChangeView(ViewModel.PageNo);
                     break;
                 case "VolumeNo":
-#if WINDOWS_APP
-					if (VolumeListView.Items.Count > 0 && VolumeListView.Items.Count > ViewModel.VolumeNo)
+#if WINDOWS_APP || WINDOWS_UAP
+                    if (VolumeListView.Items.Count > 0 && VolumeListView.Items.Count > ViewModel.VolumeNo)
 						VolumeListView.SelectedIndex = ViewModel.VolumeNo;
 #endif
                     SyncIndexSelection();
                     LoadingAheadTask = null;
                     break;
                 case "ChapterNo":
-#if WINDOWS_APP
+#if WINDOWS_APP || WINDOWS_UAP
 					if (ChapterListView.Items.Count > 0 && ChapterListView.Items.Count > ViewModel.ChapterNo)
 						ChapterListView.SelectedIndex = ViewModel.ChapterNo;
 #endif
@@ -486,11 +486,10 @@ namespace LightNovel
             }
             else
             {
-#if WINDOWS_PHONE_APP
-				int currentLine = GetCurrentLineNo();
+#if WINDOWS_PHONE_APP || WINDOWS_UAP
+                int currentLine = GetCurrentLineNo();
 				ViewModel.ReportViewChanged(null, currentLine);
 				e.PageState.Add("IsFullScreen", ViewModel.IsFullScreen);
-
 #endif
 
                 e.PageState.Add("SeriesId", ViewModel.SeriesId);
@@ -576,7 +575,14 @@ namespace LightNovel
                 string args = bookmark.Position.ToString();
                 var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), ViewModel.SeriesData.Title, args, imageUri, TileSize.Default);
                 //var tile = new SecondaryTile(ViewModel.SeriesId.ToString(), "LightNovel", ViewModel.SeriesData.Title, args, TileOptions.ShowNameOnLogo, imageUri);
-                button.IsChecked = await tile.RequestCreateForSelectionAsync(new Rect(location, size));
+                try
+                {
+                    button.IsChecked = await tile.RequestCreateAsync(location);
+                }
+                catch (Exception)
+                {
+                }
+
                 SyncPinButtonView();
             }
             else
@@ -637,7 +643,7 @@ namespace LightNovel
             request.Data.Properties.ApplicationName = "LightNovel";
             var wpLink = new Uri("http://www.windowsphone.com/s?appid=c0d0077f-5426-47ee-bc97-f4c48d277095");
             request.Data.Properties.ApplicationListingUri = wpLink;
-            var lkLink = new Uri("http://lknovel.lightnovel.cn/main/book/" + ViewModel.VolumeData.Id + ".html");
+            var lkLink = new Uri("http://www.linovel.com/main/book/" + ViewModel.VolumeData.Id + ".html");
             request.Data.SetWebLink(lkLink);
             string html = "<h3>" + ViewModel.VolumeData.Title + "</h3><p><img src=\"" + ViewModel.VolumeData.CoverImageUri + "\"></p><p>" + ViewModel.VolumeData.Description + "</p><p>Read full article at <a href=\"" + lkLink.AbsoluteUri + "\">here</a></p>" + "<p>Download the best client for read at <a href=\"" + wpLink.AbsoluteUri + "\">Windows Phone Store</a></p>";
             string htmlFormat = HtmlFormatHelper.CreateHtmlFormat(html);
@@ -687,9 +693,13 @@ namespace LightNovel
         {
             var item = sender as MenuFlyoutItem;
             ViewModel.FontSize = item.FontSize;
+            ViewModel.FontWeight = item.FontWeight;
 
-#if WINDOWS_APP
-			ContentTextBlock.FontWeight = item.FontWeight;
+//#if WINDOWS_PHONE_APP || WINDOWS_UAP
+//            ContentListView.FontWeight = item.FontWeight;
+//#endif
+#if WINDOWS_APP || WINDOWS_UAP
+            // ContentTextBlock.FontWeight = item.FontWeight;
 			// Request an update of the layout since the font size is changed
 			RichTextColumns.ResetOverflowLayout(ContentColumns, null);
 			//ContentColumns.InvalidateMeasure();
@@ -843,7 +853,7 @@ namespace LightNovel
         private async void ViewInBrowserButton_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.ChapterData != null && !String.IsNullOrEmpty(ViewModel.ChapterData.Id))
-                await Windows.System.Launcher.LaunchUriAsync(new Uri("http://lknovel.lightnovel.cn/main/view/" + ViewModel.ChapterData.Id + ".html"));
+                await Windows.System.Launcher.LaunchUriAsync(new Uri("http://www.linovel.com/main/view/" + ViewModel.ChapterData.Id + ".html"));
         }
 
     }

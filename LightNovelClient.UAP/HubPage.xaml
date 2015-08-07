@@ -16,7 +16,6 @@
       mc:Ignorable="d">
 
     <Page.Resources>
-        <x:Double x:Key="TitleBarHeight">52</x:Double>
         <Color x:Key="VolumeTileBackgroundColor">#FFF4FFC1</Color>
         <SolidColorBrush x:Key="VolumeTileBackgroundBrush" Color="Transparent" />
         <local:StringToSymbolConverter x:Key="StringToSymbolConverter" />
@@ -153,7 +152,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="HubPageHubSectionHeaderTemplate">
-            <Grid Margin="12,0">
+            <Grid Margin="0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="60" />
                     <ColumnDefinition Width="*" />
@@ -230,7 +229,6 @@
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
                     <Setter Property="BorderBrush" Value="{ThemeResource AppAccentBrushSemiLight}" />
-                    <Setter Property="RequestedTheme" Value="{Binding RequestedTheme,ElementName=pageRoot}"/>
                     <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
                     <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
@@ -351,88 +349,6 @@
         </Flyout>
 
     </Page.Resources>
-    <Page.BottomAppBar>
-        <CommandBar ClosedDisplayMode="Compact" Grid.Column="0"
-                    Background="{ThemeResource AppAccentBrush}"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Stretch"
-                    Foreground="{ThemeResource AppBackgroundBrush}"
-                    IsOpen="False">
-            <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="AccountButton" Icon="Contact" Label="User" Click="UserAccount_Click"></AppBarButton>
-                <AppBarSeparator Margin="-10,0"/>
-                <AppBarButton x:Uid="SeriesIndexButton"
-                              Click="SeriesIndexButton_Click"
-                              Icon="AllApps"
-                              Label="All Novel" />
-                <AppBarButton x:Uid="RefreshButton"
-                              Click="RefreshButton_Click"
-                              Icon="Refresh"
-                              Label="Refresh" />
-                <AppBarButton x:Uid="SettingButton"
-                              Click="SettingsButton_Click"
-                              Icon="Setting"
-                              Label="Settings" />
-                <AppBarButton Icon="Find" Label="Search" x:Uid="SearchButton">
-                    <AppBarButton.Flyout>
-                        <Flyout>
-                            <AutoSuggestBox x:Uid="HubSearchBox"
-                                    RelativePanel.LeftOf="AccountButton"
-                                    RelativePanel.AlignVerticalCenterWithPanel="True"
-                                    Margin="5,0"
-                                    Width="150"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    CommonNavigationTransitionInfo.IsStaggerElement="False"
-                                    ContinuumNavigationTransitionInfo.IsEntranceElement="True"
-                                    ContinuumNavigationTransitionInfo.IsExitElement="True"
-                                    PlaceholderText="Search for Novel"
-                                    TextChanged="SearchBox_TextChanged"
-                                    QuerySubmitted="SearchBox_QuerySubmitted"
-                                    TabIndex="2" />
-                        </Flyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-            </CommandBar.PrimaryCommands>
-            <CommandBar.SecondaryCommands>
-                <AppBarButton x:Uid="HelpButton"
-                              Icon="Help"
-                              Label="Help">
-                    <AppBarButton.Flyout>
-                        <Flyout>
-                            <StackPanel Margin="15,0,10,100">
-                                <TextBlock x:Uid="HelpHeaderTextBlock"
-                                           FontWeight="Bold"
-                                           Foreground="{ThemeResource AppAccentBrush}"
-                                           Style="{ThemeResource AppTextTitle1Style}"
-                                           Text="Tips" />
-                                <TextBlock x:Uid="Help1TextBlock"
-                                           Margin="15,5"
-                                           Style="{ThemeResource AppTextLargeStyle}"
-                                           Text="Tap and Hold your finger among a Recent or Favorite Item to Delete them. "
-                                           TextWrapping="Wrap" />
-                                <TextBlock x:Uid="Help2TextBlock"
-                                           Margin="15,5"
-                                           Style="{ThemeResource AppTextLargeStyle}"
-                                           Text="Perform an Edge Swipe from Left to open Index Panel"
-                                           TextWrapping="Wrap" />
-                            </StackPanel>
-                            <Flyout.FlyoutPresenterStyle>
-                                <Style TargetType="FlyoutPresenter">
-                                    <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
-                                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
-                                    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
-                                </Style>
-                            </Flyout.FlyoutPresenterStyle>
-                        </Flyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
-                <AppBarButton Icon="Permissions" Label="Authenticate" Click="AuthenticateButton_Click" />
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-
-    </Page.BottomAppBar>
 
     <!--  This grid acts as a root panel for the page.  -->
     <Grid Background="{ThemeResource AppBackgroundBrush}">
@@ -442,8 +358,9 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="{ThemeResource TitleBarHeight}" />
+            <RowDefinition Height="{ThemeResource TitleBarHeightGridLength}" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Rectangle HorizontalAlignment="Stretch"
                    CommonNavigationTransitionInfo.IsStaggerElement="True"
@@ -546,7 +463,7 @@
             </HubSection>
 
             <HubSection x:Uid="RecentReadingSection"
-                        x:Name="RecentReadingItem"
+                        x:Name="RecentReadingSection"
                         Margin="0,0,0,0"
                         DataContext="{Binding RecentSection}"
                         Header="Recent"
@@ -554,24 +471,32 @@
                         Visibility="{Binding IsEmpty,
                                              Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                 <DataTemplate>
-                    <ListView Margin="0,0,0,0"
+                    <GridView x:Name="RecentItemGridView"
+                              Margin="0,0,0,0"
                               IsItemClickEnabled="True"
+                              Loaded="FRItemGridView_Loaded"                              
                               ItemClick="RecentItem_Click"
                               ItemTemplate="{StaticResource HistoryItemTemplate}"
                               ItemsSource="{Binding}"
                               ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.VerticalScrollMode="Disabled"
                               ScrollViewer.IsHorizontalRailEnabled="False"
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"
                               SelectionMode="None">
-                        <ListView.ItemContainerTransitions>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical"></ItemsWrapGrid>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
                                 <AddDeleteThemeTransition />
                                 <ReorderThemeTransition />
                             </TransitionCollection>
-                        </ListView.ItemContainerTransitions>
-                    </ListView>
+                        </GridView.ItemContainerTransitions>
+                    </GridView>
                 </DataTemplate>
             </HubSection>
             <HubSection x:Uid="FavoriteSection"
@@ -583,25 +508,33 @@
                         Visibility="{Binding IsEmpty,
                                              Converter={StaticResource BooleanToVisibilityReverseConverter}}">
                 <DataTemplate>
-                    <ListView Margin="0,0,0,0"
+                    <GridView x:Name="FavoriteItemGridView"
+                              Margin="0,0,0,0"
+                              Loaded="FRItemGridView_Loaded"
                               IsItemClickEnabled="True"
                               IsSwipeEnabled="False"
                               ItemClick="RecentItem_Click"
                               ItemTemplate="{StaticResource BookmarkItemTemplate}"
                               ItemsSource="{Binding}"
                               ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.VerticalScrollMode="Disabled"
                               ScrollViewer.IsHorizontalRailEnabled="False"
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"
                               SelectionMode="None">
-                        <ListView.ItemContainerTransitions>
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid Orientation="Vertical"></ItemsWrapGrid>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                        <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
                                 <AddDeleteThemeTransition />
                                 <ReorderThemeTransition />
                             </TransitionCollection>
-                        </ListView.ItemContainerTransitions>
-                    </ListView>
+                        </GridView.ItemContainerTransitions>
+                    </GridView>
                 </DataTemplate>
             </HubSection>
             <HubSection x:Name="RecommandSection"
@@ -611,23 +544,26 @@
                         Padding="0,0,0,0">
                 <DataTemplate>
                     <GridView Margin="0,0,0,0"
+                              Loaded="RecommandGridView_Loaded"
                               VerticalAlignment="Stretch"
                               IsItemClickEnabled="True"
                               ItemClick="RecommandSectionItem_ItemClick"
                               ItemTemplate="{StaticResource BookCoverTemplate}"
                               ItemsSource="{Binding Source={StaticResource RecommandCollectionViewSource}}"
                               Padding="0"
-                              Width="600"
                               ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollMode="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled"
                               ScrollViewer.IsHorizontalRailEnabled="False"
                               ScrollViewer.IsHorizontalScrollChainingEnabled="True"
                               ScrollViewer.IsScrollInertiaEnabled="False"                              
                               SelectionMode="None">
-                        <!--<GridView.ItemsPanel>
+                        <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
+                                <ItemsWrapGrid Orientation="Vertical"/>
                             </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>-->
+                        </GridView.ItemsPanel>
                         <GridView.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EntranceThemeTransition />
@@ -685,13 +621,86 @@
             </HubSection>
         </Hub>
 
-        <!--<Grid  Grid.Row="0" HorizontalAlignment="Right">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="140"/>
-            </Grid.ColumnDefinitions>
-        </Grid>-->
+        <CommandBar x:Name="ToolBar" ClosedDisplayMode="Compact" Grid.Column="1"
+                    Background="{ThemeResource AppAccentBrush}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Foreground="{ThemeResource AppBackgroundBrush}"
+                    IsOpen="False">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="AccountButton" Icon="Contact" Label="User" Click="UserAccount_Click"></AppBarButton>
+                <AppBarSeparator Margin="-10,0"/>
+                <AppBarButton x:Uid="SeriesIndexButton"
+                              Click="SeriesIndexButton_Click"
+                              Icon="AllApps"
+                              Label="All Novel" />
+                <AppBarButton Icon="Find" Label="Search" x:Uid="SearchButton">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <AutoSuggestBox x:Uid="HubSearchBox"
+                                    RelativePanel.LeftOf="AccountButton"
+                                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                                    Margin="5,0"
+                                    Width="150"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    CommonNavigationTransitionInfo.IsStaggerElement="False"
+                                    ContinuumNavigationTransitionInfo.IsEntranceElement="True"
+                                    ContinuumNavigationTransitionInfo.IsExitElement="True"
+                                    PlaceholderText="Search for Novel"
+                                    TextChanged="SearchBox_TextChanged"
+                                    QuerySubmitted="SearchBox_QuerySubmitted"
+                                    TabIndex="2" />
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton x:Uid="SettingButton"
+                              Click="SettingsButton_Click"
+                              Icon="Setting"
+                              Label="Settings" />
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Uid="RefreshButton"
+                              Click="RefreshButton_Click"
+                              Icon="Refresh"
+                              Label="Refresh" />
+                <AppBarButton x:Uid="HelpButton"
+                              Icon="Help"
+                              Label="Help">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <StackPanel Margin="15,0,10,100">
+                                <TextBlock x:Uid="HelpHeaderTextBlock"
+                                           FontWeight="Bold"
+                                           Foreground="{ThemeResource AppAccentBrush}"
+                                           Style="{ThemeResource AppTextTitle1Style}"
+                                           Text="Tips" />
+                                <TextBlock x:Uid="Help1TextBlock"
+                                           Margin="15,5"
+                                           Style="{ThemeResource AppTextLargeStyle}"
+                                           Text="Tap and Hold your finger among a Recent or Favorite Item to Delete them. "
+                                           TextWrapping="Wrap" />
+                                <TextBlock x:Uid="Help2TextBlock"
+                                           Margin="15,5"
+                                           Style="{ThemeResource AppTextLargeStyle}"
+                                           Text="Perform an Edge Swipe from Left to open Index Panel"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />
+                                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Icon="Permissions" Label="Authenticate" Click="AuthenticateButton_Click" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+
 
 
         <ProgressBar x:Name="progressBar"

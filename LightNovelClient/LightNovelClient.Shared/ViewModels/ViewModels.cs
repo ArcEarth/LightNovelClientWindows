@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.StartScreen;
+using Windows.UI.Text;
 using Windows.UI.Xaml.Media;
 
 namespace LightNovel.ViewModels
@@ -58,6 +59,7 @@ namespace LightNovel.ViewModels
 			//_Background = (SolidColorBrush)App.Current.Resources["AppReadingBackgroundBrush"];
 			//_Foreground = (SolidColorBrush)App.Current.Resources["AppForegroundBrush"];
 			_FontSize = AppGlobal.Settings.FontSize;
+            _FontWeight.Weight = AppGlobal.Settings.FontWeight;
 			_Background = AppGlobal.Settings.Background;
 			_Foreground = AppGlobal.Settings.Foreground;
 
@@ -237,8 +239,11 @@ namespace LightNovel.ViewModels
 			{
 				if (HasNext)
 				{
-					return Index[VolumeNo][ChapterNo + 1].Title;
-				} else
+                    if (ChapterNo + 1 < Index[VolumeNo].Count)
+                        return Index[VolumeNo][ChapterNo + 1].Title;
+                    else
+                        return Index[VolumeNo + 1][0].Title;
+                } else
 				{
 					return String.Empty;
 				}
@@ -257,7 +262,25 @@ namespace LightNovel.ViewModels
 		private IList<VolumeViewModel> _Index;
 		private IList<ChapterPreviewModel> _SeconderyIndex;
 
-		public bool IsLoading
+        RelayCommand _loadNextCommand;
+        RelayCommand _loadPrevCommand;
+        public RelayCommand LoadNextChapterCommand { get {
+                if (_loadNextCommand == null)
+                    _loadNextCommand = new RelayCommand(async () => { await LoadNextChapter(); }, () => HasNext);
+                return _loadNextCommand;
+            }
+        }
+        public RelayCommand LoadPrevChapterCommand
+        {
+            get
+            {
+                if (_loadPrevCommand == null)
+                    _loadPrevCommand = new RelayCommand(async () => { await LoadPrevChapter(); }, () => HasPrev);
+                return _loadPrevCommand;
+            }
+        }
+
+        public bool IsLoading
 		{
 			get { return _IsLoading; }
 			set
@@ -383,14 +406,14 @@ namespace LightNovel.ViewModels
 		{
 			get
 			{
-				return (SeriesData != null) && (_ChapterNo > 0);
+				return (SeriesData != null) && ((_ChapterNo > 0) || (_VolumeNo > 0));
 			}
 		}
 		public bool HasNext
 		{
 			get
 			{
-				return (SeriesData != null) && (VolumeData != null) && (_ChapterNo + 1 < VolumeData.Chapters.Count); ;
+				return (SeriesData != null) && (VolumeData != null) && ((_ChapterNo + 1 < VolumeData.Chapters.Count) || (_VolumeNo + 1 < SeriesData.Volumes.Count));
 			}
 		}
 		public bool EnableComments
@@ -574,7 +597,21 @@ namespace LightNovel.ViewModels
 				}
 			}
 		}
-		public FontFamily FontFamily
+        private FontWeight _FontWeight;
+        public FontWeight FontWeight
+        {
+            get
+            {
+                return _FontWeight;
+            }
+            set
+            {
+                _FontWeight.Weight = value.Weight;
+                NotifyPropertyChanged();
+                AppGlobal.Settings.FontWeight = _FontWeight.Weight;
+            }
+        }
+        public FontFamily FontFamily
 		{
 			get
 			{
@@ -809,21 +846,32 @@ namespace LightNovel.ViewModels
 					ChapterData = chapter; //VolumeData.Chapters[chapterNo.Value] =
 					ChapterNo = chapterNo;
 
-					if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
+                    LoadNextChapterCommand.RaiseCanExecuteChanged();
+                    LoadPrevChapterCommand.RaiseCanExecuteChanged();
+
+                    if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
 					{
 						// Pre caching next chapter
-						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Id);
-					}
+                        if (chapterNo + 1 < VolumeData.Chapters.Count)
+						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Id);
+                        else
+                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo + 1].Chapters[0].Id);
+                    }
 					else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
 					{
-						CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Id);
-					}
+                        if (chapterNo > 0)
+						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Id);
+                        else
+                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo - 1].Chapters.Last().Id);
+                    }
 
 					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterData.Id));
 					//_storage.AddRange(lvms);
 					//NotifyOfInsertedItems(0, _storage.Count);
 					//NotifyPropertyChanged("Contents");
+
 					Contents = lvms.ToList();
+                    
 					if (Contents.Count == 0)
 					{
 						Contents = new LineViewModel[] { 
@@ -911,7 +959,23 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public async Task LoadCommentsListAsync()
+        public Task LoadNextChapter()
+        {
+            if (ChapterNo + 1 < VolumeData.Chapters.Count)
+                return LoadDataAsync(SeriesId, VolumeNo, ChapterNo + 1).AsTask();
+            else
+                return LoadDataAsync(SeriesId, VolumeNo + 1, 0).AsTask();
+        }
+
+        public Task LoadPrevChapter()
+        {
+            if (ChapterNo > 0)
+                return LoadDataAsync(SeriesId, VolumeNo, ChapterNo - 1, -1).AsTask();
+            else 
+                return LoadDataAsync(SeriesId, VolumeNo - 1, SeriesData.Volumes[VolumeNo - 1].Chapters.Count - 1 , -1).AsTask();
+        }
+
+        public async Task LoadCommentsListAsync()
 		{
 			if (EnableComments && Contents != null)
 			{
@@ -1842,16 +1906,13 @@ namespace LightNovel.ViewModels
 			//else
 
 			IsImage = line.ContentType == LineContentType.ImageContent;
-#if WINDOWS_PHONE_APP
-			if (!IsImage)
-				_content = "　" + line.Content; // Indent
-			else
-				_content = line.Content;
-#else
-			_content = line.Content;
-#endif
 
-			ParentChapterId = chapterId;
+            if (IsImage)
+                _content = line.Content.Replace("lknovel.lightnovel.cn", "linovel.com");
+            else
+                _content = line.Content;
+
+            ParentChapterId = chapterId;
 			No = line.No;
 		}
 

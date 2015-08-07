@@ -26,15 +26,17 @@
 
 
             <DataTemplate x:Key="LogoWideTemplate">
-                <Canvas Name="Logo"
+                <Viewbox Name="Logo" Stretch="Uniform" Height="{ThemeResource TitleBarHeight}">
+                    <Viewbox.RenderTransform>
+                        <TranslateTransform X="0" Y="0" />
+                    </Viewbox.RenderTransform>
+                    <Canvas 
                         Canvas.Left="0"
                         Canvas.Top="0"
                         Width="200"
-                        Margin="0,0,0,0"
+                        Margin="10,0,0,0"
                         Height="55">
-                    <Canvas.RenderTransform>
-                        <TranslateTransform X="0" Y="0" />
-                    </Canvas.RenderTransform>
+  
                     <Canvas.Resources />
                     <!--  Unknown tag: metadata  -->
                     <!--  Unknown tag: sodipodi:namedview  -->
@@ -97,6 +99,7 @@
                                              RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                     </Canvas>
                 </Canvas>
+                </Viewbox>
             </DataTemplate>
 
         </ResourceDictionary>

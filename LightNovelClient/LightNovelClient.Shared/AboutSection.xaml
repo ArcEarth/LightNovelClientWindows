@@ -99,7 +99,7 @@
                              HorizontalAlignment="Left"
                              FontSize="{StaticResource AppFontSizeSmall}"
                              Foreground="{StaticResource AppAccentBrush}"
-                             NavigateUri="http://lknovel.lightnovel.cn/">
+                             NavigateUri="http://www.linovel.com/">
         <Image HorizontalAlignment="Left"
                        Source="/Assets/LK_Logo.png"
                        Stretch="Uniform" MaxWidth="249"/>
