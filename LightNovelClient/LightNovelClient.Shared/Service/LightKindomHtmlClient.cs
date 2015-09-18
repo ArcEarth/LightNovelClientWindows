@@ -53,19 +53,20 @@ namespace LightNovel.Service
         //private static readonly Dictionary<string, Chapter> ChaptersDictionary = new Dictionary<string, Chapter>();
 
         private const string CharsetAffix = "?charset=big5";
+        private static HashSet<string> BlackList = new HashSet<string> { "1277" };
 
         private const string SeverBasePath = "http://www.linovel.com";
-        private const string ChapterSource = SeverBasePath + "/main/view/";
+        private const string ChapterSource = SeverBasePath + "/n/view/";
         private const string ChapterSource1 = SeverBasePath + "/mobile/view/";
-        private const string VolumeSource = SeverBasePath + "/main/book/";
-        private const string SeriesSource = SeverBasePath + "/main/vollist/";
+        private const string VolumeSource = SeverBasePath + "/n/book/";
+        private const string SeriesSource = SeverBasePath + "/n/vollist/";
         private const string IllustrationSource = SeverBasePath + "/illustration/image/";
-        private const string SearchSource = SeverBasePath + "/main/booklist/";
-        private const string SeriesIndexSource = SeverBasePath + "/main/series_index.html";
-        private const string CommentSetPath = SeverBasePath + "/main/comment_set.html";
-        private const string CommentGetPath = SeverBasePath + "/main/comment_get.html";
-        private const string CommentListPath = SeverBasePath + "/main/comment_list.html";
-        private const string QueryPath = SeverBasePath + "/main/booklist/{0}.html";
+        private const string SearchSource = SeverBasePath + "/h5/booklist/";
+        private const string SeriesIndexSource = SeverBasePath + "/n/catalog.html";
+        private const string CommentSetPath = SeverBasePath + "/n/set_comment_content/"; // POST /chapterid
+        private const string CommentGetPath = SeverBasePath + "/n/get_comment_content/"; // POST /chapterid
+        private const string CommentListPath = SeverBasePath + "/n/get_comment_list/"; // POST /chapterid
+        private const string QueryPath = SeverBasePath + "/h5/booklist/{0}.html";
         private const string HomePageSource = SeverBasePath;// + "/main/index.html"; // Well ,it's Ok to use the base address directly
 
         private const string UserLoginPath = SeverBasePath + "/main/user_login_withQuestion.html";
@@ -324,6 +325,7 @@ namespace LightNovel.Service
 
         public static async Task<bool> AddUserFavoriteVolume(string volId)
         {
+            return false;
             //var b = "/main/add_favourite.html", a = $(this).attr("vol_id");
             //$.post(b, { vol_id: a }, function (c) {
             //	alert(c.msg);
@@ -347,6 +349,9 @@ namespace LightNovel.Service
 
         public static async Task DeleteUserFavorite(string favId)
         {
+            return;
+
+
             using (var client = NewUserHttpClient())
             {
                 UriBuilder builder = new UriBuilder(UserDeleteFavoritePath);
@@ -365,6 +370,8 @@ namespace LightNovel.Service
         }
         public static async Task DeleteUserFavorite(string[] favIds)
         {
+            return;
+
             using (var client = NewUserHttpClient())
             {
                 var content = new HttpFormUrlEncodedContent(favIds.Select(id => new KeyValuePair<string, string>("fav_id[]", id)));
@@ -384,6 +391,8 @@ namespace LightNovel.Service
         public static async Task<IEnumerable<FavourVolume>> GetUserFavoriteVolumesAsync()
         {
             //var header = _cookieContainer.GetCookieHeader(new Uri(SeverBaseUri + UserRecentPath));
+            return new List<FavourVolume>();
+
             using (var client = NewUserHttpClient())
             {
                 try
@@ -430,18 +439,19 @@ namespace LightNovel.Service
             //var param = "{" + string.Format("chapter_id: {0}", chapterId) + "}";
             //var param = JsonConvert.SerializeObject(new ChapterIdMessage { chapter_id = chapterId });
             //var param = "chatper_id=33735";
-            //var content = new StringContent(param, Encoding.UTF8, "application/json");
+            //var content = new System.Net.Http.StringContent("", Encoding.UTF8, "application/json");
             //if (String.IsNullOrEmpty(AccountUserAgent))
             //{
-            var content = new System.Net.Http.FormUrlEncodedContent(new[]
+            var content = new System.Net.Http.FormUrlEncodedContent(new KeyValuePair<string, string>[]
             {
-                    new KeyValuePair<string, string>("chapter_id",chapterId),
-                });
+                    //new KeyValuePair<string, string>("chapter_id",chapterId),
+            });
             using (var client = NewDefaultHttpClient())
             {
                 try
                 {
-                    var response = await client.PostAsync(CommentListUri, content);
+                    var uri = CommentListUri + chapterId;
+                    var response = await client.PostAsync(uri, content);
                     response.EnsureSuccessStatusCode();
                     var respStr = await response.Content.ReadAsStringAsync();
                     var resp = JArray.Parse(respStr);
@@ -491,19 +501,21 @@ namespace LightNovel.Service
             //{
             var content = new System.Net.Http.FormUrlEncodedContent(new[]
             {
-                    new KeyValuePair<string, string>("chapter_id",chapterId),
+                    //new KeyValuePair<string, string>("chapter_id",chapterId),
                     new KeyValuePair<string, string>("line_id",lineId),
                 });
             using (var client = NewDefaultHttpClient())
             {
                 try
                 {
-                    var response = await client.PostAsync(CommentGetUri, content);
+                    //http://www.linovel.com/n/get_comment_content/4516	HTTP	POST
+                    Uri uri = new Uri (CommentGetPath + chapterId);
+                    var response = await client.PostAsync(uri, content);
                     response.EnsureSuccessStatusCode();
                     var respStr = await response.Content.ReadAsStringAsync();
 
-                    var resp = JArray.Parse(respStr);
-                    return resp.Select(obj => obj.ToString()).Reverse();
+                    var resp = JObject.Parse(respStr);
+                    return resp["data"].Values<string>();
                 }
                 catch (Exception exception)
                 {
@@ -565,109 +577,62 @@ namespace LightNovel.Service
         {
             if (String.IsNullOrEmpty(id))
                 throw new ArgumentNullException("id");
-            var volume = new Volume { Id = id };
             var novelUrl = new Uri(VolumeSource + id + ".html");
             var doc = await GetHtmlDocumentAsync(novelUrl);
             if (doc == null) return null;
 
             var nodes = doc.DocumentNode.Descendants();
 
-            try
-            {
-                var pathNodes =
-                    nodes.First(
-                        node =>
-                            node.Name == "ul"
-                            && node.Attributes["class"] != null
-                            && node.Attributes["class"].Value.StartsWith("breadcrumb")).Elements("li")
-                    .Select(node => node.Element("a"));
-                volume.ParentSeriesId = RetriveId(pathNodes.First(
-                        node => node.Attributes["href"].Value.Contains("vollist/"))
-                    .Attributes["href"].Value);
-            }
-            catch (Exception)
-            {
+            var chapterListNode = nodes.First(node => node.Name == "li" && node.HasClass("linovel-book-item"));
 
-            }
+            var volume = ParseBookItemNode(chapterListNode);
+            volume.Id = id;
 
-            //var parentSerNode = nodes.FirstOrDefault(node =>
-            //	node.Attributes["href"] != null &&
-            //	node.Attributes["href"].Value.StartsWith("http://www.linovel.com/mobile/vollist/"));
-            //volume.ParentSeriesId = RetriveId(parentSerNode.Attributes["href"].Value);
-            // Naviagtion Proporties
-            var detailNode = nodes.FirstOrDefault(
-                node => node.Attributes["class"] != null &&
-                        node.Attributes["class"].Value.StartsWith("lk-book-detail")
-                );
-            var details = detailNode.Descendants();
+            var moreNode = nodes.FirstOrDefault(node => node.Name == "a" && node.HasClass("linovel-detail-more"));
+            volume.ParentSeriesId = RetriveId(moreNode.GetAttributeValue("href", ""));
 
-            var titleNode = details.First(node => node.Name == "td" && node.InnerText.StartsWith("标 题"));
-            volume.Title = RemoveLabel(WebUtility.HtmlDecode(titleNode.NextSublingElement("td").InnerText));
-            volume.Label = WebUtility.HtmlDecode(ExtractLabel(titleNode.NextSublingElement("td").InnerText));
-            var authorNode = details.First(node => node.Name == "td" && node.InnerText.StartsWith("作 者"));
-            volume.Author = authorNode.NextSublingElement("td").InnerText;
-            var illustraotrNode =
-                details.First(node => node.Name == "td" && node.InnerText.StartsWith("插 画"));
-            volume.Illustrator = illustraotrNode.NextSublingElement("td").InnerText;
-            var publisherNode =
-                details.First(node => node.Name == "td" && node.InnerText.StartsWith("文 库"));
-            volume.Publisher = publisherNode.NextSublingElement("td").InnerText;
+            var infoNodes = nodes.FirstOrDefault(node => node.HasClass("linovel-info"))?.Descendants();
 
-            //volume.Title = details.First(node => node.InnerText.StartsWith("标 题")).NextSibling.InnerText;
-            //volume.Author = details.First(node => node.InnerText.StartsWith("作 者")).NextSibling.InnerText;
-            //volume.Illustrator = details.First(node => node.InnerText.StartsWith("插 画")).NextSibling.InnerText;
-            //volume.Publisher = details.First(node => node.InnerText.StartsWith("文 库")).NextSibling.InnerText;
+            if (infoNodes == null)
+                throw new Exception("Parsing Error");
+            volume.Title = CleanText(infoNodes.First(
+                node => node.Name == "h1"
+                ).FirstChild.InnerText);
+
+            // Detail Properties
+            var authorNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("作者"));
+            volume.Author = authorNode.NextSublingElement().InnerText;
+            var illustraotrNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("插画"));
+            volume.Illustrator = illustraotrNode.NextSublingElement().InnerText;
+            var publisherNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("文库"));
+            volume.Publisher = publisherNode.NextSublingElement().InnerText;
+            //series.Illustrator = details.First(node => node.Name == "td" && node.InnerText.StartsWith("插画")).NextSibling.InnerText;
+            //series.Publisher = details.First(node => node.Name == "td" && node.InnerText.StartsWith("文库")).NextSibling.InnerText;
             //volume.UpdateTime.
 
             // Description
-            var descriptNode = detailNode.NextSublingElement("strong").NextSublingElement("p");
+            var descriptNode = infoNodes.FirstOrDefault(node => node.HasClass("linovel-info-desc"));
             if (!String.IsNullOrEmpty(descriptNode.InnerText))
                 volume.Description = WebUtility.HtmlDecode(descriptNode.InnerText);
-            else // If the description have some invaliad characters... = =|||
+            else // If the description have some invalid characters... = =|||
             {
                 StringBuilder builder = new StringBuilder(200, 400);
                 while (descriptNode != null)
                 {
-                    builder.Append(WebUtility.HtmlDecode(descriptNode.InnerText));
+                    builder.Append(descriptNode.InnerText);
                     descriptNode = descriptNode.NextSibling;
                 }
                 volume.Description = builder.ToString();
             }
 
-
-            var coverNode = nodes.First(
-                node => node.Attributes["class"] != null &&
-                        node.Attributes["class"].Value.StartsWith("lk-book-cover")
-                );
-            volume.CoverImageUri = AbsoluteUrl(coverNode.Descendants("img").First().Attributes["src"].Value);
-
-            var chapterListNode = nodes.First(
-                node => node.Attributes["class"] != null &&
-                        node.Attributes["class"].Value.StartsWith("lk-chapter-list")
-                );
-            int cNo = 0;
-            volume.Chapters = (from chapter in chapterListNode.Elements("li")
-                               select new ChapterProperties
-                               {
-                                   Id = RetriveId(chapter.Descendants("a").First().Attributes["href"].Value),
-                                   Title = RemoveLabel(chapter.InnerText),
-                                   ChapterNo = cNo++,
-                               }).ToList();
-            for (int chapterIdx = 0; chapterIdx < volume.Chapters.Count; chapterIdx++)
+            var CoverNodes = nodes.Where(node => node.HasClass("linovel-cover"));
+            foreach (var coverNode in CoverNodes)
             {
-                var chapter = volume.Chapters[chapterIdx];
-                chapter.ChapterNo = chapterIdx;
-                //chapter.ParentVolumeId = vol.Id;
-                chapter.ParentVolumeId = volume.Id;
-                if (chapterIdx > 0)
-                {
-                    chapter.PrevChapterId = volume.Chapters[chapterIdx - 1].Id;
-                }
-                if (chapterIdx < volume.Chapters.Count - 1)
-                {
-                    chapter.NextChapterId = volume.Chapters[chapterIdx + 1].Id;
-                }
+                volume.CoverImageUri = AbsoluteUrl(coverNode.Descendants("img").First().Attributes["src"].Value);
+                if (volume.CoverImageUri.Contains("cover/image"))
+                    break;
             }
+
             return volume;
         }
 
@@ -748,76 +713,90 @@ namespace LightNovel.Service
             var doc = await GetHtmlDocumentAsync(novelUrl);
             if (doc == null) return null;
 
-            var nodes = doc.DocumentNode.Descendants();
-
-            // Naviagtion Proporties
+            var scriptNode = doc.DocumentNode.Descendants("script").FirstOrDefault(node => node.GetAttributeValue("type", "") == "text/javascript" && node.InnerText.Contains("var content = {"));
+            if (scriptNode != null)
             {
-                var pathNodes =
-                    nodes.First(
-                        node =>
-                            node.Name == "ul"
-                            && node.Attributes["class"] != null
-                            && node.Attributes["class"].Value.StartsWith("breadcrumb")).Elements("li")
-                    .Select(node => node.Element("a"));
-
-
-                chapter.ParentSeriesId = RetriveId(pathNodes.First(
-                        node => node.Attributes["href"].Value.Contains("vollist/"))
-                    .Attributes["href"].Value);
-
-                var navi = nodes.First(
-                    node => node.Attributes["class"] != null && node.Attributes["class"].Value.StartsWith("lk-view-navi"));
-                var naviNodes = navi.Descendants("a");
-
-                var prev = naviNodes.FirstOrDefault(node => node.InnerText.Contains("上一章"));
-                if (prev != null)
-                    chapter.PrevChapterId = RetriveId(prev.Attributes["href"].Value);
-                var content = naviNodes.First(node => node.InnerText.Contains("目录"));
-                if (content != null)
-                    chapter.ParentVolumeId = RetriveId(content.Attributes["href"].Value);
-                var next = naviNodes.FirstOrDefault(node => node.InnerText.Contains("下一章"));
-                if (next != null)
-                    chapter.NextChapterId = RetriveId(next.Attributes["href"].Value);
-            }
-
-            var chapterTitleNode = nodes.First(node => node.Name == "h3");
-            if (chapterTitleNode != null)
-                chapter.Title = RemoveLabel(chapterTitleNode.InnerText);
-
-            var lines = from line in nodes
-                        where line.Name == "div"
-                        && line.Attributes["class"] != null
-                        && line.Attributes["class"].Value.StartsWith("lk-view-line")
-                        select line;
-
-            chapter.Lines = (lines.Select<HtmlNode, Line>(node =>
-            {
-                Line line = new Line(int.Parse(node.Id), LineContentType.TextContent, null);
-                if (!node.HasChildNodes)
+                var script = scriptNode.InnerText;
+                var bidx = script.IndexOf('{');
+                var eidx = script.LastIndexOf('}');
+                script = script.Substring(bidx, eidx - bidx + 1);
+                JObject chapterJson = JObject.Parse(script);
+                //chapter.Title = chapterJson["title"].Value<string>();
+                var chapterIndecis = chapterJson["chapterIndexs"].Children().Values<string>();
+                chapter.Title = chapterJson["subTitle"].Value<string>();
+                chapter.Id = chapterJson["chapter_id"].Value<string>();
+                chapter.ParentVolumeId = chapterJson["vol_id"].Value<string>();
+                chapter.ParentSeriesId = chapterJson["series_id"].Value<string>();
+                chapter.Lines = chapterJson["content"].Children().Select(lineTok => new Line(lineTok["index"].Value<int>(), LineContentType.TextContent, lineTok["content"].Value<string>())).ToList();
+                foreach (var line in chapter.Lines)
                 {
-                    line.Content = String.Empty;
-                    return line;
-                }
-                if (node.ChildNodes.Any(elem => elem.Name == "div"))
-                {
-                    line.ContentType = LineContentType.ImageContent;
-                    var img_url = (from elem in node.Descendants()
-                                   where elem.Name == "img"
-                                         && elem.Attributes["data-cover"] != null
-                                   select elem.Attributes["data-cover"].Value).FirstOrDefault();
-                    if (img_url != null)
+                    if (line.Content.StartsWith("[img]"))
                     {
-                        line.Content = AbsoluteUrl(img_url);
+                        line.ContentType = LineContentType.ImageContent;
+                        line.Content = AbsoluteUrl(line.Content.Substring(5));
                     }
                 }
-                else
-                {
-                    var text = node.InnerText;
-                    line.Content = WebUtility.HtmlDecode(text.Trim());
-                }
-                return line;
-            })).ToList();
-            return chapter;
+                return chapter;
+            }
+            else
+            {
+                throw new Exception("Failed to parse content");
+            }
+
+
+
+            //var chapterBody = nodes.FirstOrDefault(node => node.HasClass("ChapterBody"));
+
+            //// Naviagtion Proporties
+            //{
+            //    //var dashBoard = chapterBody.NextSublingElement("div").Descendants().First(node => node.HasClass("chapter-pager"));
+            //    //var prevNode = dashBoard.ChildNodes.FindFirst("a");
+            //    //chapter.PrevChapterId = RetriveId(prevNode.Attributes["href"].Value);
+            //    //prevNode = prevNode.NextSublingElement("a");
+            //    //chapter.ParentVolumeId = RetriveId(prevNode.Attributes["href"].Value);
+            //    //prevNode = prevNode.NextSublingElement("a");
+            //    //chapter.NextChapterId = RetriveId(prevNode.Attributes["href"].Value);
+            //}
+
+            //var chapterTitleNode = chapterBody.ChildNodes.FindFirst("h2");
+            //if (chapterTitleNode != null)
+            //    chapter.Title = RemoveLabel(chapterTitleNode.InnerText);
+
+
+            //var lines = from line in chapterBody.ChildNodes.FindFirst("div").ChildNodes
+            //            where  line.Name == "p" && !String.IsNullOrWhiteSpace(line.InnerText) && line.HasChildNodes
+            //            select line;
+
+            //chapter.Lines = (lines.Select<HtmlNode, Line>(node =>
+            //{
+            //    var idStr = node.FirstChildElement("a").Attributes["data-reactid"].Value;
+            //    idStr = idStr.Substring(idStr.LastIndexOf('$') + 1);
+            //    var lineId = int.Parse(idStr);
+            //    Line line = new Line(lineId, LineContentType.TextContent, null);
+            //    if (!node.HasChildNodes)
+            //    {
+            //        line.Content = String.Empty;
+            //        return line;
+            //    }
+
+            //    var imgNode = node.ChildNodes.FindFirst("img");
+            //    if (imgNode != null)
+            //    {
+            //        line.ContentType = LineContentType.ImageContent;
+            //        var img_url = imgNode.Attributes["src"].Value;
+            //        if (img_url != null)
+            //        {
+            //            line.Content = AbsoluteUrl(img_url);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        var text = node.InnerText;
+            //        line.Content = WebUtility.HtmlDecode(text.Trim());
+            //    }
+            //    return line;
+            //})).ToList();
+            //return chapter;
         }
 
         public async static Task<Chapter> GetChapterAlterAsync(string id)
@@ -838,30 +817,27 @@ namespace LightNovel.Service
             if (doc == null) return null;
 
             var nodes = doc.DocumentNode.Descendants();
+            var infoNodes = nodes.FirstOrDefault(node => node.HasClass("linovel-info"))?.Descendants();
 
-            series.Title = CleanText(nodes.First(
+            if (infoNodes == null)
+                throw new Exception("Parsing Error");
+            series.Title = CleanText(infoNodes.First(
                 node => node.Name == "h1"
                 ).FirstChild.InnerText);
 
             // Detail Properties
-            var detailNode = nodes.FirstOrDefault(
-                node => node.Attributes["class"] != null &&
-                node.Attributes["class"].Value.StartsWith("lk-book-detail")
-                );
-            var details = detailNode.Descendants();
-
-            var authorNode = details.First(node => node.Name == "td" && node.InnerText.StartsWith("作者"));
-            series.Author = authorNode.NextSublingElement("td").InnerText;
-            var illustraotrNode = details.First(node => node.Name == "td" && node.InnerText.StartsWith("插画"));
-            series.Illustrator = illustraotrNode.NextSublingElement("td").InnerText;
-            var publisherNode = details.First(node => node.Name == "td" && node.InnerText.StartsWith("文库"));
-            series.Publisher = publisherNode.NextSublingElement("td").InnerText;
+            var authorNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("作者"));
+            series.Author = authorNode.NextSublingElement().InnerText;
+            var illustraotrNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("插画"));
+            series.Illustrator = illustraotrNode.NextSublingElement().InnerText;
+            var publisherNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("文库"));
+            series.Publisher = publisherNode.NextSublingElement().InnerText;
             //series.Illustrator = details.First(node => node.Name == "td" && node.InnerText.StartsWith("插画")).NextSibling.InnerText;
             //series.Publisher = details.First(node => node.Name == "td" && node.InnerText.StartsWith("文库")).NextSibling.InnerText;
             //volume.UpdateTime.
 
             // Description
-            var descriptNode = detailNode.NextSublingElement("p");
+            var descriptNode = infoNodes.FirstOrDefault(node => node.HasClass("linovel-info-desc"));
             if (!String.IsNullOrEmpty(descriptNode.InnerText))
                 series.Description = WebUtility.HtmlDecode(descriptNode.InnerText);
             else // If the description have some invalid characters... = =|||
@@ -875,34 +851,21 @@ namespace LightNovel.Service
                 series.Description = builder.ToString();
             }
 
-            var CoverNode = nodes.First(
-                node => node.Attributes["class"] != null &&
-                node.Attributes["class"].Value.StartsWith("lk-book-cover")
-                );
-            series.CoverImageUri = AbsoluteUrl(CoverNode.Descendants("img").First().Attributes["data-cover"].Value);
+            var CoverNodes = nodes.Where(node => node.HasClass("linovel-cover"));
+            foreach (var coverNode in CoverNodes)
+            {
+                series.CoverImageUri = AbsoluteUrl(coverNode.Descendants("img").First().Attributes["src"].Value);
+                if (series.CoverImageUri.Contains("cover/image"))
+                    break;
+            }
 
-            var volumeListNodes = nodes.Where(
-                node => node.Name == "h2" &&
-                node.NextSibling.NextSibling.Attributes["class"] != null &&
-                node.NextSibling.NextSibling.Attributes["class"].Value.StartsWith("lk-chapter-list")
-                );
-            var vols = from volNode in volumeListNodes
-                       select new Volume
-                       {
-                           Id = RetriveId(volNode.Descendants("a").First().Attributes["href"].Value),
-                           Title = RemoveLabel(WebUtility.HtmlDecode(volNode.InnerText)),
-                           Label = ExtractLabel(WebUtility.HtmlDecode(volNode.InnerText)),
-                           Author = series.Author,
-                           Illustrator = series.Illustrator,
-                           Publisher = series.Publisher,
-                           Chapters = (from chaptersNode in volNode.ParentNode.Element("ul").Elements("li")
-                                       select new ChapterProperties
-                                       {
-                                           Id = RetriveId(chaptersNode.Element("a").Attributes["href"].Value),
-                                           Title = RemoveLabel(WebUtility.HtmlDecode(chaptersNode.InnerText)),
-                                       }).ToList(),
-                           CoverImageUri = AbsoluteUrl(volNode.ParentNode.PreviousSibling.PreviousSibling.Descendants("img").First().Attributes["src"].Value)
-                       };
+            var volumeListNodes = nodes.Where(node => node.Name == "li" && node.HasClass("linovel-book-item"));
+
+            var vols = volumeListNodes.Select(volNode =>
+            {
+                return ParseBookItemNode(volNode);
+            });
+
             series.Volumes = (vols.OrderBy(vol =>
             {
                 double l;
@@ -921,6 +884,11 @@ namespace LightNovel.Service
                 var vol = series.Volumes[volIdx];
                 vol.VolumeNo = volIdx;
                 vol.ParentSeriesId = series.Id;
+
+                vol.Author = series.Author;
+                vol.Illustrator = series.Illustrator;
+                vol.Publisher = series.Publisher;
+
                 if (volIdx > 0)
                 {
                     //vol.PrevVolume = series.Volumes[volIdx-1];
@@ -953,6 +921,27 @@ namespace LightNovel.Service
             return series;
         }
 
+        private static Volume ParseBookItemNode(HtmlNode volNode)
+        {
+            var vol = new Volume();
+            vol.Id = RetriveId(volNode.Descendants("a").First().Attributes["href"].Value);
+
+            vol.Title = WebUtility.HtmlDecode(volNode.ChildNodes.FindFirst("h3").InnerText);
+
+            vol.Label = ExtractLabel(vol.Title);
+            vol.Title = RemoveLabel(vol.Title);
+
+            vol.CoverImageUri = AbsoluteUrl(volNode.Descendants("img").First().Attributes["src"].Value);
+
+            vol.Chapters = (from chaptersNode in volNode.ChildNodes.First(node => node.HasClass("linovel-chapter-list")).Descendants("a")
+                            select new ChapterProperties
+                            {
+                                Id = RetriveId(chaptersNode.Attributes["href"].Value),
+                                Title = RemoveLabel(WebUtility.HtmlDecode(chaptersNode.InnerText)),
+                            }).ToList();
+            return vol;
+        }
+
         private static string CleanText(string p)
         {
             p = Regex.Replace(p, "[\r\n\t]+", " ");
@@ -965,9 +954,9 @@ namespace LightNovel.Service
         {
             p = p.Replace("\t", "");
             p = p.Trim();
-            var s = p.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var s = p.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (s.Length > 1)
-                return s[s.Length - 1];
+                return String.Concat(s[s.Length - 1]);
             else
                 return s[0];
             //p = Regex.Replace(p, @"第\d+?[章卷话]", "");
@@ -979,7 +968,7 @@ namespace LightNovel.Service
         {
             p = p.Replace("\t", "");
             p = p.Trim();
-            var s = p.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var s = p.Split(new char[] { ' ','\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (s.Length > 1)
                 return s[s.Length - 1];
             else
@@ -989,7 +978,7 @@ namespace LightNovel.Service
         {
             p = p.Replace("\t", "");
             p = p.Trim();
-            var s = p.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
+            var s = p.Split(new char[] { ' ','\n' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
             if (s.StartsWith("第"))
                 return s.Substring(1, s.Length - 2);
             else
@@ -1017,26 +1006,28 @@ namespace LightNovel.Service
             var doc = await GetHtmlDocumentAsync(url);
             if (doc == null) return null;
             //node => node.PreviousSublingElement("strong").InnerText.Contains("卷浏览记录")
-            var books = (from bookNode in doc.DocumentNode.Descendants("div")
-                         where bookNode.HasClass("lk-book-cover")
-                         select new BookItem
-                         {
-                             HyperLinkUri = bookNode.Element("a").GetAttributeValue("href", null),
-                             CoverImageUri = AbsoluteUrl(
-                                 bookNode.Element("a").Element("img").GetAttributeValue("data-cover", null)),
-                             Title = bookNode.Element("a").Element("img").GetAttributeValue("alt", null),
-                             SeriesId = RetriveId(bookNode.NextSublingElement("p").ChildNodes.FindFirst("a").GetAttributeValue("href", null)),
-                             VolumeId = RetriveId(bookNode.NextSublingElement("p").NextSublingElement("p").ChildNodes.FindFirst("a").GetAttributeValue("href", null)),
-                             VolumeNo = CleanText(bookNode.NextSublingElement("p").NextSublingElement("p").InnerText)
-                         }).ToList();
-            foreach (var book in books)
-            {
-                book.Id = RetriveId(book.HyperLinkUri);
-                var idx = book.Title.LastIndexOf(' ');
-                book.Subtitle = book.Title.Substring(idx);
-                book.Title = book.Title.Substring(0, idx + 1);
-            }
+            var books = (from li in doc.DocumentNode.Descendants("li")
+                         where
+                           li.Element("a")?.GetAttributeValue("href", null)?.Contains("book/") == true
+                         select ParseSearchItem(li)).ToList();
+
             return books;
+        }
+
+        private static BookItem ParseSearchItem(HtmlNode li)
+        {
+            var book = new BookItem();
+            book.HyperLinkUri = li.Element("a").GetAttributeValue("href", null);
+            book.CoverImageUri = AbsoluteUrl(
+                                         li.Descendants("img").FirstOrDefault()?.GetAttributeValue("data-ks-lazyload", null));
+            book.Title = li.Element("a").Descendants("h1").FirstOrDefault()?.InnerText;
+            //book.Description = li.Element("a").Descendants("p").FirstOrDefault()?.InnerText;
+            book.VolumeId = RetriveId(book.HyperLinkUri);
+            var idx = book.Title.IndexOf(' ');
+            book.Subtitle = book.Title.Substring(idx + 1);
+            book.Title = book.Title.Substring(0, idx + 1);
+            book.Id = book.VolumeId;
+            return book;
         }
 
         public async static Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri)
@@ -1084,30 +1075,39 @@ namespace LightNovel.Service
             if (doc == null) return null;
 
             var nodes = doc.DocumentNode.Descendants();
-            var bookListsNodes = nodes.Where(x => x.Name == "ul" && x.HasClass("lk-book-list"));
+            var bookListsNodes = nodes.Where(x => x.HasClass("linovel-index-box"));
             IList<KeyValuePair<string, IList<BookItem>>> bookLists = new List<KeyValuePair<string, IList<BookItem>>>();
 
             foreach (var bookList in bookListsNodes)
             {
-                var header = CleanText(bookList.PreviousSublingElement("h3").InnerText);
-                var books = (from bookNode in bookList.Descendants("div")
-                             where bookNode.HasClass("lk-book-cover")
-                             select new BookItem
-                             {
-                                 HyperLinkUri = bookNode.Element("a").GetAttributeValue("href", null),
-                                 CoverImageUri = AbsoluteUrl(
-                                     bookNode.Element("a").Element("img").GetAttributeValue("data-cover", null)),
-                                 Title = bookNode.Element("a").Element("img").GetAttributeValue("alt", null),
-                             }).ToList();
-                foreach (var book in books)
+                var titleNode = bookList.FirstChildClass("linovel-index-box-title");
+                var booksNodes = bookList.FirstChildClass("linovel-index-box-list")?.Elements("li");
+                if (titleNode != null && booksNodes != null)
                 {
-                    book.Id = RetriveId(book.HyperLinkUri);
+                    var header = CleanText(titleNode.ChildNodes.FindFirst("h1").InnerText);
+                    var books = (from bookNode in booksNodes
+                                 select ParseBookItem(bookNode)).Where(book=>!BlackList.Contains(book.Id)).ToList();
+                    bookLists.Add(new KeyValuePair<string, IList<BookItem>>(header, books));
                 }
-                bookLists.Add(new KeyValuePair<string, IList<BookItem>>(header, books));
             }
             return bookLists;
 
         }
+
+        // bookNode class="linovel-item"
+        private static BookItem ParseBookItem(HtmlNode bookNode)
+        {
+            var book = new BookItem();
+            book.HyperLinkUri = bookNode.Element("a")?.GetAttributeValue("href", null);
+            var coverNode = bookNode.Descendants("img").FirstOrDefault();
+            book.CoverImageUri = AbsoluteUrl(coverNode?.GetAttributeValue("data-ks-lazyload", null));
+            book.Title = bookNode.Descendants("h3").FirstOrDefault()?.InnerText;
+            book.Subtitle = bookNode.Descendants("p").FirstOrDefault()?.InnerText;
+            book.Id = RetriveId(book.HyperLinkUri);
+
+            return book;
+        }
+
         public static IEnumerable<Series> GetRecommandListAsync()
         {
             throw new NotImplementedException();

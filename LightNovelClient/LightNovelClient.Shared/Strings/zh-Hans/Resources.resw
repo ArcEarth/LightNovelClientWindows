@@ -483,4 +483,7 @@
   <data name="AuthSucceedDialogContent" xml:space="preserve">
     <value>如果您仍旧无法登陆，请尝试重新启动应用:)</value>
   </data>
+  <data name="SearchButton.Label" xml:space="preserve">
+    <value>搜索</value>
+  </data>
 </root>

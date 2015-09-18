@@ -87,17 +87,17 @@ namespace LightNovel
                 };
             }
 
-            if (!AppGlobal.IsSignedIn)
-            {
-                await ViewModel.TryLogInWithStoredCredentialAsync();
-            }
-            else
-            {
-                ViewModel.IsSignedIn = true;
-                ViewModel.UserName = AppGlobal.User.UserName;
-            }
+            //if (!AppGlobal.IsSignedIn)
+            //{
+            //    await ViewModel.TryLogInWithStoredCredentialAsync();
+            //}
+            //else
+            //{
+            //    ViewModel.IsSignedIn = true;
+            //    ViewModel.UserName = AppGlobal.User.UserName;
+            //}
 
-            await ViewModel.RecommandSection.LoadAsync(false, 20);
+            await ViewModel.RecommandSection.LoadAsync(false, 30);
             if (AppGlobal.Settings.EnableLiveTile)
                 UpdateTile();
 
@@ -193,5 +193,17 @@ namespace LightNovel
             else
                 SwitchGridViewOrientation(sender as GridView, Orientation.Vertical,6);
         }
+
+        //private void ToolBar_Opening(object sender, object e)
+        //{
+        //    if (Grid.GetRow((FrameworkElement)sender) != 2)
+        //        (sender as AppBar).Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
+        //}
+
+        //private void ToolBar_Closed(object sender, object e)
+        //{
+        //    if (Grid.GetRow((FrameworkElement)sender) != 2)
+        //        (sender as AppBar).Background = (SolidColorBrush)App.Current.Resources["TransparentBrush"];
+        //}
     }
 }

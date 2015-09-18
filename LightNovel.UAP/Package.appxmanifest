@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.5.3.0" />
+  <Identity Name="10039ArcEarth.LightNovel" Publisher="CN=EC2EE364-BDA4-4132-8A08-FD59D797F3CB" Version="1.5.8.0" />
   <mp:PhoneIdentity PhoneProductId="3ffb125e-376b-4e0e-99b2-f2492e9386ac" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>LightNovel Beta</DisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="LightNovel.App">
-      <uap:VisualElements DisplayName="LightNovel" Square150x150Logo="Assets\Logo-150.png" Square44x44Logo="Assets\Logo-44.png" Description="LightNovel for Windows 10 UWP Beta 1" BackgroundColor="#A4C400">
+      <uap:VisualElements DisplayName="LightNovel" Square150x150Logo="Assets\Logo-150.png" Square44x44Logo="Assets\Logo-44.png" Description="LightNovel for Windows 10 UWP Beta 2" BackgroundColor="#A4C400">
         <uap:DefaultTile Square310x310Logo="Assets\Logo-310.png" Wide310x150Logo="Assets\Logo-310x150.png" Square71x71Logo="Assets\Logo-71.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />

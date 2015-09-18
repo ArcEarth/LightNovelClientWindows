@@ -181,6 +181,7 @@ namespace LightNovel
             }
 #elif WINDOWS_UAP
 
+            LastReadSection.Width = Math.Min(LastReadSection.ActualHeight * 0.75, Math.Max(pageRoot.ActualWidth - 60,0));
 
             if (appView.Orientation == ApplicationViewOrientation.Landscape)
             {
@@ -198,7 +199,9 @@ namespace LightNovel
                 Grid.SetRow(ToolBar, 0);
                 ToolBar.HorizontalAlignment = HorizontalAlignment.Right;
                 ToolBar.Background = (SolidColorBrush)App.Current.Resources["TransparentBrush"];
-                if (appView.IsFullScreenMode)
+                
+                // Move the tool bar since the close/minumize button is dismissed
+                if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Touch)
                 {
                     ToolBar.Padding = new Thickness(0);
                 }

@@ -146,7 +146,7 @@ namespace LightNovel.Service
 	{
 		public string Id { get; set; }
 		public string Title { get; set; }
-		public int ChapterNo { get; set; }
+		public int    ChapterNo { get; set; }
 		public string NextChapterId { get; set; }
 		public string PrevChapterId { get; set; }
 		public string ParentVolumeId { get; set; }

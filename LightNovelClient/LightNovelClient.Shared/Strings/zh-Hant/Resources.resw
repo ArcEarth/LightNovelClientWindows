@@ -483,4 +483,7 @@
   <data name="AuthSucceedDialogTitle" xml:space="preserve">
     <value>验证成功</value>
   </data>
+  <data name="SearchButton.Label" xml:space="preserve">
+    <value>搜索</value>
+  </data>
 </root>

@@ -202,6 +202,9 @@ namespace LightNovel
                 await LoadBookmarkDataAsync();
             if (User != null)
             {
+                // guard about login data
+                return;
+
                 await User.SyncFavoriteListAsync(forectRefresh);
                 var favList = from fav in User.FavoriteList orderby fav.VolumeId group fav by fav.SeriesTitle;
                 bool Changed = false;

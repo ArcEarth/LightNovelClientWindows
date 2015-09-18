@@ -258,10 +258,10 @@
                        Grid.Column="1"
                        Margin="15,0,0,0"
                        Language="zh-Hans"
-                       VerticalAlignment="Bottom"
+                       VerticalAlignment="Center"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
-                       Style="{StaticResource SubheaderTextBlockStyle}"
+                       Style="{StaticResource AppTextTitle1Style}"
                        Text="Results for &#x00a0;"
                        TextWrapping="NoWrap" />
             <Grid Grid.Column="2"

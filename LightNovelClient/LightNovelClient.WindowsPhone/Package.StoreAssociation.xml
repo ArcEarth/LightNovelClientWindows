@@ -189,42 +189,42 @@
       <ReservedName>LightNovel</ReservedName>
       <ReservedName>轻阅读</ReservedName>
       <ReservedName>轻小说</ReservedName>
+      <ReservedName>LightNovel Beta</ReservedName>
+      <ReservedName>轻之文库</ReservedName>
+      <ReservedName>神的记事本</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
-  <AccountPackageIdentityNames>
-    <MainPackageIdentityName>10039ArcEarth.Light.Novel</MainPackageIdentityName>
-    <MainPackageIdentityName>10039ArcEarth.11426B07B2717</MainPackageIdentityName>
-  </AccountPackageIdentityNames>
+  <AccountPackageIdentityNames />
   <PackageInfoList LandingUrl="https://dev.windows.com/dashboard/Application?appId=9WZDNCRDPBMT">
     <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
-      <PackageArchitecture>Unknown</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
+      <PackageArchitecture>Arm</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
     </PackageInfo>
     <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
-      <PackageArchitecture>Unknown</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
-    </PackageInfo>
-    <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
-      <PackageArchitecture>Unknown</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
-    </PackageInfo>
-    <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
-      <PackageArchitecture>Unknown</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
-    </PackageInfo>
-    <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
-      <PackageArchitecture>Unknown</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
-    </PackageInfo>
-    <PackageInfo>
-      <OsMinVersion>6.3.0.0</OsMinVersion>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
       <PackageArchitecture>Neutral</PackageArchitecture>
-      <PackageMaxArchitectureVersion>2015.629.210.0</PackageMaxArchitectureVersion>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
+      <PackageArchitecture>Neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
+      <PackageArchitecture>Neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
+      <PackageArchitecture>Neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
+    </PackageInfo>
+    <PackageInfo>
+      <OsMinVersion>6.3.1.0</OsMinVersion>
+      <PackageArchitecture>Neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.4.4.9</PackageMaxArchitectureVersion>
     </PackageInfo>
   </PackageInfoList>
 </StoreAssociation>

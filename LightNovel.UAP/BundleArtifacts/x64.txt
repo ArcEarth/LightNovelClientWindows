@@ -1,2 +1,2 @@
-MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovel.UAP\bin\x64\Release\LightNovel.UAP_1.5.3.0_x64.appx
-SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovel.UAP\AppPackages\LightNovel.UAP_1.5.3.0\LightNovel.UAP_1.5.3.0_x64.appxsym
+MainPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovel.UAP\bin\x64\Release\LightNovel.UAP_1.5.8.0_x64.appx
+SymbolPackage=C:\Users\Yupeng\Source\Workspaces\LightNovelClientWindows\LightNovel.UAP\AppPackages\LightNovel.UAP_1.5.8.0\LightNovel.UAP_1.5.8.0_x64.appxsym

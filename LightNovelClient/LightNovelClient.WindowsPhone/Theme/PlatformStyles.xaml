@@ -17,6 +17,8 @@
 
     <x:String x:Key="StoreReviewLink">ms-windows-store:reviewapp?appid=c0d0077f-5426-47ee-bc97-f4c48d277095</x:String>
     <x:Double x:Key="PosterWidth">400</x:Double>
+    <x:Double x:Key="TitleBarHeight">60</x:Double>
+    <GridLength x:Key="TitleBarHeightGridLength">60</GridLength>
     <x:Double x:Key="HeaderRowHeight">60</x:Double>
 
 

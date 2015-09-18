@@ -95,7 +95,6 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <None Include="LightNovel.UAP_StoreKey.pfx" />
-    <None Include="LightNovel.UAP_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +109,87 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Logo-100x100.png" />
+    <Content Include="Assets\Logo-150.scale-100.png" />
+    <Content Include="Assets\Logo-150.scale-125.png" />
+    <Content Include="Assets\Logo-150.scale-140.png" />
+    <Content Include="Assets\Logo-150.scale-150.png" />
+    <Content Include="Assets\Logo-150.scale-180.png" />
+    <Content Include="Assets\Logo-150.scale-200.png" />
+    <Content Include="Assets\Logo-150.scale-240.png" />
+    <Content Include="Assets\Logo-150.scale-400.png" />
+    <Content Include="Assets\Logo-150.scale-80.png" />
+    <Content Include="Assets\Logo-24.scale-100.png" />
+    <Content Include="Assets\Logo-24.scale-140.png" />
+    <Content Include="Assets\Logo-24.scale-180.png" />
+    <Content Include="Assets\Logo-24.scale-240.png" />
+    <Content Include="Assets\Logo-24.scale-80.png" />
+    <Content Include="Assets\Logo-30.scale-100.png" />
+    <Content Include="Assets\Logo-30.scale-140.png" />
+    <Content Include="Assets\Logo-30.scale-180.png" />
+    <Content Include="Assets\Logo-30.scale-80.png" />
+    <Content Include="Assets\Logo-310.scale-100.png" />
+    <Content Include="Assets\Logo-310.scale-125.png" />
+    <Content Include="Assets\Logo-310.scale-140.png" />
+    <Content Include="Assets\Logo-310.scale-150.png" />
+    <Content Include="Assets\Logo-310.scale-180.png" />
+    <Content Include="Assets\Logo-310.scale-200.png" />
+    <Content Include="Assets\Logo-310.scale-400.png" />
+    <Content Include="Assets\Logo-310.scale-80.png" />
+    <Content Include="Assets\Logo-310x150.scale-100.png" />
+    <Content Include="Assets\Logo-310x150.scale-125.png" />
+    <Content Include="Assets\Logo-310x150.scale-140.png" />
+    <Content Include="Assets\Logo-310x150.scale-150.png" />
+    <Content Include="Assets\Logo-310x150.scale-180.png" />
+    <Content Include="Assets\Logo-310x150.scale-200.png" />
+    <Content Include="Assets\Logo-310x150.scale-240.png" />
+    <Content Include="Assets\Logo-310x150.scale-400.png" />
+    <Content Include="Assets\Logo-310x150.scale-80.png" />
+    <Content Include="Assets\Logo-44.scale-100.png" />
+    <Content Include="Assets\Logo-44.scale-125.png" />
+    <Content Include="Assets\Logo-44.scale-140.png" />
+    <Content Include="Assets\Logo-44.scale-150.png" />
+    <Content Include="Assets\Logo-44.scale-200.png" />
+    <Content Include="Assets\Logo-44.scale-240.png" />
+    <Content Include="Assets\Logo-44.scale-400.png" />
+    <Content Include="Assets\Logo-50.scale-100.png" />
+    <Content Include="Assets\Logo-50.scale-140.png" />
+    <Content Include="Assets\Logo-50.scale-180.png" />
+    <Content Include="Assets\Logo-50.scale-240.png" />
+    <Content Include="Assets\Logo-50.scale-80.png" />
+    <Content Include="Assets\Logo-70.scale-100.png" />
+    <Content Include="Assets\Logo-70.scale-140.png" />
+    <Content Include="Assets\Logo-70.scale-180.png" />
+    <Content Include="Assets\Logo-70.scale-80.png" />
+    <Content Include="Assets\Logo-71.scale-100.png" />
+    <Content Include="Assets\Logo-71.scale-125.png" />
+    <Content Include="Assets\Logo-71.scale-140.png" />
+    <Content Include="Assets\Logo-71.scale-150.png" />
+    <Content Include="Assets\Logo-71.scale-200.png" />
+    <Content Include="Assets\Logo-71.scale-240.png" />
+    <Content Include="Assets\Logo-71.scale-400.png" />
+    <Content Include="Assets\Logo-75.scale-100.png" />
+    <Content Include="Assets\Logo-75.scale-125.png" />
+    <Content Include="Assets\Logo-75.scale-150.png" />
+    <Content Include="Assets\Logo-75.scale-200.png" />
+    <Content Include="Assets\Logo-75.scale-400.png" />
+    <Content Include="Assets\LogoG-310x150.png" />
+    <Content Include="Assets\LogoSquareGR-WP-Pr2.png" />
+    <Content Include="Assets\LogoWideGB.png" />
+    <Content Include="Assets\LogoWideGR-WP-Pr3.png" />
+    <Content Include="Assets\SplashScreen-480x800.scale-100.png" />
+    <Content Include="Assets\SplashScreen-480x800.scale-140.png" />
+    <Content Include="Assets\SplashScreen-480x800.scale-240.png" />
+    <Content Include="Assets\SplashScreen-620x300.scale-100.png" />
+    <Content Include="Assets\SplashScreen-620x300.scale-140.png" />
+    <Content Include="Assets\SplashScreen-620x300.scale-180.png" />
+    <Content Include="Assets\StoreLogo-300.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-125.png" />
+    <Content Include="Assets\StoreLogo.scale-150.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\StoreLogoGB-300.png" />
     <Content Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>

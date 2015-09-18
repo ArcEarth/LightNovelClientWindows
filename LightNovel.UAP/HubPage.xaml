@@ -636,7 +636,7 @@
                               Label="All Novel" />
                 <AppBarButton Icon="Find" Label="Search" x:Uid="SearchButton">
                     <AppBarButton.Flyout>
-                        <Flyout>
+                        <Flyout Placement="Right">
                             <AutoSuggestBox x:Uid="HubSearchBox"
                                     RelativePanel.LeftOf="AccountButton"
                                     RelativePanel.AlignVerticalCenterWithPanel="True"

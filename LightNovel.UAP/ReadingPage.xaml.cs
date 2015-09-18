@@ -1310,6 +1310,9 @@ namespace LightNovel
             imageContent.DataContext = line;
             var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
             var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
+            var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+
+            commentIndicator.Opacity = line.HasComments ? 1 : 0;
 
             bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
             bitMap.DownloadProgress += Image_DownloadProgress;

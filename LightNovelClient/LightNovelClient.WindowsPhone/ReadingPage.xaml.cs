@@ -273,12 +273,15 @@ namespace LightNovel
 			var target = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo];
 			if (target != null)
 				target.NotifyPropertyChanged("IsDownloaded");
-			if (ViewModel.HasNext)
-			{
-				var nextvm = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo + 1];
-				nextvm.NotifyPropertyChanged("IsDownloaded");
-			}
-			if (VolumeListView.ActualHeight > 0 && VolumeListView.Items.Count > 0)
+            if (ViewModel.HasNext)
+            {
+                if (ViewModel.ChapterNo + 1 < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count)
+                {
+                    var nextvm = ViewModel.Index[ViewModel.VolumeNo][ViewModel.ChapterNo + 1];
+                    nextvm.NotifyPropertyChanged("IsDownloaded");
+                }
+            }
+            if (VolumeListView.ActualHeight > 0 && VolumeListView.Items.Count > 0)
 			{
 				VolumeListView.SelectedItem = target;
 				VolumeListView.UpdateLayout();

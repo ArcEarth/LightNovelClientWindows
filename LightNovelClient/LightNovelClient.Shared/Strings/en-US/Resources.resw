@@ -483,4 +483,7 @@
   <data name="AuthSucceedDialogContent" xml:space="preserve">
     <value>If you still cannot login , try to close the App and restart it :)</value>
   </data>
+  <data name="SearchButton.Label" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

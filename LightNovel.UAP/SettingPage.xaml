@@ -26,12 +26,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Pivot Grid.Row="1" Margin="0,-10,0,0" >
-            <Pivot.HeaderTemplate>
+        <Pivot Grid.Row="1" Margin="0,0,0,0" >
+            <!--<Pivot.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock FontSize="{ThemeResource AppFontSizeExtraLarge}" Margin="0,0,0,-20" Text="{Binding}"></TextBlock>
+                    <TextBlock FontSize="{ThemeResource AppFontSizeExtraLarge}" Margin="0,0,0,0" Text="{Binding}"></TextBlock>
                 </DataTemplate>
-            </Pivot.HeaderTemplate>
+            </Pivot.HeaderTemplate>-->
             <PivotItem Header="General" x:Uid="GeneralOptionsItem">
                 <ScrollViewer 
                       Style="{ThemeResource VerticalScrollViewerStyle}">
@@ -65,11 +65,11 @@
             <TextBlock x:Uid="SettingsLabel"
                        x:Name="SettingsLabel"
                        Grid.Column="2"
-                       Margin="0,0,0,3"
-                       VerticalAlignment="Bottom"
+                       Margin="0,0,0,0"
+                       VerticalAlignment="Center"
                        Foreground="{ThemeResource AppBackgroundBrush}"
                        IsHitTestVisible="false"
-                       Style="{StaticResource SubheaderTextBlockStyle}"
+                       Style="{StaticResource AppTextTitle1Style}"
                        Text="Settings"
                        TextWrapping="NoWrap" />
         </Grid>

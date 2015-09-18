@@ -321,6 +321,11 @@
         <Setter Property="Foreground" Value="{ThemeResource AppBackgroundBrush}" />
     </Style>
 
+    <Style TargetType="CommandBarOverflowPresenter">
+        <Setter Property="Background" Value="{ThemeResource AppAccentBrushSemiLight}" />
+        <Setter Property="Foreground" Value="{ThemeResource AppBackgroundBrush}" />
+    </Style>
+
     <!-- Ellipsis button style for use in Windows.UI.Xaml.Controls.AppBar and Windows.UI.Xaml.Controls.CommandBar -->
     <Style x:Key="EllipsisButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />

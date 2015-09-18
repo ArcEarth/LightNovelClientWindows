@@ -301,9 +301,9 @@
                               Icon="Setting"
                               Label="Settings" />
             </CommandBar.PrimaryCommands>
-            <CommandBar.SecondaryCommands>
+            <!--<CommandBar.SecondaryCommands>
                 <AppBarButton x:Uid="AuthenticateButton" Icon="Permissions" Label="Authenticate" Click="AuthenticateButton_Click" />
-            </CommandBar.SecondaryCommands>
+            </CommandBar.SecondaryCommands>-->
         </CommandBar>
     </Page.BottomAppBar>
 

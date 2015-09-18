@@ -104,6 +104,11 @@ namespace LightNovel
 			Debug.WriteLine("AppOnLaunched");
 #endif
 #if WINDOWS_UAP
+            //var result = await LightKindomHtmlClient.GetCommentedLinesListAsync("4516");
+            //var anotherresult = await LightKindomHtmlClient.GetCommentsAsync("36","4516");
+            //var chptr = await LightKindomHtmlClient.GetSeriesIndexAsync();
+            //var result = await LightKindomHtmlClient.SearchBookAsync("青春");
+
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
