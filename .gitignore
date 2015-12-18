@@ -243,11 +243,10 @@ FakesAssemblies/
 
 # XAML Generaged Csharp file
 *.g.cs
-LightNovelClient/LightNovelClient.Windows/obj/Debug/CollectionPage.g.cs
-LightNovelClient/LightNovelClient.Windows/obj/Debug/Common/ApplicationCommonResources.g.cs
-LightNovelClient/LightNovelClient.Windows/obj/Debug/Controls/RichTextView.g.cs
-LightNovelClient/LightNovelClient.WindowsPhone/obj/Debug/HubPage.g.cs
-LightNovelClient/LightNovelClient.WindowsPhone/obj/Debug/HubPage.g.i.cs
-*.cache
-LightNovelClient/LightNovelClient.Windows/obj/Debug/XamlSaveStateFile.xml
-LightNovelClient/LightNovelClient.Windows/obj/Debug/XamlSaveStateFile.xml
+*.g.i.cs
+LightNovel.UAP/_*.*
+BundleArtifacts/
+*/BundleArtifacts/*
+*/[Oo]bj/*
+*/[Dd]ebug/*
+*/[Rr]elease/*

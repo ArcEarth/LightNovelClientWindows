@@ -79,7 +79,7 @@ namespace LightNovel.Common
             {
 #if WINDOWS_PHONE_APP
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#elif WINDOWS_UAP
+#elif WINDOWS_UWP
                 SystemNavigationManager.GetForCurrentView().BackRequested += NavigationHelper_BackRequested;
 #endif
 #if WINDOWS_APP
@@ -101,7 +101,7 @@ namespace LightNovel.Common
             {
 #if WINDOWS_PHONE_APP
                 Windows.Phone.UI.Input.HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-#elif WINDOWS_UAP
+#elif WINDOWS_UWP
                 SystemNavigationManager.GetForCurrentView().BackRequested += NavigationHelper_BackRequested;
 #endif
 #if WINDOWS_APP
@@ -220,7 +220,7 @@ namespace LightNovel.Common
                 this.GoBackCommand.Execute(null);
             }
         }
-#elif WINDOWS_UAP
+#elif WINDOWS_UWP
         private void NavigationHelper_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (this.GoBackCommand.CanExecute(null))
@@ -371,7 +371,7 @@ namespace LightNovel.Common
         private void GoBackCommand_CanExecuteChanged(object sender, EventArgs e)
         {
             var command = sender as RelayCommand;
-#if WINDOWS_UAP
+#if WINDOWS_UWP
             if (command.CanExecute(null))
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             else

@@ -127,4 +127,16 @@
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Controls\MultilingualResources\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Assets\build_logo.ps1" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Logo.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\LogoSquareHuge.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\LogoSquareMedium.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\LogoWide.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\LogoWideGB.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\LogoWide_G.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Logo_G.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Logo_GR.svg" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.svg" />
+  </ItemGroup>
 </Project>

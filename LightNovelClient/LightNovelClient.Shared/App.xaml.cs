@@ -103,7 +103,7 @@ namespace LightNovel
 			}
 			Debug.WriteLine("AppOnLaunched");
 #endif
-#if WINDOWS_UAP
+#if WINDOWS_UWP
             //var result = await LightKindomHtmlClient.GetCommentedLinesListAsync("4516");
             //var anotherresult = await LightKindomHtmlClient.GetCommentsAsync("36","4516");
             //var chptr = await LightKindomHtmlClient.GetSeriesIndexAsync();

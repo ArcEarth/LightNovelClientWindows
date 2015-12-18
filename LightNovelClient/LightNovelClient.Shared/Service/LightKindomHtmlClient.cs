@@ -55,7 +55,7 @@ namespace LightNovel.Service
         private const string CharsetAffix = "?charset=big5";
         private static HashSet<string> BlackList = new HashSet<string> { "1277" };
 
-        private const string SeverBasePath = "http://www.linovel.com";
+        private const string SeverBasePath = "http://old.linovel.com";
         private const string ChapterSource = SeverBasePath + "/n/view/";
         private const string ChapterSource1 = SeverBasePath + "/mobile/view/";
         private const string VolumeSource = SeverBasePath + "/n/book/";
@@ -81,8 +81,8 @@ namespace LightNovel.Service
         private const string UserAddFavoriteSeriesPath = SeverBasePath + "/main/add_batch_favourite.html"; // Post { series_id : id}
         private const string UserSetBookmarkPath = SeverBasePath + "/main/set_bookmark.html";
 
-        public const string DefaultUserAgent = "Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; rv:11.0; IE/11.0; Microsoft) like Gecko";
-        private static string accounrUserAgent;
+        public const string DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240";
+        private static string accounrUserAgent = DefaultUserAgent;
         private const string CiSession = "ci_session_3";
         //	$.post("/main/set_bookmark.html", {
         //		chapter_id: c,
@@ -1032,12 +1032,13 @@ namespace LightNovel.Service
 
         public async static Task<HtmlDocument> GetHtmlDocumentAsync(Uri uri)
         {
-            using (var client = new System.Net.Http.HttpClient())
+            using (var client = NewUserHttpClient() /*new System.Net.Http.HttpClient()*/)
             {
-                client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
+                //client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
                 try
                 {
-                    var stream = await client.GetStreamAsync(uri);
+                    //var stream = await client.GetStreamAsync(uri);
+                    var stream = (await client.GetInputStreamAsync(uri)).AsStreamForRead();
                     var doc = new HtmlDocument();
                     doc.Load(stream);
                     return doc;

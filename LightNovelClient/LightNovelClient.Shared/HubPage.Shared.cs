@@ -179,7 +179,7 @@ namespace LightNovel
                     (logo.RenderTransform as TranslateTransform).X = 0;
                 }
             }
-#elif WINDOWS_UAP
+#elif WINDOWS_UWP
 
             LastReadSection.Width = Math.Min(LastReadSection.ActualHeight * 0.75, Math.Max(pageRoot.ActualWidth - 60,0));
 
@@ -352,7 +352,7 @@ namespace LightNovel
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
             e.PageState.Add("HubOffset", HubScrollViewer.HorizontalOffset);
-#if WINDOWS_UAP
+#if WINDOWS_UWP
             e.PageState.Add("IsSigninPopupOpen", false); //!Hack!!!
 #else
             e.PageState.Add("IsSigninPopupOpen", SigninPopup.IsOpen);
@@ -462,7 +462,7 @@ namespace LightNovel
             else
             {
                 ViewModel.IsLoading = false;
-#if WINDOWS_UAP
+#if WINDOWS_UWP
                 SigninPopup.Hide();
 #else
                 SigninPopup.IsOpen = false;
@@ -497,7 +497,7 @@ namespace LightNovel
 
         async Task NavigateToReadingPageAsync(string seriesTitle, NovelPositionIdentifier nav, bool newWindows = false)
         {
-#if WINDOWS_APP || WINDOWS_UAP
+#if WINDOWS_APP || WINDOWS_UWP
 			var view = AppGlobal.SecondaryViews.FirstOrDefault(v => v.Title == seriesTitle);
 			if (view == null && !newWindows)
 				this.Frame.Navigate(typeof(ReadingPage), nav.ToString());
@@ -619,7 +619,7 @@ namespace LightNovel
             {
                 if (ViewModel.UserName == resourceLoader.GetString("LoginLabel"))
                     ViewModel.UserName = "";
-#if WINDOWS_UAP
+#if WINDOWS_UWP
                 SigninPopup.ShowAt(AccountButton);
 #else
                 SigninPopup.Visibility = Windows.UI.Xaml.Visibility.Visible;
@@ -637,7 +637,7 @@ namespace LightNovel
             ViewModel.UserName = resourceLoader.GetString("LoginLabel");
             ViewModel.Password = "";
 
-#if WINDOWS_UAP
+#if WINDOWS_UWP
             SigninPopup.Hide();
 #else
             SigninPopup.IsOpen = false;

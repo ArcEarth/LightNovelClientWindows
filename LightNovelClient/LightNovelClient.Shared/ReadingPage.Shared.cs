@@ -122,7 +122,7 @@ namespace LightNovel
         public string IndexOpenState = "IndexOpen";
 
         private int TranslationType = -1;
-#if !WINDOWS_UAP
+#if !WINDOWS_UWP
         private bool _indexOpened;
 		public bool IsIndexPanelOpen
 		{
@@ -217,7 +217,7 @@ namespace LightNovel
                         ChangeView(ViewModel.PageNo);
                     break;
                 case "VolumeNo":
-#if WINDOWS_APP || WINDOWS_UAP
+#if WINDOWS_APP || WINDOWS_UWP
                     if (VolumeListView.Items.Count > 0 && VolumeListView.Items.Count > ViewModel.VolumeNo)
 						VolumeListView.SelectedIndex = ViewModel.VolumeNo;
 #endif
@@ -225,7 +225,7 @@ namespace LightNovel
                     LoadingAheadTask = null;
                     break;
                 case "ChapterNo":
-#if WINDOWS_APP || WINDOWS_UAP
+#if WINDOWS_APP || WINDOWS_UWP
 					if (ChapterListView.Items.Count > 0 && ChapterListView.Items.Count > ViewModel.ChapterNo)
 						ChapterListView.SelectedIndex = ViewModel.ChapterNo;
 #endif
@@ -486,7 +486,7 @@ namespace LightNovel
             }
             else
             {
-#if WINDOWS_PHONE_APP || WINDOWS_UAP
+#if WINDOWS_PHONE_APP || WINDOWS_UWP
                 int currentLine = GetCurrentLineNo();
 				ViewModel.ReportViewChanged(null, currentLine);
 				e.PageState.Add("IsFullScreen", ViewModel.IsFullScreen);
@@ -695,10 +695,10 @@ namespace LightNovel
             ViewModel.FontSize = item.FontSize;
             ViewModel.FontWeight = item.FontWeight;
 
-//#if WINDOWS_PHONE_APP || WINDOWS_UAP
+//#if WINDOWS_PHONE_APP || WINDOWS_UWP
 //            ContentListView.FontWeight = item.FontWeight;
 //#endif
-#if WINDOWS_APP || WINDOWS_UAP
+#if WINDOWS_APP || WINDOWS_UWP
             // ContentTextBlock.FontWeight = item.FontWeight;
 			// Request an update of the layout since the font size is changed
 			RichTextColumns.ResetOverflowLayout(ContentColumns, null);
