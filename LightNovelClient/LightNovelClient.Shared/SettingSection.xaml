@@ -24,10 +24,28 @@
         </TextBlock>
         <ToggleSwitch x:Name="LiveTileSwitch"
                       Margin="0,0,15,-5"
-                      IsOn="{Binding EnableLiveTile}"
+                      IsOn="{Binding EnableLiveTile,Mode=OneWay}"
                       Padding="0"
                       Toggled="LiveTileSwitch_Toggled" />
-        <TextBlock x:Uid="AppThemeLabel"
+    <TextBlock x:Uid="AccentColorLabel"
+                   FontSize="{ThemeResource AppFontSizeMediumLarge}"
+                   FontWeight="SemiBold"
+                   Foreground="{ThemeResource AppAccentBrush}"
+                   TextWrapping="WrapWholeWords">
+            Accent Color
+    </TextBlock>
+    <TextBlock x:Uid="AccentColorDescription"
+                   Foreground="{ThemeResource AppForegroundBrush}"
+                   Style="{ThemeResource AppTextNormalStyle}"
+                   TextWrapping="WrapWholeWords">
+            Enable to set the App's accent color to change follow the system's accent color
+    </TextBlock>
+    <ToggleSwitch x:Name="AccentColorSwitch"
+                      Margin="0,0,15,-5"
+                      IsOn="{Binding UseSystemAccent,Mode=OneWay}"
+                      Padding="0"
+                      Toggled="AccentColorSwitch_Toggled" />
+    <TextBlock x:Uid="AppThemeLabel"
                    FontSize="{ThemeResource AppFontSizeMediumLarge}"
                    FontWeight="SemiBold"
                    Foreground="{ThemeResource AppAccentBrush}"

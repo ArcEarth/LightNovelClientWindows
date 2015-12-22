@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LightNovelClient", "LightNovelClient", "{7EDF20BC-180E-4F10-AC6E-8AF4F9D7BD47}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LightNovelClient.Shared", "LightNovelClient\LightNovelClient.Shared\LightNovelClient.Shared.shproj", "{8E9AFC82-367F-428F-AB20-439797C87178}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNovelClient.WindowsPhone", "LightNovelClient\LightNovelClient.WindowsPhone\LightNovelClient.WindowsPhone.csproj", "{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lightnovelService", "LightNovelService\lightnovelService.csproj", "{209FA716-A7AD-4095-BD70-C8710FC66FA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNovel.UAP", "LightNovel.UAP\LightNovel.UAP.csproj", "{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}"
 EndProject
@@ -50,23 +48,9 @@ Global
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.ActiveCfg = Release|x86
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.Build.0 = Release|x86
 		{BEE7C5D9-D63C-45E6-9EF1-751F9DE6C5C1}.Release|x86.Deploy.0 = Release|x86
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|ARM.Build.0 = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|x64.Build.0 = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Debug|x86.Build.0 = Debug|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|ARM.ActiveCfg = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|ARM.Build.0 = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|x64.ActiveCfg = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|x64.Build.0 = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|x86.ActiveCfg = Release|Any CPU
-		{209FA716-A7AD-4095-BD70-C8710FC66FA7}.Release|x86.Build.0 = Release|Any CPU
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|Any CPU.Build.0 = Debug|x86
+		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|ARM.ActiveCfg = Debug|ARM
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|ARM.Build.0 = Debug|ARM
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -77,6 +61,8 @@ Global
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|x86.Build.0 = Debug|x86
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Debug|x86.Deploy.0 = Debug|x86
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|Any CPU.ActiveCfg = Release|x86
+		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|Any CPU.Build.0 = Release|x86
+		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|Any CPU.Deploy.0 = Release|x86
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|ARM.ActiveCfg = Release|ARM
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|ARM.Build.0 = Release|ARM
 		{C825B49E-9D7D-434E-8D35-DB8ECA123C7F}.Release|ARM.Deploy.0 = Release|ARM

@@ -52,7 +52,9 @@ namespace LightNovel.Common
 				_roamingSettings.Add(EnableAutomaticReadingThemeKey, true);
 			if (!_roamingSettings.ContainsKey(BackgroundThemeKey))
 				_roamingSettings.Add(BackgroundThemeKey, (int)Windows.UI.Xaml.ElementTheme.Default);
-			if (!_localSettings.ContainsKey(ImageLoadingPolicyKey))
+            if (!_roamingSettings.ContainsKey(UseSystemAccentKey))
+                _roamingSettings.Add(UseSystemAccentKey, true);
+            if (!_localSettings.ContainsKey(ImageLoadingPolicyKey))
 				_localSettings.Add(ImageLoadingPolicyKey, (int)ImageLoadingPolicy.Automatic);
 			if (!_localSettings.ContainsKey(CredentialKey))
 				_localSettings.Add(CredentialKey, JsonConvert.SerializeObject(new Session { Expries = DateTime.Now.AddYears(-100), Key = "" }));
@@ -200,7 +202,24 @@ namespace LightNovel.Common
 			}
 		}
 
-		public int BackgroundThemeIndexBindingProperty
+        private const string UseSystemAccentKey = "UseSystemAccent";
+        public bool UseSystemAccent
+        {
+            get
+            {
+                return (bool)_roamingSettings[UseSystemAccentKey];
+            }
+            set
+            {
+                if ((bool)_roamingSettings[UseSystemAccentKey] != value)
+                {
+                    _roamingSettings[UseSystemAccentKey] = (bool)value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public int BackgroundThemeIndexBindingProperty
 		{
 			get
 			{ return (int)BackgroundTheme; }

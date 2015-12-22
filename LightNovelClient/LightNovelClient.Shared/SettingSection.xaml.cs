@@ -94,5 +94,20 @@ namespace LightNovel
 			if (language != "")
 				Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;// Windows.Globalization.ApplicationLanguages.Languages[0];
 		}
+
+        private void AccentColorSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            var switcher = sender as ToggleSwitch;
+            if (switcher.IsOn)
+            {
+                AppGlobal.Settings.UseSystemAccent = true;
+                App.Current.SyncAppAccentColor();
+            }
+            else
+            {
+                AppGlobal.Settings.UseSystemAccent = false;
+                App.Current.SyncAppAccentColor();
+            }
+        }
     }
 }

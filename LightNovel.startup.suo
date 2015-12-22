@@ -1,7 +1,10 @@
 {
   "MRU": [
-    "LightNovelClient.Windows",
-    "LightNovelClient.WindowsPhone"
+    "LightNovel.UAP"
   ],
-  "MultiProjectConfigurations": {}
+  "MultiProjectConfigurations": {},
+  "SingleProjectMode": 0,
+  "SingleProjectMruCount": 5,
+  "ActivateCommandLineArguments": false,
+  "Version": 2
 }

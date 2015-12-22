@@ -149,6 +149,9 @@
     <Color x:Key="AppSubtleColor">#66FFFFFF</Color>
     <Color x:Key="AppSemitransparentColor10">#1F000000</Color>-->
 
+    <Color x:Key="DefaultAppAccentColor">#FFA4C400</Color>
+
+
     <SolidColorBrush x:Key="ProgressBarIndeterminateForegroundThemeBrush" Color="{ThemeResource AppAccentColor}" />
 
     <SolidColorBrush x:Key="AppSubtleBrush" Color="{ThemeResource AppSubtleColor}" />

@@ -400,11 +400,13 @@ namespace LightNovel
 			TranslationType = 0;
 			LayoutRootFadeinStory.Begin();
 			await UpdateSizeOrientationDependentResourcesAsync();
-#elif WINDOWS_APP
-			if (this.Frame.CanGoBack)
+#elif WINDOWS_APP || WINDOWS_UWP
+            if (this.Frame.CanGoBack)
 				OpenInNewViewButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			else
 				OpenInNewViewButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
+            Window.Current.SetTitleBar(TitlePanelBackground);
 
 #endif
             if (this.RequestedTheme != AppGlobal.Settings.BackgroundTheme)

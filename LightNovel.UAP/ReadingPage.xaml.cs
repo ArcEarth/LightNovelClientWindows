@@ -114,10 +114,11 @@ namespace LightNovel
 
         //}
 
-        void ViewModel_CommentsListLoaded(object sender, IEnumerable<int> e)
+        void ViewModel_CommentsListLoaded(object sender, IDictionary<int, IEnumerable<CommentData>> e)
         {
-            foreach (int idx in e)
+            foreach (var pair in e)
             {
+                int idx = pair.Key;
                 var para = ContentTextBlock.Blocks[idx - 1];
                 //var fcolor = (ViewModel.Foreground as SolidColorBrush).Color;
                 if (ViewModel.ChapterData.Lines[idx - 1].ContentType == LineContentType.TextContent)

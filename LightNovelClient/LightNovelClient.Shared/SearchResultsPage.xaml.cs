@@ -39,8 +39,8 @@ namespace LightNovel
 				this.DefaultViewModel["QueryText"] = _QueryText;
 			}
 		}
-		public List<BookItem> Results { get; set; }
-		public Task<List<BookItem>> QueryTask { get; set; }
+		public List<ExtendedBookItem> Results { get; set; }
+		public Task<List<ExtendedBookItem>> QueryTask { get; set; }
 		//private bool IsPageActive = true;
 		/// <summary>
 		/// This can be changed to a strongly typed view model.
@@ -164,7 +164,7 @@ namespace LightNovel
 				{
 					var results = (string)e.PageState["Results"];
 					QueryTask = null;
-					Results = JsonConvert.DeserializeObject<List<BookItem>>(results);
+					Results = JsonConvert.DeserializeObject<List<ExtendedBookItem>>(results);
 					LoadResultIntoView();
 				}
 				else

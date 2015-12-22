@@ -13,8 +13,10 @@
       x:Name="LayoutRoot"
       mc:Ignorable="d">
     <Grid.Resources>
+        <SolidColorBrush x:Key="SplashBackgroundBrush" Color="{ThemeResource AppAccentColor}"></SolidColorBrush>
         <Storyboard x:Key="DissmissStory" x:Name="DissmissStory">
             <ColorAnimation Duration="0:0:2"
+                            x:Name="DissmissAnimation"
                             From="{ThemeResource AppAccentColor}"
                             Storyboard.TargetName="SplashElements"
                             Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
@@ -25,7 +27,7 @@
     <Grid x:Name="SplashElements"
           HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch"
-          Background="#FFA4C400">
+          Background="{StaticResource SplashBackgroundBrush}">
         <!--<Rectangle Height="60"
                    VerticalAlignment="Top"
                    Fill="{ThemeResource AppAccentBrush}" />-->

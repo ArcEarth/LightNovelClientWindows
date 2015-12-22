@@ -207,8 +207,9 @@ namespace LightNovel
                 }
                 else
                 {
-                    ToolBar.Padding = new Thickness(0, 0, 140, 0);
+                    ToolBar.Padding = new Thickness(0, 0, 170, 0);
                 }
+                Window.Current.SetTitleBar(TooBarBackground);
             }
             else
             {
@@ -222,6 +223,7 @@ namespace LightNovel
                 SwitchGridViewOrientation(RecentReadingSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical);
                 SwitchGridViewOrientation(RecommandSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical, 6);
 
+                Window.Current.SetTitleBar(null);
                 Grid.SetRow(ToolBar,2);
                 ToolBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
                 ToolBar.Padding = new Thickness(0);

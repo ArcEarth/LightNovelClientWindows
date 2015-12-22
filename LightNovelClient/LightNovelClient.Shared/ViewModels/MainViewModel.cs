@@ -406,7 +406,7 @@ namespace LightNovel.ViewModels
             IsLoading = false;
         }
 
-        public async Task<IList<KeyValuePair<string, IList<BookItem>>>> LoadAsync(bool forceRefresh = false, int maxVolumeCount = 9)
+        public async Task<IDictionary<string, IList<BookItem>>> LoadAsync(bool forceRefresh = false, int maxVolumeCount = 9)
         {
             if (!IsLoading && (!IsLoaded || forceRefresh))
             {

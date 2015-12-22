@@ -114,7 +114,7 @@ namespace LightNovel.Common
 		}
 
 
-		static Task CacheChaptersAsync(CancellationToken c, IProgress<string> progress, IEnumerable<string> chapters, bool cache_images)
+		static Task CacheChaptersAsync(CancellationToken c, IProgress<string> progress, IEnumerable<NovelPositionIdentifier> chapters, bool cache_images)
 		{
 			return Task.Run(async () =>
 			{
@@ -124,14 +124,14 @@ namespace LightNovel.Common
 				{
 					if (c.IsCancellationRequested)
 						break;
-					if (!CachedChapterSet.Contains(cid))
+					if (!CachedChapterSet.Contains(cid.ChapterId))
 					{
 						if (c.IsCancellationRequested)
 							break;
 
 						try
 						{
-							var chapter = await GetChapterAsync(cid);
+							var chapter = await GetChapterAsync(cid.ChapterId, cid.VolumeId, cid.SeriesId);
 							if (cache_images)
 							{
 								var images = from line in chapter.Lines where line.ContentType == LineContentType.ImageContent select line.Content;
@@ -198,7 +198,7 @@ namespace LightNovel.Common
 										}
 									});
 							}
-							progress.Report(cid);
+							progress.Report(cid.ChapterId);
 						}
 						catch (Exception exc)
 						{
@@ -208,14 +208,14 @@ namespace LightNovel.Common
 					}
 					else
 					{
-						progress.Report(cid);
+						progress.Report(cid.ChapterId);
 					}
 				}
 			}
 			);
 		}
 
-		public static IAsyncActionWithProgress<string> CacheChaptersAsync(IEnumerable<string> chapters, bool cache_images = false)
+		public static IAsyncActionWithProgress<string> CacheChaptersAsync(IEnumerable<NovelPositionIdentifier> chapters, bool cache_images = false)
 		{
 			//while (CachingTaskQueue.Count > 0 && (CachingTaskQueue.Peek().AsTask().IsCompleted))
 			//{
@@ -266,10 +266,15 @@ namespace LightNovel.Common
 			return task;
 		}
 
-		public static Task<Chapter> GetChapterAsync(string id, bool forceRefresh = false)
+        public static Task<Chapter> GetChapterAsync(NovelPositionIdentifier pos, bool forceRefresh = false)
+        {
+            return GetChapterAsync(pos.ChapterId, pos.VolumeId, pos.SeriesId);
+        }
+
+        public static Task<Chapter> GetChapterAsync(string chptId,string volId,string serId, bool forceRefresh = false)
 		{
-			if (!forceRefresh && ChapterCache.ContainsKey(id) && !ChapterCache[id].IsFaulted)
-				return ChapterCache[id];
+			if (!forceRefresh && ChapterCache.ContainsKey(chptId) && !ChapterCache[chptId].IsFaulted)
+				return ChapterCache[chptId];
 			if (ChapterCache.Count > MaxCachedUnit)
 			{
 				var outdates = (from item in ChapterCache where item.Value.IsCompleted select item.Key).ToArray();
@@ -282,9 +287,9 @@ namespace LightNovel.Common
 				}
 			}
 
-			var task = DataCache.GetAsync("chapter-" + id, () => LightKindomHtmlClient.GetChapterAlterAsync(id), null, forceRefresh);
-			ChapterCache[id] = task;
-			CachedChapterSet.Add(id);
+			var task = DataCache.GetAsync("chapter-" + chptId, () => LightKindomHtmlClient.GetChapterAsync(chptId,volId,serId), null, forceRefresh);
+			ChapterCache[chptId] = task;
+			CachedChapterSet.Add(chptId);
 			return task;
 		}
 
@@ -298,9 +303,9 @@ namespace LightNovel.Common
 			return index;
 		}
 
-		public static Task<IList<KeyValuePair<string, IList<BookItem>>>> GetRecommandedBookLists(bool forceRefresh = false)
+		public static Task<IDictionary<string, IList<BookItem>>> GetRecommandedBookLists(bool forceRefresh = false)
 		{
-			return DataCache.GetAsync("popular_series", LightKindomHtmlClient.GetRecommandedBookLists, DateTime.Now.AddDays(1), forceRefresh);
+			return DataCache.GetAsync("popular_series", LightKindomHtmlClient.GetFeaturedBooks, DateTime.Now.AddDays(1), forceRefresh);
 		}
 		public async static Task<bool> ClearSerialCache(string serId)
 		{
@@ -315,7 +320,7 @@ namespace LightNovel.Common
 					{
 						try
 						{
-							var chapter = await GetChapterAsync(cpt.Id);
+							var chapter = await GetChapterAsync(cpt.Id,vol.Id,ser.Id);
 							foreach (var imageLine in chapter.Lines.Where(line => line.ContentType == LineContentType.ImageContent))
 							{
 								await DeleteIllustationAsync(imageLine.Content);

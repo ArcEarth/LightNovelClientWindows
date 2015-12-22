@@ -778,7 +778,7 @@
             <RowDefinition Height="{ThemeResource TitleBarHeightGridLength}" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="IndexPanelStates">
                 <VisualState x:Name="IndexClosed">
@@ -889,6 +889,9 @@
                 <VisualState x:Name="ShowTitleBarState" />
                 <VisualState x:Name="HideTitleBarState">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
                         <!--<ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" To="{ThemeResource AppAccentColor}"/>
                         <ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Background).(SolidColorBrush.Color)" To="Transparent"/>-->
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalNextButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
@@ -898,7 +901,7 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(AppBar.ClosedDisplayMode)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Minimal" />
                         </ObjectAnimationUsingKeyFrames>
-                        
+
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Foreground)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppAccentBrush}" />
                         </ObjectAnimationUsingKeyFrames>
@@ -920,6 +923,9 @@
                 </VisualState>
                 <VisualState x:Name="PeekTitleBarState">
                     <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
+                        </ObjectAnimationUsingKeyFrames>
                         <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Foreground)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TransparentBrush}" />
                         </ObjectAnimationUsingKeyFrames>
@@ -967,6 +973,9 @@
                                       GeneratedDuration="0:0:0.25"
                                       To="HideTitleBarState">
                         <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageSplitView" Storyboard.TargetProperty="(FrameworkElement.Margin)">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="0,-48,0,0" />
                             </ObjectAnimationUsingKeyFrames>
@@ -980,6 +989,9 @@
                                       GeneratedDuration="0:0:0.25"
                                       To="PeekTitleBarState">
                         <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRegion" Storyboard.TargetProperty="(FrameworkElement.Margin)">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
+                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageSplitView" Storyboard.TargetProperty="(FrameworkElement.Margin)">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="0,-48,0,0" />
                             </ObjectAnimationUsingKeyFrames>
@@ -1008,7 +1020,7 @@
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
-            </VisualStateGroup>            
+            </VisualStateGroup>
             <VisualStateGroup>
                 <VisualState x:Name="WideIndexPaneState">
                     <VisualState.StateTriggers>
@@ -1177,6 +1189,7 @@
                 <Grid x:Name="ContentRegion"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
+                      Margin="0,0,0,48"
               KeyDown="ContentRegion_KeyDown">
                     <Grid.RenderTransform>
                         <TranslateTransform x:Name="ContentPanelTranslation" X="0" Y="0" />
@@ -1220,6 +1233,21 @@
                             </controls:RichTextColumns.ColumnTemplate>
                         </controls:RichTextColumns>
                     </ScrollViewer>
+
+                    <Rectangle x:Name="SlideHandle"
+                   Grid.Row="1"
+                   MinWidth="30"
+                   Margin="0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Stretch"
+                   Fill="Transparent"
+                   ManipulationDelta="SlideHandle_ManipulationDelta"
+                   ManipulationMode="TranslateX"
+                   Opacity="0"
+                   Stroke="Transparent"
+                   StrokeThickness="0"
+                   Tapped="IndexButton_Click" />
+
                     <Button x:Name="HorizontalPrevButton"
                     Width="30"
                     Height="80"
@@ -1441,20 +1469,6 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
 
-                    <Rectangle x:Name="SlideHandle"
-                   Grid.Row="1"
-                   MinWidth="30"
-                   Margin="0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Stretch"
-                   Fill="Transparent"
-                   ManipulationDelta="SlideHandle_ManipulationDelta"
-                   ManipulationMode="TranslateX"
-                   Opacity="0"
-                   Stroke="Transparent"
-                   StrokeThickness="0"
-                   Tapped="IndexButton_Click" />
-
                     <ProgressRing x:Name="LoadingIndicator"
                       Width="60"
                       Height="60"
@@ -1480,6 +1494,26 @@
                 <TranslateTransform X="0" Y="0"/>
             </Grid.RenderTransform>
 
+            <ScrollViewer Grid.Column="2"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          TabIndex="1"
+                          Margin="10,0,10,5"
+                          Style="{ThemeResource HorizontalScrollViewerStyle}">
+                <TextBlock x:Name="pageTitle"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Foreground="{ThemeResource AppBackgroundBrush}"
+                           IsHitTestVisible="false"
+                           Language="zh-Hans"
+                           Style="{ThemeResource AppTextTitle1Style}"
+                           Text="{Binding Header}"
+                           TextTrimming="None"
+                           TextWrapping="NoWrap" />
+            </ScrollViewer>
+
+            <Rectangle x:Name="TitlePanelBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="4" Grid.Column="0" Grid.Row="0" Fill="Transparent" Stroke="Transparent"/>
+
             <Button Style="{ThemeResource NavigationBackButtonNormalStyle}"                    AutomationProperties.AutomationId="BackButton"
                     AutomationProperties.ItemType="Navigation Button"
                     AutomationProperties.Name="Back"
@@ -1498,23 +1532,6 @@
                                 Icon="List"
                                 ToolTipService.ToolTip="Open/Close the index panel">
             </AppBarToggleButton>
-            <ScrollViewer Grid.Column="2"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
-                          TabIndex="1"
-                          Margin="10,0,10,5"
-                          Style="{ThemeResource HorizontalScrollViewerStyle}">
-                <TextBlock x:Name="pageTitle"
-                           HorizontalAlignment="Left"
-                           VerticalAlignment="Center"
-                           Foreground="{ThemeResource AppBackgroundBrush}"
-                           IsHitTestVisible="false"
-                           Language="zh-Hans"
-                           Style="{ThemeResource AppTextTitle1Style}"
-                           Text="{Binding Header}"
-                           TextTrimming="None"
-                           TextWrapping="NoWrap" />
-            </ScrollViewer>
 
             <Button x:Name="PageIndicator" Style="{StaticResource PureButtonStyle}" Grid.Column="3"  Margin="10,5,145,5" Padding="0">
                 <StackPanel Orientation="Horizontal">

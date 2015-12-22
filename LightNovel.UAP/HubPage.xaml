@@ -19,21 +19,52 @@
         <Color x:Key="VolumeTileBackgroundColor">#FFF4FFC1</Color>
         <SolidColorBrush x:Key="VolumeTileBackgroundBrush" Color="Transparent" />
         <local:StringToSymbolConverter x:Key="StringToSymbolConverter" />
-        <DataTemplate x:Key="BookCoverTemplate" x:DataType="vm:BookCoverViewModel">
-            <Grid Width="100"
-                  Height="180"
+        <DataTemplate x:Key="FeaturedTemplate" x:DataType="vm:BookCoverViewModel">
+            <Grid Width="240"
+                  Height="100"
                   Margin="5"
                   VerticalAlignment="Top"
                   Background="{ThemeResource VolumeTileBackgroundBrush}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140" />
-                    <RowDefinition Height="60" />
+                    <RowDefinition Height="100" />
                 </Grid.RowDefinitions>
                 <!--  <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>  -->
                 <Image Grid.Row="0"
                        HorizontalAlignment="Center"
                        Source="{x:Bind CoverImageUri}"
-                       Stretch="None" />
+                       Stretch="UniformToFill" />
+                <!--
+                    <Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
+                    </Rectangle>
+                -->
+                <TextBlock Grid.Row="0"
+                           VerticalAlignment="Bottom"
+                           HorizontalAlignment="Center"
+                           FontSize="{ThemeResource AppFontSizeNormal}"
+                           Foreground="{StaticResource AppForegroundBrush}"
+                           Language="zh-Hans"
+                           Text="{x:Bind Title}"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="Wrap" />
+            </Grid>
+        </DataTemplate>        
+        <DataTemplate x:Key="BookCoverTemplate" x:DataType="vm:BookCoverViewModel">
+            <Grid Width="130"
+                  Margin="5"
+                  VerticalAlignment="Top"
+                  Background="{ThemeResource VolumeTileBackgroundBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="195" />
+                    <RowDefinition Height="45" />
+                </Grid.RowDefinitions>
+                <!--  <Ellipse Fill="{StaticResource AppAccentBrush}" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="180" Width="180" Opacity="0.5" Margin="-30,-20,0,0"></Ellipse>  -->
+                <Image Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       Stretch="None" >
+                    <Image.Source>
+                        <BitmapImage UriSource="{x:Bind CoverImageUri}" DecodePixelType="Logical" DecodePixelHeight="195"></BitmapImage>
+                    </Image.Source>
+                </Image>
                 <!--
                     <Rectangle VerticalAlignment="Bottom" Height="40" Width="100" Fill="{StaticResource AppAccentBrush}" Opacity="0.75">
                     </Rectangle>
@@ -45,7 +76,8 @@
                            Language="zh-Hans"
                            Text="{x:Bind Title}"
                            TextTrimming="CharacterEllipsis"
-                           TextWrapping="Wrap" />
+                           TextWrapping="Wrap" 
+                           VerticalAlignment="Stretch" Margin="0,2,0,3"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="HistoryItemTemplate" x:DataType="vm:HistoryItemViewModel">
@@ -621,6 +653,7 @@
             </HubSection>
         </Hub>
 
+        <Rectangle x:Name="TooBarBackground"  Fill="Transparent" Stroke="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0"></Rectangle>
         <CommandBar x:Name="ToolBar" ClosedDisplayMode="Compact" Grid.Column="1"
                     Background="{ThemeResource AppAccentBrush}"
                     HorizontalAlignment="Right"

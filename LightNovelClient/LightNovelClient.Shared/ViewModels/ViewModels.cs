@@ -103,7 +103,7 @@ namespace LightNovel.ViewModels
 				case "ChapterNo":
 					if (ChapterData == null || ChapterData.Id != VolumeData.Chapters[ChapterNo].Id)
 					{
-						ChapterData = await CachedClient.GetChapterAsync(VolumeData.Chapters[ChapterNo].Id);
+						ChapterData = await CachedClient.GetChapterAsync(VolumeData.Chapters[ChapterNo].Id,VolumeData.Id,SeriesData.Id);
 						//VolumeData.Chapters[ChapterNo];
 						//CommentIndex = (await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterNo.ToString())).ToList();
 					}
@@ -121,7 +121,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public event EventHandler<IEnumerable<int>> CommentsListLoaded;
+		public event EventHandler<IDictionary<int, IEnumerable<CommentData>>> CommentsListLoaded;
 		//[IgnoreAutoChangeNotification]
 		private Series _SeriesData;
 		private Volume _VolumeData;
@@ -258,7 +258,7 @@ namespace LightNovel.ViewModels
 		private int _LineNo = -1;
 		private int _PageNo = -1;
 		private int _PagesCount = -1;
-		private IList _Contents;
+		private IList<LineViewModel> _Contents;
 		private IList<VolumeViewModel> _Index;
 		private IList<ChapterPreviewModel> _SeconderyIndex;
 
@@ -442,7 +442,7 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public IList Contents
+		public IList<LineViewModel> Contents
 		{
 			get { return _Contents; }
 			private set
@@ -455,7 +455,12 @@ namespace LightNovel.ViewModels
 			}
 		}
 
-		public IList<VolumeViewModel> Index
+        public IDictionary<int, IEnumerable<CommentData>> CommentsList
+        {
+            get; private set;
+        }
+
+        public IList<VolumeViewModel> Index
 		{
 			get { return _Index; }
 			private set
@@ -572,11 +577,6 @@ namespace LightNovel.ViewModels
 			return true;
 		}
 
-		public Task<IEnumerable<string>> GetComentsAsync(int LineNo)
-		{
-			return LightKindomHtmlClient.GetCommentsAsync(LineNo.ToString(), _ChapterData.Id);
-		}
-
 		private Brush _Background;
 		private Brush _Foreground;
 		private double _FontSize;
@@ -686,7 +686,8 @@ namespace LightNovel.ViewModels
 				{
 					if (nav.SeriesId == null)
 					{
-						var chapter = await CachedClient.GetChapterAsync(nav.ChapterId);
+                        throw new Exception("Cannot navigate to reading page without Volume and Series ID");
+						var chapter = await CachedClient.GetChapterAsync(nav.ChapterId,"-1","-1");
 						if (c.IsCancellationRequested)
 						{
 							IsLoading = false;
@@ -710,7 +711,9 @@ namespace LightNovel.ViewModels
 				{
 					if (nav.SeriesId == null)
 					{
-						string volDesc = null;
+                        throw new Exception("Cannot navigate to reading page without Volume and Series ID");
+
+                        string volDesc = null;
 						if (nav.SeriesId == null)
 						{
 							var volume = await CachedClient.GetVolumeAsync(nav.VolumeId);
@@ -821,12 +824,12 @@ namespace LightNovel.ViewModels
 				{
 					VolumeData = SeriesData.Volumes[volumeNo];// = await CachedClient.GetVolumeAsync(SeriesData.Volumes[volumeNo.Value].Id);
 					VolumeNo = volumeNo;
-					var task = CachedClient.GetChapterAsync(VolumeData.Chapters[0].Id);
-					//NotifyPropertyChanged("Index");
+					// var task = CachedClient.GetChapterAsync(VolumeData.Chapters[0].Position);
+					// NotifyPropertyChanged("Index");
 				}
 				if (chapterNo >= 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[chapterNo].Id))
 				{
-					var chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id);
+					var chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Position);
 					if (c.IsCancellationRequested)
 					{
 						IsLoading = false;
@@ -835,7 +838,7 @@ namespace LightNovel.ViewModels
 					// Fix for cached page leads to no content
 					if (chapter.Lines.Count == 0)
 					{
-						chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Id, true);
+						chapter = await CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo].Position, true);
 						if (c.IsCancellationRequested)
 						{
 							IsLoading = false;
@@ -853,16 +856,16 @@ namespace LightNovel.ViewModels
 					{
 						// Pre caching next chapter
                         if (chapterNo + 1 < VolumeData.Chapters.Count)
-						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Id);
+						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Position);
                         else
-                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo + 1].Chapters[0].Id);
+                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo + 1].Chapters[0].Position);
                     }
 					else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
 					{
                         if (chapterNo > 0)
-						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Id);
+						    CachedClient.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Position);
                         else
-                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo - 1].Chapters.Last().Id);
+                            CachedClient.GetChapterAsync(SeriesData.Volumes[VolumeNo - 1].Chapters.Last().Position);
                     }
 
 					var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterData.Id));
@@ -938,11 +941,18 @@ namespace LightNovel.ViewModels
 			{
 				try
 				{
-					var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
-					foreach (var cln in CommentsList)
+					CommentsList = await LightKindomHtmlClient.GetCommentsAsync(ChapterData.Id,ChapterData.ParentSeriesId);
+
+                    // when comments are empty or failed to get
+                    if (CommentsList == null)
+                        CommentsList = new Dictionary<int, IEnumerable<CommentData>>();
+
+                    foreach (var cln in CommentsList)
 					{
-						((LineViewModel)Contents[cln - 1]).MarkAsCommented();
-					}
+						((LineViewModel)Contents[cln.Key - 1]).MarkAsCommented();
+                        Contents[cln.Key - 1].Comments = new ObservableCollection<Comment>(cln.Value.Select(d => new Comment(d)));
+                    }
+
 					if (CommentsListLoaded != null)
 						CommentsListLoaded.Invoke(this, CommentsList);
 					//if (!IsFavored && App.User != null && App.User.FavoriteList != null && App.User.FavoriteList.Any(fav=>fav.SeriesTitle == SeriesData.Title))
@@ -981,10 +991,10 @@ namespace LightNovel.ViewModels
 			{
 				try
 				{
-					var CommentsList = await LightKindomHtmlClient.GetCommentedLinesListAsync(ChapterData.Id);
+					var CommentsList = await LightKindomHtmlClient.GetCommentsAsync(ChapterData.Id, ChapterData.ParentSeriesId);
 					foreach (var cln in CommentsList)
 					{
-						((LineViewModel)Contents[cln - 1]).MarkAsCommented();
+						((LineViewModel)Contents[cln.Key - 1]).MarkAsCommented();
 					}
 					if (CommentsListLoaded != null)
 						CommentsListLoaded.Invoke(this, CommentsList);
@@ -1060,14 +1070,14 @@ namespace LightNovel.ViewModels
 				return false;
 
 			//IsLoading = true; 
-			var chapters = new List<string>();
+			var chapters = new List<NovelPositionIdentifier>();
 			for (int i = ChapterNo + 2; i < VolumeData.Chapters.Count; i++)
 			{
-				chapters.Add(VolumeData.Chapters[i].Id);
+				chapters.Add(VolumeData.Chapters[i].Position);
 			}
 			for (int i = VolumeNo + 1; i < SeriesData.Volumes.Count; i++)
 			{
-				chapters.AddRange(SeriesData.Volumes[i].Chapters.Select(c => c.Id));
+				chapters.AddRange(SeriesData.Volumes[i].Chapters.Select(c => c.Position));
 			}
 
 			DownloadingTask = CachedClient.CacheChaptersAsync(chapters, cacheImages);
@@ -1212,7 +1222,7 @@ namespace LightNovel.ViewModels
 		{
 			Title = item.Title;
 			Subtitle = item.Subtitle;
-			Id = item.Id;
+			Id = item.SeriesId;
 			CoverImageUri = item.CoverImageUri;
 			ItemType = item.ItemType;
 			SubtileLabel = item.VolumeNo;
@@ -1832,7 +1842,14 @@ namespace LightNovel.ViewModels
 			_author = null;
 		}
 
-		public string Content
+        public Comment(CommentData data)
+        {
+            _content = data.cn;
+            _date = DateTime.FromBinary(data.t);
+            _author = data._id.ToString();
+        }
+
+        public string Content
 		{
 			get { return _content; }
 			set
@@ -1908,7 +1925,7 @@ namespace LightNovel.ViewModels
 			IsImage = line.ContentType == LineContentType.ImageContent;
 
             if (IsImage)
-                _content = line.Content.Replace("lknovel.lightnovel.cn", "linovel.com");
+                _content = line.Content;
             else
                 _content = line.Content;
 
@@ -2064,8 +2081,9 @@ namespace LightNovel.ViewModels
 			{
 				string lineId = No.ToString();
 				Debug.WriteLine("Loading Comments : line_id = " + lineId + " ,chapter_id = " + ParentChapterId);
-				LoadCommentTask = LightKindomHtmlClient.GetCommentsAsync(lineId, ParentChapterId);
-				IsLoading = true;
+                //LoadCommentTask = LightKindomHtmlClient.GetCommentsAsync(lineId, ParentChapterId);
+                LoadCommentTask = null;
+                IsLoading = true;
 				try
 				{
 					var comments = await LoadCommentTask;

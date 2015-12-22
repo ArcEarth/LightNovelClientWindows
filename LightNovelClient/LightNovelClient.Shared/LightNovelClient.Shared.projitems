@@ -128,6 +128,8 @@
     <Folder Include="$(MSBuildThisFileDirectory)Controls\MultilingualResources\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)AboutSection.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)App.xaml" />
     <None Include="$(MSBuildThisFileDirectory)Assets\build_logo.ps1" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Logo.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\LogoSquareHuge.svg" />
@@ -138,5 +140,10 @@
     <None Include="$(MSBuildThisFileDirectory)Assets\Logo_G.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\Logo_GR.svg" />
     <None Include="$(MSBuildThisFileDirectory)Assets\SplashScreen.svg" />
+    <None Include="$(MSBuildThisFileDirectory)AuthPage.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)ExtendedSplash.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)IllustrationView.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)SettingSection.xaml" />
+    <None Include="$(MSBuildThisFileDirectory)Theme\SharedStyles.xaml" />
   </ItemGroup>
 </Project>
