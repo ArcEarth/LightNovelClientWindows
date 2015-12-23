@@ -5,7 +5,7 @@ Here is the place for you to read your most favorite novels translated and share
 
 ### All credits belongs to the authors and translators.
 Please support them as much as you can.
-### All Data belongs to [LightNovel.cn](www.lightnovel.cn)
+### All Data belongs to [LightNovel.cn](http://www.lightnovel.cn)
 Please support them (By clicking the ads in their webpage) too.
 
 # Supported Platform
