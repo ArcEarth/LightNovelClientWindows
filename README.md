@@ -1,11 +1,12 @@
 # Light Novel Client for Windows
 Welcome to the page of <Light Novel Client for Windows>
-This is a free full-functionary client (User Agent) for lightnovel.cn.
-Here is the place for you to read your most favorite novels translated and shared by others.
+This is a free experimental client (User Agent) for lightnovel.cn.
+You can read your most favorite novels translated and shared by others.
+
 ### All credits belongs to the authors and translators.
 Please support them as much as you can.
 ### All Data belongs to [LightNovel.cn](http://www.lightnovel.cn)
-Please support them (By clicking the ads in their webpage) too.
+Please support them (clicking the ads in their webpage) too.
 ### Source code here are govered by **GPL**-v3 License
 You are prohabited to do any commercial use, you must open source your code if they use this.
 
@@ -16,11 +17,16 @@ You are prohabited to do any commercial use, you must open source your code if t
 * Windows Phone 8.0 (Silverlight App, Deprecated)
 ### The UI and functions varies in Platform, Deprecated Client will not receive further update from author.
 
+## Issue in Build process
+If you encountered some issue in building the project, try install [Multilingual app toolkit](https://dev.windows.com/en-us/develop/multilingual-app-toolkit). This is an nasty dependency that should been removed, but still have some effect. 
+
 ## Authors, Contributors, Credits
 * [Arc Earth](mailto:ArcEarth@outlook.com)
 * We are very happy be incorporate with any one who are interested in this project, please contact the author directly.
+
 ### Credits
-* [WinRTXamlToolkit](https://github.com/xyzzer/WinRTXamlToolkit) by Filip Skakun, MIT License
-* [Json.Net](https://github.com/JamesNK) by James Newton-King, MIT License
+* [WinRTXamlToolkit](https://github.com/xyzzer/WinRTXamlToolkit) by [Filip Skakun](https://github.com/xyzzer), MIT License
+* [Json.Net](https://github.com/JamesNK) by [James Newton-King](https://github.com/JamesNK), MIT License
+
 ### Support or Contact
 mail to : [LightNovelApp](mailto:LightNovelApp@outlook.com)
