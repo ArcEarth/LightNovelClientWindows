@@ -14,7 +14,7 @@ Please support them (By clicking the ads in their webpage) too.
 * Windows Phone 8.1 (Windows Runtime Store App, Deprecated)
 * Windows Phone 8.0 (Silverlight App, Deprecated)
 
-* The UI and functions varies in Platform, WP8 Silverlight Client will not receive further update than critical bug-fixes.
+### The UI and functions varies in Platform, Deprecated Client will not receive further update from author.
 
 ## Authors and Contributors
 * [Arc Earth](mailto:ArcEarth@outlook.com)
