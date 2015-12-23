@@ -735,6 +735,7 @@ namespace LightNovel.Data
                             line.Content = img.GetAttributeValue("src", string.Empty);
                             line.Width = img.GetAttributeValue("data-width", 0);
                             line.Height = img.GetAttributeValue("data-height", 0);
+                            line.Size = ulong.Parse(img.GetAttributeValue("data-size", string.Empty));
                         }
                         else
                         {

@@ -29,9 +29,6 @@
                                         FalseSymbol="Pin"
                                         TrueSymbol="UnPin" />
 
-        <SolidColorBrush x:Name="ContentForegroundBrush" />
-        <SolidColorBrush x:Name="ContentBackgroundBrush" />
-        <SolidColorBrush x:Name="CommentedTextBrush" />
         <DataTemplate x:Key="LineViewCCGTemplate" x:Name="LineViewCCGTemplate">
             <Grid HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgressBar"

@@ -175,7 +175,7 @@ namespace LightNovel.Data
         public LineContentType ContentType { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public int Size { get; set; }
+        public ulong Size { get; set; }
     }
 
     public struct CommentData

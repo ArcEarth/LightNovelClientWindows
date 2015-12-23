@@ -164,7 +164,10 @@
     <SolidColorBrush x:Key="AppForegroundDimBrush" Color="{ThemeResource AppForegroundDimColor}" />
     <SolidColorBrush x:Key="AppBackgroundBrush" Color="{ThemeResource AppBackgroundColor}" />
     <SolidColorBrush x:Key="AppBackgroundDimBrush" Color="{ThemeResource AppBackgroundDimColor}" />
-
+    
+    <SolidColorBrush x:Name="ContentForegroundBrush" />
+    <SolidColorBrush x:Name="ContentBackgroundBrush" />
+    <SolidColorBrush x:Name="CommentedTextBrush" />
 
     <!--  Font sizes  -->
     <!--  13pt  -->

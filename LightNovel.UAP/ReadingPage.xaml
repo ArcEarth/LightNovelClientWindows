@@ -39,7 +39,8 @@
         <SolidColorBrush x:Key="CommentedTextBrush" x:Name="CommentedTextBrush" />
 
         <DataTemplate x:Key="LineViewCCGTemplate" x:Name="LineViewCCGTemplate">
-            <Grid HorizontalAlignment="Stretch">
+            <local:IllustrationView></local:IllustrationView>
+            <!--<Grid HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgressBar"
                              Margin="20,5"
                              HorizontalAlignment="Stretch"
@@ -82,7 +83,7 @@
                            Margin="0,5"
                            HorizontalAlignment="Left"
                            Fill="{ThemeResource AppAccentBrush}" />
-            </Grid>
+            </Grid>-->
         </DataTemplate>
 
         <DataTemplate x:Key="IllustrationViewTemplate" x:Name="IllustrationViewTemplate">

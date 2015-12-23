@@ -114,10 +114,6 @@ namespace LightNovel
             }
         }
 
-        public static readonly DependencyProperty BitmapLoadingIndicatorProperty =
-            DependencyProperty.Register("BitmapImageLoadingIndicator", typeof(ProgressBar),
-            typeof(BitmapImage), new PropertyMetadata(null, null));
-
         public string IndexClosedState = "IndexClosed";
         public string IndexOpenState = "IndexOpen";
 
@@ -195,14 +191,14 @@ namespace LightNovel
             //App.Current.Resources["AppForegroundBrush"] = ViewModel.Foreground;
         }
 
-        async Task RequestCommentsInViewAsync()
-        {
-            var lineNo = GetCurrentLineNo();
-            for (int idx = lineNo; idx < Math.Min(lineNo + 30, ViewModel.Contents.Count); idx++)
-            {
-                await (ViewModel.Contents[idx] as LineViewModel).LoadCommentsAsync();
-            }
-        }
+        //async Task RequestCommentsInViewAsync()
+        //{
+        //    var lineNo = GetCurrentLineNo();
+        //    for (int idx = lineNo; idx < Math.Min(lineNo + 30, ViewModel.Contents.Count); idx++)
+        //    {
+        //        await (ViewModel.Contents[idx] as LineViewModel).LoadCommentsAsync();
+        //    }
+        //}
 
         void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -767,7 +763,7 @@ namespace LightNovel
         private void Illustration_DownloadProgress(object sender, DownloadProgressEventArgs e)
         {
             var bitmap = sender as BitmapImage;
-            var progressBar = bitmap.GetValue(BitmapLoadingIndicatorProperty) as ProgressBar;
+            var progressBar = bitmap.GetValue(IllustrationView.BitmapLoadingIndicatorProperty) as ProgressBar;
             if (progressBar == null) return;
             progressBar.Value = e.Progress;
             if (e.Progress == 100)

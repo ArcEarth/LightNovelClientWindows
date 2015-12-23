@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Windows.Storage.Streams;
 using Windows.UI.StartScreen;
 using Windows.UI.Text;
 using Windows.UI.Xaml.Media;
@@ -1943,7 +1944,7 @@ namespace LightNovel.ViewModels
     public class LineViewModel : INotifyPropertyChanged
     {
         private CachedClient _client;
-        private Task<IEnumerable<string>> LoadCommentTask;
+        private IAsyncOperationWithProgress<IRandomAccessStream, int> _imageDownloadTask;
         private string _content;
         private bool _isLoading;
         private ObservableCollection<Comment> _comments;
@@ -1960,6 +1961,30 @@ namespace LightNovel.ViewModels
                     return LineContentType.ImageContent;
                 return LineContentType.TextContent;
             }
+        }
+
+        public IAsyncOperationWithProgress<IRandomAccessStream, int> ImageDownloadTask
+        {
+            get { return _imageDownloadTask; }
+            set
+            {
+                if (_imageDownloadTask != value)
+                    _imageDownloadTask = value;
+            }
+        }
+
+        public IAsyncOperationWithProgress<IRandomAccessStream, int> DownloadImageAsync()
+        {
+            if (_imageDownloadTask == null)
+            {
+                _imageDownloadTask = Client.GetIllustrationAsync(Content, ImageSize);
+                _imageDownloadTask.Completed = (info, p) =>
+                {
+                    // discard the task and stream for bitmap creation
+                    _imageDownloadTask = null;
+                };
+            }
+            return _imageDownloadTask;
         }
 
         public int No { get; set; }
@@ -2024,7 +2049,7 @@ namespace LightNovel.ViewModels
         }
         public int ImageWidth { get; set; }
         public int ImageHeight { get; set; }
-        public int ImageSize { get; set; }
+        public ulong ImageSize { get; set; }
 
         public void MarkAsCommented()
         {
@@ -2134,34 +2159,34 @@ namespace LightNovel.ViewModels
             }
         }
 
-        public async Task LoadCommentsAsync()
-        {
-            if (HasNoComment || String.IsNullOrEmpty(ParentChapterId) || IsLoading)
-                return;
-            if (LoadCommentTask == null && Comments.Count == 0)
-            {
-                string lineId = No.ToString();
-                Debug.WriteLine("Loading Comments : line_id = " + lineId + " ,chapter_id = " + ParentChapterId);
-                //LoadCommentTask = LightKindomHtmlClient.GetCommentsAsync(lineId, ParentChapterId);
-                LoadCommentTask = null;
-                IsLoading = true;
-                try
-                {
-                    var comments = await LoadCommentTask;
-                    foreach (var comment in comments)
-                    {
-                        Comments.Add(new Comment(comment));
-                    }
-                    LoadCommentTask = null;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine("Comments load failed : line_id = " + lineId + " ,chapter_id = " + ParentChapterId + "exception : " + ex.Message);
-                }
-                IsLoading = false;
-            }
-            return;
-        }
+        //public async Task LoadCommentsAsync()
+        //{
+        //    if (HasNoComment || String.IsNullOrEmpty(ParentChapterId) || IsLoading)
+        //        return;
+        //    if (LoadCommentTask == null && Comments.Count == 0)
+        //    {
+        //        string lineId = No.ToString();
+        //        Debug.WriteLine("Loading Comments : line_id = " + lineId + " ,chapter_id = " + ParentChapterId);
+        //        //LoadCommentTask = LightKindomHtmlClient.GetCommentsAsync(lineId, ParentChapterId);
+        //        LoadCommentTask = null;
+        //        IsLoading = true;
+        //        try
+        //        {
+        //            var comments = await LoadCommentTask;
+        //            foreach (var comment in comments)
+        //            {
+        //                Comments.Add(new Comment(comment));
+        //            }
+        //            LoadCommentTask = null;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.WriteLine("Comments load failed : line_id = " + lineId + " ,chapter_id = " + ParentChapterId + "exception : " + ex.Message);
+        //        }
+        //        IsLoading = false;
+        //    }
+        //    return;
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
 

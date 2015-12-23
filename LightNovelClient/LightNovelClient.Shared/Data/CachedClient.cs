@@ -204,15 +204,24 @@ namespace LightNovel.Data
                 int result = -1;
                 if (int.TryParse(folder.Name, out result))
                 {
-                    ClientsForSeries.Add(folder.Name,null);
+                    ClientsForSeries.Add(folder.Name, null);
                 }
             }
         }
 
-        private async Task<IRandomAccessStream> LoadIllustrationAsyncInternal(CancellationToken c, IProgress<int> progress, string img_url)
+        private async Task<IRandomAccessStream> LoadIllustrationAsyncInternal(CancellationToken c, IProgress<int> progress, string img_url, ulong expectedSize, bool forceRefresh)
         {
             var localName = System.IO.Path.GetFileName(img_url);
-            StorageFile file = await IllustrationFolder.TryGetItemAsync(localName) as StorageFile;
+            StorageFile file = null;
+            try
+            {
+                file = await IllustrationFolder.TryGetItemAsync(localName) as StorageFile;
+            }
+            catch (Exception excp)
+            {
+                Debug.Write("Error in aquire file" + excp.Message);
+            }
+
             IRandomAccessStream fileStream = null;
             progress.Report(0);
 
@@ -223,36 +232,106 @@ namespace LightNovel.Data
             {
                 var prop = await file.GetBasicPropertiesAsync();
                 // Image is corrupted
-                if (prop.Size <= 10)
-                    file = null; 
+                if (prop.Size < expectedSize && AppGlobal.NetworkState != AppGlobal.AppNetworkState.Unconnected)
+                    file = null;
             }
 
-            if (file == null)
+            if (file == null || forceRefresh)
             {
-                file = await IllustrationFolder.CreateFileAsync(localName,CreationCollisionOption.ReplaceExisting);
-
-                fileStream = await file.OpenAsync(FileAccessMode.ReadWrite);
-                using (var client = new HttpClient())
+                try
                 {
-                    if (c.IsCancellationRequested)
-                        return null;
-                    progress.Report(5);
-                    var rmuri = new Uri(img_url);
-                    var download = client.GetAsync(rmuri);
-                    download.Progress = (info, p) =>
+                    using (var client = new HttpClient())
                     {
-                        double percentage = (double)p.BytesReceived / (double)p.TotalBytesToReceive;
-                        progress.Report((int)(percentage * 80));
                         if (c.IsCancellationRequested)
-                            info.Cancel();
-                    };
-                    if (c.IsCancellationRequested)
-                        return null;
-                    var stream = await (await download).Content.ReadAsInputStreamAsync();
-                    progress.Report(85);
-                    await stream.AsStreamForRead().CopyToAsync(fileStream.AsStreamForWrite());
-                    progress.Report(95);
-                    await fileStream.FlushAsync();
+                            return null;
+                        progress.Report(5);
+                        var rmuri = new Uri(img_url);
+
+                        var download = client.GetAsync(rmuri);
+                        download.Progress = (info, p) =>
+                        {
+                            double percentage = 0;
+                            if (p.TotalBytesToReceive.HasValue)
+                                percentage = (double)p.BytesReceived / (double)p.TotalBytesToReceive.Value;
+                            else if (expectedSize > 0)
+                                percentage = (double)p.BytesReceived / (double)expectedSize;
+
+                            progress.Report(5 + (int)(percentage * 80));
+                            if (c.IsCancellationRequested)
+                                info.Cancel();
+                        };
+                        if (c.IsCancellationRequested)
+                            return null;
+
+                        progress.Report(85);
+
+                        await download;
+                        if (download.Status != AsyncStatus.Completed)
+                        {
+                            Debug.WriteLine("Corrupted Image Detect");
+                            return null;
+                        }
+
+                        var result = download.GetResults();
+                        ulong recieved = 0;
+                        bool succ = result.Content.TryComputeLength(out recieved);
+
+                        if (!succ || recieved < expectedSize && expectedSize != 0)
+                        {
+                            Debug.WriteLine("Corrupted Image Detect");
+                        }
+
+                        try
+                        {
+                            if (file == null)
+                                file = await IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.ReplaceExisting);
+
+                            fileStream = await file.OpenAsync(FileAccessMode.ReadWrite);
+                        }
+                        catch (Exception exception)
+                        {
+                            if (file == null)
+                            {
+                                try
+                                {
+                                    file = await IllustrationFolder.TryGetItemAsync(localName) as StorageFile;
+                                    if (file != null)
+                                        await file.DeleteAsync();
+                                    file = await IllustrationFolder.CreateFileAsync(localName, CreationCollisionOption.ReplaceExisting);
+                                }
+                                catch (Exception)
+                                {
+                                    file = null;
+                                }
+                            }
+                            fileStream = null;
+                        }
+
+                        if (file != null && fileStream != null)
+                        {
+                            await result.Content.WriteToStreamAsync(fileStream);
+
+                            progress.Report(95);
+                            await fileStream.FlushAsync();
+                            fileStream.Dispose();
+
+                            // Reopen the file so that we don't use read/write to lock the file
+                            fileStream = await file.OpenAsync(FileAccessMode.Read);
+                            return fileStream;
+                        }
+                        else // Issues in file access
+                        {
+                            Debug.WriteLine("Issue in file access");
+                            var memeryStream = new InMemoryRandomAccessStream();
+                            await result.Content.WriteToStreamAsync(memeryStream);
+                            return memeryStream;
+                        }
+                    }
+                }
+                catch (Exception excp)
+                {
+                    Debug.Write("Error in caching");
+                    throw excp;
                 }
             }
             else
@@ -266,9 +345,9 @@ namespace LightNovel.Data
             return fileStream;
         }
 
-        public IAsyncOperationWithProgress<IRandomAccessStream,int> GetIllustrationAsync(string img_url)
+        public IAsyncOperationWithProgress<IRandomAccessStream, int> GetIllustrationAsync(string img_url, ulong expectedSize, bool forceRefresh = false)
         {
-            return AsyncInfo.Run<IRandomAccessStream, int>((c,p)=> LoadIllustrationAsyncInternal(c,p,img_url));
+            return AsyncInfo.Run<IRandomAccessStream, int>((c, p) => Task.Run(() => LoadIllustrationAsyncInternal(c, p, img_url, expectedSize, forceRefresh)));
         }
 
         public Uri GetIllustrationCachedUri(string img_url)
@@ -426,7 +505,7 @@ namespace LightNovel.Data
                 var prop = await file.GetBasicPropertiesAsync();
 
                 if (prop.Size > 0 &&
-                    (!expires.HasValue || 
+                    (!expires.HasValue ||
                     prop.DateModified + expires.Value > DateTime.Now))
                 {
                     result = await GetItemFromFileAsync<T>(file);
@@ -455,7 +534,8 @@ namespace LightNovel.Data
 
             if (Index == null || forceRefresh)
             {
-                _indexUpdateTask = GetAsync(BookFolder, SeriesMetaFileName, () => LightKindomHtmlClient.GetSeriesAsync(_seriesId), TimeSpan.FromDays(7), forceRefresh).ContinueWith(ts => {
+                _indexUpdateTask = GetAsync(BookFolder, SeriesMetaFileName, () => LightKindomHtmlClient.GetSeriesAsync(_seriesId), TimeSpan.FromDays(7), forceRefresh).ContinueWith(ts =>
+                {
                     Index = ts.Result;
                     _indexUpdateTask = null;
                     return ts.Result;
@@ -510,7 +590,7 @@ namespace LightNovel.Data
 
             var task = GetAsync<Chapter>(
                 ChaptersFolder,
-                string.Format(ChapterFileName,chptId), 
+                string.Format(ChapterFileName, chptId),
                 () => LightKindomHtmlClient.GetChapterAsync(chptId, volId, serId),
                 null, forceRefresh);
 
@@ -521,7 +601,7 @@ namespace LightNovel.Data
 
         public static async Task<List<Descriptor>> GetSeriesIndexAsync(bool forceRefresh = false)
         {
-            var index = await GetAsync(CacheFolder,"series_index.json", () => LightKindomHtmlClient.GetSeriesIndexAsync(), TimeSpan.FromDays(1));
+            var index = await GetAsync(CacheFolder, "series_index.json", () => LightKindomHtmlClient.GetSeriesIndexAsync(), TimeSpan.FromDays(1));
             if (index.Count == 0)
             {
                 index = await GetAsync(CacheFolder, "series_index.json", () => LightKindomHtmlClient.GetSeriesIndexAsync(), TimeSpan.FromDays(1), true);
@@ -563,7 +643,7 @@ namespace LightNovel.Data
             bool IsSigninError = false;
             try
             {
-                var fav = await GetAsync(CacheFolder,"user_fav", LightKindomHtmlClient.GetUserFavoriteVolumesAsync, TimeSpan.FromDays(1), foreceRefresh);
+                var fav = await GetAsync(CacheFolder, "user_fav", LightKindomHtmlClient.GetUserFavoriteVolumesAsync, TimeSpan.FromDays(1), foreceRefresh);
                 return fav;
             }
             catch (NotSignedInException)
@@ -578,7 +658,7 @@ namespace LightNovel.Data
             {
                 if (await AppGlobal.SignInAutomaticllyAsync(true))
                 {
-                    return await GetAsync(CacheFolder,"user_fav.json", LightKindomHtmlClient.GetUserFavoriteVolumesAsync, TimeSpan.FromDays(1), true);
+                    return await GetAsync(CacheFolder, "user_fav.json", LightKindomHtmlClient.GetUserFavoriteVolumesAsync, TimeSpan.FromDays(1), true);
                 }
             }
             return null;

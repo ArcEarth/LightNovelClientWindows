@@ -1,6 +1,6 @@
 ﻿using LightNovel.Common;
 using LightNovel.Controls;
-using LightNovel.Service;
+using LightNovel.Data;
 using LightNovel.ViewModels;
 using System;
 using System.Collections.Generic;

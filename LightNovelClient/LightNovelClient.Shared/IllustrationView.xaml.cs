@@ -1,4 +1,5 @@
 ﻿using LightNovel.Common;
+using LightNovel.Controls;
 using LightNovel.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -25,52 +26,148 @@ namespace LightNovel
 {
 	public sealed partial class IllustrationView : Grid
 	{
+        static string _ImageLoadingTextPlaceholder = "Image Loading ...";
+        static string _ImageTapToLoadPlaceholder = "Tap to load Illustration";
+        static string _ImageLoadFailedPlaceholder = "Illustration failed to load. Tap to retry.";
+
+        static public string ImageLoadingTextPlaceholder { get { return _ImageLoadingTextPlaceholder; } set { _ImageLoadingTextPlaceholder = value; } }
+        static public string ImageTapToLoadPlaceholder { get { return _ImageTapToLoadPlaceholder; } set { _ImageTapToLoadPlaceholder = value; } }
+        static public string ImageLoadFailedPlaceholder { get { return _ImageLoadFailedPlaceholder; } set { _ImageLoadFailedPlaceholder = value; } }
+
+        public static readonly DependencyProperty BitmapLoadingIndicatorProperty =
+			DependencyProperty.Register("BitmapImageLoadingIndicator", typeof(ProgressBar),
+			typeof(BitmapImage), new PropertyMetadata(null, null));
+
 		public IllustrationView()
 		{
 			this.InitializeComponent();
 		}
 
-		public void ClearContent(string textPlaceholder)
+		public void ClearContent()
 		{
-			TextContent.Text = textPlaceholder;
-			ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
-			ImagePlaceHolder.Opacity = 1;
-			ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-			TextContent.TextAlignment = TextAlignment.Center;
-			TextContent.Opacity = 1;
-			ImageContent.Opacity = 0;
-			ProgressBar.Opacity = 1;
-		}
+            ProgressBar.Value = 0;
+            if (ImageContent.Source != null)
+            {
+                var bitmap = ImageContent.Source as BitmapImage;
+                bitmap.DownloadProgress -= Image_DownloadProgress;
+            }
+            ImageContent.DataContext = null;
+            ImageContent.ClearValue(Image.SourceProperty);
+            ImageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            ImageContent.Height = 0;
+            TextContent.ClearValue(TextBlock.TextProperty);
+        }
 
-		public void LoadIllustrationLine(LineViewModel line)
+        public void ResetPhase0(LineViewModel line)
+        {
+            var iv = LayoutRoot;
+            ImageContent.Opacity = 0;
+            ImageContent.Height = double.NaN;
+            CommentIndicator.Opacity = 0;
+            ProgressBar.Opacity = 0;
+            TextContent.Opacity = 1;
+            if (ImageContent.Source != null)
+            {
+                var bitmap = ImageContent.Source as BitmapImage;
+                bitmap.DownloadProgress -= Image_DownloadProgress;
+                ImageContent.ClearValue(Image.SourceProperty);
+            }
+
+            if (line.IsImage)
+            {
+                if (!AppGlobal.ShouldAutoLoadImage)
+                    TextContent.Text = ImageTapToLoadPlaceholder;
+                else
+                    TextContent.Text = ImageLoadingTextPlaceholder;
+
+                double aspect = (double)line.ImageHeight / (double)line.ImageWidth;
+                double ih = iv.Width * aspect;
+
+                if (ih <= 1.0)
+                    ih = 440;
+
+                ImageContent.Height = ih;
+                ImagePlaceHolder.Height = ih;
+
+                ProgressBar.Visibility = Visibility.Visible;
+                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                TextContent.TextAlignment = TextAlignment.Center;
+            }
+            else
+            {
+                TextContent.Text = "　" + line.Content;
+                //textContent.Height = double.NaN;
+                TextContent.TextAlignment = TextAlignment.Left;
+
+                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                ImageContent.DataContext = null;
+            }
+        }
+
+		public async Task LoadIllustrationLine(LineViewModel line)
 		{
-			var bitMap = new BitmapImage(line.ImageUri);
-			DataContext = line;
+			var bitMap = new BitmapImage();
+			if (line.ImageHeight > 1.0)
+			{
+				bitMap.DecodePixelHeight = line.ImageHeight;
+				bitMap.DecodePixelWidth = line.ImageWidth;
+				bitMap.DecodePixelType = DecodePixelType.Physical;
+			}
+
+			ImageContent.DataContext = line;
+
+			bitMap.SetValue(BitmapLoadingIndicatorProperty, ProgressBar);
 			bitMap.DownloadProgress += Image_DownloadProgress;
-			ImageContent.ImageOpened += imageContent_ImageOpened;
+
+			CommentIndicator.Opacity = line.HasComments ? 1 : 0;
+
+			ImageContent.ImageOpened += ImageContent_ImageOpened;
+			ImageContent.ImageFailed += ImageContent_Failed;
+
+			var download = line.DownloadImageAsync();
+            if (download.Status != AsyncStatus.Started)
+            {
+                download.Progress = (info, p) =>
+                {
+                    ProgressBar.Value = p;
+                };
+            }
+
+			var stream = await download;
+            var setTask = bitMap.SetSourceAsync(stream);
 			ImageContent.Source = bitMap;
+			await setTask;
 		}
 
-		void imageContent_ImageOpened(object sender, RoutedEventArgs e)
+        public async void ImageContent_ImageOpened(object sender, RoutedEventArgs e)
 		{
-			ImageContent.ImageOpened -= imageContent_ImageOpened;
+			ImageContent.ImageOpened -= ImageContent_ImageOpened;
 			ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-			ImageContent.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
+			await ImageContent.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 		}
 
 		private async void ImageContent_Failed(object sender, ExceptionRoutedEventArgs e)
 		{
-			await RefreshCruptedImage();
-		}
+            ProgressBar.Value = 0;
+            TextContent.Text = ImageLoadFailedPlaceholder;
+            //await RefreshCruptedImage();
+        }
 
 		private void Image_DownloadProgress(object sender, DownloadProgressEventArgs e)
 		{
 			var bitmap = sender as BitmapImage;
+			var ProgressBar = bitmap.GetValue(BitmapLoadingIndicatorProperty) as ProgressBar;
+			if (ProgressBar == null) return;
 			ProgressBar.Value = e.Progress;
 			if (e.Progress == 100)
 			{
+				var iv = ProgressBar.GetVisualParent();
+				if (iv == null) return;
 				TextContent.Opacity = 0;
 				ProgressBar.Opacity = 0;
+				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
 		}
 
@@ -83,30 +180,28 @@ namespace LightNovel
 			var bitmap = ImageContent.Source as BitmapImage;
 			if (bitmap == null) return;
 
-			var uri = bitmap.UriSource.AbsoluteUri;
-			if (uri.StartsWith("ms-appdata"))
-			{
-				var remoteUri = lvm.Content;
+            if (lvm.IsImageCached)
+            {
+                var remoteUri = lvm.Content;
 
-				var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-				TextContent.Text = resourceLoader.GetString("ImageLoadingPlaceholderText"); ;
-				ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				ImagePlaceHolder.Opacity = 1;
-				ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				TextContent.TextAlignment = TextAlignment.Center;
-				TextContent.Opacity = 1;
-				ImageContent.Opacity = 0;
-				ProgressBar.Opacity = 1;
+                TextContent.Text = ImageLoadingTextPlaceholder;
+                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ImagePlaceHolder.Opacity = 1;
+                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                TextContent.TextAlignment = TextAlignment.Center;
+                TextContent.Opacity = 1;
+                ImageContent.Opacity = 0;
+                ProgressBar.Opacity = 1;
 
-				ImageContent.ImageOpened -= imageContent_ImageOpened;
-				bitmap.DownloadProgress -= Image_DownloadProgress;
+                ImageContent.ImageOpened -= ImageContent_ImageOpened;
+                bitmap.DownloadProgress -= Image_DownloadProgress;
 
-				bitmap.UriSource = new Uri(remoteUri);
-				bitmap.DownloadProgress += Image_DownloadProgress;
-				ImageContent.ImageOpened += imageContent_ImageOpened;
+                bitmap.UriSource = new Uri(remoteUri);
+                bitmap.DownloadProgress += Image_DownloadProgress;
+                ImageContent.ImageOpened += ImageContent_ImageOpened;
 
-				//await CachedClient.DeleteIllustationAsync(remoteUri);
-			} // else is Network Issue
-		}
+                await lvm.Client.DeleteIllustationAsync(remoteUri);
+            } // else is Network Issue
+        }
 	}
 }

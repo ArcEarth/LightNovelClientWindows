@@ -27,8 +27,10 @@ namespace LightNovel
             IsHistoryListChanged = true;
             SecondaryViews = new ObservableCollection<ViewLifetimeControl>();
             LightKindomHtmlClient.AccountUserAgent = Settings.DeviceUserAgent;
+            NetworkInformation.NetworkStatusChanged += NetworkInformation_NetworkStatusChanged;
+            RefreshNetworkState();
+            RefreshAutoLoadPolicy();
         }
-
 
         public static ApplicationSettings Settings { get; }
         public static UserInfo User;
@@ -351,8 +353,25 @@ namespace LightNovel
                 _shouldAutoImage = NetworkState == AppNetworkState.Unrestricted;
         }
 
+        static public AppNetworkState GetCurrentNetworkState()
+        {
+            ConnectionProfile connectionProfile = NetworkInformation.GetInternetConnectionProfile();
+            if (connectionProfile == null || connectionProfile.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
+                return AppNetworkState.Unconnected;
+            if (connectionProfile.GetConnectionCost().NetworkCostType == NetworkCostType.Unrestricted)
+                return AppNetworkState.Unrestricted;
+            else
+                return AppNetworkState.Metered;
+        }
+
+        public static void RefreshNetworkState()
+        {
+            _networkState = GetCurrentNetworkState();
+        }
+
         internal static void NetworkInformation_NetworkStatusChanged(object sender)
         {
+            RefreshNetworkState();
             RefreshAutoLoadPolicy();
         }
 
@@ -363,17 +382,12 @@ namespace LightNovel
             Unrestricted = 2
         };
 
+        static AppNetworkState _networkState;
         public static AppNetworkState NetworkState
         {
             get
             {
-                ConnectionProfile connectionProfile = NetworkInformation.GetInternetConnectionProfile();
-                if (connectionProfile == null || connectionProfile.GetNetworkConnectivityLevel() != NetworkConnectivityLevel.InternetAccess)
-                    return AppNetworkState.Unconnected;
-                if (connectionProfile.GetConnectionCost().NetworkCostType == NetworkCostType.Unrestricted)
-                    return AppNetworkState.Unrestricted;
-                else
-                    return AppNetworkState.Metered;
+                return _networkState;
             }
         }
 

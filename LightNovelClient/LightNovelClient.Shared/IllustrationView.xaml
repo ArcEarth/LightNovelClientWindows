@@ -5,46 +5,43 @@
       xmlns:local="using:LightNovel"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Name="LayoutRoot"
-      Background="Black"
-      d:DesignHeight="350"
+      d:DesignHeight="450"
       d:DesignWidth="400"
       mc:Ignorable="d">
     <ProgressBar x:Name="ProgressBar"
-                 Margin="60,10"
-                 HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
-                 Background="{ThemeResource AppAccentBrushLight}"
-                 Foreground="{ThemeResource AppAccentBrush}"
-                 Maximum="100"
-                 Minimum="0"
-                 Value="0" />
+                             Margin="20,5"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Background="{ThemeResource AppAccentBrushLight}"
+                             Foreground="{ThemeResource AppAccentBrush}"
+                             Maximum="100"
+                             Minimum="0"
+                             Value="0" 
+                             />
+    
     <Path x:Name="ImagePlaceHolder"
-          Margin="60,10"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "
-          Fill="{Binding ElementName=LayoutRoot,
-                         Path=Background}"
-          Stretch="Fill" />
+                      Margin="20,5" 
+                      HorizontalAlignment="Stretch"
+                      Stretch="Uniform"
+                      Height="440" 
+                      Fill="{ThemeResource ContentBackgroundBrush}" 
+                      Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "></Path>
 
     <Image x:Name="ImageContent"
-           Margin="0,5"
-           HorizontalAlignment="Stretch"
-           VerticalAlignment="Center"
-           ImageFailed="ImageContent_Failed"
-           Stretch="Uniform" />
+                       Margin="0,5"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       Stretch="Uniform" />
 
     <TextBlock x:Name="TextContent"
-               Margin="12,2"
-               HorizontalAlignment="Stretch"
-               VerticalAlignment="Center"
-               FontFamily="{Binding FontFamily,
-                                    ElementName=ContentListView}"
-               FontSize="{Binding FontSize,
-                                  ElementName=ContentListView}"
-               FontWeight="SemiLight"
-               Foreground="{Binding Foreground,
-                                    ElementName=ContentListView}"
-               TextAlignment="Left"
-               TextWrapping="Wrap" />
+                           Margin="12,2,6,2"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           TextAlignment="Left"
+                           TextWrapping="Wrap" />
+    <Rectangle x:Name="CommentIndicator"
+                           Width="5"
+                           Margin="0,5"
+                           HorizontalAlignment="Left"
+                           Fill="{ThemeResource AppAccentBrush}" />
 </Grid>
