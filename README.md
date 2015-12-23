@@ -10,9 +10,9 @@ Please support them (By clicking the ads in their webpage) too.
 
 ## Supported Platform
 * Windows 10 (UWP x86,x64,ARM)
-* Windows 8.1 ([Windows Store](http://apps.microsoft.com/windows/en-ca/app/lightnovel/f685715a-305d-4584-ae00-4ff774710331))
-* Windows Phone 8.1 (Windows Runtime Store App, Coming soon)
-* Windows Phone 8.0 (Silverlight App, Coming soon)
+* Windows 8.1 (Deprecated,[Windows Store](http://apps.microsoft.com/windows/en-ca/app/lightnovel/f685715a-305d-4584-ae00-4ff774710331))
+* Windows Phone 8.1 (Windows Runtime Store App, Deprecated)
+* Windows Phone 8.0 (Silverlight App, Deprecated)
 
 * The UI and functions varies in Platform, WP8 Silverlight Client will not receive further update than critical bug-fixes.
 
