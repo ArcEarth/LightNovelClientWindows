@@ -1,7 +1,6 @@
 ﻿using LightNovel.Common;
-using LightNovel.Service;
+using LightNovel.Data;
 using LightNovel.ViewModels;
-using Q42.WinRT.Data;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -19,6 +18,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Notifications;
 using NotificationsExtensions.TileContent;
 using Windows.UI.Xaml.Input;
+using Windows.ApplicationModel.Core;
 
 namespace LightNovel
 {
@@ -199,15 +199,17 @@ namespace LightNovel
                 Grid.SetRow(ToolBar, 0);
                 ToolBar.HorizontalAlignment = HorizontalAlignment.Right;
                 ToolBar.Background = (SolidColorBrush)App.Current.Resources["TransparentBrush"];
-                
+
                 // Move the tool bar since the close/minumize button is dismissed
-                if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Touch)
+                var titleBar = CoreApplication.GetCurrentView().TitleBar;
+                
+                if (!titleBar.IsVisible || UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Touch)
                 {
-                    ToolBar.Padding = new Thickness(0);
+                    ToolBar.Margin = new Thickness(0, -5, 0, 0);
                 }
                 else
                 {
-                    ToolBar.Padding = new Thickness(0, 0, 170, 0);
+                    ToolBar.Margin = new Thickness(0, -5, titleBar.SystemOverlayRightInset, 0);
                 }
                 Window.Current.SetTitleBar(TooBarBackground);
             }
@@ -222,7 +224,7 @@ namespace LightNovel
                 SwitchGridViewOrientation(FavoriteSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical);
                 SwitchGridViewOrientation(RecentReadingSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical);
                 SwitchGridViewOrientation(RecommandSection.GetFirstDescendantOfType<GridView>(), Orientation.Vertical, 6);
-
+                
                 Window.Current.SetTitleBar(null);
                 Grid.SetRow(ToolBar,2);
                 ToolBar.Background = (SolidColorBrush)App.Current.Resources["AppAccentBrush"];
@@ -405,7 +407,7 @@ namespace LightNovel
         private async void ClearCacheButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.IsLoading = true;
-            await DataCache.ClearAll();
+            //await DataCache.ClearAll();
             ViewModel.IsLoading = false;
             //MessageBox.Show("Web data cache cleared.");
         }
@@ -719,7 +721,7 @@ namespace LightNovel
         private async Task RemoveRecentItem(HistoryItemViewModel hvm)
         {
             ViewModel.IsLoading = true;
-            await CachedClient.ClearSerialCache(hvm.Position.SeriesId);
+            await CachedClient.DeleteSeries(hvm.Position.SeriesId);
             ViewModel.RecentSection.Remove(hvm);
             var recentItem = AppGlobal.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
             if (recentItem != null)

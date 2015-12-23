@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
-namespace LightNovel.Service
+namespace LightNovel.Data
 {
     internal static class HtmlNodeExtension
     {

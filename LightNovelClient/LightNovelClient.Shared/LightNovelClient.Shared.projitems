@@ -32,7 +32,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Common\AlphaKeyGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ApplicationSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\Converters.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common\CachedClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ICollectionViewEx.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\ListCollectionView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\UserInfo.cs" />
@@ -50,6 +49,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Controls\WrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CachedClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtendedSplash.xaml.cs">
       <DependentUpon>ExtendedSplash.xaml</DependentUpon>
     </Compile>
@@ -65,9 +65,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ReadingPage.Shared.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SearchResultsPage.xaml.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SeriesIndexPage.xaml.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\HtmlNodeExtension.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomHtmlClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Service\LightKindomModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\HtmlNodeExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\LightKindomHtmlClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\LightKindomModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SettingSection.xaml.cs">
       <DependentUpon>SettingSection.xaml</DependentUpon>
     </Compile>

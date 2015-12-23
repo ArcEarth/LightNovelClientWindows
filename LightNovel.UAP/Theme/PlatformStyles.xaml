@@ -15,8 +15,8 @@
     <Color x:Key="AppAccentColorLight">#FFE5FA78</Color>-->
 
     <x:String x:Key="StoreReviewLink">ms-windows-store:reviewapp?appid=c0d0077f-5426-47ee-bc97-f4c48d277095</x:String>
-    <x:Double x:Key="TitleBarHeight">48</x:Double>
-    <GridLength x:Key="TitleBarHeightGridLength">48</GridLength>
+    <x:Double x:Key="TitleBarHeight">40</x:Double>
+    <GridLength x:Key="TitleBarHeightGridLength">40</GridLength>
     <x:Double x:Key="PosterWidth">620</x:Double>
 
 

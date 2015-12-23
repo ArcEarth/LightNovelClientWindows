@@ -105,7 +105,7 @@ namespace LightNovel
 				bitmap.DownloadProgress += Image_DownloadProgress;
 				ImageContent.ImageOpened += imageContent_ImageOpened;
 
-				await CachedClient.DeleteIllustationAsync(remoteUri);
+				//await CachedClient.DeleteIllustationAsync(remoteUri);
 			} // else is Network Issue
 		}
 	}

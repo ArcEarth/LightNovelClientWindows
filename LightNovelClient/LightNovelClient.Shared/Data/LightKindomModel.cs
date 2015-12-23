@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace LightNovel.Service
+namespace LightNovel.Data
 {
     public class Descriptor
     {
@@ -175,6 +175,7 @@ namespace LightNovel.Service
         public LineContentType ContentType { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public int Size { get; set; }
     }
 
     public struct CommentData

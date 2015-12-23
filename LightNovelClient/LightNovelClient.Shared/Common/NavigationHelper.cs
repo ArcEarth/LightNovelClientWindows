@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -141,6 +142,22 @@ namespace LightNovel.Common
             set
             {
                 _goBackCommand = value;
+            }
+        }
+
+        public bool IsPhone
+        {
+            get
+            {
+                return (ApiInformation.IsApiContractPresent("Windows.Phone.PhoneContract", 1, 0));
+            }
+        }
+
+        public bool HasHardwareBackButton
+        {
+            get
+            {
+                return ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons");
             }
         }
         /// <summary>

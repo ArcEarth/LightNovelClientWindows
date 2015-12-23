@@ -53,7 +53,10 @@
                 <Path x:Name="ImagePlaceHolder"
                       Margin="20,5" Visibility="Collapsed" 
                       HorizontalAlignment="Stretch"
-                      Height="440" Fill="{ThemeResource ContentBackgroundBrush}" Stretch="Fill"  Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "></Path>
+                      Stretch="Uniform"
+                      Height="440" 
+                      Fill="{ThemeResource ContentBackgroundBrush}" 
+                      Data="M 19.324219 13.378906 L 19.324219 62.15625 L 59.089844 62.15625 L 59.089844 13.378906 L 19.324219 13.378906 z M 22.300781 15.90625 L 56.300781 15.90625 L 56.300781 59.90625 L 22.300781 59.90625 L 22.300781 15.90625 z M 25.300781 18.90625 L 25.300781 56.90625 L 53.300781 56.90625 L 53.300781 18.90625 L 25.300781 18.90625 z M 27.300781 20.90625 L 34.966797 20.90625 C 35.096997 21.41225 35.384766 22.277419 35.384766 22.824219 C 35.384766 26.322019 32.548581 29.15625 29.050781 29.15625 C 28.503981 29.15625 27.806781 29.03645 27.300781 28.90625 L 27.300781 20.90625 z M 43.216797 38.740234 L 47.966797 43.490234 L 51.300781 39.90625 L 51.300781 54.90625 L 27.300781 54.90625 L 43.216797 38.740234 z "></Path>
 
                 <Image x:Name="ImageContent"
                        Margin="0,5"
@@ -894,10 +897,6 @@
                         </ObjectAnimationUsingKeyFrames>
                         <!--<ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Foreground).(SolidColorBrush.Color)" To="{ThemeResource AppAccentColor}"/>
                         <ColorAnimation Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(UIElement.Background).(SolidColorBrush.Color)" To="Transparent"/>-->
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalNextButton" Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="0,0,0,0" />
-                        </ObjectAnimationUsingKeyFrames>
-
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PageBottomCommandBar" Storyboard.TargetProperty="(AppBar.ClosedDisplayMode)">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Minimal" />
                         </ObjectAnimationUsingKeyFrames>
@@ -1189,16 +1188,15 @@
                 <Grid x:Name="ContentRegion"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
-                      Margin="0,0,0,48"
-              KeyDown="ContentRegion_KeyDown">
+                      Margin="0,0,0,48">
                     <Grid.RenderTransform>
                         <TranslateTransform x:Name="ContentPanelTranslation" X="0" Y="0" />
                     </Grid.RenderTransform>
                     <ScrollViewer x:Name="ContentScrollViewer"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Stretch"
+                          KeyDown="ScrollViewer_KeyDownBypass"
                           HorizontalSnapPointsType="Mandatory"
-                          KeyDown="ContentRegion_KeyDown"
                           Style="{StaticResource HorizontalScrollViewerStyle}"
                           VerticalSnapPointsType="Mandatory"
                           ViewChanged="ContentScrollViewer_ViewChanged">
@@ -1234,39 +1232,6 @@
                         </controls:RichTextColumns>
                     </ScrollViewer>
 
-                    <Rectangle x:Name="SlideHandle"
-                   Grid.Row="1"
-                   MinWidth="30"
-                   Margin="0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Stretch"
-                   Fill="Transparent"
-                   ManipulationDelta="SlideHandle_ManipulationDelta"
-                   ManipulationMode="TranslateX"
-                   Opacity="0"
-                   Stroke="Transparent"
-                   StrokeThickness="0"
-                   Tapped="IndexButton_Click" />
-
-                    <Button x:Name="HorizontalPrevButton"
-                    Width="30"
-                    Height="80"
-                    Click="PrevChapterButton_Click"
-                    Foreground="{Binding Foreground}"
-                    Opacity="0.5"
-                    Style="{StaticResource LeftArrowIconRectBackground}">
-                        Prev Chapter
-                    </Button>
-                    <Button x:Name="HorizontalNextButton"
-                    Width="30"
-                    Height="80"
-                    Click="NextChapterButton_Click"
-                    Foreground="{Binding Foreground}"
-                    Opacity="0.5"
-                    Style="{StaticResource RightArrowIconRectBackground}">
-                        Next Chapter
-                    </Button>
-
                     <ListView x:Name="ContentListView"
                       Grid.ColumnSpan="2"
                         Visibility="Collapsed"
@@ -1284,6 +1249,7 @@
                       IsItemClickEnabled="True"
                       IsRightTapEnabled="False"
                       IsSwipeEnabled="False"
+                      KeyDown="ContentRegion_KeyDown"
                       ItemClick="ContentListView_ItemClick"
                       ItemTemplate="{StaticResource LineViewCCGTemplate}"
                       ItemsSource="{Binding Contents}"
@@ -1374,7 +1340,7 @@
                             <Button Name="VerticalNextButton"
                             Height="60"
                             MinHeight="30"
-                            Margin="0,0,0,40"
+                            Margin="0,0,0,0"
                             HorizontalAlignment="Left"
                             Background="{ThemeResource AppAccentBrush}"
                             BorderBrush="Transparent"
@@ -1469,6 +1435,39 @@
                         </ListView.ItemContainerStyle>
                     </ListView>
 
+                    <Rectangle x:Name="SlideHandle"
+                   Grid.Row="1"
+                   MinWidth="30"
+                   Margin="0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Stretch"
+                   Fill="Transparent"
+                   ManipulationDelta="SlideHandle_ManipulationDelta"
+                   ManipulationMode="TranslateX"
+                   Opacity="0"
+                   Stroke="Transparent"
+                   StrokeThickness="0"
+                   Tapped="IndexButton_Click" />
+
+                    <Button x:Name="HorizontalPrevButton"
+                    Width="30"
+                    Height="80"
+                    Click="PrevChapterButton_Click"
+                    Foreground="{Binding Foreground}"
+                    Opacity="0.5"
+                    Style="{StaticResource LeftArrowIconRectBackground}">
+                        Prev Chapter
+                    </Button>
+                    <Button x:Name="HorizontalNextButton"
+                    Width="30"
+                    Height="80"
+                    Click="NextChapterButton_Click"
+                    Foreground="{Binding Foreground}"
+                    Opacity="0.5"
+                    Style="{StaticResource RightArrowIconRectBackground}">
+                        Next Chapter
+                    </Button>
+
                     <ProgressRing x:Name="LoadingIndicator"
                       Width="60"
                       Height="60"
@@ -1514,7 +1513,10 @@
 
             <Rectangle x:Name="TitlePanelBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="4" Grid.Column="0" Grid.Row="0" Fill="Transparent" Stroke="Transparent"/>
 
-            <Button Style="{ThemeResource NavigationBackButtonNormalStyle}"                    AutomationProperties.AutomationId="BackButton"
+            <Button x:Name="PageBackButton"
+                    Visibility="{Binding NavigationHelper.HasHardwareBackButton,ElementName=pageRoot,Converter={StaticResource BooleanToVisibilityReverseConverter}}"
+                    Style="{ThemeResource NavigationBackButtonNormalStyle}"                    
+                    AutomationProperties.AutomationId="BackButton"
                     AutomationProperties.ItemType="Navigation Button"
                     AutomationProperties.Name="Back"
                     Command="{Binding NavigationHelper.GoBackCommand,
@@ -1533,7 +1535,7 @@
                                 ToolTipService.ToolTip="Open/Close the index panel">
             </AppBarToggleButton>
 
-            <Button x:Name="PageIndicator" Style="{StaticResource PureButtonStyle}" Grid.Column="3"  Margin="10,5,145,5" Padding="0">
+            <Button x:Name="PageIndicator" Style="{StaticResource PureButtonStyle}" Grid.Column="3" VerticalAlignment="Center" Margin="10,0,145,0" Padding="0">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock MinWidth="40"
                          Margin="0,0,0,0"
@@ -1554,11 +1556,13 @@
                            TextAlignment="Center" />
                 </StackPanel>
                 <Button.Flyout>
-                    <Flyout>
-                        <Slider Width="200" Orientation="Horizontal" Minimum="1" Maximum="{Binding PagesCount}" LargeChange="5" SmallChange="1" Value="{Binding Path=PageNo,
-                                        Converter={StaticResource PlusConverter},
-                                        ConverterParameter=1,
-                                        Mode=TwoWay}"></Slider>
+                    <Flyout x:Name="PageIndicatorFlyout" Opening="PageIndicatorFlyout_Opening">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="10,4,10,0"></Setter>
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <Slider x:Name="PageSlider" VerticalAlignment="Center" Width="200" Orientation="Horizontal" Minimum="1" Maximum="{Binding PagesCount}" LargeChange="5" SmallChange="1" ValueChanged="PageSlider_ValueChanged" SnapsTo="Ticks" TickFrequency="1" TickPlacement="Inline"></Slider>
                     </Flyout>
                 </Button.Flyout>
             </Button>

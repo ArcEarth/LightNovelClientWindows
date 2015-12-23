@@ -1,5 +1,5 @@
 ﻿using LightNovel.Common;
-using LightNovel.Service;
+using LightNovel.Data;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

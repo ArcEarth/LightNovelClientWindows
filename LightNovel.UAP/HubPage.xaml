@@ -658,6 +658,8 @@
                     Background="{ThemeResource AppAccentBrush}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    Margin="0,-5,0,0"
                     Foreground="{ThemeResource AppBackgroundBrush}"
                     IsOpen="False">
             <CommandBar.PrimaryCommands>
@@ -670,6 +672,14 @@
                 <AppBarButton Icon="Find" Label="Search" x:Uid="SearchButton">
                     <AppBarButton.Flyout>
                         <Flyout Placement="Right">
+                            <!--<Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="Padding" Value="0"></Setter>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"></Setter>
+                                    <Setter Property="Margin" Value="0"></Setter>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>-->
                             <AutoSuggestBox x:Uid="HubSearchBox"
                                     RelativePanel.LeftOf="AccountButton"
                                     RelativePanel.AlignVerticalCenterWithPanel="True"

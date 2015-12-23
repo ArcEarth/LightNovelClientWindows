@@ -1,6 +1,6 @@
 ﻿using LightNovel.Common;
 using LightNovel.Controls;
-using LightNovel.Service;
+using LightNovel.Data;
 using LightNovel.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -75,15 +75,20 @@ namespace LightNovel
             {
                 this.RequestedTheme = AppGlobal.Settings.BackgroundTheme;
             }
+            pageSliderFlag = false;
             this.InitializeComponent();
+            //PageSlider.DataContext = this.ViewModel;
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
             this.navigationHelper.GoBackCommand = new LightNovel.Common.RelayCommand(() => this.GoBack(), () => this.CanGoBack());
             RegisterForShare();
             ScrollSwitch = false;
+            pageSliderFlag = true;
             DisableAnimationScrollingFlag = true;
             ContentRegion.SizeChanged += ContentRegion_SizeChanged;
+            //var command = new WinRTXamlToolkit.Input.KeyCommand();
+            //command. = new WinRTXamlToolkit.Input.KeyGesture();
             //IndexRegion.SizeChanged += IndexRegion_SizeChanged;
             ContentColumns.ColumnsChanged += ContentColumns_LayoutUpdated;
             ContentScrollViewer.LayoutUpdated += ScrollToPage_ContentColumns_LayoutUpdated;
@@ -94,7 +99,6 @@ namespace LightNovel
             var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             ImageLoadingTextPlaceholder = resourceLoader.GetString("ImageLoadingPlaceholderText");
             ImageTapToLoadPlaceholder = resourceLoader.GetString("ImageTapToLoadPlaceholderText");
-
         }
 
         //private void IndexRegion_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -153,13 +157,13 @@ namespace LightNovel
                 if (page >= 0) // Use page index instead of line index
                 {
                     // Is Current View state fully loaded
-                    if (ContentColumns.Visibility != Visibility.Visible || !ContentColumns.IsLayoutValiad)
+                    if (ScrollSwitch || ContentColumns.Visibility != Visibility.Visible || !ContentColumns.IsLayoutValiad)
                     {
-                        RequestDelayedChangeView(ViewModel.PageNo);
+                        RequestDelayedChangeView(page);
                     }
                     else
                     {
-                        ScrollToPage(ViewModel.PageNo, DisableAnimationScrollingFlag);
+                        ScrollToPage(page, DisableAnimationScrollingFlag);
                         DisableAnimationScrollingFlag = true;
                     }
                 }
@@ -396,10 +400,12 @@ namespace LightNovel
 
         bool ScrollToPage(int page, bool disableAnimation)
         {
+            bool result = false;
             if (ContentScrollViewer.HorizontalScrollMode != ScrollMode.Disabled)
-                return ContentScrollViewer.ChangeView(ContentColumns.Margin.Left + page * ContentColumns.ColumnWidth + 0.1, null, null, disableAnimation);
+                result = ContentScrollViewer.ChangeView(ContentColumns.Margin.Left + page * ContentColumns.ColumnWidth + 0.1, null, null, disableAnimation);
             else
-                return ContentScrollViewer.ChangeView(null, ContentColumns.Margin.Top + page * ContentColumns.ColumnHeight + 0.1, null, disableAnimation);
+                result = ContentScrollViewer.ChangeView(null, ContentColumns.Margin.Top + page * ContentColumns.ColumnHeight + 0.1, null, disableAnimation);
+            return result;
         }
 
         void ScrollToPage_ContentColumns_LayoutUpdated(object sender, object e)
@@ -537,44 +543,77 @@ namespace LightNovel
             RichTextColumns.ResetOverflowLayout(ContentColumns, null);
         }
 
-        private async void PrevChapterButton_Click(object sender, RoutedEventArgs e)
+        private void ScrollToNextScreen()
         {
-            int page = GetCurrentPageNo();
-            if (page == 0)
+            if (_currentViewOrientation == Orientation.Horizontal)
             {
-                if (ViewModel.ChapterNo > 0 && !ViewModel.IsLoading)
-                {
-                    await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo - 1, -1);
-                    ViewModel.PageNo = TotalPage - 2;
-                }
+                int page = GetCurrentPageNo();
+                page += ColumnsPerScreen;
+                page = Math.Min(TotalPage - ColumnsPerScreen, page);
+                DisableAnimationScrollingFlag = false;
+                ViewModel.PageNo = page;
             }
             else
             {
+                int cline = GetCurrentLineNo();
+                int line = (ContentListView.ItemsPanelRoot as ItemsStackPanel).LastVisibleIndex;
+                if (line == cline)
+                    line++;
+                line = Math.Min(ViewModel.Contents.Count - 1, line);
+                DisableAnimationScrollingFlag = false;
+                ViewModel.LineNo = line;
+            }
+        }
+
+        private void ScrollToPrevScreen()
+        {
+            if (_currentViewOrientation == Orientation.Horizontal)
+            {
+                int page = GetCurrentPageNo();
                 page -= ColumnsPerScreen;
                 page = Math.Max(0, page);
                 DisableAnimationScrollingFlag = false;
                 ViewModel.PageNo = page;
             }
+            else
+            {
+                int cline = GetCurrentLineNo();
+                int line = (ContentListView.ItemsPanelRoot as ItemsStackPanel).FirstCacheIndex;
+                int lline = (ContentListView.ItemsPanelRoot as ItemsStackPanel).LastVisibleIndex;
+                cline = cline - (lline - cline);
+                cline = Math.Max(cline, 0);
+                line = Math.Max(cline, line);
+                DisableAnimationScrollingFlag = false;
+                ViewModel.LineNo = line;
+            }
+        }
+
+        private async void PrevChapterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentViewOrientation == Orientation.Horizontal)
+            {
+                int page = GetCurrentPageNo();
+                if (page == 0 && ViewModel.ChapterNo > 0 && !ViewModel.IsLoading && ViewModel.LoadPrevChapterCommand.CanExecute(this))
+                {
+                    ViewModel.LoadPrevChapterCommand.Execute(this);
+                    return;
+                }
+            }
+            ScrollToPrevScreen();
         }
 
         private async void NextChapterButton_Click(object sender, RoutedEventArgs e)
         {
-            int page = GetCurrentPageNo();
-            if (page >= TotalPage - ColumnsPerScreen)
+            if (_currentViewOrientation == Orientation.Horizontal)
             {
-                if (ViewModel.ChapterNo < ViewModel.Index[ViewModel.VolumeNo].Chapters.Count - 1 && !ViewModel.IsLoading)
+                int page = GetCurrentPageNo();
+                if (page >= TotalPage - ColumnsPerScreen && ViewModel.LoadNextChapterCommand.CanExecute(this))
                 {
-                    await ViewModel.LoadDataAsync(-1, -1, ViewModel.ChapterNo + 1, 0);
-                    ViewModel.PageNo = 0;
+                    ViewModel.LoadNextChapterCommand.Execute(this);
+                    return;
                 }
             }
-            else
-            {
-                page += ColumnsPerScreen;
-                page = Math.Min(TotalPage - 1, page);
-                DisableAnimationScrollingFlag = false;
-                ViewModel.PageNo = page;
-            }
+            ScrollToNextScreen();
         }
 
         private void ContentScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -839,7 +878,7 @@ namespace LightNovel
                 var para = element as Paragraph;
                 var container = para?.Inlines.OfType<InlineUIContainer>().First();
                 var iv = container.Child as Grid;
-                SetUpComentFlyoutForLineView(iv,line);
+                SetUpComentFlyoutForLineView(iv, line);
 
                 CommentsFlyout.ShowAt(iv);
             }
@@ -1237,23 +1276,24 @@ namespace LightNovel
 
                 if (line.IsImage)
                 {
-                    progressIndicator.Visibility = Visibility.Visible;
                     if (!AppGlobal.ShouldAutoLoadImage)
-                    {
                         textContent.Text = ImageTapToLoadPlaceholder;
-                        //imageContent.MinHeight = 440;
-                        imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        textContent.TextAlignment = TextAlignment.Center;
-                    }
                     else
-                    {
                         textContent.Text = ImageLoadingTextPlaceholder;
-                        //imageContent.MinHeight = 440;
-                        imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        textContent.TextAlignment = TextAlignment.Center;
-                    }
+
+                    double aspect = (double)line.ImageHeight / (double)line.ImageWidth;
+                    double ih = iv.Width * aspect;
+
+                    if (ih <= 1.0)
+                        ih = 440;
+
+                    imageContent.Height = ih;
+                    imagePlaceHolder.Height = ih;
+
+                    progressIndicator.Visibility = Visibility.Visible;
+                    imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    imagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    textContent.TextAlignment = TextAlignment.Center;
                 }
                 else
                 {
@@ -1304,22 +1344,39 @@ namespace LightNovel
             args.Handled = true;
         }
 
-        private void LoadItemIllustation(Grid iv, LineViewModel line)
+        private async Task LoadItemIllustation(Grid iv, LineViewModel line)
         {
-            var bitMap = new BitmapImage(line.ImageUri);
+            var bitMap = new BitmapImage();
+            if (line.ImageHeight > 1.0)
+            {
+                bitMap.DecodePixelHeight = line.ImageHeight;
+                bitMap.DecodePixelWidth = line.ImageWidth;
+                bitMap.DecodePixelType = DecodePixelType.Physical;
+            }
+
             var imageContent = iv.FindName("ImageContent") as Image;
             imageContent.DataContext = line;
             var imagePlaceHolder = iv.FindName("ImagePlaceHolder") as Windows.UI.Xaml.Shapes.Path;
             var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
             var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
 
-            commentIndicator.Opacity = line.HasComments ? 1 : 0;
-
             bitMap.SetValue(BitmapLoadingIndicatorProperty, progressIndicator);
             bitMap.DownloadProgress += Image_DownloadProgress;
+
+            commentIndicator.Opacity = line.HasComments ? 1 : 0;
+
             imageContent.ImageOpened += imageContent_ImageOpened;
             imageContent.ImageFailed += ImageContent_Failed;
+
             imageContent.Source = bitMap;
+            var download = ViewModel.Client.GetIllustrationAsync(line.Content);
+            download.Progress = (info, p) =>
+            {
+                progressIndicator.Value = p;
+            };
+
+            var stream = await download;
+            await bitMap.SetSourceAsync(stream);
         }
 
         async void imageContent_ImageOpened(object sender, RoutedEventArgs e)
@@ -1481,7 +1538,7 @@ namespace LightNovel
                 bitmap.DownloadProgress += Image_DownloadProgress;
                 imageContent.ImageOpened += imageContent_ImageOpened;
 
-                await CachedClient.DeleteIllustationAsync(remoteUri);
+                await ViewModel.Client.DeleteIllustationAsync(remoteUri);
             } // else is Network Issue
         }
 
@@ -1530,6 +1587,33 @@ namespace LightNovel
         {
             if (ViewModel.IsFullScreen)
                 VisualStateManager.GoToState(this, "HideTitleBarState", true);
+        }
+
+        private bool pageSliderFlag;
+
+        private void PageSlider_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            var slider = sender as Slider;
+            if (pageSliderFlag)
+            {
+                DisableAnimationScrollingFlag = false;
+                ChangeView((int)slider.Value - 1);
+            }
+            pageSliderFlag = true;
+        }
+
+        private void PageIndicatorFlyout_Opening(object sender, object e)
+        {
+            pageSliderFlag = false;
+            PageSlider.Value = ViewModel.PageNo + 1;
+        }
+
+        private void ScrollViewer_KeyDownBypass(object sender, KeyRoutedEventArgs e)
+        {
+            Debug.Write("ScrollViewerKeyEvent");
+            if (e.Handled) return;
+            // This line avoids it from resulting in a stackoverflowexception
+            if (sender is ScrollViewer) return;
         }
     }
 }

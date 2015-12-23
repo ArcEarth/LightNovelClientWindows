@@ -1,5 +1,5 @@
 ﻿using LightNovel.Common;
-using LightNovel.Service;
+using LightNovel.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -92,10 +92,10 @@ namespace LightNovel.ViewModels
                     {
                         try
                         {
-                            var volume = await CachedClient.GetVolumeAsync(bk.Position.VolumeId);
+                            var volume = await CachedClient.GetSeriesAsync(bk.Position.SeriesId);
                             hvm.CoverImageUri = volume.CoverImageUri;
                             hvm.Description = volume.Description;
-                            bk.Position.SeriesId = volume.ParentSeriesId;
+                            bk.Position.SeriesId = volume.Id;
                             bk.ContentDescription = volume.Description;
                             bk.DescriptionThumbnailUri = volume.CoverImageUri;
                         }
@@ -161,10 +161,10 @@ namespace LightNovel.ViewModels
                         if (serp == null)
                         {
                             var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime };
-                            var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+                            var volume = await CachedClient.GetSeriesAsync(vol.VolumeId);
                             item.CoverImageUri = volume.CoverImageUri;
                             item.Description = volume.Description;
-                            item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+                            item.Position = new NovelPositionIdentifier { SeriesId = volume.Id, VolumeId = volume.Id, VolumeNo = -1 };
                             this.Add(item);
                             NotifyPropertyChanged("IsEmpty");
                         }
@@ -173,10 +173,10 @@ namespace LightNovel.ViewModels
                             serp.SeriesTitle = vol.SeriesTitle;
                             serp.VolumeTitle = vol.VolumeTitle;
                             serp.UpdateTime = vol.FavTime;
-                            var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+                            var volume = await CachedClient.GetSeriesAsync(vol.VolumeId);
                             serp.CoverImageUri = volume.CoverImageUri;
                             serp.Description = volume.Description;
-                            serp.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+                            serp.Position = new NovelPositionIdentifier { SeriesId = volume.Id, VolumeId = volume.Id, VolumeNo = -1 };
                         }
                     }
                     break;
@@ -200,10 +200,10 @@ namespace LightNovel.ViewModels
                     {
                         var vol = series.LastOrDefault();
                         var item = new HistoryItemViewModel() { SeriesTitle = vol.SeriesTitle, VolumeTitle = vol.VolumeTitle, UpdateTime = vol.FavTime };
-                        var volume = await CachedClient.GetVolumeAsync(vol.VolumeId);
+                        var volume = await CachedClient.GetSeriesAsync(vol.VolumeId);
                         item.CoverImageUri = volume.CoverImageUri;
                         item.Description = volume.Description;
-                        item.Position = new NovelPositionIdentifier { SeriesId = volume.ParentSeriesId, VolumeId = volume.Id, VolumeNo = -1 };
+                        item.Position = new NovelPositionIdentifier { SeriesId = volume.Id, VolumeId = volume.Id, VolumeNo = -1 };
                         this.Add(item);
                         NotifyPropertyChanged("IsEmpty");
                     }

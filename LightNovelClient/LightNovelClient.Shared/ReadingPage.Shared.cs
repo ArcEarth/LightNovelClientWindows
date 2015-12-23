@@ -1,5 +1,5 @@
 ﻿using LightNovel.Common;
-using LightNovel.Service;
+using LightNovel.Data;
 using LightNovel.ViewModels;
 using LightNovel.Controls;
 using System;
@@ -160,6 +160,7 @@ namespace LightNovel
                 if (value == PageSplitView.IsPaneOpen) return;
                 PageSplitView.IsPaneOpen = value;
                 IndexButton.IsChecked = value;
+                ViewModel.SyncChapterPreviewDownloadProgress();
             }
         }
 #endif

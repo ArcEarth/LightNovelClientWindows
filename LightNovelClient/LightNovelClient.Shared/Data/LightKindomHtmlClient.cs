@@ -18,7 +18,7 @@ using Windows.Foundation.Metadata;
 //using System.Net;
 //using System.Net;
 
-namespace LightNovel.Service
+namespace LightNovel.Data
 {
     public enum UserAgentType
     {

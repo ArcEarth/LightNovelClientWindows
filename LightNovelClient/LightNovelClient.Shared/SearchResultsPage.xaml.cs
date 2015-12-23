@@ -1,5 +1,5 @@
 ﻿using LightNovel.Common;
-using LightNovel.Service;
+using LightNovel.Data;
 using LightNovel.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -134,7 +134,7 @@ namespace LightNovel
 				QueryTask.AsAsyncAction().Cancel();
 			}
 			VisualStateManager.GoToState(this, "Searching", false);
-			QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText);
+			QueryTask = LightNovel.Data.LightKindomHtmlClient.SearchBookAsync(QueryText);
 			try
 			{
 				Results = await QueryTask;
@@ -181,7 +181,7 @@ namespace LightNovel
 			if (Results == null && QueryTask == null)
 			{
 				VisualStateManager.GoToState(this, "Searching", false);
-				QueryTask = LightNovel.Service.LightKindomHtmlClient.SearchBookAsync(QueryText);
+				QueryTask = LightNovel.Data.LightKindomHtmlClient.SearchBookAsync(QueryText);
 			}
 
 			// TODO: Application-specific searching logic.  The search process is responsible for
@@ -228,11 +228,11 @@ namespace LightNovel
 			// Navigate to the appropriate destination page, configuring the new page
 			// by passing required information as a navigation parameter
 			var book = (BookCoverViewModel)e.ClickedItem;
-			if (book.ItemType == LightNovel.Service.BookItemType.Volume)
+			if (book.ItemType == LightNovel.Data.BookItemType.Volume)
 			{
 				this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { VolumeId = book.Id }.ToString());
 			}
-			else if (book.ItemType == LightNovel.Service.BookItemType.Series)
+			else if (book.ItemType == LightNovel.Data.BookItemType.Series)
 			{
 				this.Frame.Navigate(typeof(ReadingPage), new NovelPositionIdentifier { SeriesId = book.Id }.ToString());
 			}
