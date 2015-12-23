@@ -2,24 +2,25 @@
 Welcome to the page of <Light Novel Client for Windows>
 This is a free full-functionary client (User Agent) for lightnovel.cn.
 Here is the place for you to read your most favorite novels translated and shared by others.
-
 ### All credits belongs to the authors and translators.
 Please support them as much as you can.
 ### All Data belongs to [LightNovel.cn](http://www.lightnovel.cn)
 Please support them (By clicking the ads in their webpage) too.
+### Source code here are govered by **GPL**-v3 License
+You are prohabited to do any commercial use, you must open source your code if they use this.
 
 ## Supported Platform
 * Windows 10 (UWP x86,x64,ARM)
 * Windows 8.1 (Deprecated,[Windows Store](http://apps.microsoft.com/windows/en-ca/app/lightnovel/f685715a-305d-4584-ae00-4ff774710331))
 * Windows Phone 8.1 (Windows Runtime Store App, Deprecated)
 * Windows Phone 8.0 (Silverlight App, Deprecated)
-
 ### The UI and functions varies in Platform, Deprecated Client will not receive further update from author.
 
-## Authors and Contributors
+## Authors, Contributors, Credits
 * [Arc Earth](mailto:ArcEarth@outlook.com)
-
 * We are very happy be incorporate with any one who are interested in this project, please contact the author directly.
-
+### Credits
+* [WinRTXamlToolkit](https://github.com/xyzzer/WinRTXamlToolkit) by Filip Skakun, MIT License
+* [Json.Net](https://github.com/JamesNK) by James Newton-King, MIT License
 ### Support or Contact
 mail to : [LightNovelApp](mailto:LightNovelApp@outlook.com)
