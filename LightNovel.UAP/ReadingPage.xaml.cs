@@ -1048,7 +1048,7 @@ namespace LightNovel
             var image = sender as Image;
             image.ImageOpened -= Image_ImageOpened;
             //RelayoutImageCommentsIndicator(image);
-            await image.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
+            await image.FadeInCustomAsync(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 
         }
 

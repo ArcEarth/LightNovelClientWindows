@@ -53,7 +53,7 @@ namespace LightNovel
             }
             ImageContent.DataContext = null;
             ImageContent.ClearValue(Image.SourceProperty);
-            ImageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            ImageContent.Visibility = Visibility.Collapsed;
             ImageContent.Height = 0;
             TextContent.ClearValue(TextBlock.TextProperty);
         }
@@ -90,8 +90,8 @@ namespace LightNovel
                 ImagePlaceHolder.Height = ih;
 
                 ProgressBar.Visibility = Visibility.Visible;
-                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ImageContent.Visibility = Visibility.Visible;
+                ImagePlaceHolder.Visibility = Visibility.Visible;
                 TextContent.TextAlignment = TextAlignment.Center;
             }
             else
@@ -100,8 +100,8 @@ namespace LightNovel
                 //textContent.Height = double.NaN;
                 TextContent.TextAlignment = TextAlignment.Left;
 
-                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                ImagePlaceHolder.Visibility = Visibility.Collapsed;
+                ImageContent.Visibility = Visibility.Collapsed;
                 ImageContent.DataContext = null;
             }
         }
@@ -144,8 +144,9 @@ namespace LightNovel
         public async void ImageContent_ImageOpened(object sender, RoutedEventArgs e)
 		{
 			ImageContent.ImageOpened -= ImageContent_ImageOpened;
-			ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-			await ImageContent.FadeInCustom(new TimeSpan(0, 0, 0, 0, 500), null, 1);
+            ProgressBar.Visibility = Visibility.Collapsed;
+            ImagePlaceHolder.Visibility = Visibility.Collapsed;
+			await ImageContent.FadeInCustomAsync(new TimeSpan(0, 0, 0, 0, 500), null, 1);
 		}
 
 		private async void ImageContent_Failed(object sender, ExceptionRoutedEventArgs e)
@@ -167,7 +168,7 @@ namespace LightNovel
 				if (iv == null) return;
 				TextContent.Opacity = 0;
 				ProgressBar.Opacity = 0;
-				//imageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				//imageContent.Visibility = Visibility.Visible;
 			}
 		}
 
@@ -185,9 +186,9 @@ namespace LightNovel
                 var remoteUri = lvm.Content;
 
                 TextContent.Text = ImageLoadingTextPlaceholder;
-                ImagePlaceHolder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ImagePlaceHolder.Visibility = Visibility.Visible;
                 ImagePlaceHolder.Opacity = 1;
-                ImageContent.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                ImageContent.Visibility = Visibility.Visible;
                 TextContent.TextAlignment = TextAlignment.Center;
                 TextContent.Opacity = 1;
                 ImageContent.Opacity = 0;

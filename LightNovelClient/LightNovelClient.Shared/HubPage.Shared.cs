@@ -722,7 +722,8 @@ namespace LightNovel
         {
             ViewModel.IsLoading = true;
             await CachedClient.DeleteSeries(hvm.Position.SeriesId);
-            ViewModel.RecentSection.Remove(hvm);
+            if (ViewModel.RecentSection.Contains(hvm))
+                ViewModel.RecentSection.Remove(hvm);
             var recentItem = AppGlobal.RecentList.FirstOrDefault(it => it.Position.SeriesId == hvm.Position.SeriesId);
             if (recentItem != null)
             {

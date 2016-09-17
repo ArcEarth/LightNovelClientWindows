@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Windows.Foundation;
 
 namespace LightNovel.Data
 {
@@ -50,6 +51,7 @@ namespace LightNovel.Data
     }
     public class BookItem
     {
+        public string Source { get; set; }
         public string Id { get; set; }
         public string Title { get; set; }
         public string Subtitle { get; set; }
@@ -72,6 +74,82 @@ namespace LightNovel.Data
                 //return BookItemType.Chapter;
             }
         }
+    }
+
+    public interface IDocumentSection
+    {
+        string Id { get; }
+        string Path { get; }
+        string Title { get; }
+        string Description { get; }
+        string CoverImage { get; }
+        DateTime UpdateTime { get; }
+
+        IDocumentSection Parent { get; }
+        string Content { get; }
+        IList<IDocumentSection> Children { get; }
+
+        bool   IsLoaded { get; }
+        IAsyncAction GetAsync();
+    }
+
+    public interface IDocument : IDocumentSection
+    {
+        // Document meta data
+        string DataProvider { get; }
+        string Author { get; }
+        string Illustrator { get; }
+        string Publisher { get; }
+        // A hash value which could differiate it with other novels
+        string UniqueID { get; }
+        ICollection<BookCatalog> Catalogs { get; }
+        ICollection<string> Alias { get; }
+    }
+
+    public abstract class DocumentSectionBase : IDocumentSection
+    {
+        protected List<IDocumentSection> _children;
+
+        public IList<IDocumentSection> Children => _children;
+
+        public string Content { get; set; }
+
+        public string CoverImage { get; set; }
+
+        public string Description { get; set; }
+
+        public string Id { get; set; }
+        public string Path { get; set; }
+
+        public IDocumentSection Parent { get; protected set; }
+
+        public string Title { get; set; }
+
+        public DateTime UpdateTime { get; set; }
+
+        public bool IsLoaded
+        {
+            get; protected set;
+        }
+
+        public IAsyncAction GetAsync() => GetAsyncImpl().AsAsyncAction();
+
+        public abstract Task GetAsyncImpl();
+    }
+
+    public abstract class DocumentBase : DocumentSectionBase, IDocument
+    {
+        protected Collection<BookCatalog> _catalogs = new Collection<BookCatalog>();
+        protected Collection<string> _alias;
+
+        public string DataProvider { get; set; }
+        public string Author { get; set; }
+        public string Illustrator { get; set; }
+        public string Publisher { get; set; }
+        // A hash value which could differiate it with other novels
+        public string UniqueID { get; set; }
+        public ICollection<BookCatalog> Catalogs => _catalogs;
+        public ICollection<string> Alias => _alias;
     }
 
     public class ExtendedBookItem : BookItem
@@ -176,6 +254,11 @@ namespace LightNovel.Data
         public int Width { get; set; }
         public int Height { get; set; }
         public ulong Size { get; set; }
+
+        public bool ShouldSerializeLineContentType() => (ContentType == LineContentType.ImageContent);
+        public bool ShouldSerializeWidth() => (ContentType == LineContentType.ImageContent);
+        public bool ShouldSerializeHeight() => (ContentType == LineContentType.ImageContent);
+        public bool ShouldSerializeSize() => (ContentType == LineContentType.ImageContent);
     }
 
     public struct CommentData

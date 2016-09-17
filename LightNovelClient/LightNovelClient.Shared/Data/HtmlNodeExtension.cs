@@ -14,7 +14,7 @@ namespace LightNovel.Data
             return node.Attributes["class"] != null && node.Attributes["class"].Value.Contains(name);
         }
 
-        public static HtmlNode PreviousSublingElement(this HtmlNode node, string name = null)
+        public static HtmlNode PreviousSiblingElement(this HtmlNode node, string name = null)
         {
             node = node.PreviousSibling;
             if (name == null)
@@ -30,7 +30,7 @@ namespace LightNovel.Data
                 return node;
             }
         }
-        public static HtmlNode NextSublingElement(this HtmlNode node, string name = null)
+        public static HtmlNode NextSiblingElement(this HtmlNode node, string name = null)
         {
             node = node.NextSibling;
             if (name == null)
@@ -46,7 +46,18 @@ namespace LightNovel.Data
                 return node;
             }
         }
-
+        public static HtmlNode NextSiblingClass(this HtmlNode node, string classname)
+        {
+            while (node != null && (node.NodeType != HtmlNodeType.Element || node.HasClass(classname)))
+                node = node.NextSibling;
+            return node;
+        }
+        public static HtmlNode PreviousSiblingClass(this HtmlNode node, string classname)
+        {
+            while (node != null && (node.NodeType != HtmlNodeType.Element || node.HasClass(classname)))
+                node = node.PreviousSibling;
+            return node;
+        }
         public static HtmlNode FirstChildClass(this HtmlNode node, string classname)
         {
             node = node.FirstChild;
@@ -54,6 +65,9 @@ namespace LightNovel.Data
                 node = node.NextSibling;
             return node;
         }
-
+        public static HtmlNode FirstDescendantClass(this HtmlNode node, string classname)
+        {
+           return node.Descendants().FirstOrDefault(c => c.HasClass(classname));
+        }
     }
 }

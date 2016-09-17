@@ -2018,14 +2018,14 @@ namespace LightNovel.ViewModels
 
         public bool IsImageCached
         {
-            get { return _content.StartsWith("http://") && _client.IsIllustrationCached(_content); }
+            get { return Uri.IsWellFormedUriString(_content, UriKind.Absolute) && _client.IsIllustrationCached(_content); }
         }
 
         public Uri ImageUri
         {
             get
             {
-                if (!_content.StartsWith("http://"))
+                if (!Uri.IsWellFormedUriString(_content, UriKind.Absolute))
                     return null;
                 return _client.GetIllustrationCachedUri(_content);
             }

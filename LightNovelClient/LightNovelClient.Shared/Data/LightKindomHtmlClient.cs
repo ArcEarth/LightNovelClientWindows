@@ -409,14 +409,14 @@ namespace LightNovel.Data
                         var vol = new FavourVolume();
                         var td = node.Element("td");
                         vol.FavId = td.Element("input").GetAttributeValue("value", "");
-                        td = td.NextSublingElement("td");
+                        td = td.NextSiblingElement("td");
                         vol.SeriesTitle = WebUtility.HtmlDecode(CleanText(td.InnerText));
                         vol.VolumeId = RetriveId(td.Element("a").GetAttributeValue("href", ""));
-                        td = td.NextSublingElement("td");
+                        td = td.NextSiblingElement("td");
                         vol.VolumeNo = WebUtility.HtmlDecode(CleanText(td.InnerText));
-                        td = td.NextSublingElement("td");
+                        td = td.NextSiblingElement("td");
                         vol.VolumeTitle = WebUtility.HtmlDecode(CleanText(td.InnerText));
-                        td = td.NextSublingElement("td");
+                        td = td.NextSiblingElement("td");
                         vol.FavTime = DateTime.Parse(td.InnerText);
                         return vol;
                     });
@@ -601,11 +601,11 @@ namespace LightNovel.Data
 
             // Detail Properties
             var authorNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("作者"));
-            volume.Author = authorNode.NextSublingElement().InnerText;
+            volume.Author = authorNode.NextSiblingElement().InnerText;
             var illustraotrNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("插画"));
-            volume.Illustrator = illustraotrNode.NextSublingElement().InnerText;
+            volume.Illustrator = illustraotrNode.NextSiblingElement().InnerText;
             var publisherNode = infoNodes.First(node => node.Name == "label" && node.InnerText.StartsWith("文库"));
-            volume.Publisher = publisherNode.NextSublingElement().InnerText;
+            volume.Publisher = publisherNode.NextSiblingElement().InnerText;
             //series.Illustrator = details.First(node => node.Name == "td" && node.InnerText.StartsWith("插画")).NextSibling.InnerText;
             //series.Publisher = details.First(node => node.Name == "td" && node.InnerText.StartsWith("文库")).NextSibling.InnerText;
             //volume.UpdateTime.
@@ -718,7 +718,7 @@ namespace LightNovel.Data
             try
             {
                 var article = doc.DocumentNode.Descendants("article").FirstOrDefault();
-                var titles = article.PreviousSublingElement("div");
+                var titles = article.PreviousSiblingElement("div");
                 chapter.Title = titles?.Element("h1")?.InnerText;
                 var lines = article.ChildNodes.Where(node => node.Name == "p" && node.HasClass("read-line"));
                 chapter.Lines = lines.Select(
@@ -928,7 +928,7 @@ namespace LightNovel.Data
             else
             {
                 StringBuilder builder = new StringBuilder();
-                intro = intro?.NextSublingElement("span")?.NextSibling;
+                intro = intro?.NextSiblingElement("span")?.NextSibling;
                 while (intro != null && intro.Name != "p")
                 {
                     if (intro.NextSibling == null & intro.FirstChild != null && intro.FirstChild.NextSibling != null)
@@ -1002,7 +1002,8 @@ namespace LightNovel.Data
         {
             p = p.Replace("\t", "");
             p = p.Trim();
-            var s = p.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
+            var strs = p.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var s = strs[0].Trim();
             if (s.StartsWith("第"))
                 return s.Substring(1, s.Length - 2);
             else
@@ -1195,7 +1196,7 @@ namespace LightNovel.Data
             if (doc == null) return null;
 
             var topBar = doc.DocumentNode.Descendants("div").FirstOrDefault(n => n.HasClass("top-bar"));
-            var container = topBar.NextSublingElement("div");
+            var container = topBar.NextSiblingElement("div");
 
             Dictionary<string, IList<BookItem>> bookLists = new Dictionary<string, IList<BookItem>>();
 
@@ -1220,7 +1221,7 @@ namespace LightNovel.Data
             string[] rankNames = new string[] { "Daily Rank", "Weekly Rank", "Mothly Rank" };
             foreach (var ranker in ranks)
             {
-                var titleNode = ranker.PreviousSublingElement("h4");
+                var titleNode = ranker.PreviousSiblingElement("h4");
                 var booksNodes = ranker.Descendants("a");
                 if (booksNodes != null)
                 {
