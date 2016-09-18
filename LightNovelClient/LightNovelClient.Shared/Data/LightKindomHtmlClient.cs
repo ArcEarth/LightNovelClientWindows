@@ -675,7 +675,7 @@ namespace LightNovel.Data
 
             chapter.Lines = (lines.Select<HtmlNode, Line>(node =>
             {
-                Line line = new Line(int.Parse(node.Id), LineContentType.TextContent, null);
+                Line line = new Line { No= int.Parse(node.Id),Content= null };
                 if (!node.HasChildNodes)
                 {
                     line.Content = String.Empty;
@@ -683,7 +683,6 @@ namespace LightNovel.Data
                 }
                 if (node.ChildNodes.Any(elem => elem.Name == "div"))
                 {
-                    line.ContentType = LineContentType.ImageContent;
                     var img_url = (from elem in node.Descendants()
                                    where elem.Name == "img"
                                          && elem.Attributes["data-ks-lazyload"] != null
@@ -724,13 +723,13 @@ namespace LightNovel.Data
                 chapter.Lines = lines.Select(
                     (p) =>
                     {
-                        var line = new Line(
-                           int.Parse(p.Attributes["data-i"].Value),
-                           LineContentType.TextContent,
-                           string.Empty);
+                        var line = new Line
+                        {
+                            No = int.Parse(p.Attributes["data-i"].Value),
+                            Content = string.Empty
+                        };
                         if (p.HasClass("read-line-image"))
                         {
-                            line.ContentType = LineContentType.ImageContent;
                             var img = p.ChildNodes.FirstOrDefault(child => child.Name == "img");
                             line.Content = img.GetAttributeValue("src", string.Empty);
                             line.Width = img.GetAttributeValue("data-width", 0);

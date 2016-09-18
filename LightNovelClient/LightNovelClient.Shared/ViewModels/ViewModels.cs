@@ -1197,14 +1197,20 @@ namespace LightNovel.ViewModels
                 bookmark.DescriptionThumbnailUri = VolumeData.CoverImageUri;
                 bookmark.DescriptionImageUri = VolumeData.CoverImageUri;
 
-                if (_client.ChapterCache.ContainsKey(VolumeData.Chapters[0].Id) && _client.ChapterCache[VolumeData.Chapters[0].Id].IsCompleted && !_client.ChapterCache[VolumeData.Chapters[0].Id].IsFaulted)
+
+                var ic = VolumeData.Chapters.FirstOrDefault(c => DmzjDocSecBase.IsIllustrationChapter(c));
+                string icid = ic != null ? ic.Id : VolumeData.Chapters[0].Id;
+                var ccache = _client.ChapterCache;
+                if (ccache.ContainsKey(icid) && 
+                    ccache[icid].IsCompleted && 
+                    !ccache[icid].IsFaulted)
                 {
                     // Find the First Illustration of current Volume
-                    var imageLine = _client.ChapterCache[VolumeData.Chapters[0].Id].Result.Lines.FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
+                    var imageLine = ccache[icid].Result.Lines.FirstOrDefault(line => line.ContentType == LineContentType.ImageContent);
                     if (imageLine != null)
                         bookmark.DescriptionImageUri = imageLine.Content;
                 }
-                else
+                if (bookmark.DescriptionImageUri == VolumeData.CoverImageUri)
                 {
                     var imageLine = Contents.Cast<LineViewModel>().FirstOrDefault(line => line.IsImage);
                     if (imageLine != null)

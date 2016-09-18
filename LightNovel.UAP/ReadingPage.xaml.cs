@@ -509,6 +509,8 @@ namespace LightNovel
                     illustration.DataContext = line;
                     illustration.Width = ContentColumns.ColumnWidth - padding.Width - 1;
                     illustration.Height = ContentColumns.ColumnHeight - padding.Height - PictureMargin;
+                    illustration.Phase0(line);
+                    illustration.Phase1(line);
                     illustration.LoadIllustrationLine(line);
                     //LoadItemIllustation(illustration, line);
                     (illustration.FindName("ImageContent") as Image).SizeChanged += Image_SizeChanged;
@@ -1256,7 +1258,7 @@ namespace LightNovel
                 if (!Double.IsNaN(sender.ActualWidth) && sender.ActualWidth > 0)
                     iv.MaxWidth = sender.ActualWidth;
 
-                iv.ResetPhase0(line);
+                iv.Phase0(line);
 
                 //var imageContent = iv.FindName("ImageContent") as Image;
                 //var textContent = iv.FindName("TextContent") as TextBlock;
@@ -1323,20 +1325,13 @@ namespace LightNovel
             else if (args.Phase == 1) // Show comment indicator rectangle / progress bar
             {
                 var line = (LineViewModel)args.Item;
-                var commentIndicator = iv.FindName("CommentIndicator") as Rectangle;
+                iv.Phase1(line);
+
                 if (line.HasComments)
-                {
-                    commentIndicator.Opacity = 1;
                     args.RegisterUpdateCallback(3, ContentListView_ContainerContentChanging);
-                }
-                if (line.IsImage)
-                {
-                    var progressIndicator = iv.FindName("ProgressBar") as ProgressBar;
-                    progressIndicator.Value = 0;
-                    progressIndicator.Opacity = 1;
-                    if (AppGlobal.ShouldAutoLoadImage)
+
+                if (AppGlobal.ShouldAutoLoadImage && line.IsImage)
                         args.RegisterUpdateCallback(2, ContentListView_ContainerContentChanging);
-                }
             }
             else if (args.Phase == 2)
             {

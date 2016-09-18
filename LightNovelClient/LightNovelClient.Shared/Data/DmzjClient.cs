@@ -27,6 +27,7 @@ namespace LightNovel.Data
         public const string DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10240";
         public static Dictionary<string, List<Chapter>> vol_cache = new Dictionary<string, List<Chapter>>();
         static StorageFolder DmzjFolder;
+        static int LineNoBase = 1;
 
 
         public static HttpClient NewHttpClient()
@@ -90,6 +91,11 @@ namespace LightNovel.Data
             return bookLists;
         }
 
+        public static bool IsIllustrationChapter(ChapterProperties chpt)
+        {
+            return chpt.Title.Contains("插画") || chpt.Title.Contains("插图");
+        }
+
         public static async Task<Chapter> GetChapterAsync(string chpId, Volume vol)
         {
             List<Chapter> chpts;
@@ -127,14 +133,14 @@ namespace LightNovel.Data
                 vol_cache.Add(vid, chpts);
             }
             var chpt = chpts.FirstOrDefault(c => c.Id == chpId);
-            if (chpt.Title == "插画" || chpt.Title == "插图") // there is an bug in dmzj's image address
+            if (IsIllustrationChapter(chpt)) // there is an bug in dmzj's image address
             {
                 // http://xs.dmzj.com/1464/8046/66927.shtml
                 var uri = Domain + vol.ParentSeriesId + '/' + vol.Id + '/' + chpt.Id + ".shtml";
                 var doc = await GetHtmlDocumentAsync(new Uri(uri));
                 var contents = doc.DocumentNode.FirstDescendantClass("novel_text");
-                int lino = 0;
-                chpt.Lines = contents.Descendants("img").Select(img => new Line(lino++, LineContentType.ImageContent, img.GetAttributeValue("src", null))).ToList();
+                int lino = LineNoBase;
+                chpt.Lines = contents.Descendants("img").Select(img => new Line { No = lino++, Content = img.GetAttributeValue("src", null) }).ToList();
                 foreach (var line in chpt.Lines)
                 {
                     var fullurl = Domain + line.Content;
@@ -164,7 +170,7 @@ namespace LightNovel.Data
                 chpt.Title = cp.Title;
                 chpt.Id = cp.Id;
                 var lines = new List<Line>();
-                int no = 0;
+                int no = LineNoBase;
                 for (string line = reader.ReadLine();
                     !reader.EndOfStream && (nxtTitle == null || !line.StartsWith(nxtTitle));
                     line = reader.ReadLine())
@@ -175,7 +181,7 @@ namespace LightNovel.Data
                         || line.StartsWith("<script"))
                         continue;
                     var type = IsImageUri(line) ? LineContentType.ImageContent : LineContentType.TextContent;
-                    lines.Add(new Line(no++, type, line));
+                    lines.Add(new Line { No = no++, Content = line });
                 }
                 chpt.Lines = lines;
                 chpts.Add(chpt);

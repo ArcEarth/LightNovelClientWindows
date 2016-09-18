@@ -16,7 +16,8 @@
                              Foreground="{ThemeResource AppAccentBrush}"
                              Maximum="100"
                              Minimum="0"
-                             Value="0" 
+                             Value="0"
+                             Opacity="0"
                              />
     
     <Path x:Name="ImagePlaceHolder"

@@ -172,6 +172,9 @@ namespace LightNovel
             var fgColor = ((SolidColorBrush)ViewModel.Foreground).Color;
             ContentForegroundBrush.Color = fgColor;
             ContentBackgroundBrush.Color = bgColor;
+
+            App.Current.Resources["ContentForegroundBrush"] = ContentForegroundBrush;
+            App.Current.Resources["ContentBackgroundBrush"] = ContentBackgroundBrush;
             var accentColor = (Color)App.Current.Resources["AppAccentColor"];
 
             bgColor.R = (byte)(0.3 * bgColor.R + 0.7 * fgColor.R);

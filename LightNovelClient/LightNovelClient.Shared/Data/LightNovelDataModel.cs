@@ -6,6 +6,8 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Foundation;
+using System.IO;
+
 
 namespace LightNovel.Data
 {
@@ -241,16 +243,25 @@ namespace LightNovel.Data
     }
     public class Line
     {
-        public Line(int no, LineContentType type, string content)
+        public static bool IsImageUri(string line)
         {
-            No = no;
-            Content = content;
-            ContentType = type;
+            Uri uri;
+            if (!Uri.TryCreate(line, UriKind.Absolute, out uri))
+                return false;
+            var ext = Path.GetExtension(uri.LocalPath);
+            return (!String.IsNullOrEmpty(ext) && (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".gif"));
         }
+
+        //public static int GetIntQuery(string line, string key)
+        //{
+        //    var qidx = line.LastIndexOf('?');
+        //    if (qidx == -1) return 0;
+        //    line.IndexOf(key + "=");
+        //}
 
         public int No { get; set; }
         public string Content { get; set; }
-        public LineContentType ContentType { get; set; }
+        public LineContentType ContentType => IsImageUri(Content) ? LineContentType.ImageContent : LineContentType.TextContent;
         public int Width { get; set; }
         public int Height { get; set; }
         public ulong Size { get; set; }
