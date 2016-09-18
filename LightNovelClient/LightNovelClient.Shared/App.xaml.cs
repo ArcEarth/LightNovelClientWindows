@@ -119,6 +119,11 @@ namespace LightNovel
 #if WINDOWS_UWP
 			SyncAppAccentColor();
 
+            //CommentsClient client = new CommentsClient(0, null);
+            //var succ = await client.CreateCommentAsync("dmzj/1984/7240/53216", Data.Convert.MD5Hash("人类全都是混帐。"), "testing_comment");
+            //var comments = await client.GetCommentsAsync("dmzj/1984/7240/53216");
+            //Debug.Write(comments);
+
 			//var series = await DmzjDocSecBase.GetSeriesAsync("2014");
 			//var chptr = await DmzjDocSecBase.GetChapterAsync(series.Volumes[0].Chapters[0].Id, series.Volumes[0]);
 

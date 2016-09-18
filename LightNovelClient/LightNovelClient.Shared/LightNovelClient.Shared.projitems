@@ -50,6 +50,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\WrapPanel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DataModel\SampleDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\CachedClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CommentsClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\DmzjClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\NovelDataSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExtendedSplash.xaml.cs">

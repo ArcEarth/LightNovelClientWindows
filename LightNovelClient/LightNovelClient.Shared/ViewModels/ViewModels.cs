@@ -124,7 +124,7 @@ namespace LightNovel.ViewModels
             }
         }
 
-        public event EventHandler<IDictionary<int, IEnumerable<CommentData>>> CommentsListLoaded;
+        public event EventHandler<IDictionary<int, IEnumerable<Comment>>> CommentsListLoaded;
         //[IgnoreAutoChangeNotification]
         private CachedClient _client;
         private Series _SeriesData;
@@ -470,7 +470,7 @@ namespace LightNovel.ViewModels
             }
         }
 
-        public IDictionary<int, IEnumerable<CommentData>> CommentsList
+        public IDictionary<int, IEnumerable<Comment>> CommentsList
         {
             get; private set;
         }
@@ -839,13 +839,9 @@ namespace LightNovel.ViewModels
                     //SeriesId = seriesId;
                     SeriesData = series;
                 }
-                if (volumeNo >= 0 && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[volumeNo].Id))
-                {
-                    VolumeData = SeriesData.Volumes[volumeNo];// = await CachedClient.GetVolumeAsync(SeriesData.Volumes[volumeNo.Value].Id);
-                    VolumeNo = volumeNo;
-                    // var task = CachedClient.GetChapterAsync(VolumeData.Chapters[0].Position);
-                    // NotifyPropertyChanged("Index");
-                }
+
+                TryLoadVolumnData(volumeNo);
+
                 if (chapterNo >= 0 && (ChapterData == null || ChapterData.Id != VolumeData.Chapters[chapterNo].Id))
                 {
                     var chapter = await _client.GetChapterAsync(VolumeData.Chapters[chapterNo].Position);
@@ -871,42 +867,9 @@ namespace LightNovel.ViewModels
                     LoadNextChapterCommand.RaiseCanExecuteChanged();
                     LoadPrevChapterCommand.RaiseCanExecuteChanged();
 
-                    if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
-                    {
-                        // Pre caching next chapter
-                        if (chapterNo + 1 < VolumeData.Chapters.Count)
-                            _client.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Position);
-                        else
-                            _client.GetChapterAsync(SeriesData.Volumes[VolumeNo + 1].Chapters[0].Position);
-                    }
-                    else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
-                    {
-                        if (chapterNo > 0)
-                            _client.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Position);
-                        else
-                            _client.GetChapterAsync(SeriesData.Volumes[VolumeNo - 1].Chapters.Last().Position);
-                    }
+                    PreCachingNextChapter(chapterNo, preCachePolicy);
 
-                    var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterData.Id)).ToList();
-
-                    foreach (var line in lvms)
-                    {
-                        if (line.IsImage)
-                            line.Client = _client;
-                    }
-                    //_storage.AddRange(lvms);
-                    //NotifyOfInsertedItems(0, _storage.Count);
-                    //NotifyPropertyChanged("Contents");
-
-                    Contents = lvms;
-
-                    if (Contents.Count == 0)
-                    {
-                        Contents = new LineViewModel[] {
-                            new LineViewModel(1,LoadingFailedContentOverallLabel),
-                            new LineViewModel(2,LoadingFailedContentSeviceIssue),
-                            new LineViewModel(3,"Detail : " + _ChapterData.ErrorMessage) };
-                    }
+                    SetupContents();
                     //var collection = new PagelizedIncrementalVector<LineViewModel>(ChapterNo,new List<int>(VolumeData.Chapters.Select(c=>0)), lvms);
                     //collection.AccuirePageData = async chptNo =>
                     //{
@@ -962,20 +925,98 @@ namespace LightNovel.ViewModels
                 return;
             }
 
+            await LoadCommentsAsync();
+        }
+
+        private void TryLoadVolumnData(int volumeNo)
+        {
+            if (volumeNo >= 0 && (VolumeData == null || VolumeData.Id != SeriesData.Volumes[volumeNo].Id))
+            {
+                VolumeData = SeriesData.Volumes[volumeNo];// = await CachedClient.GetVolumeAsync(SeriesData.Volumes[volumeNo.Value].Id);
+                VolumeNo = volumeNo;
+                // var task = CachedClient.GetChapterAsync(VolumeData.Chapters[0].Position);
+                // NotifyPropertyChanged("Index");
+            }
+        }
+
+        private void SetupContents()
+        {
+            var lvms = _ChapterData.Lines.Select(line => new LineViewModel(line, ChapterFullPath)).ToList();
+
+            foreach (var line in lvms)
+            {
+                if (line.IsImage)
+                    line.Client = _client;
+            }
+            //_storage.AddRange(lvms);
+            //NotifyOfInsertedItems(0, _storage.Count);
+            //NotifyPropertyChanged("Contents");
+
+            Contents = lvms;
+
+            if (Contents.Count == 0)
+            {
+                Contents = new LineViewModel[] {
+                            new LineViewModel(1,LoadingFailedContentOverallLabel),
+                            new LineViewModel(2,LoadingFailedContentSeviceIssue),
+                            new LineViewModel(3,"Detail : " + _ChapterData.ErrorMessage) };
+            }
+        }
+
+        private void PreCachingNextChapter(int chapterNo, PreCachePolicy preCachePolicy)
+        {
+            if (preCachePolicy == PreCachePolicy.CacheNext && HasNext)
+            {
+                // Pre caching next chapter
+                if (chapterNo + 1 < VolumeData.Chapters.Count)
+                    _client.GetChapterAsync(VolumeData.Chapters[chapterNo + 1].Position);
+                else
+                    _client.GetChapterAsync(SeriesData.Volumes[VolumeNo + 1].Chapters[0].Position);
+            }
+            else if (preCachePolicy == PreCachePolicy.CachePrev && HasPrev)
+            {
+                if (chapterNo > 0)
+                    _client.GetChapterAsync(VolumeData.Chapters[chapterNo - 1].Position);
+                else
+                    _client.GetChapterAsync(SeriesData.Volumes[VolumeNo - 1].Chapters.Last().Position);
+            }
+        }
+
+        private async Task LoadCommentsAsync()
+        {
             if (EnableComments && Contents != null)
             {
                 try
                 {
-                    CommentsList = await LightKindomHtmlClient.GetCommentsAsync(ChapterData.Id, ChapterData.ParentSeriesId);
+                    var client = new CommentsClient(0, null);
+
+                    var path = ChapterFullPath;
+                    var commentsDict = await client.GetCommentsAsync(path);
+
+                    if (CommentsList == null)
+                        CommentsList = new Dictionary<int, IEnumerable<Comment>>();
+                    else
+                        CommentsList.Clear();
+
+                    foreach (var lvm in Contents)
+                    {
+                        IDictionary<string, Comment> lcmts = null;
+                        if (commentsDict.TryGetValue(lvm.UniqueIdentifier, out lcmts))
+                        {
+                            CommentsList.Add(lvm.No, lcmts.Values);
+                        }
+                    }
+
+                    //CommentsList = await LightKindomHtmlClient.GetCommentsAsync(ChapterData.Id, ChapterData.ParentSeriesId);
 
                     // when comments are empty or failed to get
                     if (CommentsList == null)
-                        CommentsList = new Dictionary<int, IEnumerable<CommentData>>();
+                        CommentsList = new Dictionary<int, IEnumerable<Comment>>();
 
                     foreach (var cln in CommentsList)
                     {
                         ((LineViewModel)Contents[cln.Key - 1]).MarkAsCommented();
-                        Contents[cln.Key - 1].Comments = new ObservableCollection<Comment>(cln.Value.Select(d => new Comment(d)));
+                        Contents[cln.Key - 1].Comments = new ObservableCollection<CommentViewModel>(cln.Value.Select(d => new CommentViewModel(d)));
                     }
 
                     if (CommentsListLoaded != null)
@@ -1201,8 +1242,8 @@ namespace LightNovel.ViewModels
                 var ic = VolumeData.Chapters.FirstOrDefault(c => DmzjDocSecBase.IsIllustrationChapter(c));
                 string icid = ic != null ? ic.Id : VolumeData.Chapters[0].Id;
                 var ccache = _client.ChapterCache;
-                if (ccache.ContainsKey(icid) && 
-                    ccache[icid].IsCompleted && 
+                if (ccache.ContainsKey(icid) &&
+                    ccache[icid].IsCompleted &&
                     !ccache[icid].IsFaulted)
                 {
                     // Find the First Illustration of current Volume
@@ -1232,6 +1273,11 @@ namespace LightNovel.ViewModels
 
         // When LineNo/PageNo Changed by UI Report, this flag will be TRUE, When User set, this will be FALSE
         public bool SuppressViewChange { get; set; }
+        public string ChapterFullPath { get {
+                if (String.IsNullOrEmpty(_SeriesData.Provider))
+                    _SeriesData.Provider = "dmzj";
+                return _SeriesData.Provider + '/' + _SeriesData.Id + '/' + _VolumeData.Id + '/' + _ChapterData.Id; } }
+
         // Use this method to set the LineNo and PageNo without calling NotifyPropertyChanged Event
         public void ReportViewChanged(int? pageNo, int? lineNo = null)
         {
@@ -1880,30 +1926,31 @@ namespace LightNovel.ViewModels
         }
     }
 
-    public class Comment : INotifyPropertyChanged
+    public class CommentViewModel : INotifyPropertyChanged
     {
         private string _author;
         private DateTime _date;
         private string _content;
 
-        public Comment()
+        public CommentViewModel()
         {
             _content = "uninitialized";
             _author = "unknown";
         }
 
-        public Comment(string content)
+        public CommentViewModel(string content)
         {
             _content = content;
-            _date = DateTime.MinValue;
+            //_date = DateTime.MinValue;
             _author = null;
         }
 
-        public Comment(CommentData data)
+        public CommentViewModel(Comment data)
         {
             _content = data.cn;
-            _date = DateTime.FromBinary(data.t);
-            _author = data._id.ToString();
+            _author = data.u;
+            //_date = DateTime.FromBinary(data.t);
+            //_author = data._id.ToString();
         }
 
         public string Content
@@ -1916,15 +1963,15 @@ namespace LightNovel.ViewModels
             }
         }
 
-        public DateTime Date
-        {
-            get { return _date; }
-            set
-            {
-                _date = value;
-                NotifyPropertyChanged();
-            }
-        }
+        //public DateTime Date
+        //{
+        //    get { return _date; }
+        //    set
+        //    {
+        //        _date = value;
+        //        NotifyPropertyChanged();
+        //    }
+        //}
 
         public string Author
         {
@@ -1952,12 +1999,14 @@ namespace LightNovel.ViewModels
         private CachedClient _client;
         private IAsyncOperationWithProgress<IRandomAccessStream, int> _imageDownloadTask;
         private string _content;
+        private string _uid; // MD5 hash of the content
         private bool _isLoading;
-        private ObservableCollection<Comment> _comments;
+        private ObservableCollection<CommentViewModel> _comments;
 
         public CachedClient Client { get { return _client; } set { _client = value; } }
 
         public string ParentChapterId { get; set; }
+        public string ChapterFullPath { get; set; }
 
         public LineContentType ContentType
         {
@@ -2000,7 +2049,7 @@ namespace LightNovel.ViewModels
             _content = null;
         }
 
-        public LineViewModel(Line line, string chapterId)
+        public LineViewModel(Line line, string fullChapterPath)
         {
             //if (line.ContentType == LineContentType.TextContent)
             //	_content = line.Content; // Add the indent
@@ -2018,7 +2067,7 @@ namespace LightNovel.ViewModels
             else
                 _content = line.Content;
 
-            ParentChapterId = chapterId;
+            ChapterFullPath = fullChapterPath;
             No = line.No;
         }
 
@@ -2050,7 +2099,7 @@ namespace LightNovel.ViewModels
         public LineViewModel(string content, params string[] comments)
         {
             _content = content;
-            Comments = new ObservableCollection<Comment>(comments.Select(comment => new Comment(comment)));
+            Comments = new ObservableCollection<CommentViewModel>(comments.Select(comment => new CommentViewModel(comment)));
             Comments.CollectionChanged += Comments_CollectionChanged;
         }
         public int ImageWidth { get; set; }
@@ -2061,7 +2110,7 @@ namespace LightNovel.ViewModels
         {
             if (Comments != null)
                 return;
-            Comments = new ObservableCollection<Comment>();
+            Comments = new ObservableCollection<CommentViewModel>();
             Comments.CollectionChanged += Comments_CollectionChanged;
             NotifyPropertyChanged("HasNoComment");
             NotifyPropertyChanged("HasComment");
@@ -2069,22 +2118,27 @@ namespace LightNovel.ViewModels
 
         public async Task<bool> AddCommentAsync(string commentText)
         {
-            if (!string.IsNullOrEmpty(commentText) && commentText.Length < 300 && !String.IsNullOrEmpty(ParentChapterId) && AppGlobal.IsSignedIn)
+            if (!string.IsNullOrEmpty(commentText)
+                && commentText.Length < 300
+                && !String.IsNullOrEmpty(ChapterFullPath)
+                )//&& AppGlobal.IsSignedIn)
             {
                 if (HasNoComment)
                     MarkAsCommented();
-                Comments.Add(new Comment(commentText));
+                Comments.Add(new CommentViewModel(commentText));
                 try
                 {
-                    var result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
+                    var client = new CommentsClient(0, null);
+                    var result = await client.CreateCommentAsync(ChapterFullPath, UniqueIdentifier, commentText);
+                    //var result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
                     if (!result)
                     {
                         // Re-signin
-                        result = await AppGlobal.SignInAutomaticllyAsync(true);
-                        if (!result)
-                            return false;
+                        //result = await AppGlobal.SignInAutomaticllyAsync(true);
+                        //if (!result)
+                        //    return false;
                         // And retry
-                        result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
+                        // result = await LightKindomHtmlClient.CreateCommentAsync(No.ToString(), ParentChapterId, commentText);
                     }
                     return result;
                 }
@@ -2101,12 +2155,22 @@ namespace LightNovel.ViewModels
             NotifyPropertyChanged("CommentsNotice");
         }
 
+        public string UniqueIdentifier
+        {
+            get
+            {
+                if (_uid == null)
+                    _uid = Data.Convert.MD5Hash(_content);
+                return _uid;
+            }
+        }
         public virtual string Content
         {
             get { return _content; }
             set
             {
                 _content = value;
+                _uid = null;
                 NotifyPropertyChanged("Content");
             }
         }
@@ -2150,7 +2214,7 @@ namespace LightNovel.ViewModels
             //get { return Uri.IsWellFormedUriString(_content, UriKind.Absolute); }
         }
 
-        public ObservableCollection<Comment> Comments
+        public ObservableCollection<CommentViewModel> Comments
         {
             get { return _comments; }
             set

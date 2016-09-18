@@ -244,6 +244,7 @@ namespace LightNovel.Data
             var uri = new Uri(Domain + sid + "/index.shtml");
             HtmlDocument doc = await GetHtmlDocumentAsync(uri);
             Series ser = new Series();
+            ser.Provider = "dmzj";
             ser.Id = sid;
             var root = doc.DocumentNode;
             // .novel_cover

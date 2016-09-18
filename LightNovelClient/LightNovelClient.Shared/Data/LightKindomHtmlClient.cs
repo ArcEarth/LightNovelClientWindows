@@ -430,7 +430,7 @@ namespace LightNovel.Data
             //return null;
         }
 
-        public static async Task<IDictionary<int, IEnumerable<CommentData>>> GetCommentsAsync(string chapterId, string seriesId, string lineId = "*")
+        public static async Task<IDictionary<int, IEnumerable<Comment>>> GetCommentsAsync(string chapterId, string seriesId, string lineId = "*")
         {
             using (var client = NewUserHttpClient())
             {
@@ -448,11 +448,11 @@ namespace LightNovel.Data
                     if (comments.ValueType != JsonValueType.Object)
                         return null;
 
-                    var reuslt = comments.GetObject().ToDictionary(pair => int.Parse(pair.Key), pair => pair.Value.GetArray().Select(token => new CommentData
+                    var reuslt = comments.GetObject().ToDictionary(pair => int.Parse(pair.Key), pair => pair.Value.GetArray().Select(token => new Comment
                     {
-                        _id = (uint)(token.GetObject().GetNamedNumber("_id")),
+                        //_id = (uint)(token.GetObject().GetNamedNumber("_id")),
                         cn = token.GetObject().GetNamedString("cn"),
-                        t = (long)(token.GetObject().GetNamedNumber("t"))
+                        //t = (long)(token.GetObject().GetNamedNumber("t"))
                     }));
                     return reuslt;
                 }

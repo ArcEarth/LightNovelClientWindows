@@ -119,7 +119,7 @@ namespace LightNovel
 
         //}
 
-        void ViewModel_CommentsListLoaded(object sender, IDictionary<int, IEnumerable<CommentData>> e)
+        void ViewModel_CommentsListLoaded(object sender, IDictionary<int, IEnumerable<Comment>> e)
         {
             foreach (var pair in e)
             {
@@ -893,7 +893,7 @@ namespace LightNovel
                 if (ViewModel.EnableComments)
                 {
                     CommentsTool.Visibility = Visibility.Visible;
-                    if (AppGlobal.IsSignedIn)
+                    if (true)//(AppGlobal.IsSignedIn)
                     {
                         CommentsInputTool.Visibility = Windows.UI.Xaml.Visibility.Visible;
                     }

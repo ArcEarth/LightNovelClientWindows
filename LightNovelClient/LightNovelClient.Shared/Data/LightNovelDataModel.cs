@@ -7,7 +7,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Windows.Foundation;
 using System.IO;
-
+using System.Security.Cryptography;
+using System.Text;
 
 namespace LightNovel.Data
 {
@@ -91,7 +92,7 @@ namespace LightNovel.Data
         string Content { get; }
         IList<IDocumentSection> Children { get; }
 
-        bool   IsLoaded { get; }
+        bool IsLoaded { get; }
         IAsyncAction GetAsync();
     }
 
@@ -222,6 +223,7 @@ namespace LightNovel.Data
 
     public class Series
     {
+        public string Provider { get; set; }
         public string Id { get; set; }
         public string Title { get; set; }
         public DateTime UpdateTime { get; set; }
@@ -241,6 +243,37 @@ namespace LightNovel.Data
         TextContent,
         ImageContent,
     }
+
+    public static class Convert
+    {
+        static HashAlgorithm hasher = MD5.Create();
+
+        static readonly char[] padding = { '=' };
+        public static string ToBase64UrlEncoding(byte[] bytes)
+        {
+            return System.Convert.ToBase64String(bytes)
+                    .TrimEnd(padding).Replace('+', '-').Replace('/', '_');
+        }
+
+        public static byte[] FromBase64UrlEncoding(string encoded)
+        {
+            string incoming = encoded
+                .Replace('_', '/').Replace('-', '+');
+            switch (encoded.Length % 4)
+            {
+                case 2: incoming += "=="; break;
+                case 3: incoming += "="; break;
+            }
+            return System.Convert.FromBase64String(incoming);
+        }
+
+        public static string MD5Hash(string str)
+        {
+            var hash = hasher.ComputeHash(Encoding.UTF8.GetBytes(str));
+            return ToBase64UrlEncoding(hash);
+        }
+    }
+
     public class Line
     {
         public static bool IsImageUri(string line)
@@ -259,6 +292,16 @@ namespace LightNovel.Data
         //    line.IndexOf(key + "=");
         //}
 
+        string _uid; // an MD5 hash of this line's content
+        public string Uid
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(_uid))
+                    _uid = Convert.MD5Hash(Content);
+                return _uid;
+            }
+        }
         public int No { get; set; }
         public string Content { get; set; }
         public LineContentType ContentType => IsImageUri(Content) ? LineContentType.ImageContent : LineContentType.TextContent;
@@ -272,11 +315,10 @@ namespace LightNovel.Data
         public bool ShouldSerializeSize() => (ContentType == LineContentType.ImageContent);
     }
 
-    public struct CommentData
+    public struct Comment
     {
-        public uint _id;
         public string cn;
-        public long t;
+        public string u;
     };
 
     public interface IChapterProperties
