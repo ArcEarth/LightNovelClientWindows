@@ -12,8 +12,9 @@
       mc:Ignorable="d">
 
     <Page.Resources>
+        <x:Boolean x:Key="UseGroupView">True</x:Boolean>
         <CollectionViewSource x:Name="resultsViewSource"
-                              IsSourceGrouped="True"
+                              IsSourceGrouped="{Binding GroupView}"
                               Source="{Binding Results}" />
         <CollectionViewSource x:Name="filtersViewSource" Source="{Binding Filters}" />
         <DataTemplate x:Key="SeriesTitleDataTemplate">
@@ -148,7 +149,7 @@
                                         <Image Grid.Row="0"
                                                HorizontalAlignment="Center"
                                                Source="{Binding CoverImageUri}"
-                                               Stretch="None" />
+                                               Stretch="UniformToFill" />
                                         <TextBlock Grid.Row="1"
                                                    Margin="0,5,0,0"
                                                    HorizontalAlignment="Center"

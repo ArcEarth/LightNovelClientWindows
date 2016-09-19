@@ -91,6 +91,39 @@ namespace LightNovel.Data
             return bookLists;
         }
 
+        static string QueryPath = "http://s.acg.dmzj.com/lnovelsum/search.php?s={0}&type=0";
+        public static async Task<IList<ExtendedBookItem>> SearchBookAsync(string keyword)
+        {
+            var url = new Uri(String.Format(QueryPath, WebUtility.HtmlEncode(keyword)));
+            string srtext;
+            using (var client = NewHttpClient())
+                srtext = await client.GetStringAsync(url);
+            int hl = "varg_search_data = ".Length;
+            srtext = srtext.Substring(hl, srtext.Length - hl - 1);
+            return JsonArray.Parse(srtext).Select(jo => {
+                var jojo = jo.GetObject();
+                var paths = jojo["last_chapter_url"].GetString().Split(new char[] { '/', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                var book = new ExtendedBookItem {
+                    Source = "dmzj",
+                    SeriesId = paths[0],
+                    VolumeId = paths[1],
+                    Id = paths[2],
+                    Title = jojo["full_name"].GetString(),
+                    Subtitle = jojo["fullc_name"].GetString(),
+                    CoverImageUri = jojo["image_url"].GetString(),
+                    Author = jojo["author"].GetString(),
+                    Description = jojo["description"].GetString(),
+                    Catalogs = ParseCatalogs(jojo["types"].GetString())
+                };
+                return book;
+            }).ToList();
+        }
+
+        private static IList<BookCatalog> ParseCatalogs(string v)
+        {
+            return null;
+        }
+
         public static bool IsIllustrationChapter(ChapterProperties chpt)
         {
             return chpt.Title.Contains("插画") || chpt.Title.Contains("插图");

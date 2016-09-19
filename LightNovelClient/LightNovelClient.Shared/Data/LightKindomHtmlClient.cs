@@ -1039,7 +1039,7 @@ namespace LightNovel.Data
             return book;
         }
 
-        public static async Task<List<ExtendedBookItem>> SearchBookAsync(string keyword)
+        public static async Task<IList<ExtendedBookItem>> SearchBookAsync(string keyword)
         {
             var url = new Uri(String.Format(QueryPath, WebUtility.HtmlEncode(keyword)));
             var doc = await GetHtmlDocumentAsync(url);

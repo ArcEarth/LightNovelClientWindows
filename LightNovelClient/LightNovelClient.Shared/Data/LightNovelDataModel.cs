@@ -96,7 +96,7 @@ namespace LightNovel.Data
         IAsyncAction GetAsync();
     }
 
-    public interface IDocument : IDocumentSection
+    public interface IDocumentProperties
     {
         // Document meta data
         string DataProvider { get; }
@@ -107,6 +107,11 @@ namespace LightNovel.Data
         string UniqueID { get; }
         ICollection<BookCatalog> Catalogs { get; }
         ICollection<string> Alias { get; }
+    }
+
+
+    public interface IDocument : IDocumentSection, IDocumentProperties
+    {
     }
 
     public abstract class DocumentSectionBase : IDocumentSection
@@ -155,7 +160,7 @@ namespace LightNovel.Data
         public ICollection<string> Alias => _alias;
     }
 
-    public class ExtendedBookItem : BookItem
+    public class ExtendedBookItem : BookItem/*, IDocumentProperties*/
     {
         // Contributer
         public string Author { get; set; }
@@ -164,8 +169,8 @@ namespace LightNovel.Data
         public string Description { get; set; }
         public DateTime UpdateTime { get; set; }
 
-        public List<BookCatalog> Catalogs { get; set; }
-        public List<string> Alias { get; set; }
+        public IList<BookCatalog> Catalogs { get; set; }
+        public IList<string> Alias { get; set; }
         public List<KeyValuePair<string, List<string>>> Volumes { get; set; }
     }
 

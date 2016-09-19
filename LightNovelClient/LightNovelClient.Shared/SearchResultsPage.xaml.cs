@@ -39,8 +39,8 @@ namespace LightNovel
 				this.DefaultViewModel["QueryText"] = _QueryText;
 			}
 		}
-		public List<ExtendedBookItem> Results { get; set; }
-		public Task<List<ExtendedBookItem>> QueryTask { get; set; }
+		public IList<ExtendedBookItem> Results { get; set; }
+		public Task<IList<ExtendedBookItem>> QueryTask { get; set; }
 		//private bool IsPageActive = true;
 		/// <summary>
 		/// This can be changed to a strongly typed view model.
@@ -65,6 +65,7 @@ namespace LightNovel
 			this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
             this.SizeChanged += SearchResultsPage_SizeChanged;
+            this.DefaultViewModel["UseGroupView"] = this.Resources["UseGroupView"];
         }
 
         private void SearchResultsPage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -120,10 +121,17 @@ namespace LightNovel
 				VisualStateManager.GoToState(this, "NoResultsFound", true);
 			else
 			{
-				var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
-				this.DefaultViewModel["Results"] = bvms;
-				resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
-				VisualStateManager.GoToState(this, "ResultsFound", true);
+                if ((bool)this.Resources["UseGroupView"])
+                {
+                    var bvms = from book in Results group new BookCoverViewModel(book) by book.Title into g select g;
+                    this.DefaultViewModel["Results"] = bvms;
+                    resultsZoomedOutView.ItemsSource = resultsViewSource.View.CollectionGroups;
+                }
+                else{
+                    var bvms = from book in Results select new BookCoverViewModel(book);
+                    this.DefaultViewModel["Results"] = bvms;
+                }
+                VisualStateManager.GoToState(this, "ResultsFound", true);
 			}
 		}
 
@@ -134,7 +142,7 @@ namespace LightNovel
 				QueryTask.AsAsyncAction().Cancel();
 			}
 			VisualStateManager.GoToState(this, "Searching", false);
-			QueryTask = LightNovel.Data.LightKindomHtmlClient.SearchBookAsync(QueryText);
+			QueryTask = DmzjDocSecBase.SearchBookAsync(QueryText);
 			try
 			{
 				Results = await QueryTask;
@@ -181,7 +189,7 @@ namespace LightNovel
 			if (Results == null && QueryTask == null)
 			{
 				VisualStateManager.GoToState(this, "Searching", false);
-				QueryTask = LightNovel.Data.LightKindomHtmlClient.SearchBookAsync(QueryText);
+				QueryTask = DmzjDocSecBase.SearchBookAsync(QueryText);
 			}
 
 			// TODO: Application-specific searching logic.  The search process is responsible for
